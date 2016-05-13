@@ -44,7 +44,7 @@ public class StatsFragment extends Fragment
 
     private long time;  // milliseconds
     private double distance;
-    private double lastDistance;
+    private double lastSentDistance;
     private double speed;
 
     private Activity activity;
@@ -58,7 +58,7 @@ public class StatsFragment extends Fragment
         if (savedInstanceState != null) {
             time = savedInstanceState.getLong(SAVED_TIME);
             distance = savedInstanceState.getDouble(SAVED_DISTANCE);
-            lastDistance = savedInstanceState.getDouble(SAVED_LAST_DISTANCE);
+            lastSentDistance = savedInstanceState.getDouble(SAVED_LAST_DISTANCE);
             speed = savedInstanceState.getDouble(SAVED_SPEED);
         }
         else {
@@ -73,7 +73,7 @@ public class StatsFragment extends Fragment
         speedTextView = (TextView) v.findViewById(R.id.speed_value);
         sendNowButton = (Button) v.findViewById(R.id.send_now_button);
         sendNowButton.setOnClickListener(this);
-        sendNowButton.setEnabled(distance != 0.0 && distance != lastDistance);
+        sendNowButton.setEnabled(distance != 0.0 && distance != lastSentDistance);
 
         show();
         Timer.getInstance().reset();
@@ -169,19 +169,21 @@ public class StatsFragment extends Fragment
         outState.putLong(SAVED_TIME, time);
         outState.putDouble(SAVED_SPEED, speed);
         outState.putDouble(SAVED_DISTANCE, distance);
-        outState.putDouble(SAVED_LAST_DISTANCE, lastDistance);
+        outState.putDouble(SAVED_LAST_DISTANCE, lastSentDistance);
     }
 
     @Override
     public void onDistanceChanged(double distance, double speed) {
         time = System.currentTimeMillis();
         Timer.getInstance().reset();
-        sendNowButton.setEnabled(true);
+        if (distance != lastSentDistance) {
+            sendNowButton.setEnabled(true);
+        }
 
         if (time - this.time > 3 * 3600 * 1000) {  // reset the values if three hours have passed
             this.speed = 0.0;
             this.distance = 0.0;
-            this.lastDistance = 0.0;
+            this.lastSentDistance = 0.0;
         }
 
         this.distance = distance;
@@ -209,11 +211,11 @@ public class StatsFragment extends Fragment
     @Override
     public void onClick(View v) {
         if (v == sendNowButton) {
+            sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(time);
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
             minutes += calendar.get(Calendar.MINUTE);
-            sendNowButton.setEnabled(false);
             LocationModel location = new LocationModel();
             location.setDistance(distance);
             location.setDirection(0);
@@ -225,7 +227,8 @@ public class StatsFragment extends Fragment
 
     @Override
     public void onSendingSMS(LocationModel model) {
-        lastDistance = model.getDistance();
+        lastSentDistance = model.getDistance();
+        sendNowButton.setEnabled(false);
     }
 
     @Override

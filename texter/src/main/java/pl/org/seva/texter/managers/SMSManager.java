@@ -62,15 +62,13 @@ public class SMSManager {
 		initialized = true;
 	}
 
-    public SMSManager addSMSListener(ISMSListener listener) {
-        listeners.remove(listener);
+    public void addSMSListener(ISMSListener listener) {
         removeSMSListener(listener);
-        return this;
+        listeners.add(listener);
     }
 
-    public SMSManager removeSMSListener(ISMSListener listener) {
+    public void removeSMSListener(ISMSListener listener) {
         listeners.remove(listener);
-        return this;
     }
 	
 	public int getPhoneNumber() {
