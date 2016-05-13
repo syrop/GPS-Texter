@@ -29,7 +29,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
+import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.PermissionsManager;
 
 /**
  * Created by wiktor on 20.08.15.
@@ -38,7 +40,8 @@ public class MapPreference extends DialogPreference implements
         GoogleMap.OnMapLongClickListener,
         View.OnClickListener,
         ILocationChangedListener,
-        GoogleMap.OnCameraChangeListener {
+        GoogleMap.OnCameraChangeListener,
+        IPermissionGrantedListener{
 
     /** Geo URI for Warsaw. */
     public static final String DEFAULT_VALUE = "geo:52.233333,21.016667";  // Warsaw
@@ -176,6 +179,11 @@ public class MapPreference extends DialogPreference implements
                         PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
                 }
+                else {
+                    PermissionsManager.getInstance().addPermissionListener(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            MapPreference.this);
+                }
                 zoom = PreferenceManager.getDefaultSharedPreferences(context).
                         getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
 
@@ -265,6 +273,19 @@ public class MapPreference extends DialogPreference implements
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         zoom = cameraPosition.zoom;
+    }
+
+    @Override
+    public void onPermissionGranted(String permission) {
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
+                ContextCompat.checkSelfPermission(
+                        getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+            PermissionsManager.getInstance().
+                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+        }
     }
 
     private static class SavedState extends BaseSavedState {

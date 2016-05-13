@@ -23,12 +23,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
+import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.PermissionsManager;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
-public class NavigationFragment extends Fragment implements IDistanceChangedListener, IHomeChangedListener {
+public class NavigationFragment extends Fragment implements
+        IDistanceChangedListener, IHomeChangedListener, IPermissionGrantedListener {
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -62,6 +65,11 @@ public class NavigationFragment extends Fragment implements IDistanceChangedList
                         Manifest.permission.ACCESS_FINE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
+                }
+                else {
+                    PermissionsManager.getInstance().addPermissionListener(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            NavigationFragment.this);
                 }
                 LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
                 updateHomeLocation(homeLatLng);
@@ -116,5 +124,18 @@ public class NavigationFragment extends Fragment implements IDistanceChangedList
     @Override
     public void onHomeChanged() {
         updateHomeLocation(GPSManager.getInstance().getHomeLatLng());
+    }
+
+    @Override
+    public void onPermissionGranted(String permission) {
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
+                ContextCompat.checkSelfPermission(
+                        getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+            PermissionsManager.getInstance().
+                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+        }
     }
 }

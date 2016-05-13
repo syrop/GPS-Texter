@@ -12,7 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-public class SettingsActivity extends AppCompatActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** If device is not enabled to send SMS< this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
@@ -78,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity  implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case LOCATION_UPDATE_FREQUENCY:
-                GPSManager.getInstance().requestLocationUpdates(this);
+                GPSManager.getInstance().updateFrequencyChanged(this);
                 break;
             case HOME_LOCATION:
                 GPSManager.getInstance().updateHome();

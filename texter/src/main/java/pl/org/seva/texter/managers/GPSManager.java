@@ -1,6 +1,7 @@
 package pl.org.seva.texter.managers;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -82,7 +84,11 @@ public class GPSManager implements LocationListener {
         return distance;
     }
 
-    public void requestLocationUpdates(Context context) {
+    public void updateFrequencyChanged(Context context) {
+        requestLocationUpdates(context);
+    }
+
+    private void requestLocationUpdates(Context context) {
         int updateFrequency = getUpdateFrequency();
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -120,7 +126,32 @@ public class GPSManager implements LocationListener {
         }
     }
 
-	public GPSManager init(Context context) {
+	public void init(Activity activity) {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
+                    PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION);
+        }
+        else {
+            initWithPermissions(activity);
+        }
+    }
+
+    public void close(Context context) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
+        initialized = false;
+    }
+
+    private void initWithPermissions(Context context) {
 		if (!initialized) {
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
 			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -129,38 +160,33 @@ public class GPSManager implements LocationListener {
 
 			initialized = true;
 		}
-		return this;
 	}
 	
-	public GPSManager addDistanceChangedListener(IDistanceChangedListener listener) {
+	public void addDistanceChangedListener(IDistanceChangedListener listener) {
 		if (listener == null) {
-            return this;
+            return;
         }
         distanceListeners.remove(listener);
         distanceListeners.add(listener);
-		return this;
 	}
 
-	public GPSManager removeDistanceListener(IDistanceChangedListener listener) {
+	public void removeDistanceListener(IDistanceChangedListener listener) {
         if (listener == null) {
-            return this;
+            return;
         }
         distanceListeners.remove(listener);
-		return this;
 	}
 
-	public GPSManager addHomeChangedListener(IHomeChangedListener listener) {
+	public void addHomeChangedListener(IHomeChangedListener listener) {
         removeHomeChangedListener(listener);
 		homeChangedListeners.add(listener);
-		return this;
 	}
 
-    public GPSManager removeHomeChangedListener(IHomeChangedListener listener) {
+    public void removeHomeChangedListener(IHomeChangedListener listener) {
         if (listener == null) {
-            return this;
+            return;
         }
         homeChangedListeners.remove(listener);
-        return this;
     }
 
     public GPSManager addLocationChangedListener(ILocationChangedListener listener) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.utils.Timer;
 
@@ -119,14 +121,28 @@ public class MainActivity extends AppCompatActivity {
 
         GPSManager.getInstance().init(this);
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
-        GPSManager.getInstance().requestLocationUpdates(this);
         GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            for (String permission : permissions) {
+                PermissionsManager.getInstance().permissionGranted(permission);
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Timer.getInstance().end();
+        GPSManager.getInstance().close(this);
     }
 
     @Override
