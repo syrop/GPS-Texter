@@ -47,12 +47,12 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/location_settings">
-        <EditTextPreference
+        <!--<EditTextPreference
             android:key="pref_update_frequency"
             android:title="@string/update_frequency"
             android:summary="@string/update_frequency_summary"
             android:inputType="number"
-            android:defaultValue="1" />
+            android:defaultValue="1" />-->
         <pl.org.seva.texter.preferences.MapPreference
             android:title="@string/home_location"
             android:summary="@string/home_location_summary"
