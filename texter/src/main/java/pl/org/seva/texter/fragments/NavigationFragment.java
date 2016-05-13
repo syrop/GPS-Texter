@@ -33,6 +33,8 @@ import pl.org.seva.texter.managers.PermissionsManager;
 public class NavigationFragment extends Fragment implements
         IDistanceChangedListener, IHomeChangedListener, IPermissionGrantedListener {
 
+    private SupportMapFragment mapFragment;
+
     private TextView distanceTextView;
     private GoogleMap map;
 
@@ -51,7 +53,7 @@ public class NavigationFragment extends Fragment implements
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().
+        mapFragment = (SupportMapFragment) getChildFragmentManager().
                 findFragmentById(R.id.map);
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -93,6 +95,7 @@ public class NavigationFragment extends Fragment implements
         super.onDestroy();
         GPSManager.getInstance().removeDistanceListener(this);
         GPSManager.getInstance().removeHomeChangedListener(this);
+        getChildFragmentManager().beginTransaction().remove(mapFragment).commit();
     }
 
     private void updateHomeLocation(LatLng home) {

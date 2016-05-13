@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,6 +63,8 @@ public class MapPreference extends DialogPreference implements
     private GoogleMap map;
     private Button useCurrentButton;
 
+    private SupportMapFragment mapFragment;
+
     public MapPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -106,6 +109,9 @@ public class MapPreference extends DialogPreference implements
             lon = parseLongitude(value);
         }
         GPSManager.getInstance().removeLocationChangedListener(this);
+
+        ((android.support.v4.app.FragmentActivity) getContext()).
+                        getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
     }
 
     @Override
@@ -165,7 +171,7 @@ public class MapPreference extends DialogPreference implements
 
         MapsInitializer.initialize(context);
 
-        SupportMapFragment mapFragment = (SupportMapFragment)
+        mapFragment = (SupportMapFragment)
                 ((android.support.v4.app.FragmentActivity)getContext()).
                 getSupportFragmentManager().findFragmentById(R.id.map);
 

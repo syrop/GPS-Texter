@@ -2,11 +2,7 @@ package pl.org.seva.texter.fragments;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activities.SettingsActivity;
