@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -83,9 +84,10 @@ public class GPSManager implements LocationListener {
 
     public void requestLocationUpdates(Context context) {
         int updateFrequency = getUpdateFrequency();
-        if (context.getPackageManager().checkPermission(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                context.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,

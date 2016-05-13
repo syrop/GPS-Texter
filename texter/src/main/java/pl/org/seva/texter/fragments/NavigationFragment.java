@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +57,10 @@ public class NavigationFragment extends Fragment implements IDistanceChangedList
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
-                if (getContext().getPackageManager().checkPermission(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        getContext().getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
                 }
                 LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();

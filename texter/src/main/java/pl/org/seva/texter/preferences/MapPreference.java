@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -169,9 +170,10 @@ public class MapPreference extends DialogPreference implements
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
-                if (getContext().getPackageManager().checkPermission(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        getContext().getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
                 }
                 zoom = PreferenceManager.getDefaultSharedPreferences(context).
@@ -197,7 +199,10 @@ public class MapPreference extends DialogPreference implements
                     GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
                 }
                 if (!toastShown) {
-                    Toast.makeText(context, R.string.long_press, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            context,
+                            R.string.long_press,
+                            Toast.LENGTH_SHORT).show();
                     toastShown = true;
                 }
                 GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
