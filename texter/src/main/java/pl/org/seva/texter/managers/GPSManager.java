@@ -127,6 +127,13 @@ public class GPSManager implements LocationListener {
     }
 
 	public void init(Activity activity) {
+        if (initialized) {
+            return;
+        }
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        updateHome();
+
         if (ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
@@ -138,28 +145,12 @@ public class GPSManager implements LocationListener {
         }
         else {
             initWithPermissions(activity);
+            initialized = true;
         }
-    }
-
-    public void close(Context context) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this);
-        }
-        initialized = false;
     }
 
     private void initWithPermissions(Context context) {
-		if (!initialized) {
-            preferences = PreferenceManager.getDefaultSharedPreferences(context);
-			locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            updateHome();
-            requestLocationUpdates(context);
-
-			initialized = true;
-		}
+        requestLocationUpdates(context);
 	}
 	
 	public void addDistanceChangedListener(IDistanceChangedListener listener) {

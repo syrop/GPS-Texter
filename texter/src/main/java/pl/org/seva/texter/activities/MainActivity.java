@@ -1,11 +1,13 @@
 package pl.org.seva.texter.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,12 +30,13 @@ import pl.org.seva.texter.fragments.HistoryFragment;
 import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
+import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.utils.Timer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IPermissionGrantedListener {
 
     public static final int STATS_TAB_POSITION = 0;
     public static final int MAP_TAB_POSITION = 1;
@@ -119,9 +122,18 @@ public class MainActivity extends AppCompatActivity {
             Timer.getInstance().start();
         }
 
-        GPSManager.getInstance().init(this);
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
+        GPSManager.getInstance().init(this);
         GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            PermissionsManager.getInstance().addPermissionListener(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    this);
+        }
     }
 
     @Override
@@ -142,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         Timer.getInstance().end();
-        GPSManager.getInstance().close(this);
     }
 
     @Override
@@ -156,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MILLIS) {
             super.onBackPressed();
-        } else {
+        }
+        else {
             Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT).
                     show();
             clickTime = System.currentTimeMillis();
@@ -174,5 +186,10 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPermissionGranted(String permission) {
+        GPSManager.getInstance().init(this);
     }
 }

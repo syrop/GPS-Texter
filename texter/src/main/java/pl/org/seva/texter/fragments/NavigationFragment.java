@@ -33,8 +33,6 @@ import pl.org.seva.texter.managers.PermissionsManager;
 public class NavigationFragment extends Fragment implements
         IDistanceChangedListener, IHomeChangedListener, IPermissionGrantedListener {
 
-    private SupportMapFragment mapFragment;
-
     private TextView distanceTextView;
     private GoogleMap map;
 
@@ -53,7 +51,7 @@ public class NavigationFragment extends Fragment implements
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
 
-        mapFragment = (SupportMapFragment) getChildFragmentManager().
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().
                 findFragmentById(R.id.map);
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -75,10 +73,11 @@ public class NavigationFragment extends Fragment implements
                 }
                 LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
                 updateHomeLocation(homeLatLng);
-
+                System.out.println("home: " + homeLatLng);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(homeLatLng).zoom(12).build();
                 if (savedInstanceState == null) {
+                    System.out.println("animating");
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
                 else {
@@ -95,7 +94,6 @@ public class NavigationFragment extends Fragment implements
         super.onDestroy();
         GPSManager.getInstance().removeDistanceListener(this);
         GPSManager.getInstance().removeHomeChangedListener(this);
-        getChildFragmentManager().beginTransaction().remove(mapFragment).commit();
     }
 
     private void updateHomeLocation(LatLng home) {
