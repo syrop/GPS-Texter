@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
@@ -207,8 +209,17 @@ public class StatsFragment extends Fragment
     @Override
     public void onClick(View v) {
         if (v == sendNowButton) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(time);
+            int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
+            minutes += calendar.get(Calendar.MINUTE);
             sendNowButton.setEnabled(false);
-
+            LocationModel location = new LocationModel();
+            location.setDistance(distance);
+            location.setDirection(0);
+            location.setTime(minutes);
+            location.setSpeed(speed);
+            SMSManager.getInstance().send(location);
         }
     }
 

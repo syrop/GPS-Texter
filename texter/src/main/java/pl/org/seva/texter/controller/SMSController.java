@@ -70,14 +70,13 @@ public class SMSController implements IDistanceChangedListener {
         location.setTime(minutes);
         location.setSpeed(speed);
 
-
         ZoneModel.Zone zone = ZoneModel.getInstance().zone(distance, true);
         if (this.zone == null) {
             this.zone = zone;
         }
         else if (zone.getMin() != this.zone.getMin() &&
-                (zone.getCounter() >= SMS_TRIGGER &&
-                        zone.getDelay() >= TIME_IN_ZONE)) {
+                zone.getCounter() >= SMS_TRIGGER &&
+                zone.getDelay() >= TIME_IN_ZONE) {
             if (this.zone.getMin() > zone.getMin()) {
                 direction = -1;
             }
@@ -86,7 +85,8 @@ public class SMSController implements IDistanceChangedListener {
             }
             location.setDirection(direction);  // calculated specifically for zone border
 
-            if ((direction == 1 ? zone.getMin() : zone.getMax()) <= SMSManager.getInstance().getMaxSentDistance()) {
+            if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
+                    SMSManager.getInstance().getMaxSentDistance()) {
                 sendSMS(location);
             }
             this.zone = zone;

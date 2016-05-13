@@ -77,7 +77,6 @@ public class NavigationFragment extends Fragment implements
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(homeLatLng).zoom(12).build();
                 if (savedInstanceState == null) {
-                    System.out.println("animating");
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
                 else {
