@@ -122,20 +122,22 @@ public class MapPreference extends DialogPreference implements
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
 
-        // Create instance of custom BaseSavedState
+        // Create instance of custom BaseSavedState.
         final SavedState myState = new SavedState(superState);
         // Set the state's value with the class member that holds current
-        // setting value
+        // setting value.
         myState.lat = lat;
         myState.lon = lon;
         myState.toastShown = toastShown;
         myState.zoom = zoom;
 
-        // If called after onSaveInstanceState, throws:
-        // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-        ((android.support.v4.app.FragmentActivity) getContext()).
-                getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
-        mapFragment = null;
+        // Equals null inside the setting activity if map has not been invoked.
+        if (mapFragment != null) {
+            // If called after onSaveInstanceState, throws:
+            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+            ((android.support.v4.app.FragmentActivity) getContext()).
+                    getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+        }
 
         return myState;
     }
