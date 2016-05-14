@@ -110,8 +110,12 @@ public class MapPreference extends DialogPreference implements
         }
         GPSManager.getInstance().removeLocationChangedListener(this);
 
-        ((android.support.v4.app.FragmentActivity) getContext()).
-                        getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+        if (mapFragment != null) {
+            // Without enclosing in the if, throws:
+            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+            ((android.support.v4.app.FragmentActivity) getContext()).
+                    getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+        }
     }
 
     @Override
@@ -126,6 +130,13 @@ public class MapPreference extends DialogPreference implements
         myState.lon = lon;
         myState.toastShown = toastShown;
         myState.zoom = zoom;
+
+        // If called after onSaveInstanceState, throws:
+        // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        ((android.support.v4.app.FragmentActivity) getContext()).
+                getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+        mapFragment = null;
+
         return myState;
     }
 
