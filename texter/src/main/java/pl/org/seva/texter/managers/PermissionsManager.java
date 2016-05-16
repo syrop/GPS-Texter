@@ -16,14 +16,13 @@ public class PermissionsManager {
 
     private static final PermissionsManager INSTANCE = new PermissionsManager();
 
-    private final Map<String, List<IPermissionGrantedListener>> map;
+    private final Map<String, List<IPermissionGrantedListener>> map = new HashMap<>();
 
     public static PermissionsManager getInstance() {
         return INSTANCE;
     }
 
     private PermissionsManager() {
-        map = new HashMap<>();
     }
 
     public void addPermissionListener(
