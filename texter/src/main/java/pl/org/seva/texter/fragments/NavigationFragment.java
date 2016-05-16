@@ -1,6 +1,7 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -128,9 +129,12 @@ public class NavigationFragment extends Fragment implements
 
     @Override
     public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
+        Context context = getContext();
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                context != null &&
+                map != null &&
                 ContextCompat.checkSelfPermission(
-                        getContext(),
+                        context,  // must not be null
                         Manifest.permission.ACCESS_FINE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
