@@ -188,6 +188,27 @@ public class MapPreference extends DialogPreference implements
                 ((android.support.v4.app.FragmentActivity)getContext()).
                 getSupportFragmentManager().findFragmentById(R.id.map);
 
+        useCurrentButton = (Button) result.findViewById(R.id.current_location_button);
+        useCurrentButton.setOnClickListener(MapPreference.this);
+        boolean locationPermitted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
+        boolean locationAvailable = locationPermitted &&
+                GPSManager.getInstance().isLocationAvailable();
+        useCurrentButton.setEnabled(locationAvailable);
+        if (!locationAvailable) {
+            GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
+        }
+        if (!toastShown) {
+            Toast.makeText(
+                    context,
+                    R.string.long_press,
+                    Toast.LENGTH_SHORT).show();
+            toastShown = true;
+        }
+        GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
+
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -218,23 +239,15 @@ public class MapPreference extends DialogPreference implements
 
                 map.setOnMapLongClickListener(MapPreference.this);
                 map.setOnCameraChangeListener(MapPreference.this);
-
-                useCurrentButton = (Button) result.findViewById(R.id.current_location_button);
-                useCurrentButton.setOnClickListener(MapPreference.this);
-                useCurrentButton.setEnabled(GPSManager.getInstance().isLocationAvailable());
-                if (!useCurrentButton.isEnabled()) {
-                    GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
-                }
-                if (!toastShown) {
-                    Toast.makeText(
-                            context,
-                            R.string.long_press,
-                            Toast.LENGTH_SHORT).show();
-                    toastShown = true;
-                }
-                GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
             }
         });
+
+        if (!locationPermitted) {
+            useCurrentButton.setEnabled(false);
+            PermissionsManager.getInstance().addPermissionListener(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    this);
+        }
 
         return result;
     }
@@ -301,7 +314,8 @@ public class MapPreference extends DialogPreference implements
                         getContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);  // Requires checking, otherwise compile time error.
+            useCurrentButton.setEnabled(false);
             PermissionsManager.getInstance().
                     removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }

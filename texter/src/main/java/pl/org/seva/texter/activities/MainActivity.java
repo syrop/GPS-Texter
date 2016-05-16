@@ -190,6 +190,10 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
 
     @Override
     public void onPermissionGranted(String permission) {
-        GPSManager.getInstance().init(this);
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            GPSManager.getInstance().init(this);
+            PermissionsManager.getInstance().
+                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+        }
     }
 }

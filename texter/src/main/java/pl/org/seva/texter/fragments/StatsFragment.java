@@ -1,9 +1,12 @@
 package pl.org.seva.texter.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +18,10 @@ import java.util.Calendar;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
+import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.listeners.ISMSListener;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.Timer;
@@ -26,7 +31,8 @@ import pl.org.seva.texter.utils.Timer;
  */
 public class StatsFragment extends Fragment
         implements IDistanceChangedListener, Timer.TimerListener,
-        View.OnClickListener, ISMSListener, IHomeChangedListener {
+        View.OnClickListener, ISMSListener, IHomeChangedListener,
+        IPermissionGrantedListener {
 
     private static final String SAVED_TIME = "time";
     private static final String SAVED_SPEED = "speed";
@@ -81,6 +87,15 @@ public class StatsFragment extends Fragment
         SMSManager.getInstance().addSMSListener(this);
         GPSManager.getInstance().addDistanceChangedListener(this);
         GPSManager.getInstance().addHomeChangedListener(this);
+
+        if (ContextCompat.checkSelfPermission(
+                getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            PermissionsManager.getInstance().addPermissionListener(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    this);
+        }
 
         return v;
     }
@@ -239,5 +254,14 @@ public class StatsFragment extends Fragment
     public void onHomeChanged() {
         distance = GPSManager.getInstance().getDistance();
         show();
+    }
+
+    @Override
+    public void onPermissionGranted(String permission) {
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            sendNowButton.setEnabled(true);
+            PermissionsManager.getInstance().
+                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+        }
     }
 }
