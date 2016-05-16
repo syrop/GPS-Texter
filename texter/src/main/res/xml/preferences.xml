@@ -23,7 +23,7 @@
             android:inputType="number"
             android:title="@string/maximum_distance"
             android:summary="@string/maximum_distance_summary"
-            android:defaultValue="10"
+            android:defaultValue="50"
             />
     </PreferenceCategory>
     <PreferenceCategory
@@ -32,12 +32,12 @@
             android:key="pref_include_speed"
             android:title="@string/include_speed"
             android:summary="@string/include_speed_summary"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_include_time"
             android:title="@string/include_time"
             android:summary="@string/include_time_summary"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_include_location"
             android:title="@string/include_location"
