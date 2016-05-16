@@ -26,7 +26,7 @@
     <string name="include_time">Godzina</string>
     <string name="include_time_summary">Dołączaj informację o godzinie</string>
     <string name="include_location">Dołączaj lokalizację</string>
-    <string name="indluce_location_summary">Dołączaj dokładną lokalizację</string>
+    <string name="include_location_summary">Dołączaj dokładną lokalizację</string>
     <string name="location_settings">Lokalizacja</string>
     <string name="update_frequency">Częstotliwość odświeżania</string>
     <string name="update_frequency_summary">Czas [s] między aktualizacjami</string>
