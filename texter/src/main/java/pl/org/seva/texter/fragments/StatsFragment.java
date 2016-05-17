@@ -38,7 +38,6 @@ public class StatsFragment extends Fragment
     private static String hourString;
 
     private TextView distanceTextView;
-    private TextView intervalLabelTextView;
     private TextView intervalTextView;
     private TextView speedTextView;
     private Button sendNowButton;
@@ -61,7 +60,6 @@ public class StatsFragment extends Fragment
         hourString = getActivity().getString(R.string.hour);
         View v = inflater.inflate(R.layout.stats_fragment,container,false);
         distanceTextView = (TextView) v.findViewById(R.id.distance_value);
-        intervalLabelTextView = (TextView) v.findViewById(R.id.interval_label);
         intervalTextView = (TextView) v.findViewById(R.id.interval_value);
         speedTextView = (TextView) v.findViewById(R.id.speed_value);
         sendNowButton = (Button) v.findViewById(R.id.send_now_button);
@@ -127,8 +125,6 @@ public class StatsFragment extends Fragment
             timeStrBuilder.setLength(0);
             timeStrBuilder.append("0 s");
         }
-        intervalLabelTextView.setVisibility(View.VISIBLE);
-        intervalTextView.setVisibility(View.VISIBLE);
         intervalTextView.setText(timeStrBuilder.toString());
         if (speed == 0.0 || distance == 0.0) {
             speedTextView.setVisibility(View.INVISIBLE);
