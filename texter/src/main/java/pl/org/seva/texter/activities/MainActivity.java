@@ -42,20 +42,21 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
 
     private static final int NUMBER_OF_TABS = 3;
 
-    /**
-     * Number of milliseconds that will be taken for a double click.
-     */
+    /** Number of milliseconds that will be taken for a double click. */
     private static final long DOUBLE_CLICK_MILLIS = 5000;
-    /**
-     * Used when counting a double click.
-     */
+    /** Used when counting a double click. */
     private long clickTime;
+    /** Obtained from intent, may be null. */
+    private String action;
 
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String action = getIntent().getAction();
+        action = getIntent().getAction();
+        if (action == null) {
+            finish();
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -169,7 +170,9 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
     public void onDestroy() {
         // Also called when the screen is rotated
         super.onDestroy();
-        stopService();
+        if (action != null && action.equals(Intent.ACTION_MAIN)) {
+            stopService();
+        }
     }
 
     @Override
