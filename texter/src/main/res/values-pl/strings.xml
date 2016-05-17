@@ -43,9 +43,6 @@
     <string name="reset">Zresetuj</string>
     <string name="action_settings">Ustawienia</string>
     <string name="app_name_settings">GPS Texter - Ustawienia</string>
-    <string name="set_number_question">Ustawić numer [number]?</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz by wyjść z aplikacji</string>
 
     <!-- Map preferences -->
