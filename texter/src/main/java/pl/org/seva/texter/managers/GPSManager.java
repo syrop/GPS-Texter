@@ -23,6 +23,7 @@ import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
 import pl.org.seva.texter.preferences.MapPreference;
+import pl.org.seva.texter.utils.Timer;
 
 public class GPSManager implements LocationListener {
 
@@ -47,6 +48,8 @@ public class GPSManager implements LocationListener {
     private Location location;
     /** Last calculated distance. */
     private double distance;
+    /** Last calculated speed. */
+    private double speed;
 
 	private boolean initialized;
 
@@ -82,6 +85,10 @@ public class GPSManager implements LocationListener {
 
     public double getDistance() {
         return distance;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     public void updateFrequencyChanged(Context context) {
@@ -285,13 +292,14 @@ public class GPSManager implements LocationListener {
             return;
         }
         this.location = location;
+        Timer.getInstance().reset();
         double distance = calculateDistance();  // distance in kilometres
         long time = System.currentTimeMillis();
-        double speed = calculateSpeed(this.distance, distance, time - this.time);
+        speed = calculateSpeed(this.distance, distance, time - this.time);
         this.distance = distance;
         this.time = time;
         for (IDistanceChangedListener listener : distanceListeners) {
-            listener.onDistanceChanged(distance, speed);
+            listener.onDistanceChanged();
         }
         for (ILocationChangedListener listener : locationChangedListeners) {
             listener.onLocationChanged(location);

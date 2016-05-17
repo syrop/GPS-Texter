@@ -118,8 +118,8 @@ public class NavigationFragment extends Fragment implements
     }
 
     @Override
-    public void onDistanceChanged(double distance, double speed) {
-        show(distance);
+    public void onDistanceChanged() {
+        show(GPSManager.getInstance().getDistance());
     }
 
     @Override

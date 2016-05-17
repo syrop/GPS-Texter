@@ -12,6 +12,7 @@
     <string name="map_tab_name">Mapa</string>
     <string name="history_tab_name">Historia</string>
     <string name="send_now">Wyślij teraz</string>
+    <string name="notification_text">Odbieranie lokalizacji</string>
 
     <!-- Preferences -->
     <string name="sms_settings">SMS</string>

@@ -17,9 +17,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +31,7 @@ import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
+import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.utils.Timer;
 
 public class MainActivity extends AppCompatActivity implements IPermissionGrantedListener {
@@ -57,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String action = getIntent().getAction();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
 
@@ -121,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
         if (Timer.getInstance().getState() == Thread.State.NEW) {
             Timer.getInstance().start();
         }
+        else if (savedInstanceState == null && action != null && action.equals(Intent.ACTION_MAIN)) {
+            Timer.getInstance().reset();
+        }
 
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
         GPSManager.getInstance().init(this);
@@ -134,6 +137,18 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
+
+        startService();
+    }
+
+    // Method to start the service
+    public void startService() {
+        startService(new Intent(getBaseContext(), TexterService.class));
+    }
+
+    // Method to stop the service
+    public void stopService() {
+        stopService(new Intent(getBaseContext(), TexterService.class));
     }
 
     @Override
@@ -152,8 +167,9 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
 
     @Override
     public void onDestroy() {
+        // Also called when the screen is rotated
         super.onDestroy();
-        Timer.getInstance().end();
+        stopService();
     }
 
     @Override

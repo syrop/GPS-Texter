@@ -3,6 +3,7 @@ package pl.org.seva.texter.controller;
 import java.util.Calendar;
 
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
+import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
@@ -55,7 +56,9 @@ public class SMSController implements IDistanceChangedListener {
     }
 
     @Override
-    public void onDistanceChanged(double distance, double speed) {
+    public void onDistanceChanged() {
+        double distance = GPSManager.getInstance().getDistance();
+        double speed = GPSManager.getInstance().getSpeed();
 
         long time = System.currentTimeMillis();
         int direction = 0 ; // alternatively (int) Math.signum(this.distance - distance);

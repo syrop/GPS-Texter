@@ -37,6 +37,8 @@ public class SMSManager {
     private String speedUnit;
 
 	private SmsManager smsManager;
+
+    private double lastSentDistance;
 	
 	private boolean initialized;
 
@@ -178,6 +180,11 @@ public class SMSManager {
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";
         String smsStr = smsBuilder.toString();
         send(smsStr, intentDistanceStr, model);
+        lastSentDistance = distance;
+    }
+
+    public double getLastSentDistance() {
+        return lastSentDistance;
     }
 
     private void send(String text, String intentText, LocationModel location) {

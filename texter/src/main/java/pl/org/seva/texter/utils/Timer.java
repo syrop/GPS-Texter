@@ -10,7 +10,7 @@ public class Timer extends Thread {
 
     private static final Timer INSTANCE = new Timer();
 
-    private boolean ended;
+    private long resetTime;
 
     private List<TimerListener> listeners = new ArrayList<>();
 
@@ -23,7 +23,8 @@ public class Timer extends Thread {
 
     public void run() {
         try {
-            while (!ended) {
+            //noinspection InfiniteLoopStatement
+            while (true) {
                 synchronized (INSTANCE) {
                     INSTANCE.wait(1000);
                 }
@@ -31,7 +32,6 @@ public class Timer extends Thread {
                     listener.onTimer();
                 }
             }
-
         }
         catch (InterruptedException ex) {
             ex.printStackTrace();
@@ -39,9 +39,14 @@ public class Timer extends Thread {
     }
 
     public void reset() {
+        resetTime = System.currentTimeMillis();
         synchronized (INSTANCE) {
             INSTANCE.notify();
         }
+    }
+
+    public long getResetTime() {
+        return resetTime;
     }
 
     public boolean addListener(TimerListener listener) {
@@ -50,11 +55,6 @@ public class Timer extends Thread {
 
     public boolean removeListener(TimerListener listener) {
         return listeners.remove(listener);
-    }
-
-    public void end() {
-        ended = true;
-        reset();
     }
 
     public interface TimerListener {
