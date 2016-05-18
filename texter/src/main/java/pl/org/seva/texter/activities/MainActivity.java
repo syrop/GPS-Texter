@@ -17,6 +17,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
     public static final int MAP_TAB_POSITION = 1;
     public static final int HISTORY_TAB_POSITION = 2;
 
+    private static final int GOOGLE_REQUEST_CODE = 0;
+
     private static final int NUMBER_OF_TABS = 3;
 
     /** Number of milliseconds that will be taken for a double click. */
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
         if (action == null) {
             finish();
         }
-
+        // Set up colors depending on SDK version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
 
@@ -129,6 +134,12 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
         GPSManager.getInstance().init(this);
         GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
+
+        int googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        if (googlePlay != ConnectionResult.SUCCESS) {
+            GoogleApiAvailability.getInstance().
+                    getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
+        }
 
         if (ContextCompat.checkSelfPermission(
                 this,

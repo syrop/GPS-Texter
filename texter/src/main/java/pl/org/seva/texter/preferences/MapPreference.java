@@ -137,6 +137,7 @@ public class MapPreference extends DialogPreference implements
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+            mapFragment = null;
         }
 
         return myState;

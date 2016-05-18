@@ -74,7 +74,6 @@ public class NavigationFragment extends Fragment implements
                 }
                 LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
                 updateHomeLocation(homeLatLng);
-                System.out.println("home: " + homeLatLng);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(homeLatLng).zoom(12).build();
                 if (savedInstanceState == null) {
