@@ -188,7 +188,7 @@ public class MapPreference extends DialogPreference implements
         MapsInitializer.initialize(context);
 
         mapFragment = (SupportMapFragment)
-                ((android.support.v4.app.FragmentActivity)getContext()).
+                ((android.support.v4.app.FragmentActivity) getContext()).
                 getSupportFragmentManager().findFragmentById(R.id.map);
 
         useCurrentButton = (Button) result.findViewById(R.id.current_location_button);

@@ -25,11 +25,12 @@ public class NumberPreference extends DialogPreference {
 
     @Override
     protected View onCreateDialogView() {
+        View result = super.onCreateDialogView();
         numberFragment = (NumberFragment)
-                ((android.support.v4.app.FragmentActivity)getContext()).
+                ((android.support.v4.app.FragmentActivity) getContext()).
                         getSupportFragmentManager().findFragmentById(R.id.number_fragment);
 
-        return super.onCreateDialogView();
+        return result;
     }
 
     @Override
@@ -47,7 +48,6 @@ public class NumberPreference extends DialogPreference {
         if (numberFragment != null) {
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
-            numberFragment = null;
         }
         super.onDialogClosed(positiveResult);
     }

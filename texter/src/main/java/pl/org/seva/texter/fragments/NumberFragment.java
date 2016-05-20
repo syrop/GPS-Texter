@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import pl.org.seva.texter.R;
+
 /**
  * Created by wiktor on 5/20/16.
  */
@@ -27,29 +28,44 @@ public class NumberFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         AdapterView.OnItemClickListener {
 
+    private static final int CONTACTS_QUERY_ID = 0;
+    private static final int DETAILS_QUERY_ID = 1;
+
     private final static String[] FROM_COLUMNS = {
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
     };
 
-    private static final String[] PROJECTION = {
+    private static final String[] CONTACTS_PROJECTION = {
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
     };
 
-    private static final String SELECTION = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?";
+    private static final String[] DETAILS_PROJECTION = {
+            ContactsContract.CommonDataKinds.Phone._ID,
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.CommonDataKinds.Phone.TYPE,
+            ContactsContract.CommonDataKinds.Phone.LABEL,
+    };
 
-    // The column index for the _ID column
-    private static final int CONTACT_ID_INDEX = 0;
+
+    private static final String CONTACTS_SELECTION =
+            ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?";
+    private static final String DETAILS_SELECTION =
+            ContactsContract.Data.LOOKUP_KEY + " = ?";
+
     // The column index for the LOOKUP_KEY column
-    private static final int LOOKUP_KEY_INDEX = 1;
+    private static final int CONTACT_KEY_INDEX = 1;
+    private static final int DETAILS_NUMBER_INDEX = 1;
+    private static final int DETAILS_TYPE_INDEX = 2;
 
     private final static int[] TO_IDS = {
             android.R.id.text1
     };
 
     private boolean contactsEnabled;
+    private String contactKey;
 
     private SimpleCursorAdapter adapter;
     private ListView contacts;
@@ -75,12 +91,12 @@ public class NumberFragment extends Fragment implements
         }
         else {
             contacts.setOnItemClickListener(this);
-
             adapter = new SimpleCursorAdapter(
                     getActivity(),
                     R.layout.contacts_list_item,
                     null,
-                    FROM_COLUMNS, TO_IDS,
+                    FROM_COLUMNS,
+                    TO_IDS,
                     0);
             contacts.setAdapter(adapter);
         }
@@ -92,7 +108,7 @@ public class NumberFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(CONTACTS_QUERY_ID, null, this);
     }
 
     @Override
@@ -100,28 +116,69 @@ public class NumberFragment extends Fragment implements
         if (!contactsEnabled) {
             return null;
         }
-        String[] selectionArgs = { "1", };
-        return new CursorLoader(
-                getActivity(),
-                ContactsContract.Contacts.CONTENT_URI,
-                PROJECTION,
-                SELECTION,
-                selectionArgs,
-                null);
+        switch (id) {
+            case CONTACTS_QUERY_ID:
+                String[] contactsSelectionArgs = {"1",};
+                return new CursorLoader(
+                        getActivity(),
+                        ContactsContract.Contacts.CONTENT_URI,
+                        CONTACTS_PROJECTION,
+                        CONTACTS_SELECTION,
+                        contactsSelectionArgs,
+                        null);
+            case DETAILS_QUERY_ID:
+                String[] detailsSelectionArgs = { contactKey, };
+                return new CursorLoader(
+                        getActivity(),
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        DETAILS_PROJECTION,
+                        DETAILS_SELECTION,
+                        detailsSelectionArgs,
+                        null);
+            default:
+                return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
+        switch (loader.getId()) {
+            case CONTACTS_QUERY_ID:
+                adapter.swapCursor(data);
+                break;
+            case DETAILS_QUERY_ID:
+                String number = null;
+                while (data.moveToNext()) {
+                    if (data.getInt(DETAILS_TYPE_INDEX) ==
+                            ContactsContract.CommonDataKinds.Phone.TYPE_MAIN) {
+                        number = data.getString(DETAILS_NUMBER_INDEX);
+                        break;
+                    }
+                    else if (number == null) {
+                        number = data.getString(DETAILS_NUMBER_INDEX);
+                    }
+                }
+                this.number.setText(number);
+                break;
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        switch (loader.getId()) {
+            case CONTACTS_QUERY_ID:
+                adapter.swapCursor(null);
+                break;
+            case DETAILS_QUERY_ID:
+                break;
+        }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Cursor cursor = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
+        cursor.moveToPosition(position);
+        contactKey = cursor.getString(CONTACT_KEY_INDEX);
+        getLoaderManager().restartLoader(DETAILS_QUERY_ID, null, this);
     }
 }
