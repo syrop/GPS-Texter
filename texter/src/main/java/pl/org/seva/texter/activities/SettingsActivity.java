@@ -1,12 +1,17 @@
 package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.fragments.SettingsFragment;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.PermissionsManager;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,7 +20,7 @@ import android.view.WindowManager;
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    /** If device is not enabled to send SMS< this entire category will be hidden. */
+    /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
 
     /** Unless true, SMS will be disabled and SMS-related options grayed out. */
@@ -48,6 +53,16 @@ public class SettingsActivity extends AppCompatActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CONTACTS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] { Manifest.permission.READ_CONTACTS, },
+                    PermissionsManager.PERMISSION_READ_CONTACTS);
         }
     }
 
@@ -84,6 +99,21 @@ public class SettingsActivity extends AppCompatActivity
             case HOME_LOCATION:
                 GPSManager.getInstance().updateHome();
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode != PermissionsManager.PERMISSION_READ_CONTACTS &&
+                grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            for (String permission : permissions) {
+                PermissionsManager.getInstance().permissionGranted(permission);
+            }
         }
     }
 }

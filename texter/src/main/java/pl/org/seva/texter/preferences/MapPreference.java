@@ -116,6 +116,8 @@ public class MapPreference extends DialogPreference implements
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
         }
+
+        super.onDialogClosed(positiveResult);
     }
 
     @Override

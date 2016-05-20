@@ -169,8 +169,9 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode != PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION &&
+                grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             for (String permission : permissions) {
                 PermissionsManager.getInstance().permissionGranted(permission);
             }

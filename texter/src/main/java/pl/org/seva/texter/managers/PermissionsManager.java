@@ -13,6 +13,7 @@ import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 public class PermissionsManager {
 
     public static int PERMISSION_ACCESS_FINE_LOCATION = 0;
+    public static int PERMISSION_READ_CONTACTS = 1;
 
     private static final PermissionsManager INSTANCE = new PermissionsManager();
 
