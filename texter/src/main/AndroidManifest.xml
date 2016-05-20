@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyAWMf0cxg7Wnyv059Xmbg-eYcJ8OtXCwLs"/>
+        android:value=" AIzaSyBwOgpWN50-JxfBbElXXV9Cmg9xvRGTYfw "/>
         
         <activity
             android:name="pl.org.seva.texter.activities.MainActivity"

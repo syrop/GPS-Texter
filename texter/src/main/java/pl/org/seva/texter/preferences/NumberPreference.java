@@ -1,8 +1,10 @@
 package pl.org.seva.texter.preferences;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,6 +17,7 @@ import pl.org.seva.texter.fragments.NumberFragment;
 public class NumberPreference extends DialogPreference {
 
     private NumberFragment numberFragment;
+    private String number;
 
     public NumberPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,8 +32,19 @@ public class NumberPreference extends DialogPreference {
         numberFragment = (NumberFragment)
                 ((android.support.v4.app.FragmentActivity) getContext()).
                         getSupportFragmentManager().findFragmentById(R.id.number_fragment);
+        numberFragment.setNumber(number);
 
         return result;
+    }
+
+    @Override
+    protected Object onGetDefaultValue(TypedArray a, int index) {
+        return "";
+    }
+
+    @Override
+    protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+        number = restorePersistedValue ? getPersistedString("") : defaultValue.toString();
     }
 
     @Override
@@ -45,6 +59,10 @@ public class NumberPreference extends DialogPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
+        if (positiveResult) {
+            number = numberFragment.toString();
+            persistString(number);
+        }
         if (numberFragment != null) {
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();

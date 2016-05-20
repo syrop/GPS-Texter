@@ -112,6 +112,11 @@ public class NumberFragment extends Fragment implements
     }
 
     @Override
+    public String toString() {
+        return number.getText().toString();
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (!contactsEnabled) {
             return null;
@@ -181,4 +186,9 @@ public class NumberFragment extends Fragment implements
         contactKey = cursor.getString(CONTACT_KEY_INDEX);
         getLoaderManager().restartLoader(DETAILS_QUERY_ID, null, this);
     }
+
+    public void setNumber(String number) {
+        this.number.setText(number);
+    }
+
 }
