@@ -14,12 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -299,9 +297,13 @@ public class MapPreference extends DialogPreference implements
 
     @Override
     public void onLocationChanged(Location location) {
+        if (map == null || useCurrentButton == null) {
+            return;
+        }
         useCurrentButton.setEnabled(true);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(zoom).build();
+                .target(new LatLng(location.getLatitude(), location.getLongitude())).
+                zoom(zoom).build();
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
