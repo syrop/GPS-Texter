@@ -33,7 +33,7 @@ public class TexterService extends Service{
                 (int) System.currentTimeMillis(),
                 mainActivityIntent,
                 0);
-        Notification n  = new Notification.Builder(this)
+        Notification n = new Notification.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_text))
                 .setSmallIcon(R.drawable.ic_launcher)

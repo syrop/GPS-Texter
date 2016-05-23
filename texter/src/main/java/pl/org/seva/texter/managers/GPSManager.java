@@ -22,6 +22,7 @@ import pl.org.seva.texter.activities.SettingsActivity;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
+import pl.org.seva.texter.listeners.IProviderListener;
 import pl.org.seva.texter.preferences.MapPreference;
 import pl.org.seva.texter.utils.Timer;
 
@@ -44,6 +45,7 @@ public class GPSManager implements LocationListener {
     private List<IDistanceChangedListener> distanceListeners;
 	private List<IHomeChangedListener> homeChangedListeners;
     private List<ILocationChangedListener> locationChangedListeners;
+    private List<IProviderListener> providerListeners;
     /** Location last received from the update. */
     private Location location;
     /** Last calculated distance. */
@@ -61,6 +63,7 @@ public class GPSManager implements LocationListener {
 		distanceListeners = new ArrayList<>();
 		homeChangedListeners = new ArrayList<>();
         locationChangedListeners = new ArrayList<>();
+        providerListeners = new ArrayList<>();
 	}
 
 	public String getLocationUrl() {
@@ -201,6 +204,20 @@ public class GPSManager implements LocationListener {
         return this;
     }
 
+    public GPSManager addProviderListener(IProviderListener listener) {
+        removeProviderListener(listener);
+        providerListeners.add(listener);
+        return this;
+    }
+
+    public GPSManager removeProviderListener(IProviderListener listener) {
+        if (listener == null) {
+            return this;
+        }
+        providerListeners.remove(listener);
+        return this;
+    }
+
 	/**
 	 * Determines whether one Location reading is better than the current Location fix.
 	 * @param location  The new Location that you want to evaluate
@@ -283,6 +300,11 @@ public class GPSManager implements LocationListener {
         return location != null;
     }
 
+    public boolean isLocationServiceAvailable() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) { // removed dependence on previous accuracy
@@ -349,9 +371,15 @@ public class GPSManager implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
+        for (IProviderListener listener : providerListeners) {
+            listener.onProviderEnabled();
+        }
     }
 
     @Override
     public void onProviderDisabled(String provider) {
+        for (IProviderListener listener : providerListeners) {
+            listener.onProviderDisabled();
+        }
     }
 }

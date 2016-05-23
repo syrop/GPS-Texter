@@ -31,13 +31,15 @@ import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
+import pl.org.seva.texter.listeners.IProviderListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.utils.Timer;
 
-public class MainActivity extends AppCompatActivity implements IPermissionGrantedListener {
+public class MainActivity extends AppCompatActivity implements
+        IPermissionGrantedListener, IProviderListener {
 
     public static final int STATS_TAB_POSITION = 0;
     public static final int MAP_TAB_POSITION = 1;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
     private long clickTime;
     /** Obtained from intent, may be null. */
     private String action;
+
+    private boolean serviceRunning;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -149,18 +153,28 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-
-        startService();
+        GPSManager.getInstance().addProviderListener(this);
+        if (GPSManager.getInstance().isLocationServiceAvailable()) {
+            startService();
+        }
     }
 
     // Method to start the service
     public void startService() {
+        if (serviceRunning) {
+            return;
+        }
         startService(new Intent(getBaseContext(), TexterService.class));
+        serviceRunning = true;
     }
 
     // Method to stop the service
     public void stopService() {
+        if (!serviceRunning) {
+            return;
+        }
         stopService(new Intent(getBaseContext(), TexterService.class));
+        serviceRunning = false;
     }
 
     @Override
@@ -226,5 +240,15 @@ public class MainActivity extends AppCompatActivity implements IPermissionGrante
             PermissionsManager.getInstance().
                     removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
+    }
+
+    @Override
+    public void onProviderEnabled() {
+        startService();
+    }
+
+    @Override
+    public void onProviderDisabled() {
+        stopService();
     }
 }
