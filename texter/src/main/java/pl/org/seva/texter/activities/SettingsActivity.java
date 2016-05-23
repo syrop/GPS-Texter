@@ -1,10 +1,13 @@
 package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.listeners.IPermissionDeniedListener;
+import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,13 +15,15 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
 public class SettingsActivity extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener,
+        IPermissionGrantedListener, IPermissionDeniedListener {
 
     /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
@@ -54,6 +59,17 @@ public class SettingsActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
+            if (!checkPermission()) {
+                PermissionsManager.getInstance().addPermissionGrantedListener(
+                        Manifest.permission.READ_CONTACTS,
+                        this);
+                PermissionsManager.getInstance().addPermissionDeniedListener(
+                        Manifest.permission.READ_CONTACTS,
+                        this);
+            }
+        }
     }
 
     @Override
@@ -78,19 +94,28 @@ public class SettingsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean checkPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CONTACTS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] { Manifest.permission.READ_CONTACTS, },
+                    PermissionsManager.PERMISSION_READ_CONTACTS_REQUEST);
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case SMS_ENABLED:  // off by default
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.READ_CONTACTS) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        new String[] { Manifest.permission.READ_CONTACTS, },
-                        PermissionsManager.PERMISSION_READ_CONTACTS);
+                if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {
+                    checkPermission();
                 }
+                break;
             case LOCATION_UPDATE_FREQUENCY:
                 GPSManager.getInstance().updateFrequencyChanged(this);
                 break;
@@ -105,13 +130,48 @@ public class SettingsActivity extends AppCompatActivity
             int requestCode,
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
-        if (requestCode != PermissionsManager.PERMISSION_READ_CONTACTS &&
-                grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            for (String permission : permissions) {
-                PermissionsManager.getInstance().permissionGranted(permission);
+        if (requestCode == PermissionsManager.PERMISSION_READ_CONTACTS_REQUEST) {
+            PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
+        }
+
+    }
+
+    @Override
+    public void onPermissionDenied(String permission) {
+        if (permission.equals(Manifest.permission.READ_CONTACTS)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.READ_CONTACTS)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.perm_contacts_rationale).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkPermission();
+                    }
+                });
+                builder.create().show();
             }
+            else {
+                PermissionsManager.getInstance().removePermissionGrantedListener(
+                        Manifest.permission.READ_CONTACTS,
+                        this);
+            }
+            PermissionsManager.getInstance().removePermissionDeniedListener(
+                    Manifest.permission.READ_CONTACTS,
+                    this);
+        }
+    }
+
+    @Override
+    public void onPermissionGranted(String permission) {
+        if (permission.equals(Manifest.permission.READ_CONTACTS)) {
+            PermissionsManager.getInstance().removePermissionDeniedListener(
+                    Manifest.permission.READ_CONTACTS,
+                    this);
+            PermissionsManager.getInstance().removePermissionDeniedListener(
+                    Manifest.permission.READ_CONTACTS,
+                    this);
         }
     }
 }

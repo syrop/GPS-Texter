@@ -11,7 +11,7 @@ import java.util.List;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.model.LocationModel;
-import pl.org.seva.texter.utils.TexterUtils;
+import pl.org.seva.texter.utils.StringUtils;
 
 /**
  * Created by wiktor on 01.08.15.
@@ -49,7 +49,7 @@ public class HistoryAdapter extends ArrayAdapter<LocationModel> {
         }
         builder.append(minutes);
         holder.time.setText(builder.toString());
-        holder.speed.setText(TexterUtils.getSpeedStr(location.getSpeed(), context.getString(R.string.speed_unit)));
+        holder.speed.setText(StringUtils.getSpeedStr(location.getSpeed(), context.getString(R.string.speed_unit)));
         return convertView;
     }
 

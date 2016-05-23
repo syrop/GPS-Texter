@@ -77,7 +77,7 @@ public class StatsFragment extends Fragment
                 getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-            PermissionsManager.getInstance().addPermissionListener(
+            PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
@@ -228,7 +228,7 @@ public class StatsFragment extends Fragment
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
             sendNowButton.setEnabled(true);
             PermissionsManager.getInstance().
-                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 }

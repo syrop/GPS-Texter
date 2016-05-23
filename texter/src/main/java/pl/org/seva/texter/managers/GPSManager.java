@@ -151,7 +151,7 @@ public class GPSManager implements LocationListener {
             ActivityCompat.requestPermissions(
                     activity,
                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION, },
-                    PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION);
+                    PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
         }
         else {
             initWithPermissions(activity);

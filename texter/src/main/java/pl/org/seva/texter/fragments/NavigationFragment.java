@@ -68,7 +68,7 @@ public class NavigationFragment extends Fragment implements
                     map.setMyLocationEnabled(true);
                 }
                 else {
-                    PermissionsManager.getInstance().addPermissionListener(
+                    PermissionsManager.getInstance().addPermissionGrantedListener(
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             NavigationFragment.this);
                 }
@@ -138,7 +138,7 @@ public class NavigationFragment extends Fragment implements
                         PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
             PermissionsManager.getInstance().
-                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 }

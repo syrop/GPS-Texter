@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
-import pl.org.seva.texter.utils.TexterUtils;
+import pl.org.seva.texter.utils.StringUtils;
 
 /**
  * Created by wiktor on 28.08.15.
@@ -33,7 +33,7 @@ public class ZoneModel {
         int max;
         while (check < distance) {  // calculate min and max
             min = check;
-            check += TexterUtils.KM_INTERVAL;
+            check += StringUtils.KM_INTERVAL;
         }
         max = check;
         if (!updateCounters) {

@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-            PermissionsManager.getInstance().addPermissionListener(
+            PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
@@ -183,12 +183,8 @@ public class MainActivity extends AppCompatActivity implements
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
-        if (requestCode != PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION &&
-                grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            for (String permission : permissions) {
-                PermissionsManager.getInstance().permissionGranted(permission);
-            }
+        if (requestCode != PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
+            PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
         }
     }
 
@@ -238,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
             GPSManager.getInstance().init(this);
             PermissionsManager.getInstance().
-                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 

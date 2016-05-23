@@ -3,7 +3,7 @@ package pl.org.seva.texter.utils;
 /**
  * Created by wiktor on 28.08.15.
  */
-public class TexterUtils {
+public class StringUtils {
 
     /** Send an sms each time this value is passed. */
     public static final int KM_INTERVAL = 2;  // two kilometers

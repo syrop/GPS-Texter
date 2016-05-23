@@ -221,7 +221,7 @@ public class MapPreference extends DialogPreference implements
                     map.setMyLocationEnabled(true);
                 }
                 else {
-                    PermissionsManager.getInstance().addPermissionListener(
+                    PermissionsManager.getInstance().addPermissionGrantedListener(
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             MapPreference.this);
                 }
@@ -245,7 +245,7 @@ public class MapPreference extends DialogPreference implements
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().addPermissionListener(
+            PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
@@ -322,7 +322,7 @@ public class MapPreference extends DialogPreference implements
             map.setMyLocationEnabled(true);  // Requires checking, otherwise compile time error.
             useCurrentButton.setEnabled(false);
             PermissionsManager.getInstance().
-                    removePermissionListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 

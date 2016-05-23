@@ -20,7 +20,7 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.activities.SettingsActivity;
 import pl.org.seva.texter.listeners.ISMSListener;
 import pl.org.seva.texter.model.LocationModel;
-import pl.org.seva.texter.utils.TexterUtils;
+import pl.org.seva.texter.utils.StringUtils;
 
 public class SMSManager {
 
@@ -161,7 +161,7 @@ public class SMSManager {
         String distanceStr = String.format("%.2f", distance) + model.getSign();
         StringBuilder smsBuilder = new StringBuilder(distanceStr + " km");
         if (isSpeedIncluded()) {
-            String speedStr = TexterUtils.getSpeedStr(model.getSpeed(), speedUnit);
+            String speedStr = StringUtils.getSpeedStr(model.getSpeed(), speedUnit);
             smsBuilder.append(speedStr.startsWith("0 ") ? "" : ", " + speedStr);
         }
         if (isTimeIncluded()) {
