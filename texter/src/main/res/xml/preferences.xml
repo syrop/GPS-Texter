@@ -12,17 +12,9 @@
 
         <pl.org.seva.texter.preferences.NumberPreference
             android:dependency="pref_enable_sms"
-            android:key="pref_phone_number_contacts"
+            android:key="pref_phone_number"
             android:title="@string/telephone_number"
             android:summary="@string/telephone_number_summary"/>
-        <!--<EditTextPreference
-            android:dependency="pref_enable_sms"
-            android:key="pref_phone_number"
-            android:inputType="number"
-            android:title="@string/telephone_number"
-            android:summary="@string/telephone_number_summary"
-            android:defaultValue=""
-            /> -->
         <EditTextPreference
             android:dependency="pref_enable_sms"
             android:key="pref_max_distance"

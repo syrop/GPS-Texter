@@ -2,9 +2,10 @@ package pl.org.seva.texter.preferences;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -38,6 +39,40 @@ public class NumberPreference extends DialogPreference {
     }
 
     @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final SavedState myState = new SavedState(superState);
+
+        if (numberFragment != null) {
+            number = numberFragment.toString();
+            myState.number = number;
+            // If called after onSaveInstanceState, throws:
+            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+            ((android.support.v4.app.FragmentActivity) getContext()).
+                    getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
+            numberFragment = null;
+        }
+
+        return myState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        // Check whether we saved the state in onSaveInstanceState
+        if (state == null || !state.getClass().equals(SavedState.class)) {
+            // Didn't save the state, so call superclass
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        // Cast state to custom BaseSavedState and pass to superclass
+        SavedState myState = (SavedState) state;
+        number = myState.number;
+
+        super.onRestoreInstanceState(myState.getSuperState());
+    }
+
+    @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return "";
     }
@@ -48,25 +83,47 @@ public class NumberPreference extends DialogPreference {
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
+    protected void onDialogClosed(boolean positiveResult) {
         if (numberFragment != null) {
+            number = numberFragment.toString();
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
-            numberFragment = null;
         }
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
-            number = numberFragment.toString();
             persistString(number);
         }
-        if (numberFragment != null) {
-            ((android.support.v4.app.FragmentActivity) getContext()).
-                    getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
-        }
         super.onDialogClosed(positiveResult);
+    }
+
+    private static class SavedState extends BaseSavedState {
+        private String number;
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public SavedState(Parcel source) {
+            super(source);
+            number = source.readString();
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeString(number);
+        }
+
+        // Standard creator object using an instance of this class
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
     }
 }

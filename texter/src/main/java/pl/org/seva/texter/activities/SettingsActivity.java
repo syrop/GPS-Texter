@@ -54,16 +54,6 @@ public class SettingsActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_CONTACTS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[] { Manifest.permission.READ_CONTACTS, },
-                    PermissionsManager.PERMISSION_READ_CONTACTS);
-        }
     }
 
     @Override
@@ -82,9 +72,7 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -93,6 +81,16 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
+            case SMS_ENABLED:  // off by default
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_CONTACTS) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        new String[] { Manifest.permission.READ_CONTACTS, },
+                        PermissionsManager.PERMISSION_READ_CONTACTS);
+                }
             case LOCATION_UPDATE_FREQUENCY:
                 GPSManager.getInstance().updateFrequencyChanged(this);
                 break;

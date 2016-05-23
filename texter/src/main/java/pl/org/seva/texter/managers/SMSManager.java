@@ -129,25 +129,25 @@ public class SMSManager {
         {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-            	String text = arg1.getStringExtra("text");
-                switch (getResultCode())
-                {
-                    case Activity.RESULT_OK:
-                    	StringBuilder deliveredBuilder = new StringBuilder(arg0.getString(R.string.delivered));
-                    	if (text != null) {
-                    		deliveredBuilder.append(": ").append(text);
-                    	}
-                        Toast.makeText(arg0, deliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                    	StringBuilder notDeliveredBuilder = new StringBuilder(arg0.getString(R.string.not_delivered));
-                    	if (text != null) {
-                    		notDeliveredBuilder.append(": ").append(text);
-                    	}
-                        Toast.makeText(arg0, notDeliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
-                        break;                        
-                }
-                arg0.unregisterReceiver(this);
+            String text = arg1.getStringExtra("text");
+            switch (getResultCode())
+            {
+                case Activity.RESULT_OK:
+                    StringBuilder deliveredBuilder = new StringBuilder(arg0.getString(R.string.delivered));
+                    if (text != null) {
+                        deliveredBuilder.append(": ").append(text);
+                    }
+                    Toast.makeText(arg0, deliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    StringBuilder notDeliveredBuilder = new StringBuilder(arg0.getString(R.string.not_delivered));
+                    if (text != null) {
+                        notDeliveredBuilder.append(": ").append(text);
+                    }
+                    Toast.makeText(arg0, notDeliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            arg0.unregisterReceiver(this);
             }
         }, new IntentFilter(DELIVERED + id));        
 	}
