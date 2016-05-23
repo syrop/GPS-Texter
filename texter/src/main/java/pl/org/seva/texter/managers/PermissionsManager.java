@@ -23,6 +23,7 @@ public class PermissionsManager {
 
     private final Map<String, List<IPermissionGrantedListener>> grantedMap = new HashMap<>();
     private final Map<String, List<IPermissionDeniedListener>> deniedMap = new HashMap<>();
+    private final List<String> rationalesShown = new ArrayList<>();
 
     public static PermissionsManager getInstance() {
         return INSTANCE;
@@ -65,6 +66,16 @@ public class PermissionsManager {
                 }
             }
         }).start();
+    }
+
+    public boolean rationaleShown(String permission) {
+        return rationalesShown.contains(permission);
+    }
+
+    public void onRationaleShown(String permission) {
+        if (!rationaleShown(permission)) {
+            rationalesShown.add(permission);
+        }
     }
 
     public void addPermissionDeniedListener(

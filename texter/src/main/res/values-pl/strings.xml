@@ -51,5 +51,8 @@
     <string name="long_press">Przytrzymaj aby wybrać lokalizację</string>
     <string name="use_current_location">Użyj bieżącej lokalizacji</string>
 
+    <!-- Permissions -->
+    <string name="perm_contacts_rationale">Program próbuje wyświetlić listę kontaktów aby ułatwić wybór telefonu, na który będą wysyłane wiadomości.\n\nW przypadku braku tego pozwolenia, numer można wpisać ręcznie na klawiaturze.</string>
+
 
 </resources>

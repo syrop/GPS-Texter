@@ -60,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
             if (!checkPermission()) {
                 PermissionsManager.getInstance().addPermissionGrantedListener(
                         Manifest.permission.READ_CONTACTS,
@@ -113,7 +113,14 @@ public class SettingsActivity extends AppCompatActivity
         switch (key) {
             case SMS_ENABLED:  // off by default
                 if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {
-                    checkPermission();
+                    if (!checkPermission()) {
+                        PermissionsManager.getInstance().addPermissionGrantedListener(
+                                Manifest.permission.READ_CONTACTS,
+                                this);
+                        PermissionsManager.getInstance().addPermissionDeniedListener(
+                                Manifest.permission.READ_CONTACTS,
+                                this);
+                    }
                 }
                 break;
             case LOCATION_UPDATE_FREQUENCY:
@@ -133,7 +140,6 @@ public class SettingsActivity extends AppCompatActivity
         if (requestCode == PermissionsManager.PERMISSION_READ_CONTACTS_REQUEST) {
             PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
         }
-
     }
 
     @Override
@@ -141,12 +147,16 @@ public class SettingsActivity extends AppCompatActivity
         if (permission.equals(Manifest.permission.READ_CONTACTS)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
-                    Manifest.permission.READ_CONTACTS)) {
+                    Manifest.permission.READ_CONTACTS) &&
+                    !PermissionsManager.getInstance().
+                            rationaleShown(Manifest.permission.READ_CONTACTS)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.perm_contacts_rationale).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        PermissionsManager.getInstance().
+                                onRationaleShown(Manifest.permission.READ_CONTACTS);
                         checkPermission();
                     }
                 });

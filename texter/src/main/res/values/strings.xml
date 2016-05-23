@@ -53,6 +53,6 @@
     <string name="use_current_location">Use current location</string>
 
     <!-- Permissions -->
-    <string name="perm_contacts_rationale">This app wants to display your contact list in order to pick a phone number the text messages will be sent to.\n\nIf you do not grant the permission, you still can type in the number manually.</string>
+    <string name="perm_contacts_rationale">This app wants to display your contact list in order to let you pick a phone number the text messages will be sent to.\n\nIf you do not grant the permission, you still can type in the phone number manually.</string>
 
 </resources>
