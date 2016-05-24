@@ -1,10 +1,13 @@
 package pl.org.seva.texter.activities;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,8 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +47,8 @@ import pl.org.seva.texter.utils.Timer;
 public class MainActivity extends AppCompatActivity implements
         IPermissionGrantedListener, IProviderListener {
 
+    private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
+
     public static final int STATS_TAB_POSITION = 0;
     public static final int MAP_TAB_POSITION = 1;
     public static final int HISTORY_TAB_POSITION = 2;
@@ -55,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
     private long clickTime;
     /** Obtained from intent, may be null. */
     private String action;
-
+    private boolean startupShown;
     private boolean serviceRunning;
 
     @Override
@@ -157,6 +165,45 @@ public class MainActivity extends AppCompatActivity implements
         if (GPSManager.getInstance().isLocationServiceAvailable()) {
             startService();
         }
+        showStartupDialog();
+    }
+
+    private boolean showStartupDialog() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean(PREF_STARTUP_SHOWN, false)) {
+            return false;
+        }
+        final Dialog dialog = new Dialog(this);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.info_dialog_layout);
+        WebView web = (WebView) dialog.findViewById(R.id.web);
+
+        String language = getResources().getConfiguration().locale.getLanguage();
+
+        web.loadUrl(language.equals("pl") ?
+                "file:///android_asset/startup_pl.html" :
+                "file:///android_asset/startup_en.html");
+
+        Button dismiss = (Button) dialog.findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
+            }
+        });
+        Button settings = (Button) dialog.findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
+        return true;
     }
 
     // Method to start the service

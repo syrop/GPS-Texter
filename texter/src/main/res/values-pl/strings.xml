@@ -55,5 +55,8 @@
     <!-- Permissions -->
     <string name="perm_contacts_rationale">Program próbuje wyświetlić listę kontaktów aby ułatwić wybór telefonu, na który będą wysyłane wiadomości.\n\nW przypadku braku tego pozwolenia, numer można wpisać ręcznie na klawiaturze.</string>
 
+    <!-- Dialogs -->
+    <string name="info_dismiss_button">Zamknij</string>
+    <string name="info_settings_button">Ustawienia</string>
 
 </resources>

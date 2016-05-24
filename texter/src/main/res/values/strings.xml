@@ -57,4 +57,8 @@
     <!-- Permissions -->
     <string name="perm_contacts_rationale">This app wants to display your contact list in order to let you pick a phone number the text messages will be sent to.\n\nIf you do not grant the permission, you still can type in the phone number manually.</string>
 
+    <!-- Dialogs -->
+    <string name="info_dismiss_button">Dismiss</string>
+    <string name="info_settings_button">Settings</string>
+
 </resources>
