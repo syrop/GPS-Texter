@@ -31,6 +31,7 @@
     <string name="location_settings">Lokalizacja</string>
     <string name="update_frequency">Częstotliwość odświeżania</string>
     <string name="update_frequency_summary">Czas [s] między aktualizacjami</string>
+    <string name="no_number">Brak numeru przypisanego do wybranej osoby</string>
 
     <!-- Messages -->
     <string name="sent">Wysłano</string>

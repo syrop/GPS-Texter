@@ -32,6 +32,7 @@
     <string name="location_settings">Location</string>
     <string name="update_frequency">Update frequency</string>
     <string name="update_frequency_summary">Time [s] between location updates</string>
+    <string name="no_number">This person doesn\'t have any associated number</string>
 
     <!-- Messages -->
     <string name="sent">Sent</string>

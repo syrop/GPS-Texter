@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import pl.org.seva.texter.R;
 
@@ -30,6 +31,8 @@ public class NumberFragment extends Fragment implements
 
     private static final int CONTACTS_QUERY_ID = 0;
     private static final int DETAILS_QUERY_ID = 1;
+
+    Toast toast;
 
     private final static String[] FROM_COLUMNS = {
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
@@ -163,7 +166,13 @@ public class NumberFragment extends Fragment implements
                         number = data.getString(DETAILS_NUMBER_INDEX);
                     }
                 }
-                this.number.setText(number);
+                if (number != null) {
+                    this.number.setText(number);
+                }
+                else {
+                    toast = Toast.makeText(getContext(), R.string.no_number, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 break;
         }
     }
@@ -181,6 +190,9 @@ public class NumberFragment extends Fragment implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (toast != null) {
+            toast.cancel();
+        }
         Cursor cursor = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
         cursor.moveToPosition(position);
         contactKey = cursor.getString(CONTACT_KEY_INDEX);
