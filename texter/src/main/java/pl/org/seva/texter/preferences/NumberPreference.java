@@ -85,12 +85,15 @@ public class NumberPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (numberFragment != null) {
-            number = numberFragment.toString();
+            if (positiveResult) {
+                number = numberFragment.toString();
+                persistString(number);
+            }
+            else {
+                number = getPersistedString("");
+            }
             ((android.support.v4.app.FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
-        }
-        if (positiveResult) {
-            persistString(number);
         }
         super.onDialogClosed(positiveResult);
     }

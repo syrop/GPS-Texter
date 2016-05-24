@@ -204,5 +204,4 @@ public class NumberFragment extends Fragment implements
     public void setNumber(String number) {
         this.number.setText(number);
     }
-
 }
