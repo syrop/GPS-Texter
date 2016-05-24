@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements
     private long clickTime;
     /** Obtained from intent, may be null. */
     private String action;
-    private boolean startupShown;
     private boolean serviceRunning;
 
     @Override

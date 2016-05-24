@@ -55,6 +55,9 @@ public class NumberFragment extends Fragment implements
 
     private static final String CONTACTS_SELECTION =
             ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?";
+
+    private static final String CONTACTS_SORT = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
+
     private static final String DETAILS_SELECTION =
             ContactsContract.Data.LOOKUP_KEY + " = ?";
 
@@ -132,7 +135,7 @@ public class NumberFragment extends Fragment implements
                         CONTACTS_PROJECTION,
                         CONTACTS_SELECTION,
                         contactsSelectionArgs,
-                        null);
+                        CONTACTS_SORT);
             case DETAILS_QUERY_ID:
                 String[] detailsSelectionArgs = { contactKey, };
                 return new CursorLoader(
