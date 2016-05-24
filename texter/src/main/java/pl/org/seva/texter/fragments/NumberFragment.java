@@ -1,7 +1,6 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,7 +32,7 @@ public class NumberFragment extends Fragment implements
     private static final int CONTACTS_QUERY_ID = 0;
     private static final int DETAILS_QUERY_ID = 1;
 
-    Toast toast;
+    private Toast toast;
 
     private final static String[] FROM_COLUMNS = {
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
@@ -74,7 +73,6 @@ public class NumberFragment extends Fragment implements
     private SimpleCursorAdapter adapter;
     private ListView contacts;
     private EditText number;
-    private ProgressDialog progress;
 
     @Nullable
     @Override
@@ -112,7 +110,6 @@ public class NumberFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         getLoaderManager().initLoader(CONTACTS_QUERY_ID, null, this);
     }
 
@@ -157,10 +154,6 @@ public class NumberFragment extends Fragment implements
                 adapter.swapCursor(data);
                 break;
             case DETAILS_QUERY_ID:
-                if (progress != null) {
-                    progress.dismiss();
-                    progress = null;
-                }
                 String number = null;
                 while (data.moveToNext()) {
                     if (data.getInt(DETAILS_TYPE_INDEX) ==
@@ -202,7 +195,6 @@ public class NumberFragment extends Fragment implements
         Cursor cursor = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
         cursor.moveToPosition(position);
         contactKey = cursor.getString(CONTACT_KEY_INDEX);
-        progress = ProgressDialog.show(getContext(), null, getString(R.string.please_wait), true);
         getLoaderManager().restartLoader(DETAILS_QUERY_ID, null, this);
     }
 
