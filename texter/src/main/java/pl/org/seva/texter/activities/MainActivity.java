@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements
         if (action != null && action.equals(Intent.ACTION_MAIN)) {
             stopService();
         }
+        SMSManager.getInstance().unregtsterReceivers();
     }
 
     @Override

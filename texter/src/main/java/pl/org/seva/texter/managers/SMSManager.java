@@ -38,6 +38,8 @@ public class SMSManager {
 
 	private SmsManager smsManager;
 
+    private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
+
     private double lastSentDistance;
 	
 	private boolean initialized;
@@ -82,10 +84,38 @@ public class SMSManager {
         String numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "");
         return numberStr.length() > 0 ? Integer.valueOf(numberStr) : 0;
     }
+
+    private void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        synchronized (broadcastReceivers) {
+            context.registerReceiver(receiver, filter);
+            broadcastReceivers.add(receiver);
+        }
+    }
+
+    private void unregisterReceiver(BroadcastReceiver receiver) {
+        synchronized (broadcastReceivers) {
+            context.unregisterReceiver(receiver);
+            broadcastReceivers.remove(receiver);
+        }
+    }
+
+    public boolean unregtsterReceivers() {
+        synchronized (broadcastReceivers) {
+            if (broadcastReceivers.isEmpty()) {
+                return false;
+            }
+            for (BroadcastReceiver receiver : broadcastReceivers) {
+                context.unregisterReceiver(receiver);
+            }
+            broadcastReceivers.clear();
+        }
+
+        return true;
+    }
 	
 	private void registerBroadcastReceiver(String id) {
         // When the SMS has been sent.
-        context.registerReceiver(new BroadcastReceiver()
+        registerReceiver(new BroadcastReceiver()
         {
             public void onReceive(Context arg0, Intent arg1) {
             	String text = arg1.getStringExtra(TEXT_KEY);
@@ -120,12 +150,12 @@ public class SMSManager {
                         Toast.makeText(arg0, arg0.getString(R.string.radio_off), Toast.LENGTH_SHORT).show();
                         break;
                 }
-                arg0.unregisterReceiver(this);
+                unregisterReceiver(this);
             }
         }, new IntentFilter(SENT + id));
 
         // When the SMS has been delivered.
-        context.registerReceiver(new BroadcastReceiver()
+        registerReceiver(new BroadcastReceiver()
         {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
@@ -147,7 +177,7 @@ public class SMSManager {
                     Toast.makeText(arg0, notDeliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
                     break;
             }
-            arg0.unregisterReceiver(this);
+            unregisterReceiver(this);
             }
         }, new IntentFilter(DELIVERED + id));        
 	}
