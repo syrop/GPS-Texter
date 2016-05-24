@@ -75,9 +75,9 @@ public class SMSManager {
         listeners.remove(listener);
     }
 	
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		String numberStr = preferences.getString(SettingsActivity.SMS_NUMBER, "");
-		return numberStr.length() > 0 ? Integer.valueOf(numberStr) : 0;
+		return numberStr.length() > 0 ? numberStr : "0";
 	}
 
     public int getMaxSentDistance() {
@@ -183,7 +183,7 @@ public class SMSManager {
 	}
 	
 	public void send(LocationModel model) {
-        if (getPhoneNumber() == 0) {
+        if (getPhoneNumber().equals("0")) {
             return;
         }
         checkInit();
@@ -234,7 +234,7 @@ public class SMSManager {
                 listener.onSendingSMS(location);
             }
         }
-		smsManager.sendTextMessage(Integer.toString(getPhoneNumber()), null, text, sentPI, deliveredPI);
+		smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
 	}
 	
 	private void checkInit() {
