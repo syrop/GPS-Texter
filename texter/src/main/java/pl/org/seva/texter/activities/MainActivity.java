@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements
     /** Obtained from intent, may be null. */
     private String action;
     private boolean serviceRunning;
+    private boolean showSettings;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -143,8 +144,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
-        GPSManager.getInstance().init(this);
-        GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
 
         int googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (googlePlay != ConnectionResult.SUCCESS) {
@@ -152,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
+        if (!showStartupDialog()) {
+            initGPS();
+        }
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
@@ -160,11 +162,24 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        GPSManager.getInstance().addProviderListener(this);
-        if (GPSManager.getInstance().isLocationServiceAvailable()) {
-            startService();
+        else {
+            if (GPSManager.getInstance().isLocationServiceAvailable()) {
+                startService();
+            }
         }
-        showStartupDialog();
+
+    }
+
+    private void initGPS() {
+        initGPS(true);
+    }
+
+    private void initGPS(boolean addListeners) {
+        GPSManager.getInstance().init(this);
+        if (addListeners) {
+            GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
+            GPSManager.getInstance().addProviderListener(this);
+        }
     }
 
     private boolean showStartupDialog() {
@@ -187,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                initGPS();
                 dialog.dismiss();
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
             }
@@ -195,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                initGPS();
                 dialog.dismiss();
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                showSettings = true;
             }
         });
         dialog.show();
@@ -229,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
-        if (requestCode != PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
+        if (requestCode == PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
             PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
         }
     }
@@ -279,9 +295,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            GPSManager.getInstance().init(this);
+            initGPS(false);  // listeners already added
+            if (GPSManager.getInstance().isLocationServiceAvailable()) {
+                startService();
+            }
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+            if (showSettings) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -99,7 +98,8 @@ public class NavigationFragment extends Fragment implements
         if (map == null || home == null) {
             return;
         }
-        MarkerOptions marker = new MarkerOptions().position(home).title(StatsFragment.getHomeString());
+        MarkerOptions marker =
+                new MarkerOptions().position(home).title(StatsFragment.getHomeString());
 
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
@@ -128,15 +128,14 @@ public class NavigationFragment extends Fragment implements
 
     @Override
     public void onPermissionGranted(String permission) {
-        Context context = getContext();
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                context != null &&
-                map != null &&
-                ContextCompat.checkSelfPermission(
-                        context,  // must not be null
-                        Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
+        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null) {
+            try {
+                map.setMyLocationEnabled(true);
+            }
+            catch (SecurityException ex) {
+                // won't happen in the permission granted listener
+                ex.printStackTrace();
+            }
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
