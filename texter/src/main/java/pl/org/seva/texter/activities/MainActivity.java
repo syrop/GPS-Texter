@@ -39,10 +39,11 @@ import pl.org.seva.texter.layouts.SlidingTabLayout;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.listeners.IProviderListener;
 import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.services.TexterService;
-import pl.org.seva.texter.utils.Timer;
+import pl.org.seva.texter.managers.TimerManager;
 
 public class MainActivity extends AppCompatActivity implements
         IPermissionGrantedListener, IProviderListener {
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
     private String action;
     private boolean serviceRunning;
     private boolean showSettings;
+    private boolean shuttingDown;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -136,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements
             });
             tabs.setViewPager(pager);
         }
-        if (Timer.getInstance().getState() == Thread.State.NEW) {
-            Timer.getInstance().start();
+        if (TimerManager.getInstance().getState() == Thread.State.NEW) {
+            TimerManager.getInstance().start();
         }
         else if (savedInstanceState == null && action != null && action.equals(Intent.ACTION_MAIN)) {
-            Timer.getInstance().reset();
+            TimerManager.getInstance().reset();
         }
 
         SMSManager.getInstance().init(this, getString(R.string.speed_unit));
@@ -257,7 +259,13 @@ public class MainActivity extends AppCompatActivity implements
         if (action != null && action.equals(Intent.ACTION_MAIN)) {
             stopService();
         }
-        SMSManager.getInstance().unregtsterReceivers();
+        if (!shuttingDown) {
+            GPSManager.getInstance().clearDistanceListeners();
+            GPSManager.getInstance().clearHomeChangedListeners();
+            SMSManager.getInstance().unregisterReceivers();
+            TimerManager.getInstance().clearListeners();
+            SMSManager.getInstance().clearSMSListeners();
+        }
     }
 
     @Override
@@ -270,6 +278,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MILLIS) {
+            shuttingDown = true;
+            HistoryManager.shutdown();
+            GPSManager.shutdown();
+            PermissionsManager.shutdown();
+            SMSManager.shutdown();
+            TimerManager.shutdown();
             super.onBackPressed();
         }
         else {

@@ -20,17 +20,18 @@ import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.listeners.ISMSListener;
+import pl.org.seva.texter.listeners.ITimerListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.model.LocationModel;
-import pl.org.seva.texter.utils.Timer;
+import pl.org.seva.texter.managers.TimerManager;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class StatsFragment extends Fragment
-        implements IDistanceChangedListener, Timer.TimerListener,
+        implements IDistanceChangedListener, ITimerListener,
         View.OnClickListener, ISMSListener, IHomeChangedListener,
         IPermissionGrantedListener {
 
@@ -68,7 +69,7 @@ public class StatsFragment extends Fragment
                 distance != SMSManager.getInstance().getLastSentDistance());
 
         show();
-        Timer.getInstance().addListener(this);
+        TimerManager.getInstance().addListener(this);
         SMSManager.getInstance().addSMSListener(this);
         GPSManager.getInstance().addDistanceChangedListener(this);
         GPSManager.getInstance().addHomeChangedListener(this);
@@ -100,7 +101,7 @@ public class StatsFragment extends Fragment
             distanceStr = "0 km";
         }
         distanceTextView.setText(distanceStr);
-        int seconds = (int) (System.currentTimeMillis() - Timer.getInstance().getResetTime()) / 1000;
+        int seconds = (int) (System.currentTimeMillis() - TimerManager.getInstance().getResetTime()) / 1000;
         int minutes = seconds / 60;
         seconds = seconds % 60;
         int hours = minutes / 60;
@@ -136,7 +137,7 @@ public class StatsFragment extends Fragment
     }
 
     private String getSpeedStr() {
-        String result = String.format("%.1f", speed) + " " + getActivity().getString(R.string.speed_unit);
+        String result = String.format("%.1f", speed) + " " + activity.getString(R.string.speed_unit);
         if (result.contains(".0")) {
             result = result.replace(".0", "");
         }
@@ -147,18 +148,9 @@ public class StatsFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timer.getInstance().removeListener(this);
-        GPSManager.getInstance().removeDistanceListener(this);
-        SMSManager.getInstance().removeSMSListener(this);
-        GPSManager.getInstance().removeHomeChangedListener(this);
-    }
-
-    @Override
     public void onDistanceChanged() {
         boolean resetValues =
-                System.currentTimeMillis() - Timer.getInstance().getResetTime() > 3 * 3600 * 1000;
+                System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;
         if (distance != SMSManager.getInstance().getLastSentDistance()) {
             sendNowButton.setEnabled(true);
         }
@@ -196,7 +188,7 @@ public class StatsFragment extends Fragment
         if (v == sendNowButton) {
             sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(Timer.getInstance().getResetTime());
+            calendar.setTimeInMillis(TimerManager.getInstance().getResetTime());
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
             minutes += calendar.get(Calendar.MINUTE);
             LocationModel location = new LocationModel();

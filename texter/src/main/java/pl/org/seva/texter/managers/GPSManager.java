@@ -24,28 +24,27 @@ import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
 import pl.org.seva.texter.listeners.IProviderListener;
 import pl.org.seva.texter.preferences.MapPreference;
-import pl.org.seva.texter.utils.Timer;
 
 public class GPSManager implements LocationListener {
 
     private static final double ACCURACY_THRESHOLD = 0.1;  // a hundred meters
 
     private static final double EARTH_RADIUS = 6371.0;  // in kilometers
-	
-	private static final GPSManager INSTANCE = new GPSManager();
-	
-	/** Minimal distance (in meters) that will be counted between two subsequent updates. */
-	private static final int MIN_DISTANCE = 10;
-	
-	private static final int SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2;
+
+    private static GPSManager instance;
+
+    /** Minimal distance (in meters) that will be counted between two subsequent updates. */
+    private static final int MIN_DISTANCE = 10;
+
+    private static final int SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2;
 
     private SharedPreferences preferences;
 
-	private LocationManager locationManager;
-    private List<IDistanceChangedListener> distanceListeners;
-	private List<IHomeChangedListener> homeChangedListeners;
-    private List<ILocationChangedListener> locationChangedListeners;
-    private List<IProviderListener> providerListeners;
+    private LocationManager locationManager;
+    private final List<IDistanceChangedListener> distanceListeners;
+    private final List<IHomeChangedListener> homeChangedListeners;
+    private final List<ILocationChangedListener> locationChangedListeners;
+    private final List<IProviderListener> providerListeners;
     /** Location last received from the update. */
     private Location location;
     /** Last calculated distance. */
@@ -53,38 +52,56 @@ public class GPSManager implements LocationListener {
     /** Last calculated speed. */
     private double speed;
 
-	private boolean initialized;
+    private boolean initialized;
 
-	private double homeLat;
-	private double homeLon;
+    private double homeLat;
+    private double homeLon;
     private long time;
 
-	private GPSManager() {
-		distanceListeners = new ArrayList<>();
-		homeChangedListeners = new ArrayList<>();
+    private Context context;
+
+    private GPSManager() {
+        distanceListeners = new ArrayList<>();
+        homeChangedListeners = new ArrayList<>();
         locationChangedListeners = new ArrayList<>();
         providerListeners = new ArrayList<>();
-	}
+    }
 
-	public String getLocationUrl() {
-		if (location == null) {
-			return "";
-		}
-		return "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
-	}
-	
-	public static GPSManager getInstance() {
-		return INSTANCE;
-	}
+    public static GPSManager getInstance() {
+        if (instance == null) {
+            synchronized (GPSManager.class) {
+                if (instance == null) {
+                    instance = new GPSManager();
+                }
+            }
+        }
+        return instance;
+    }
 
-	/**
-	 * @return minimum time between two subsequent updates from one provider (in millis)
-	 */
-	private int getUpdateFrequency() {
+    public static void shutdown() {
+        synchronized (GPSManager.class) {
+            if (instance != null) {
+                instance.removeUpdates();
+                instance = null;
+            }
+        }
+    }
+
+    public String getLocationUrl() {
+        if (location == null) {
+            return "";
+        }
+        return "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
+    }
+
+    /**
+     * @return minimum time between two subsequent updates from one provider (in millis)
+     */
+    private int getUpdateFrequency() {
         String timeStr = preferences.getString(SettingsActivity.LOCATION_UPDATE_FREQUENCY, "");
         int seconds = timeStr.length() > 0 ? Integer.valueOf(timeStr) : 0;
-		return seconds * 1000;
-	}
+        return seconds * 1000;
+    }
 
     public double getDistance() {
         return distance;
@@ -100,6 +117,7 @@ public class GPSManager implements LocationListener {
 
     private void requestLocationUpdates(Context context) {
         int updateFrequency = getUpdateFrequency();
+        this.context = context;
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -118,6 +136,15 @@ public class GPSManager implements LocationListener {
         }
     }
 
+    private void removeUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
+    }
+
     public void updateHome() {
         updateDistance();
         String homeLocation = preferences.
@@ -131,8 +158,10 @@ public class GPSManager implements LocationListener {
                     location.getLatitude(),
                     location.getLongitude());
         }
-        for (IHomeChangedListener l : homeChangedListeners) {
-            l.onHomeChanged();
+        synchronized (homeChangedListeners) {
+            for (IHomeChangedListener l : homeChangedListeners) {
+                l.onHomeChanged();
+            }
         }
     }
 
@@ -167,32 +196,43 @@ public class GPSManager implements LocationListener {
 		if (listener == null) {
             return;
         }
-        distanceListeners.remove(listener);
-        distanceListeners.add(listener);
+        synchronized (distanceListeners) {
+            distanceListeners.remove(listener);
+            distanceListeners.add(listener);
+        }
 	}
 
-	public void removeDistanceListener(IDistanceChangedListener listener) {
-        if (listener == null) {
-            return;
+    public void clearDistanceListeners() {
+        synchronized (distanceListeners) {
+            distanceListeners.clear();
         }
-        distanceListeners.remove(listener);
-	}
+    }
 
 	public void addHomeChangedListener(IHomeChangedListener listener) {
-        removeHomeChangedListener(listener);
-		homeChangedListeners.add(listener);
+        synchronized (homeChangedListeners) {
+            removeHomeChangedListener(listener);
+            homeChangedListeners.add(listener);
+        }
 	}
 
     public void removeHomeChangedListener(IHomeChangedListener listener) {
         if (listener == null) {
             return;
         }
-        homeChangedListeners.remove(listener);
+        synchronized (homeChangedListeners) {
+            homeChangedListeners.remove(listener);
+        }
+    }
+
+    public void clearHomeChangedListeners() {
+        homeChangedListeners.clear();
     }
 
     public GPSManager addLocationChangedListener(ILocationChangedListener listener) {
-        removeLocationChangedListener(listener);
-        locationChangedListeners.add(listener);
+        synchronized (locationChangedListeners) {
+            removeLocationChangedListener(listener);
+            locationChangedListeners.add(listener);
+        }
         return this;
     }
 
@@ -200,13 +240,17 @@ public class GPSManager implements LocationListener {
         if (listener == null) {
             return this;
         }
-        locationChangedListeners.remove(listener);
+        synchronized (locationChangedListeners) {
+            locationChangedListeners.remove(listener);
+        }
         return this;
     }
 
     public GPSManager addProviderListener(IProviderListener listener) {
-        removeProviderListener(listener);
-        providerListeners.add(listener);
+        synchronized (providerListeners) {
+            removeProviderListener(listener);
+            providerListeners.add(listener);
+        }
         return this;
     }
 
@@ -214,7 +258,9 @@ public class GPSManager implements LocationListener {
         if (listener == null) {
             return this;
         }
-        providerListeners.remove(listener);
+        synchronized (providerListeners) {
+            providerListeners.remove(listener);
+        }
         return this;
     }
 
@@ -314,17 +360,21 @@ public class GPSManager implements LocationListener {
             return;
         }
         this.location = location;
-        Timer.getInstance().reset();
+        TimerManager.getInstance().reset();
         double distance = calculateDistance();  // distance in kilometres
         long time = System.currentTimeMillis();
         speed = calculateSpeed(this.distance, distance, time - this.time);
         this.distance = distance;
         this.time = time;
-        for (IDistanceChangedListener listener : distanceListeners) {
-            listener.onDistanceChanged();
+        synchronized (distanceListeners) {
+            for (IDistanceChangedListener listener : distanceListeners) {
+                listener.onDistanceChanged();
+            }
         }
-        for (ILocationChangedListener listener : locationChangedListeners) {
-            listener.onLocationChanged(location);
+        synchronized (locationChangedListeners) {
+            for (ILocationChangedListener listener : locationChangedListeners) {
+                listener.onLocationChanged(location);
+            }
         }
     }
 
@@ -367,19 +417,24 @@ public class GPSManager implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        // do nothing
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        for (IProviderListener listener : providerListeners) {
-            listener.onProviderEnabled();
+        synchronized (providerListeners) {
+            for (IProviderListener listener : providerListeners) {
+                listener.onProviderEnabled();
+            }
         }
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        for (IProviderListener listener : providerListeners) {
-            listener.onProviderDisabled();
+        synchronized (providerListeners) {
+            for (IProviderListener listener : providerListeners) {
+                listener.onProviderDisabled();
+            }
         }
     }
 }

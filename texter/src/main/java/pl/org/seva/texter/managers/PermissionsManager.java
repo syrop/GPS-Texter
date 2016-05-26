@@ -19,17 +19,30 @@ public class PermissionsManager {
     public static int PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0;
     public static int PERMISSION_READ_CONTACTS_REQUEST = 1;
 
-    private static final PermissionsManager INSTANCE = new PermissionsManager();
+    private static PermissionsManager instance;
 
     private final Map<String, List<IPermissionGrantedListener>> grantedMap = new HashMap<>();
     private final Map<String, List<IPermissionDeniedListener>> deniedMap = new HashMap<>();
     private final List<String> rationalesShown = new ArrayList<>();
 
-    public static PermissionsManager getInstance() {
-        return INSTANCE;
+    private PermissionsManager() {
     }
 
-    private PermissionsManager() {
+    public static PermissionsManager getInstance() {
+        if (instance == null ) {
+            synchronized (PermissionsManager.class) {
+                if (instance == null) {
+                    instance = new PermissionsManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void shutdown() {
+        synchronized (PermissionsManager.class) {
+            instance = null;
+        }
     }
 
     public void addPermissionGrantedListener(

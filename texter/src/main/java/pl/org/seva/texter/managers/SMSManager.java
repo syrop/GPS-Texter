@@ -24,7 +24,7 @@ import pl.org.seva.texter.utils.StringUtils;
 
 public class SMSManager {
 
-	private static final SMSManager INSTANCE = new SMSManager();
+	private static SMSManager instance;
 
     private static final String TEXT_KEY = "text";
     private static final String MODEL_KEY = "model";
@@ -44,15 +44,29 @@ public class SMSManager {
 	
 	private boolean initialized;
 
-	public static SMSManager getInstance() {
-		return INSTANCE;
-	}
-	
-	private SMSManager() {
+    public static SMSManager getInstance() {
+        if (instance == null ) {
+            synchronized (SMSManager.class) {
+                if (instance == null) {
+                    instance = new SMSManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void shutdown() {
+        synchronized (SMSManager.class) {
+            instance = null;
+        }
+    }
+
+
+    private SMSManager() {
 		smsManager = SmsManager.getDefault();
 	}
 
-    private List<ISMSListener> listeners;
+    private final List<ISMSListener> listeners = new ArrayList<>();
 	
 	public void init(final Context context, String speedUnit) {
 		if (initialized) {
@@ -61,18 +75,26 @@ public class SMSManager {
 		this.context = context;
         this.speedUnit = speedUnit;
 		preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        listeners = new ArrayList<>();
 		initialized = true;
 	}
 
     public void addSMSListener(ISMSListener listener) {
-        removeSMSListener(listener);
-        listeners.add(listener);
+        synchronized (listeners) {
+            removeSMSListener(listener);
+            listeners.add(listener);
+        }
     }
 
     public void removeSMSListener(ISMSListener listener) {
-        listeners.remove(listener);
+        synchronized (listeners) {
+            listeners.remove(listener);
+        }
+    }
+
+    public void clearSMSListeners() {
+        synchronized (listeners) {
+            listeners.clear();
+        }
     }
 	
 	public String getPhoneNumber() {
@@ -99,7 +121,7 @@ public class SMSManager {
         }
     }
 
-    public boolean unregtsterReceivers() {
+    public boolean unregisterReceivers() {
         synchronized (broadcastReceivers) {
             if (broadcastReceivers.isEmpty()) {
                 return false;
@@ -132,8 +154,10 @@ public class SMSManager {
                         Toast.makeText(arg0, sentBuilder.toString(), length).show();
                         if (location != null) {
                             HistoryManager.getInstance().add(location);
-                            for (ISMSListener listener : listeners) {
-                                listener.onSMSSent(location);
+                            synchronized (listeners) {
+                                for (ISMSListener listener : listeners) {
+                                    listener.onSMSSent(location);
+                                }
                             }
                         }
                         break;
@@ -230,8 +254,10 @@ public class SMSManager {
         PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
 		registerBroadcastReceiver(id);
         if (location != null) {
-            for (ISMSListener listener : listeners) {
-                listener.onSendingSMS(location);
+            synchronized (listeners) {
+                for (ISMSListener listener : listeners) {
+                    listener.onSendingSMS(location);
+                }
             }
         }
 		smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);

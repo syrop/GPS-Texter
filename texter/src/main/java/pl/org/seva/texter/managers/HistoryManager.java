@@ -9,7 +9,7 @@ import pl.org.seva.texter.model.LocationModel;
  * Created by wiktor on 01.08.15.
  */
 public class HistoryManager {
-    private static final HistoryManager INSTANCE = new HistoryManager();
+    private static HistoryManager instance;
 
     private boolean mock = true;
 
@@ -21,7 +21,20 @@ public class HistoryManager {
     }
 
     public static HistoryManager getInstance() {
-        return INSTANCE;
+        if (instance == null ) {
+            synchronized (HistoryManager.class) {
+                if (instance == null) {
+                    instance = new HistoryManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void shutdown() {
+        synchronized (HistoryManager.class) {
+            instance = null;
+        }
     }
 
     public List<LocationModel> getList() {

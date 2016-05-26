@@ -87,13 +87,6 @@ public class NavigationFragment extends Fragment implements
         return v;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        GPSManager.getInstance().removeDistanceListener(this);
-        GPSManager.getInstance().removeHomeChangedListener(this);
-    }
-
     private void updateHomeLocation(LatLng home) {
         if (map == null || home == null) {
             return;
