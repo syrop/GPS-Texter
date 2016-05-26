@@ -148,6 +148,15 @@ public class StatsFragment extends Fragment
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        TimerManager.getInstance().removeListener(this);
+        GPSManager.getInstance().removeDistanceChangedListener(this);
+        SMSManager.getInstance().removeSMSListener(this);
+        GPSManager.getInstance().removeHomeChangedListener(this);
+    }
+
+    @Override
     public void onDistanceChanged() {
         boolean resetValues =
                 System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;

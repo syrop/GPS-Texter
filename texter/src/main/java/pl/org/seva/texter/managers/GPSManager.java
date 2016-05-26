@@ -202,9 +202,12 @@ public class GPSManager implements LocationListener {
         }
 	}
 
-    public void clearDistanceListeners() {
+    public void removeDistanceChangedListener(IDistanceChangedListener listener) {
+        if (listener == null) {
+            return;
+        }
         synchronized (distanceListeners) {
-            distanceListeners.clear();
+            distanceListeners.remove(listener);
         }
     }
 
@@ -222,10 +225,6 @@ public class GPSManager implements LocationListener {
         synchronized (homeChangedListeners) {
             homeChangedListeners.remove(listener);
         }
-    }
-
-    public void clearHomeChangedListeners() {
-        homeChangedListeners.clear();
     }
 
     public GPSManager addLocationChangedListener(ILocationChangedListener listener) {

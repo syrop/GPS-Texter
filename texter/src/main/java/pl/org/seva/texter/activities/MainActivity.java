@@ -262,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onDestroy() {
         // Also called when the screen is rotated.
         super.onDestroy();
+        System.out.println("activity destroy");
         if (dialog != null) {
             dialog.dismiss();
         }
@@ -269,12 +270,12 @@ public class MainActivity extends AppCompatActivity implements
             // Condition is false when activity has been launched from a notification.
             stopService();
         }
-        if (!shuttingDown) {
-            GPSManager.getInstance().clearDistanceListeners();
-            GPSManager.getInstance().clearHomeChangedListeners();
-            SMSManager.getInstance().unregisterReceivers();
-            TimerManager.getInstance().clearListeners();
-            SMSManager.getInstance().clearSMSListeners();
+        if (shuttingDown) {
+            HistoryManager.shutdown();
+            GPSManager.shutdown();
+            PermissionsManager.shutdown();
+            SMSManager.shutdown();
+            TimerManager.shutdown();
         }
     }
 
@@ -289,11 +290,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onBackPressed() {
         if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MILLIS) {
             shuttingDown = true;
-            HistoryManager.shutdown();
-            GPSManager.shutdown();
-            PermissionsManager.shutdown();
-            SMSManager.shutdown();
-            TimerManager.shutdown();
             super.onBackPressed();
         }
         else {

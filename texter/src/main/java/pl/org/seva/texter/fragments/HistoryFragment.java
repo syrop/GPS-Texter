@@ -43,6 +43,12 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SMSManager.getInstance().removeSMSListener(this);
+    }
+
+    @Override
     public void onSMSSent(LocationModel model) {
         adapter.notifyDataSetChanged();
         if (scrollToBottom) {

@@ -56,6 +56,7 @@ public class SMSManager {
     }
 
     public static void shutdown() {
+        instance.unregisterReceivers();
         synchronized (SMSManager.class) {
             instance = null;
         }
@@ -91,12 +92,6 @@ public class SMSManager {
         }
     }
 
-    public void clearSMSListeners() {
-        synchronized (listeners) {
-            listeners.clear();
-        }
-    }
-	
 	public String getPhoneNumber() {
 		String numberStr = preferences.getString(SettingsActivity.SMS_NUMBER, "");
 		return numberStr.length() > 0 ? numberStr : "0";

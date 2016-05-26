@@ -70,9 +70,9 @@ public class TimerManager extends Thread {
         }
     }
 
-    public void clearListeners() {
+    public boolean removeListener(ITimerListener listener) {
         synchronized (listeners) {
-            listeners.clear();
+            return listeners.remove(listener);
         }
     }
 }
