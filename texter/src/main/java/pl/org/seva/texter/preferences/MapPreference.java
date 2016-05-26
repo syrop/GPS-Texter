@@ -78,9 +78,6 @@ public class MapPreference extends DialogPreference implements
                 lat = loc.latitude;
                 lon = loc.longitude;
                 updateMarker();
-                if (GPSManager.getInstance().isLocationAvailable()) {
-                    useCurrentButton.setEnabled(false);
-                }
             }
         }
     }
