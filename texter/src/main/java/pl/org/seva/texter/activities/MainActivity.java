@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean serviceRunning;
     private boolean showSettings;
     private boolean shuttingDown;
+    private Dialog dialog;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -156,32 +157,34 @@ public class MainActivity extends AppCompatActivity implements
         if (!showStartupDialog()) {
             initGPS();
         }
-        if (ContextCompat.checkSelfPermission(
+    }
+
+    private boolean initGPS() {
+        return initGPS(true);
+    }
+
+    private boolean initGPS(boolean addListeners) {
+        GPSManager.getInstance().init(this);
+        boolean permissionGranted = ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
+
+        if (permissionGranted) {
             PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        else {
-            if (GPSManager.getInstance().isLocationServiceAvailable()) {
-                startService();
-            }
+        else if (GPSManager.getInstance().isLocationServiceAvailable()) {
+            startService();
         }
-
-    }
-
-    private void initGPS() {
-        initGPS(true);
-    }
-
-    private void initGPS(boolean addListeners) {
-        GPSManager.getInstance().init(this);
         if (addListeners) {
+            // Condition is false on calling it second time, after permission was granted.
             GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
             GPSManager.getInstance().addProviderListener(this);
         }
+
+        return permissionGranted;
     }
 
     private boolean showStartupDialog() {
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements
         if (prefs.getBoolean(PREF_STARTUP_SHOWN, false)) {
             return false;
         }
-        final Dialog dialog = new Dialog(this);
+        dialog = new Dialog(this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.info_dialog_layout);
         WebView web = (WebView) dialog.findViewById(R.id.web);
@@ -213,10 +216,13 @@ public class MainActivity extends AppCompatActivity implements
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initGPS();
                 dialog.dismiss();
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-                showSettings = true;
+                showSettings = true;  // Only relevant if permission is not granted.
+                if (initGPS()) {
+                    // Called if permission has already been granted, e.g. when API < 23.
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
             }
         });
         dialog.show();
@@ -254,9 +260,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDestroy() {
-        // Also called when the screen is rotated
+        // Also called when the screen is rotated.
         super.onDestroy();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
         if (action != null && action.equals(Intent.ACTION_MAIN)) {
+            // Condition is false when activity has been launched from a notification.
             stopService();
         }
         if (!shuttingDown) {
