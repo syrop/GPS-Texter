@@ -301,10 +301,6 @@ public class MapPreference extends DialogPreference implements
             return;
         }
         useCurrentButton.setEnabled(true);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(location.getLatitude(), location.getLongitude())).
-                zoom(zoom).build();
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     @Override
