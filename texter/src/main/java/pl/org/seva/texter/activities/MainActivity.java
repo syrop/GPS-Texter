@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED;
 
-        if (permissionGranted) {
+        if (!permissionGranted) {
             PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
