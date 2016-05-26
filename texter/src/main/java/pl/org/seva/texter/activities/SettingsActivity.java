@@ -1,10 +1,12 @@
 package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.controller.SMSController;
 import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
+import pl.org.seva.texter.managers.SMSManager;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -128,6 +130,7 @@ public class SettingsActivity extends AppCompatActivity
                 break;
             case HOME_LOCATION:
                 GPSManager.getInstance().updateHome();
+                SMSController.getInstance().resetZones();
                 break;
         }
     }

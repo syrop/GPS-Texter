@@ -42,6 +42,7 @@ import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SMSManager;
+import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.managers.TimerManager;
 
@@ -269,13 +270,14 @@ public class MainActivity extends AppCompatActivity implements
         if (action != null && action.equals(Intent.ACTION_MAIN)) {
             // Condition is false when activity has been launched from a notification.
             stopService();
-        }
-        if (shuttingDown) {
-            HistoryManager.shutdown();
-            GPSManager.shutdown();
-            PermissionsManager.shutdown();
-            SMSManager.shutdown();
-            TimerManager.shutdown();
+            if (shuttingDown) {
+                HistoryManager.shutdown();
+                GPSManager.shutdown();
+                PermissionsManager.shutdown();
+                SMSManager.shutdown();
+                TimerManager.shutdown();
+                ZoneManager.shutdown();
+            }
         }
     }
 

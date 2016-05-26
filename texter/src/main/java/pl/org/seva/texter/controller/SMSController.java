@@ -5,6 +5,7 @@ import java.util.Calendar;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.SMSManager;
+import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
 
@@ -21,12 +22,12 @@ public class SMSController implements IDistanceChangedListener {
     private static final long TIME_IN_ZONE = 11 * 1000;
 
     private LocationModel lastSentLocation;
-    private ZoneModel.Zone zone;
+    private ZoneModel zone;
     private boolean smsInSystem;
     private boolean initialized;
 
     private SMSController() {
-
+        // do nothing
     }
 
     public static SMSController getInstance() {
@@ -55,6 +56,11 @@ public class SMSController implements IDistanceChangedListener {
         SMSManager.getInstance().send(model);
     }
 
+    public synchronized void resetZones() {
+        ZoneManager.getInstance().clear();
+        zone = null;
+    }
+
     @Override
     public void onDistanceChanged() {
         double distance = GPSManager.getInstance().getDistance();
@@ -73,26 +79,28 @@ public class SMSController implements IDistanceChangedListener {
         location.setTime(minutes);
         location.setSpeed(speed);
 
-        ZoneModel.Zone zone = ZoneModel.getInstance().zone(distance, true);
-        if (this.zone == null) {
-            this.zone = zone;
-        }
-        else if (zone.getMin() != this.zone.getMin() &&
-                zone.getCounter() >= SMS_TRIGGER &&
-                zone.getDelay() >= TIME_IN_ZONE) {
-            if (this.zone.getMin() > zone.getMin()) {
-                direction = -1;
+        synchronized (this) {
+            ZoneModel zone = ZoneManager.getInstance().zone(distance, true);
+            if (this.zone == null) {
+                this.zone = zone;
             }
-            else {
-                direction = 1;
-            }
-            location.setDirection(direction);  // calculated specifically for zone border
+            else if (zone.getMin() != this.zone.getMin() &&
+                    zone.getCounter() >= SMS_TRIGGER &&
+                    zone.getDelay() >= TIME_IN_ZONE) {
+                if (this.zone.getMin() > zone.getMin()) {
+                    direction = -1;
+                }
+                else {
+                    direction = 1;
+                }
+                location.setDirection(direction);  // calculated specifically for zone border
 
-            if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
-                    SMSManager.getInstance().getMaxSentDistance()) {
-                sendSMS(location);
+                if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
+                        SMSManager.getInstance().getMaxSentDistance()) {
+                    sendSMS(location);
+                }
+                this.zone = zone;
             }
-            this.zone = zone;
         }
     }
 }

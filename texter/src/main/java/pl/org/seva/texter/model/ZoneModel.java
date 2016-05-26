@@ -9,111 +9,71 @@ import pl.org.seva.texter.utils.StringUtils;
 /**
  * Created by wiktor on 28.08.15.
  */
-public class ZoneModel {
+public class ZoneModel implements Parcelable {
+    private int min;
+    private int max;
+    private int counter;
+    private long time;
 
-    private static ZoneModel INSTANCE = new ZoneModel();
-
-    private SparseArray<Zone> zones;
-
-    private ZoneModel() {
-        zones = new SparseArray<>();
+    public ZoneModel(int min, int max) {
+        this.min = min;
+        this.max = max;
+        time = System.currentTimeMillis();
     }
 
-    public static ZoneModel getInstance() {
-        return INSTANCE;
+    public int getMin() {
+        return min;
     }
 
-    private void clear() {
-        zones.clear();
+    public int getMax() {
+        return max;
     }
 
-    public Zone zone(double distance, boolean updateCounters) {
-        int check = 0;
-        int min = 0;
-        int max;
-        while (check < distance) {  // calculate min and max
-            min = check;
-            check += StringUtils.KM_INTERVAL;
-        }
-        max = check;
-        if (!updateCounters) {
-            return new Zone(min, max);
-        }
-        Zone zone = zones.get(min);
-        if (zone == null) {
-            clear();
-            zone = new Zone(min, max);
-            zone.counter++;
-            zones.put(min, zone);
-        }
-        else {
-            zone.counter++;
-        }
-
-        return zone;
+    public void increaseCounter() {
+        counter++;
     }
 
-    public static class Zone implements Parcelable {
-        private int min;
-        private int max;
-        private int counter;
-        private long time;
+    public int getCounter() {
+        return counter;
+    }
 
-        private Zone(int min, int max) {
-            this.min = min;
-            this.max = max;
-            time = System.currentTimeMillis();
+    public long getDelay() {
+        return System.currentTimeMillis() - time;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getMin() + " km - " + getMax() + " km]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(min);
+        out.writeInt(max);
+        out.writeInt(counter);
+        out.writeLong(time);
+    }
+
+    public static final Parcelable.Creator<ZoneModel> CREATOR =
+            new Parcelable.Creator<ZoneModel>() {
+        public ZoneModel createFromParcel(Parcel in) {
+            return new ZoneModel(in);
         }
 
-        public int getMin() {
-            return min;
+        public ZoneModel[] newArray(int size) {
+            return new ZoneModel[size];
         }
+    };
 
-        public int getMax() {
-            return max;
-        }
-
-        public int getCounter() {
-            return counter;
-        }
-
-        public long getDelay() {
-            return System.currentTimeMillis() - time;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + getMin() + " km - " + getMax() + " km]";
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            out.writeInt(min);
-            out.writeInt(max);
-            out.writeInt(counter);
-            out.writeLong(time);
-        }
-
-        public static final Parcelable.Creator<Zone> CREATOR = new Parcelable.Creator<Zone>() {
-            public Zone createFromParcel(Parcel in) {
-                return new Zone(in);
-            }
-
-            public Zone[] newArray(int size) {
-                return new Zone[size];
-            }
-        };
-
-        private Zone(Parcel in) {
-            min = in.readInt();
-            max = in.readInt();
-            counter = in.readInt();
-            time = in.readLong();
-        }
+    private ZoneModel(Parcel in) {
+        min = in.readInt();
+        max = in.readInt();
+        counter = in.readInt();
+        time = in.readLong();
     }
 }
