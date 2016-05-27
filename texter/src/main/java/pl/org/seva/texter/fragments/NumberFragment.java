@@ -1,6 +1,7 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pl.org.seva.texter.R;
 
@@ -68,8 +73,8 @@ public class NumberFragment extends Fragment implements
 
     // The column index for the LOOKUP_KEY column
     private static final int CONTACT_KEY_INDEX = 1;
+    private static final int CONTACT_NAME_INDEX = 2;
     private static final int DETAILS_NUMBER_INDEX = 1;
-    private static final int DETAILS_TYPE_INDEX = 2;
 
     private final static int[] TO_IDS = {
             android.R.id.text1
@@ -77,6 +82,7 @@ public class NumberFragment extends Fragment implements
 
     private boolean contactsEnabled;
     private String contactKey;
+    private String contactName;
 
     private SimpleCursorAdapter adapter;
     private ListView contacts;
@@ -162,27 +168,43 @@ public class NumberFragment extends Fragment implements
                 adapter.swapCursor(data);
                 break;
             case DETAILS_QUERY_ID:
-                String number = null;
+                final List<String> numbers = new ArrayList<>();
                 while (data.moveToNext()) {
-                    if (data.getInt(DETAILS_TYPE_INDEX) ==
-                            ContactsContract.CommonDataKinds.Phone.TYPE_MAIN) {
-                        number = data.getString(DETAILS_NUMBER_INDEX);
-                        break;
-                    }
-                    else if (number == null) {
-                        number = data.getString(DETAILS_NUMBER_INDEX);
+                    String n = data.getString(DETAILS_NUMBER_INDEX);
+                    if (!numbers.contains(n)) {
+                        numbers.add(n);
                     }
                 }
                 data.close();
-                if (number != null) {
-                    this.number.setText(number);
+                if (numbers.size() == 1) {
+                    this.number.setText(numbers.get(0));
                 }
-                else {
+                else if (numbers.isEmpty()) {
                     toast = Toast.makeText(
                             getContext(),
                             R.string.no_number,
                             Toast.LENGTH_SHORT);
                     toast.show();
+                }
+                else {
+                    String[] items = new String[numbers.size()];
+                    numbers.toArray(items);
+                    new AlertDialog.Builder(getActivity()).
+                            setItems(items, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    number.setText(numbers.get(which));
+                                }
+                            }).
+                            setTitle(contactName).
+                            setCancelable(true).
+                            setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                 }
                 break;
         }
@@ -207,6 +229,8 @@ public class NumberFragment extends Fragment implements
         Cursor cursor = ((SimpleCursorAdapter) parent.getAdapter()).getCursor();
         cursor.moveToPosition(position);
         contactKey = cursor.getString(CONTACT_KEY_INDEX);
+        contactName = cursor.getString(CONTACT_NAME_INDEX);
+
         getLoaderManager().restartLoader(DETAILS_QUERY_ID, null, this);
     }
 
