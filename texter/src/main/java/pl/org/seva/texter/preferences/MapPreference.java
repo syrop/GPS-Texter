@@ -78,6 +78,10 @@ public class MapPreference extends DialogPreference implements
                 lat = loc.latitude;
                 lon = loc.longitude;
                 updateMarker();
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(lat, lon)).
+                                zoom(zoom).build();
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         }
     }
