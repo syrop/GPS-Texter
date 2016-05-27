@@ -1,10 +1,13 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.justinkaur.sms.MainActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
         <item android:id="@+id/action_settings"
             android:icon="@drawable/ic_settings_white_24dp"
             android:title="@string/action_settings"
             app:showAsAction="ifRoom"  />
+        <item android:id="@+id/action_help"
+            android:title="@string/action_help"
+            android:icon="@drawable/ic_help_white_24dp"
+            app:showAsAction="ifRoom"  />
+
 </menu>

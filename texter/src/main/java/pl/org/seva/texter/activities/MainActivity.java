@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
         if (!initGPS(true)) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if (ContextCompat.checkSelfPermission(
+        if (SMSManager.getInstance().isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.info_dialog_layout);
+        dialog.setContentView(R.layout.startup_dialog_layout);
         WebView web = (WebView) dialog.findViewById(R.id.web);
 
         String language = getResources().getConfiguration().locale.getLanguage();
@@ -247,6 +247,28 @@ public class MainActivity extends AppCompatActivity implements
                     // Called if permission has already been granted, e.g. when API < 23.
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 }
+            }
+        });
+        dialog.show();
+        return true;
+    }
+
+    private boolean showHelpDialog() {
+        dialog = new Dialog(this);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.help_dialog_layout);
+        WebView web = (WebView) dialog.findViewById(R.id.web);
+
+        String language = getResources().getConfiguration().locale.getLanguage();
+
+        web.loadUrl(language.equals("pl") ?
+                "file:///android_asset/help_pl.html" :
+                "file:///android_asset/help_en.html");
+
+        dialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -325,15 +347,20 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_help:
+                showHelpDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
