@@ -38,28 +38,33 @@ public class NumberFragment extends Fragment implements
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
     };
 
-    private static final String[] CONTACTS_PROJECTION = {
+    private static final String[] CONTACTS_PROJECTION = {  // SELECT
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
             ContactsContract.Contacts.HAS_PHONE_NUMBER,
     };
 
-    private static final String[] DETAILS_PROJECTION = {
+    private static final String CONTACTS_SELECTION =  // FROM
+            ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?";
+
+    private static final String CONTACTS_SORT =  // ORDER_BY
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
+
+    private static final String[] DETAILS_PROJECTION = {  // SELECT
             ContactsContract.CommonDataKinds.Phone._ID,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.TYPE,
             ContactsContract.CommonDataKinds.Phone.LABEL,
     };
 
+    private static final String DETAILS_SORT =  // ORDER_BY
+            ContactsContract.CommonDataKinds.Phone._ID;
 
-    private static final String CONTACTS_SELECTION =
-            ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?";
-
-    private static final String CONTACTS_SORT = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
-
-    private static final String DETAILS_SELECTION =
+    private static final String DETAILS_SELECTION =  // WHERE
             ContactsContract.Data.LOOKUP_KEY + " = ?";
+
+
 
     // The column index for the LOOKUP_KEY column
     private static final int CONTACT_KEY_INDEX = 1;
@@ -144,7 +149,7 @@ public class NumberFragment extends Fragment implements
                         DETAILS_PROJECTION,
                         DETAILS_SELECTION,
                         detailsSelectionArgs,
-                        null);
+                        DETAILS_SORT);
             default:
                 return null;
         }
@@ -168,11 +173,15 @@ public class NumberFragment extends Fragment implements
                         number = data.getString(DETAILS_NUMBER_INDEX);
                     }
                 }
+                data.close();
                 if (number != null) {
                     this.number.setText(number);
                 }
                 else {
-                    toast = Toast.makeText(getContext(), R.string.no_number, Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(
+                            getContext(),
+                            R.string.no_number,
+                            Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 break;

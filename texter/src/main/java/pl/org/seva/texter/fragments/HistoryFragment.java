@@ -30,7 +30,10 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.history_fragment,container,false);
         historyListView = (ListView) v.findViewById(R.id.listView);
         adapter = new HistoryAdapter(getActivity(), HistoryManager.getInstance().getList());
@@ -65,7 +68,11 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onScroll(
+            AbsListView view,
+            int firstVisibleItem,
+            int visibleItemCount,
+            int totalItemCount) {
         if (view == historyListView) {
             scrollToBottom = firstVisibleItem + visibleItemCount >= totalItemCount;
         }

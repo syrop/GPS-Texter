@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onDestroy() {
         // Also called when the screen is rotated.
         super.onDestroy();
-        System.out.println("activity destroy");
         if (dialog != null) {
             dialog.dismiss();
         }
