@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -156,20 +157,42 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         if (!showStartupDialog()) {
-            initGPS();
+            processPermissions();
         }
     }
 
-    private boolean initGPS() {
-        return initGPS(true);
+    /**
+     * All actions that require permissions must be placed here. The methods performs them or
+     * asks for permissions if they haven't been granted already.
+     *
+     * @return true if all permissions had been granted before calling the method
+     */
+    private boolean processPermissions() {
+        List<String> permissions = new ArrayList<>();
+        if (!initGPS(true)) {
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.SEND_SMS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.SEND_SMS);
+        }
+        if (permissions.isEmpty()) {
+            return true;
+        }
+        String arr[] = new String[permissions.size()];
+        permissions.toArray(arr);
+        ActivityCompat.requestPermissions(
+                this,
+                arr,
+                PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
+
+        return false;
     }
 
     private boolean initGPS(boolean addListeners) {
-        GPSManager.getInstance().init(this);
-        boolean permissionGranted = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
+        boolean permissionGranted = GPSManager.getInstance().init(this);
 
         if (!permissionGranted) {
             PermissionsManager.getInstance().addPermissionGrantedListener(
@@ -208,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initGPS();
+                processPermissions();
                 dialog.dismiss();
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
             }
@@ -220,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements
                 dialog.dismiss();
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
                 showSettings = true;  // Only relevant if permission is not granted.
-                if (initGPS()) {
+                if (processPermissions()) {
                     // Called if permission has already been granted, e.g. when API < 23.
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 }

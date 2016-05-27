@@ -255,7 +255,12 @@ public class SMSManager {
                 }
             }
         }
-		smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
+        try {
+            smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
+        }
+        catch (SecurityException ex) {
+            // Ignore, as may indicate the app has no permission to send SMS.
+        }
 	}
 	
 	private void checkInit() {

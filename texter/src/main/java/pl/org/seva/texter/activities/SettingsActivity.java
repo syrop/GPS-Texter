@@ -6,7 +6,6 @@ import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
-import pl.org.seva.texter.managers.SMSManager;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -22,6 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.WindowManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
@@ -63,7 +65,7 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
-            if (!checkPermission()) {
+            if (!processPermissions()) {
                 PermissionsManager.getInstance().addPermissionGrantedListener(
                         Manifest.permission.READ_CONTACTS,
                         this);
@@ -96,18 +98,39 @@ public class SettingsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkPermission() {
+
+    /**
+     * All actions that require permissions must be placed here. The methods performs them or
+     * asks for permissions if they haven't been granted already.
+     *
+     * @return false if particularly READ_CONTACTS was't granted previously
+     */
+    private boolean processPermissions() {
+        List<String> permissions = new ArrayList<>();
+        boolean result = true;
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_CONTACTS) !=
                 PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_CONTACTS);
+            result = false;
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.SEND_SMS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.SEND_SMS);
+        }
+        if (!permissions.isEmpty()) {
+            String arr[] = new String[permissions.size()];
+            permissions.toArray(arr);
             ActivityCompat.requestPermissions(
                     this,
-                    new String[] { Manifest.permission.READ_CONTACTS, },
+                    arr,
                     PermissionsManager.PERMISSION_READ_CONTACTS_REQUEST);
-            return false;
         }
-        return true;
+        return result;
     }
 
     @Override
@@ -115,7 +138,7 @@ public class SettingsActivity extends AppCompatActivity
         switch (key) {
             case SMS_ENABLED:  // off by default
                 if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {
-                    if (!checkPermission()) {
+                    if (!processPermissions()) {
                         PermissionsManager.getInstance().addPermissionGrantedListener(
                                 Manifest.permission.READ_CONTACTS,
                                 this);
@@ -154,13 +177,14 @@ public class SettingsActivity extends AppCompatActivity
                     !PermissionsManager.getInstance().
                             rationaleShown(Manifest.permission.READ_CONTACTS)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.perm_contacts_rationale).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.perm_contacts_rationale).
+                        setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PermissionsManager.getInstance().
                                 onRationaleShown(Manifest.permission.READ_CONTACTS);
-                        checkPermission();
+                        processPermissions();
                     }
                 });
                 builder.create().show();

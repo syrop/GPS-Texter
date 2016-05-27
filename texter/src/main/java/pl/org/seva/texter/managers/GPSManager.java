@@ -165,27 +165,33 @@ public class GPSManager implements LocationListener {
         }
     }
 
-	public void init(Activity activity) {
+    /**
+     * Initializes the GPS.
+     *
+     * Actions taken depend on whether the app possesses the permission. If not, has to be
+     * called again.
+     *
+     * @param activity the calling activity
+     * @return true if actions requiring the permission have been performed
+     */
+    public boolean init(Activity activity) {
+        boolean granted = ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
         if (initialized) {
-            return;
+            return granted;
         }
         preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         updateHome();
 
-        if (ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION, },
-                    PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
-        }
-        else {
+        if (granted) {
             initWithPermissions(activity);
             initialized = true;
         }
+
+        return granted;
     }
 
     private void initWithPermissions(Context context) {
