@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="home">Dom</string>
+    <string name="distance">Odległość od domu:</string>
+    <string name="time_since_update">Czas od pomiaru:</string>
+    <string name="speed">Prędkość:</string>
+    <string name="speed_unit">km/godz</string>
+    <string name="hour">godz</string>
+    <string name="zone">Strefa:</string>
+    <string name="stats_tab_name">Główna</string>
+    <string name="map_tab_name">Mapa</string>
+    <string name="history_tab_name">Historia</string>
+    <string name="send_now">Wyślij teraz</string>
+    <string name="notification_text">Wyznaczanie lokalizacji.</string>
+
+    <!-- Preferences -->
+    <string name="sms_settings">SMS</string>
+    <string name="enable_sms">Włącz SMS</string>
+    <string name="telephone_number">Numer telefonu</string>
+    <string name="telephone_number_summary">Osoba, która dostanie SMS</string>
+    <string name="maximum_distance">Maksymalna odległość</string>
+    <string name="maximum_distance_summary">Wysyłaj wiadomości do tej granicy</string>
+    <string name="content_settings">Treść SMS</string>
+    <string name="include_speed">Prędkość</string>
+    <string name="include_speed_summary">Dołączaj informację o prędkości</string>
+    <string name="include_time">Godzina</string>
+    <string name="include_time_summary">Dołączaj informację o godzinie</string>
+    <string name="include_location">Dołączaj lokalizację</string>
+    <string name="include_location_summary">Dołączaj dokładną lokalizację</string>
+    <string name="location_settings">Lokalizacja</string>
+    <string name="update_frequency">Częstotliwość odświeżania</string>
+    <string name="update_frequency_summary">Czas [s] między aktualizacjami</string>
+    <string name="no_number">Brak numeru przypisanego do wybranej osoby</string>
+
+    <!-- Messages -->
+    <string name="sent">Wysłano</string>
+    <string name="delivered">Dostarczono</string>
+    <string name="not_delivered">Nie dostarczono</string>
+    <string name="generic_failure">Niemożliwe do dostarczenia</string>
+    <string name="no_service">Brak sieci</string>
+    <string name="radio_off">Brak połączenia</string>
+    <string name="tap_once_more_to_reset">Naciśnij jeszcze raz aby zresetować</string>
+    <string name="reset">Zresetuj</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_help">Pomoc</string>
+    <string name="app_name_settings">GPS Texter - Ustawienia</string>
+    <string name="tap_back_second_time">Naciśnij Wstecz drugi raz by wyjść z aplikacji</string>
+
+    <!-- Map preferences -->
+    <string name="home_location">Lokalizacja domu</string>
+    <string name="home_location_summary">Punkt, od którego mierzona jest odległość</string>
+    <string name="long_press">Przytrzymaj aby wybrać lokalizację</string>
+    <string name="use_current_location">Użyj bieżącej lokalizacji</string>
+
+    <!-- Permissions -->
+    <string name="perm_contacts_rationale">Program próbuje wyświetlić listę kontaktów aby ułatwić wybór telefonu, na który będą wysyłane wiadomości.\n\nW przypadku braku tego pozwolenia, numer można wpisać ręcznie na klawiaturze.</string>
+
+    <!-- Dialogs -->
+    <string name="info_dismiss_button">Zamknij</string>
+    <string name="info_settings_button">Ustawienia</string>
+
+</resources>

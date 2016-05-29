@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/sms_settings"
+        android:key="category_sms">
+        <CheckBoxPreference
+            android:key="pref_enable_sms"
+            android:title="@string/enable_sms"
+            android:defaultValue="false" />
+
+        <pl.org.seva.texter.preferences.NumberPreference
+            android:dependency="pref_enable_sms"
+            android:key="pref_phone_number"
+            android:title="@string/telephone_number"
+            android:summary="@string/telephone_number_summary"/>
+        <EditTextPreference
+            android:dependency="pref_enable_sms"
+            android:key="pref_max_distance"
+            android:inputType="number"
+            android:title="@string/maximum_distance"
+            android:summary="@string/maximum_distance_summary"
+            android:defaultValue="50"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/content_settings">
+        <CheckBoxPreference
+            android:key="pref_include_speed"
+            android:title="@string/include_speed"
+            android:summary="@string/include_speed_summary"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_include_time"
+            android:title="@string/include_time"
+            android:summary="@string/include_time_summary"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_include_location"
+            android:title="@string/include_location"
+            android:summary="@string/include_location_summary"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/location_settings">
+        <!--<EditTextPreference
+            android:key="pref_update_frequency"
+            android:title="@string/update_frequency"
+            android:summary="@string/update_frequency_summary"
+            android:inputType="number"
+            android:defaultValue="1" />-->
+        <pl.org.seva.texter.preferences.MapPreference
+            android:title="@string/home_location"
+            android:summary="@string/home_location_summary"
+            android:key="pref_home_location"
+            android:defaultValue=""/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
