@@ -27,7 +27,7 @@ import pl.org.seva.texter.listeners.ITimerListener;
  */
 public class TimerManager extends Thread {
 
-    private static TimerManager instance = new TimerManager();
+    private static TimerManager instance;
 
     private long resetTime = System.currentTimeMillis();
 
