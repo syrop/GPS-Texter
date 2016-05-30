@@ -29,7 +29,7 @@ public class TimerManager extends Thread {
 
     private static TimerManager instance = new TimerManager();
 
-    private long resetTime;
+    private long resetTime = System.currentTimeMillis();
 
     private final List<ITimerListener> listeners = new ArrayList<>();
 
