@@ -33,6 +33,8 @@ public class TimerManager extends Thread {
 
     private final List<ITimerListener> listeners = new ArrayList<>();
 
+    private boolean running = true;
+
     private TimerManager() {
     }
 
@@ -48,16 +50,23 @@ public class TimerManager extends Thread {
     }
 
     public static void shutdown() {
+        instance.end();
         synchronized (TimerManager.class) {
             instance = null;
+        }
+    }
+
+    private void end() {
+        synchronized (listeners) {
+            running = false;
+            listeners.notify();
         }
     }
 
     public void run() {
         try {
             synchronized (listeners) {
-            //noinspection InfiniteLoopStatement
-                while (true) {
+                while (running) {
                     listeners.wait(1000);
                     for (ITimerListener listener : listeners) {
                         listener.onTimer();
