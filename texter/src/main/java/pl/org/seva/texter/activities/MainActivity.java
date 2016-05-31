@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements
         WebView web = (WebView) dialog.findViewById(R.id.web);
 
         String language = getResources().getConfiguration().locale.getLanguage();
+        web.getSettings().setDefaultTextEncodingName("utf-8");
 
         web.loadUrl(language.equals("pl") ?
                 "file:///android_asset/startup_pl.html" :
@@ -275,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.help_dialog_layout);
         WebView web = (WebView) dialog.findViewById(R.id.web);
+        web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = getResources().getConfiguration().locale.getLanguage();
 
