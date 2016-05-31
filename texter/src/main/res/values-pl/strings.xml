@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="home">Dom</string>
+    <string name="app_name">GPS Texter</string>
     <string name="distance">Odległość od domu:</string>
     <string name="time_since_update">Czas od pomiaru:</string>
     <string name="speed">Prędkość:</string>
@@ -46,6 +46,7 @@
     <string name="action_help">Pomoc</string>
     <string name="app_name_settings">GPS Texter - Ustawienia</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz by wyjść z aplikacji</string>
+    <string name="please_wait">Zaczekaj</string>
 
     <!-- Map preferences -->
     <string name="home_location">Lokalizacja domu</string>
