@@ -183,6 +183,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 outValue,
                 true);
         textView.setBackgroundResource(outValue.resourceId);
+        textView.setSingleLine();
         textView.setAllCaps(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
