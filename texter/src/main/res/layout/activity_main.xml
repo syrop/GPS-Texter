@@ -9,6 +9,9 @@
 	<include
 		android:id="@+id/tool_bar"
 		layout="@layout/tool_bar" />
+
+	<!-- Setting tools:targetApi to lollipop prevents the warning that android:elevation -->
+    <!-- parameter is not available prior to API 21. -->
 	<pl.org.seva.texter.layouts.SlidingTabLayout
 		android:id="@+id/tabs"
 		android:layout_width="match_parent"

@@ -46,6 +46,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.MainActivityTabAdapter;
@@ -138,18 +139,16 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        if (tabs != null) {
-            tabs.setDistributeEvenly(true);
-        }
 
-        final int tabColor;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tabColor = getResources().getColor(R.color.tabsScrollColor, getTheme());
-        }
-        else {
-            tabColor = getResources().getColor(R.color.tabsScrollColor);
-        }
         if (tabs != null) {
+            final int tabColor;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tabColor = getResources().getColor(R.color.tabsScrollColor, getTheme());
+            }
+            else {
+                tabColor = getResources().getColor(R.color.tabsScrollColor);
+            }
+            tabs.setDistributeEvenly(true);
             tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
                 @Override
                 public int getIndicatorColor(int position) {
@@ -238,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements
         dialog.setContentView(R.layout.startup_dialog_layout);
         WebView web = (WebView) dialog.findViewById(R.id.web);
 
-        String language = getResources().getConfiguration().locale.getLanguage();
+        String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         web.loadUrl(language.equals("pl") ?
@@ -278,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements
         WebView web = (WebView) dialog.findViewById(R.id.web);
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
-        String language = getResources().getConfiguration().locale.getLanguage();
+        String language = Locale.getDefault().getLanguage();
 
         web.loadUrl(language.equals("pl") ?
                 "file:///android_asset/help_pl.html" :

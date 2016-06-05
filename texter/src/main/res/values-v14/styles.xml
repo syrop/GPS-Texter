@@ -9,6 +9,9 @@
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
         <!-- API 14 theme customizations can go here. -->
+
+        <!-- Color palette -->
+        <item name="colorControlHighlight">@android:color/white</item>
     </style>
 
 </resources>

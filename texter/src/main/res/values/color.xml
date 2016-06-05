@@ -2,5 +2,5 @@
 <resources>
     <color name="ColorPrimary">#FF5722</color>
     <color name="ColorPrimaryDark">#E64A19</color>
-    <color name="tabsScrollColor">#8a140e</color>
+    <color name="tabsScrollColor">@android:color/white</color>
 </resources>
