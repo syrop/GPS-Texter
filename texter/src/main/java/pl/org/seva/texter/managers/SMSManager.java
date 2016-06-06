@@ -49,7 +49,7 @@ public class SMSManager {
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
     private static final String MINUTES_KEY = "pl.org.seva.texter.Minutes";
     private static final String DIRECTION_KEY = "pl.org.seva.texter.Direction";
-    private static final String SPEED_KEY = "pl.org.seva.texter.Seed";
+    private static final String SPEED_KEY = "pl.org.seva.texter.Speed";
 
 	private static final String SENT = "SMS_SENT";
     private static final String DELIVERED = "SMS_DELIVERED";
