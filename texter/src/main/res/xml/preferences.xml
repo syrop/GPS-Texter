@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="@string/sms_settings"
         android:key="category_sms">
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_enable_sms"
             android:title="@string/enable_sms"
             android:defaultValue="false" />
@@ -26,17 +26,17 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/content_settings">
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_include_speed"
             android:title="@string/include_speed"
             android:summary="@string/include_speed_summary"
             android:defaultValue="true"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_include_time"
             android:title="@string/include_time"
             android:summary="@string/include_time_summary"
             android:defaultValue="true"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="pref_include_location"
             android:title="@string/include_location"
             android:summary="@string/include_location_summary"
