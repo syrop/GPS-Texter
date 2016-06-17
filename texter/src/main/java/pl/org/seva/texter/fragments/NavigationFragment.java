@@ -123,6 +123,7 @@ public class NavigationFragment extends Fragment implements
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
         // adding marker
+        map.clear();
         map.addMarker(marker);
     }
 
