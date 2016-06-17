@@ -250,40 +250,36 @@ public class GPSManager implements LocationListener {
         }
     }
 
-    public GPSManager addLocationChangedListener(ILocationChangedListener listener) {
+    public void addLocationChangedListener(ILocationChangedListener listener) {
         synchronized (locationChangedListeners) {
             removeLocationChangedListener(listener);
             locationChangedListeners.add(listener);
         }
-        return this;
     }
 
-    public GPSManager removeLocationChangedListener(ILocationChangedListener listener) {
+    public void removeLocationChangedListener(ILocationChangedListener listener) {
         if (listener == null) {
-            return this;
+            return;
         }
         synchronized (locationChangedListeners) {
             locationChangedListeners.remove(listener);
         }
-        return this;
     }
 
-    public GPSManager addProviderListener(IProviderListener listener) {
+    public void addProviderListener(IProviderListener listener) {
         synchronized (providerListeners) {
             removeProviderListener(listener);
             providerListeners.add(listener);
         }
-        return this;
     }
 
-    public GPSManager removeProviderListener(IProviderListener listener) {
+    private void removeProviderListener(IProviderListener listener) {
         if (listener == null) {
-            return this;
+            return;
         }
         synchronized (providerListeners) {
             providerListeners.remove(listener);
         }
-        return this;
     }
 
 	/**
@@ -345,11 +341,11 @@ public class GPSManager implements LocationListener {
 	    return provider1.equals(provider2);
 	}
 	
-    public double getHomeLat() {
+    private double getHomeLat() {
         return homeLat;
     }
 
-    public double getHomeLng() {
+    private double getHomeLng() {
         return homeLon;
     }
 
@@ -395,7 +391,7 @@ public class GPSManager implements LocationListener {
         }
         synchronized (locationChangedListeners) {
             for (ILocationChangedListener listener : locationChangedListeners) {
-                listener.onLocationChanged(location);
+                listener.onLocationChanged();
             }
         }
     }

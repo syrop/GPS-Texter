@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ import pl.org.seva.texter.utils.StringUtils;
  * Created by wiktor on 01.08.15.
  */
 public class HistoryAdapter extends ArrayAdapter<LocationModel> {
-    private Context context;
+    private final Context context;
 
     public HistoryAdapter(Context context, List<LocationModel> values) {
         super(context, -1, values);
@@ -55,7 +56,9 @@ public class HistoryAdapter extends ArrayAdapter<LocationModel> {
         else {
             holder = (HistoryViewHolder) convertView.getTag();
         }
-        String distanceStr = String.format("%.2f", location.getDistance()) + location.getSign() + " km";
+        @SuppressLint("DefaultLocale")
+        String distanceStr =
+                String.format("%.2f", location.getDistance()) + location.getSign() + " km";
         holder.distance.setText(distanceStr);
 
         int hours = location.getMinutes() / 60;
@@ -71,9 +74,9 @@ public class HistoryAdapter extends ArrayAdapter<LocationModel> {
     }
 
     private static class HistoryViewHolder {
-        private TextView distance;
-        private TextView time;
-        private TextView speed;
+        private final TextView distance;
+        private final TextView time;
+        private final TextView speed;
 
         private HistoryViewHolder(View v) {
             distance = (TextView) v.findViewById(R.id.distance);

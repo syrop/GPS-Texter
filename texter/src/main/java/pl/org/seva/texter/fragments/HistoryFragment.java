@@ -31,7 +31,6 @@ import pl.org.seva.texter.adapters.HistoryAdapter;
 import pl.org.seva.texter.listeners.ISMSListener;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.SMSManager;
-import pl.org.seva.texter.model.LocationModel;
 
 /**
  * Created by hp1 on 21-01-2015.
@@ -40,7 +39,7 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
 
     private HistoryAdapter adapter;
     private ListView historyListView;
-    boolean scrollToBottom;
+    private boolean scrollToBottom;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -69,7 +68,7 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
-    public void onSMSSent(LocationModel model) {
+    public void onSMSSent() {
         adapter.notifyDataSetChanged();
         if (scrollToBottom) {
             historyListView.setSelection(adapter.getCount());
@@ -77,7 +76,7 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
-    public void onSendingSMS(LocationModel location) {
+    public void onSendingSMS() {
     }
 
     @Override

@@ -28,16 +28,16 @@ import java.util.List;
  */
 public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
 
-    private int numberOfTabs;
-    private CharSequence titles[]; // This will Store the Titles of the Tabs which are Going to be passed when MainActivityTabAdapter is created
+    private final int numberOfTabs;
+    private final CharSequence titles[]; // This will Store the Titles of the Tabs which are Going to be passed when MainActivityTabAdapter is created
     private List<Fragment> items;
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
-    public MainActivityTabAdapter(FragmentManager fm, CharSequence titles[], int numberOfTabs) {
+    public MainActivityTabAdapter(FragmentManager fm, CharSequence titles[]) {
         super(fm);
 
         this.titles = titles;
-        this.numberOfTabs = numberOfTabs;
+        this.numberOfTabs = pl.org.seva.texter.activities.MainActivity.NUMBER_OF_TABS;
     }
 
     public MainActivityTabAdapter setItems(List<Fragment> items) {

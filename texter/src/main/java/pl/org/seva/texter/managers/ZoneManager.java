@@ -29,7 +29,7 @@ public class ZoneManager {
 
     private static ZoneManager instance;
 
-    private SparseArray<ZoneModel> zones;
+    private final SparseArray<ZoneModel> zones;
 
     public static ZoneManager getInstance() {
         if (instance == null ) {
@@ -58,7 +58,7 @@ public class ZoneManager {
     }
 
     // Needs to be called from a synchronized block.
-    public ZoneModel zone(double distance, boolean updateCounters) {
+    public ZoneModel zone(double distance) {
         int check = 0;
         int min = 0;
         int max;
@@ -67,9 +67,6 @@ public class ZoneManager {
             check += StringUtils.KM_INTERVAL;
         }
         max = check;
-        if (!updateCounters) {
-            return new ZoneModel(min, max);
-        }
         ZoneModel zone = zones.get(min);
         if (zone == null) {
             clear();

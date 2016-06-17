@@ -97,7 +97,7 @@ public class SMSController implements IDistanceChangedListener {
         location.setSpeed(speed);
 
         synchronized (this) {
-            ZoneModel zone = ZoneManager.getInstance().zone(distance, true);
+            ZoneModel zone = ZoneManager.getInstance().zone(distance);
             if (this.zone == null) {
                 this.zone = zone;
             }

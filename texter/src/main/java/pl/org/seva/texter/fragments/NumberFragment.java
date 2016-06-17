@@ -102,7 +102,6 @@ public class NumberFragment extends Fragment implements
     private String contactName;
 
     private SimpleCursorAdapter adapter;
-    private ListView contacts;
     private EditText number;
 
     @Nullable
@@ -119,7 +118,7 @@ public class NumberFragment extends Fragment implements
                 Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED;
 
-        contacts = (ListView) v.findViewById(R.id.contacts);
+        ListView contacts = (ListView) v.findViewById(R.id.contacts);
         if (!contactsEnabled) {
             contacts.setVisibility(View.GONE);
         }
