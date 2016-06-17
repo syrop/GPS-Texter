@@ -8,6 +8,7 @@ android {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
         targetSdkVersion 24
+        multiDexEnabled true
     }
 
     buildTypes {
