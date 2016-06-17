@@ -19,10 +19,10 @@ package pl.org.seva.texter.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -34,28 +34,26 @@ import pl.org.seva.texter.utils.StringUtils;
 /**
  * Created by wiktor on 01.08.15.
  */
-public class HistoryAdapter extends ArrayAdapter<LocationModel> {
-    private final Context context;
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
+    private Context context;
+    private List<LocationModel> values;
 
     public HistoryAdapter(Context context, List<LocationModel> values) {
-        super(context, -1, values);
         this.context = context;
+        this.values = values;
     }
 
+    @Override
+    public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.history_adapter, parent, false);
+        return new ViewHolder(v);
+    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LocationModel location = getItem(position);
-        HistoryViewHolder holder;
-        if (convertView == null) {
-            convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).
-                    inflate(R.layout.history_adapter, parent, false);
-            holder = new HistoryViewHolder(convertView);
-            convertView.setTag(holder);
-        }
-        else {
-            holder = (HistoryViewHolder) convertView.getTag();
-        }
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        LocationModel location = values.get(position);
+
         @SuppressLint("DefaultLocale")
         String distanceStr =
                 String.format("%.2f", location.getDistance()) + location.getSign() + " km";
@@ -69,16 +67,23 @@ public class HistoryAdapter extends ArrayAdapter<LocationModel> {
         }
         builder.append(minutes);
         holder.time.setText(builder.toString());
-        holder.speed.setText(StringUtils.getSpeedStr(location.getSpeed(), context.getString(R.string.speed_unit)));
-        return convertView;
+        holder.speed.setText(
+            StringUtils.getSpeedStr(location.getSpeed(),
+            context.getString(R.string.speed_unit)));
     }
 
-    private static class HistoryViewHolder {
+    @Override
+    public int getItemCount() {
+        return values.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView distance;
         private final TextView time;
         private final TextView speed;
 
-        private HistoryViewHolder(View v) {
+        private ViewHolder(View v) {
+            super(v);
             distance = (TextView) v.findViewById(R.id.distance);
             time = (TextView) v.findViewById(R.id.time);
             speed = (TextView) v.findViewById(R.id.speed);
