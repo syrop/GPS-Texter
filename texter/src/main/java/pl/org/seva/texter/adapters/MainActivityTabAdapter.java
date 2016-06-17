@@ -23,21 +23,20 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
+import pl.org.seva.texter.activities.MainActivity;
+
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
 
-    private final int numberOfTabs;
-    private final CharSequence titles[]; // This will Store the Titles of the Tabs which are Going to be passed when MainActivityTabAdapter is created
+    private final CharSequence titles[];
     private List<Fragment> items;
 
-    // Build a Constructor and assign the passed Values to appropriate values in the class
     public MainActivityTabAdapter(FragmentManager fm, CharSequence titles[]) {
         super(fm);
 
         this.titles = titles;
-        this.numberOfTabs = pl.org.seva.texter.activities.MainActivity.NUMBER_OF_TABS;
     }
 
     public MainActivityTabAdapter setItems(List<Fragment> items) {
@@ -45,22 +44,18 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
         return this;
     }
 
-    //This method return the fragment for the every position in the View Pager
     @Override
     public Fragment getItem(int position) {
         return items.get(position);
     }
 
-    // This method return the titles for the Tabs in the Tab Strip
     @Override
     public CharSequence getPageTitle(int position) {
         return titles[position];
     }
 
-    // This method return the Number of tabs for the tabs Strip
-
     @Override
     public int getCount() {
-        return numberOfTabs;
+        return MainActivity.NUMBER_OF_TABS;
     }
 }
