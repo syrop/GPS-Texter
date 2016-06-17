@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -29,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
@@ -43,9 +45,12 @@ public class SMSManager {
 
 	private static SMSManager instance;
 
-    private static final String TEXT_KEY = "text";
-    private static final String MODEL_KEY = "model";
-	
+    private static final String TEXT_KEY = "pl.org.seva.texter.Text";
+    private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
+    private static final String MINUTES_KEY = "pl.org.seva.texter.Minutes";
+    private static final String DIRECTION_KEY = "pl.org.seva.texter.Direction";
+    private static final String SPEED_KEY = "pl.org.seva.texter.Seed";
+
 	private static final String SENT = "SMS_SENT";
     private static final String DELIVERED = "SMS_DELIVERED";
 
@@ -153,7 +158,11 @@ public class SMSManager {
         {
             public void onReceive(Context arg0, Intent arg1) {
             	String text = arg1.getStringExtra(TEXT_KEY);
-                LocationModel location = arg1.getParcelableExtra(MODEL_KEY);
+                LocationModel location = new LocationModel().
+                    setDistance(arg1.getDoubleExtra(DISTANCE_KEY, 0.0)).
+                    setTime(arg1.getIntExtra(MINUTES_KEY, 0)).
+                    setDirection(arg1.getIntExtra(DIRECTION_KEY, 0)).
+                    setSpeed(arg1.getDoubleExtra(SPEED_KEY, 0.0));
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
@@ -195,7 +204,7 @@ public class SMSManager {
         {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-            String text = arg1.getStringExtra("text");
+            String text = arg1.getStringExtra(TEXT_KEY);
             switch (getResultCode())
             {
                 case Activity.RESULT_OK:
@@ -224,6 +233,7 @@ public class SMSManager {
         }
         checkInit();
         double distance = model.getDistance();
+        @SuppressLint("DefaultLocale")
         String distanceStr = String.format("%.2f", distance) + model.getSign();
         StringBuilder smsBuilder = new StringBuilder(distanceStr + " km");
         if (isSpeedIncluded()) {
@@ -242,7 +252,7 @@ public class SMSManager {
         if (isLocationIncluded()) {
             smsBuilder.append(" ").append(GPSManager.getInstance().getLocationUrl());
         }
-
+        @SuppressLint("DefaultLocale")
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";
         String smsStr = smsBuilder.toString();
         send(smsStr, intentDistanceStr, model);
@@ -257,19 +267,20 @@ public class SMSManager {
         String id = UUID.randomUUID().toString();
 		Intent sentIntent = new Intent(SENT + id);
 		sentIntent.putExtra(TEXT_KEY, intentText);
-        sentIntent.putExtra(MODEL_KEY, location);
+        sentIntent.putExtra(DISTANCE_KEY, location.getDistance());
+        sentIntent.putExtra(MINUTES_KEY, location.getMinutes());
+        sentIntent.putExtra(DIRECTION_KEY, location.getDirection());
+        sentIntent.putExtra(SPEED_KEY, location.getSpeed());
 
 		Intent deliveredIntent = new Intent(DELIVERED + id);
-		deliveredIntent.putExtra("text", intentText);
+		deliveredIntent.putExtra(TEXT_KEY, intentText);
 
 		PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0);
         PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
 		registerBroadcastReceiver(id);
-        if (location != null) {
-            synchronized (listeners) {
-                for (ISMSListener listener : listeners) {
-                    listener.onSendingSMS(location);
-                }
+        synchronized (listeners) {
+            for (ISMSListener listener : listeners) {
+                listener.onSendingSMS(location);
             }
         }
         try {

@@ -103,6 +103,10 @@ public class LocationModel implements Parcelable {
         return this;
     }
 
+    public int getDirection() {
+        return direction;
+    }
+
     public int describeContents() {
         return  0;
     }
