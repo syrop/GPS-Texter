@@ -90,15 +90,15 @@ public class TimerManager extends Thread {
         return resetTime;
     }
 
-    public boolean addListener(ITimerListener listener) {
+    public void addListener(ITimerListener listener) {
         synchronized (listeners) {
-            return listeners.add(listener);
+            listeners.add(listener);
         }
     }
 
-    public boolean removeListener(ITimerListener listener) {
+    public void removeListener(ITimerListener listener) {
         synchronized (listeners) {
-            return listeners.remove(listener);
+            listeners.remove(listener);
         }
     }
 }

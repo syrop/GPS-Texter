@@ -30,7 +30,7 @@ public class HistoryManager {
 
     private boolean mock = true;
 
-    private List<LocationModel> list;
+    private final List<LocationModel> list;
 
     private HistoryManager() {
         list = new ArrayList<>();
@@ -58,12 +58,11 @@ public class HistoryManager {
         return list;
     }
 
-    public HistoryManager add(LocationModel model) {
+    public void add(LocationModel model) {
         if (mock) {
             list.clear();
             mock = false;
         }
         list.add(model);
-        return this;
     }
 }

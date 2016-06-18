@@ -17,6 +17,8 @@
 
 package pl.org.seva.texter.utils;
 
+import android.annotation.SuppressLint;
+
 /**
  * Created by wiktor on 28.08.15.
  */
@@ -26,6 +28,7 @@ public class StringUtils {
     public static final int KM_INTERVAL = 2;  // two kilometers
 
     public static String getSpeedStr(double speed, String speedUnit) {
+        @SuppressLint("DefaultLocale")
         String result = String.format("%.1f", speed) + " " + speedUnit;
         if (result.contains(".0")) {
             result = result.replace(".0", "");

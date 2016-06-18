@@ -21,7 +21,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
@@ -74,7 +73,7 @@ public class MapPreference extends DialogPreference implements
     /** True indicates restoring from a saved state. */
     private boolean restored;
 
-    private Context context;
+    private final Context context;
     private GoogleMap map;
     private Button useCurrentButton;
 
@@ -287,7 +286,7 @@ public class MapPreference extends DialogPreference implements
         return toString(lat, lon);
     }
 
-    public static String toString(double lat, double lon) {
+    private static String toString(double lat, double lon) {
         return ("geo:") +
         (int) lat + "." +
         Double.toString(lat - (int) lat).substring(2, 8) + "," +
@@ -314,7 +313,7 @@ public class MapPreference extends DialogPreference implements
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged() {
         if (map == null || useCurrentButton == null) {
             return;
         }

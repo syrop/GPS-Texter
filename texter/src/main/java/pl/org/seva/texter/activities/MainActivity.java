@@ -70,13 +70,13 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
-    public static final int STATS_TAB_POSITION = 0;
-    public static final int MAP_TAB_POSITION = 1;
-    public static final int HISTORY_TAB_POSITION = 2;
+    private static final int STATS_TAB_POSITION = 0;
+    private static final int MAP_TAB_POSITION = 1;
+    private static final int HISTORY_TAB_POSITION = 2;
 
     private static final int GOOGLE_REQUEST_CODE = 0;
 
-    private static final int NUMBER_OF_TABS = 3;
+    public static final int NUMBER_OF_TABS = 3;
 
     /** Number of milliseconds that will be taken for a double click. */
     private static final long DOUBLE_CLICK_MILLIS = 5000;
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements
         fragments.add(HistoryFragment.newInstance());
 
         MainActivityTabAdapter adapter =
-                new MainActivityTabAdapter(getSupportFragmentManager(), titles, NUMBER_OF_TABS).
+                new MainActivityTabAdapter(getSupportFragmentManager(), titles).
                         setItems(fragments);
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements
             else {
                 tabColor = getResources().getColor(R.color.tabsScrollColor);
             }
-            tabs.setDistributeEvenly(true);
+            tabs.setDistributeEvenly();
             tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
                 @Override
                 public int getIndicatorColor(int position) {
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    private boolean showHelpDialog() {
+    private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.help_dialog_layout);
@@ -290,11 +290,10 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         dialog.show();
-        return true;
     }
 
     // Method to start the service
-    public void startService() {
+    private void startService() {
         if (serviceRunning) {
             return;
         }
@@ -303,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // Method to stop the service
-    public void stopService() {
+    private void stopService() {
         if (!serviceRunning) {
             return;
         }

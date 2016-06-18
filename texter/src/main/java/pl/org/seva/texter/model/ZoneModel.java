@@ -19,18 +19,15 @@ package pl.org.seva.texter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.SparseArray;
-
-import pl.org.seva.texter.utils.StringUtils;
 
 /**
  * Created by wiktor on 28.08.15.
  */
 public class ZoneModel implements Parcelable {
-    private int min;
-    private int max;
+    private final int min;
+    private final int max;
     private int counter;
-    private long time;
+    private final long time;
 
     public ZoneModel(int min, int max) {
         this.min = min;

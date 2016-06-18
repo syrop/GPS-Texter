@@ -18,6 +18,7 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -122,11 +123,12 @@ public class NavigationFragment extends Fragment implements
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
         // adding marker
+        map.clear();
         map.addMarker(marker);
     }
 
     private void show(double distance) {
-        String distanceStr = String.format("%.3f km", distance);
+        @SuppressLint("DefaultLocale") String distanceStr = String.format("%.3f km", distance);
         if (distance == 0.0) {
             distanceStr = "0 km";
         }

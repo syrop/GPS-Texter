@@ -18,6 +18,7 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -112,7 +113,7 @@ public class StatsFragment extends Fragment
     }
 
     private void show() {
-        String distanceStr = String.format("%.3f km", distance);
+        @SuppressLint("DefaultLocale") String distanceStr = String.format("%.3f km", distance);
 
         if (distance == 0.0) {
             distanceStr = "0 km";
@@ -154,6 +155,7 @@ public class StatsFragment extends Fragment
     }
 
     private String getSpeedStr() {
+        @SuppressLint("DefaultLocale")
         String result = String.format("%.1f", speed) + " " + activity.getString(R.string.speed_unit);
         if (result.contains(".0")) {
             result = result.replace(".0", "");
@@ -227,12 +229,12 @@ public class StatsFragment extends Fragment
     }
 
     @Override
-    public void onSendingSMS(LocationModel model) {
+    public void onSendingSMS() {
         sendNowButton.setEnabled(false);
     }
 
     @Override
-    public void onSMSSent(LocationModel model) {
+    public void onSMSSent() {
     }
 
     @Override

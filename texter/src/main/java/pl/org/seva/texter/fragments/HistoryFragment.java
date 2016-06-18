@@ -17,33 +17,43 @@
 
 package pl.org.seva.texter.fragments;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.HistoryAdapter;
 import pl.org.seva.texter.listeners.ISMSListener;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.SMSManager;
-import pl.org.seva.texter.model.LocationModel;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
-public class HistoryFragment extends Fragment implements ISMSListener, AbsListView.OnScrollListener {
+public class HistoryFragment extends Fragment implements ISMSListener  {
 
     private HistoryAdapter adapter;
-    private ListView historyListView;
-    boolean scrollToBottom;
+    private RecyclerView historyRecyclerView;
+    private boolean scrollToBottom;
+    private Context context;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -51,11 +61,15 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
             LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.history_fragment,container,false);
-        historyListView = (ListView) v.findViewById(R.id.listView);
+        View v = inflater.inflate(R.layout.history_fragment, container, false);
+        historyRecyclerView = (RecyclerView) v.findViewById(R.id.listView);
+        historyRecyclerView.setHasFixedSize(true);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new HistoryAdapter(getActivity(), HistoryManager.getInstance().getList());
-        historyListView.setAdapter(adapter);
-        historyListView.setOnScrollListener(this);
+        historyRecyclerView.setAdapter(adapter);
+        historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
+        historyRecyclerView.clearOnScrollListeners();
+        historyRecyclerView.addOnScrollListener(new OnScrollListener());
         SMSManager.getInstance().addSMSListener(this);
         scrollToBottom = true;
 
@@ -69,29 +83,60 @@ public class HistoryFragment extends Fragment implements ISMSListener, AbsListVi
     }
 
     @Override
-    public void onSMSSent(LocationModel model) {
+    public void onSMSSent() {
         adapter.notifyDataSetChanged();
         if (scrollToBottom) {
-            historyListView.setSelection(adapter.getCount());
+            historyRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
         }
     }
 
     @Override
-    public void onSendingSMS(LocationModel location) {
+    public void onSendingSMS() {
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    private class OnScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            if (recyclerView == historyRecyclerView) {
+                scrollToBottom = recyclerView.computeVerticalScrollOffset() ==
+                        recyclerView.computeVerticalScrollRange() -
+                                recyclerView.computeVerticalScrollExtent();
+            }
+        }
     }
 
-    @Override
-    public void onScroll(
-            AbsListView view,
-            int firstVisibleItem,
-            int visibleItemCount,
-            int totalItemCount) {
-        if (view == historyListView) {
-            scrollToBottom = firstVisibleItem + visibleItemCount >= totalItemCount;
+    private static class DividerItemDecoration extends RecyclerView.ItemDecoration {
+
+        private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
+
+        private Drawable mDivider;
+
+        /**
+         * Default divider will be used
+         */
+        public DividerItemDecoration(Context context) {
+            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
+            mDivider = styledAttributes.getDrawable(0);
+            styledAttributes.recycle();
+        }
+
+        @Override
+        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
         }
     }
 }

@@ -33,8 +33,8 @@ import pl.org.seva.texter.listeners.IPermissionGrantedListener;
  */
 public class PermissionsManager {
 
-    public static int PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0;
-    public static int PERMISSION_READ_CONTACTS_REQUEST = 1;
+    public static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0;
+    public static final int PERMISSION_READ_CONTACTS_REQUEST = 1;
 
     private static PermissionsManager instance;
 
@@ -98,6 +98,7 @@ public class PermissionsManager {
         }).start();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean rationaleShown(String permission) {
         return rationalesShown.contains(permission);
     }

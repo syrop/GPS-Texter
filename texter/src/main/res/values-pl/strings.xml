@@ -7,7 +7,6 @@
     <string name="speed">Prędkość:</string>
     <string name="speed_unit">km/godz</string>
     <string name="hour">godz</string>
-    <string name="zone">Strefa:</string>
     <string name="stats_tab_name">Główna</string>
     <string name="map_tab_name">Mapa</string>
     <string name="history_tab_name">Historia</string>
@@ -29,8 +28,6 @@
     <string name="include_location">Dołączaj lokalizację</string>
     <string name="include_location_summary">Dołączaj dokładną lokalizację</string>
     <string name="location_settings">Lokalizacja</string>
-    <string name="update_frequency">Częstotliwość odświeżania</string>
-    <string name="update_frequency_summary">Czas [s] między aktualizacjami</string>
     <string name="no_number">Brak numeru przypisanego do wybranej osoby</string>
 
     <!-- Messages -->
@@ -40,13 +37,10 @@
     <string name="generic_failure">Niemożliwe do dostarczenia</string>
     <string name="no_service">Brak sieci</string>
     <string name="radio_off">Brak połączenia</string>
-    <string name="tap_once_more_to_reset">Naciśnij jeszcze raz aby zresetować</string>
-    <string name="reset">Zresetuj</string>
     <string name="action_settings">Ustawienia</string>
     <string name="action_help">Pomoc</string>
     <string name="app_name_settings">GPS Texter - Ustawienia</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz by wyjść z aplikacji</string>
-    <string name="please_wait">Zaczekaj</string>
 
     <!-- Map preferences -->
     <string name="home_location">Lokalizacja domu</string>

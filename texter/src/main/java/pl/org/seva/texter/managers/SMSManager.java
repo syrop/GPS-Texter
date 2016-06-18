@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
@@ -58,7 +57,7 @@ public class SMSManager {
 	private SharedPreferences preferences;
     private String speedUnit;
 
-	private SmsManager smsManager;
+	private final SmsManager smsManager;
 
     private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
 
@@ -114,7 +113,7 @@ public class SMSManager {
         }
     }
 
-	public String getPhoneNumber() {
+	private String getPhoneNumber() {
 		String numberStr = preferences.getString(SettingsActivity.SMS_NUMBER, "");
 		return numberStr.length() > 0 ? numberStr : "0";
 	}
@@ -138,10 +137,10 @@ public class SMSManager {
         }
     }
 
-    public boolean unregisterReceivers() {
+    private void unregisterReceivers() {
         synchronized (broadcastReceivers) {
             if (broadcastReceivers.isEmpty()) {
-                return false;
+                return;
             }
             for (BroadcastReceiver receiver : broadcastReceivers) {
                 context.unregisterReceiver(receiver);
@@ -149,7 +148,6 @@ public class SMSManager {
             broadcastReceivers.clear();
         }
 
-        return true;
     }
 	
 	private void registerBroadcastReceiver(String id) {
@@ -177,22 +175,31 @@ public class SMSManager {
                             HistoryManager.getInstance().add(location);
                             synchronized (listeners) {
                                 for (ISMSListener listener : listeners) {
-                                    listener.onSMSSent(location);
+                                    listener.onSMSSent();
                                 }
                             }
                         }
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(arg0, arg0.getString(R.string.generic_failure), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                arg0,
+                                arg0.getString(R.string.generic_failure),
+                                Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(arg0, arg0.getString(R.string.no_service), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                arg0,
+                                arg0.getString(R.string.no_service),
+                                Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
                         Toast.makeText(arg0, "Null PDU", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(arg0, arg0.getString(R.string.radio_off), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                arg0,
+                                arg0.getString(R.string.radio_off),
+                                Toast.LENGTH_SHORT).show();
                         break;
                 }
                 unregisterReceiver(this);
@@ -208,14 +215,16 @@ public class SMSManager {
             switch (getResultCode())
             {
                 case Activity.RESULT_OK:
-                    StringBuilder deliveredBuilder = new StringBuilder(arg0.getString(R.string.delivered));
+                    StringBuilder deliveredBuilder =
+                            new StringBuilder(arg0.getString(R.string.delivered));
                     if (text != null) {
                         deliveredBuilder.append(": ").append(text);
                     }
                     Toast.makeText(arg0, deliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
                     break;
                 case Activity.RESULT_CANCELED:
-                    StringBuilder notDeliveredBuilder = new StringBuilder(arg0.getString(R.string.not_delivered));
+                    StringBuilder notDeliveredBuilder =
+                            new StringBuilder(arg0.getString(R.string.not_delivered));
                     if (text != null) {
                         notDeliveredBuilder.append(": ").append(text);
                     }
@@ -280,7 +289,7 @@ public class SMSManager {
 		registerBroadcastReceiver(id);
         synchronized (listeners) {
             for (ISMSListener listener : listeners) {
-                listener.onSendingSMS(location);
+                listener.onSendingSMS();
             }
         }
         try {
