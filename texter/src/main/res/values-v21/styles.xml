@@ -4,12 +4,9 @@
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
         <item name="colorControlHighlight">@android:color/white</item>
-    </style>
-
-    <style name="FixForPreferenceThemeOverlay" parent="AppTheme">
         <item name="android:colorAccent">@color/ColorPrimary</item>
         <item name="android:colorControlActivated">@color/ColorPrimary</item>
-        <item name="android:colorControlHighlight">@android:color/secondary_text_dark_nodisable</item>
+        <item name="android:colorControlHighlight">@android:color/secondary_text_dark</item>
     </style>
 
 </resources>

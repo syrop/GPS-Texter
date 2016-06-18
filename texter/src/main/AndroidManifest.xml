@@ -37,7 +37,6 @@
         </activity>
         <activity
             android:name="pl.org.seva.texter.activities.SettingsActivity"
-            android:theme="@style/FixForPreferenceThemeOverlay"
             android:label="@string/app_name_settings"
             android:screenOrientation="portrait" />
 
