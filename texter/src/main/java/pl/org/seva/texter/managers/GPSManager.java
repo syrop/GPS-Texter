@@ -377,12 +377,11 @@ public class GPSManager implements LocationListener {
         if (!GPSManager.isBetterLocation(location, this.location)) {
             return;
         }
-        this.location = location;
         TimerManager.getInstance().reset();
-        double distance = calculateDistance();  // distance in kilometres
         long time = System.currentTimeMillis();
-        speed = calculateSpeed(this.distance, distance, time - this.time);
-        this.distance = distance;
+        speed = calculateSpeed(this.location, location, time - this.time);
+        this.location = location;
+        this.distance = calculateDistance();  // distance in kilometres
         this.time = time;
         synchronized (distanceListeners) {
             for (IDistanceChangedListener listener : distanceListeners) {
@@ -420,16 +419,22 @@ public class GPSManager implements LocationListener {
         return EARTH_RADIUS * c;
     }
 
-    private double calculateSpeed(double dist1, double dist2, long time) {
-        if (dist1 == dist2 || this.time == 0 || time == 0) {
+    private double calculateSpeed(Location loc1, Location loc2, long time) {
+        if (loc1 == null || loc2 == null || this.time == 0 || time == 0 ||
+                loc1.getLatitude() == loc2.getLatitude() &&
+                        loc1.getLongitude() == loc2.getLongitude()) {
             return 0.0;
         }
-        double distance = Math.abs(dist2 - dist1);
         double seconds = (double) time / 1000.0;
         double hours = seconds / 3600.0;
         if (hours == 0.0) {
             return 0.0;
         }
+        double distance = calculateDistance(
+                loc1.getLatitude(),
+                loc1.getLongitude(),
+                loc2.getLatitude(),
+                loc2.getLongitude());
         return distance / hours;
     }
 
