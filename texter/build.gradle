@@ -9,7 +9,18 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         multiDexEnabled true
+//        jackOptions {
+//            enabled false
+//        }
+
+//        Jack options disabled de to issue 209504. For more info see:
+//        https://code.google.com/p/android/issues/detail?id=209504
     }
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     buildTypes {
         release {

@@ -5,4 +5,7 @@
         <item name="colorControlHighlight">@android:color/white</item>
     </style>
 
+    <style name="FixForPreferenceThemeOverlay" parent="AppTheme">
+    </style>
+
 </resources>
