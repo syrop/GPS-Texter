@@ -4,11 +4,17 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    dexOptions {
+        maxProcessCount 2
+        javaMaxHeapSize "2g"
+    }
+
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
         targetSdkVersion 24
         multiDexEnabled true
+
 //        jackOptions {
 //            enabled false
 //        }
@@ -36,5 +42,5 @@ dependencies {
     compile "com.android.support:support-v4:24.0.0"
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.google.android.gms:play-services:9.0.2'
+    compile 'com.google.android.gms:play-services:9.2.0'
 }
