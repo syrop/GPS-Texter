@@ -20,6 +20,7 @@ package pl.org.seva.texter.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
@@ -63,8 +65,9 @@ public class NavigationFragment extends Fragment implements
             LayoutInflater inflater,
             ViewGroup container,
             final Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.navigation_fragment, container, false);
-        distanceTextView = (TextView) v.findViewById(R.id.distance);
+        NavigationFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
+        distanceTextView = binding.distance;
         GPSManager.getInstance().addDistanceChangedListener(this);
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
@@ -102,7 +105,7 @@ public class NavigationFragment extends Fragment implements
             }
         });
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override

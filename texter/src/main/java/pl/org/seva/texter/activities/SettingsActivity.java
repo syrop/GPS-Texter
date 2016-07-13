@@ -19,6 +19,8 @@ package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.databinding.ActivityMainBinding;
+import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
@@ -28,6 +30,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -69,11 +72,12 @@ public class SettingsActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
+        ActivitySettingsBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_settings);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Attaching the layout to the toolbar object
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = binding.toolBar.toolBar;
 
 		setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

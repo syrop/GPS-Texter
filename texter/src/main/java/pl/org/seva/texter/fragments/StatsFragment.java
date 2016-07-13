@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
@@ -77,11 +79,12 @@ public class StatsFragment extends Fragment
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
-        View v = inflater.inflate(R.layout.stats_fragment,container,false);
-        distanceTextView = (TextView) v.findViewById(R.id.distance_value);
-        intervalTextView = (TextView) v.findViewById(R.id.interval_value);
-        speedTextView = (TextView) v.findViewById(R.id.speed_value);
-        sendNowButton = (Button) v.findViewById(R.id.send_now_button);
+        StatsFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.stats_fragment, container, false);
+        distanceTextView = binding.distanceValue;
+        intervalTextView = binding.intervalValue;
+        speedTextView = binding.speedValue;
+        sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
         sendNowButton.setEnabled(distance != 0.0 &&
                 distance != SMSManager.getInstance().getLastSentDistance());
@@ -101,7 +104,7 @@ public class StatsFragment extends Fragment
                     this);
         }
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override

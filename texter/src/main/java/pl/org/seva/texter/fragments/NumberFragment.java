@@ -21,6 +21,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.NumberFragmentBinding;
 
 /**
  * Created by wiktor on 5/20/16.
@@ -110,15 +112,16 @@ public class NumberFragment extends Fragment implements
             (LayoutInflater inflater,
              @Nullable ViewGroup container,
              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.number_fragment, container, false);
-        number = (EditText) v.findViewById(R.id.number);
+        NumberFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.number_fragment, container, false);
+        number = binding.number;
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 getActivity(),
                 Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED;
 
-        ListView contacts = (ListView) v.findViewById(R.id.contacts);
+        ListView contacts = binding.contacts;
         if (!contactsEnabled) {
             contacts.setVisibility(View.GONE);
         }
@@ -134,7 +137,7 @@ public class NumberFragment extends Fragment implements
             contacts.setAdapter(adapter);
         }
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override

@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,7 +39,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -51,6 +51,9 @@ import java.util.Locale;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.MainActivityTabAdapter;
 import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.databinding.ActivityMainBinding;
+import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
+import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
 import pl.org.seva.texter.fragments.HistoryFragment;
 import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             window.setStatusBarColor(color);
         }
-        setContentView(R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
         SMSController.getInstance().init(getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = binding.toolBar.toolBar;
         setSupportActionBar(toolbar);
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(StatsFragment.newInstance());
@@ -133,12 +136,12 @@ public class MainActivity extends AppCompatActivity implements
                 new MainActivityTabAdapter(getSupportFragmentManager(), titles).
                         setItems(fragments);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        ViewPager pager = binding.pager;
         if (pager != null) {
             pager.setAdapter(adapter);
         }
 
-        SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        SlidingTabLayout tabs = binding.tabs;
 
         if (tabs != null) {
             final int tabColor;
@@ -234,8 +237,10 @@ public class MainActivity extends AppCompatActivity implements
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.startup_dialog_layout);
-        WebView web = (WebView) dialog.findViewById(R.id.web);
+        StartupDialogLayoutBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.startup_dialog_layout);
+        dialog.setContentView(binding.getRoot());
+        WebView web = binding.web;
 
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
@@ -244,8 +249,7 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/startup_pl.html" :
                 "file:///android_asset/startup_en.html");
 
-        Button dismiss = (Button) dialog.findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
+        binding.dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 processPermissions();
@@ -253,8 +257,7 @@ public class MainActivity extends AppCompatActivity implements
                 prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
             }
         });
-        Button settings = (Button) dialog.findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
+        binding.settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -273,8 +276,10 @@ public class MainActivity extends AppCompatActivity implements
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.help_dialog_layout);
-        WebView web = (WebView) dialog.findViewById(R.id.web);
+        HelpDialogLayoutBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.help_dialog_layout);
+        dialog.setContentView(binding.getRoot());
+        WebView web = binding.web;
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = Locale.getDefault().getLanguage();
@@ -283,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/help_pl.html" :
                 "file:///android_asset/help_en.html");
 
-        dialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        binding.ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

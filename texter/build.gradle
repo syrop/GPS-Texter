@@ -4,6 +4,10 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    dataBinding {
+        enabled = true;
+    }
+
 // For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
     dexOptions {
         dexInProcess true
@@ -45,5 +49,5 @@ dependencies {
     compile "com.android.support:support-v4:24.0.0"
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.google.android.gms:play-services:9.2.0'
+    compile 'com.google.android.gms:play-services:9.2.1'
 }
