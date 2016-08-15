@@ -246,7 +246,7 @@ public class SMSManager {
         String distanceStr = String.format("%.2f", distance) + model.getSign();
         StringBuilder smsBuilder = new StringBuilder(distanceStr + " km");
         if (isSpeedIncluded()) {
-            String speedStr = StringUtils.getSpeedStr(model.getSpeed(), speedUnit);
+            String speedStr = StringUtils.getSpeedString(model.getSpeed(), speedUnit);
             smsBuilder.append(speedStr.startsWith("0 ") ? "" : ", " + speedStr);
         }
         if (isTimeIncluded()) {

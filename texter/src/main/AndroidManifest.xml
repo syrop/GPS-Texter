@@ -41,6 +41,8 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".services.TexterService"/>
+        <service android:name=".services.GeofenceTransitionsIntentService"/>
+
 
         <meta-data
             android:name="com.google.android.gms.version"

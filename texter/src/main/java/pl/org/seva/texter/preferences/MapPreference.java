@@ -47,6 +47,7 @@ import pl.org.seva.texter.listeners.ILocationChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
+import pl.org.seva.texter.utils.Constants;
 
 /**
  * Created by wiktor on 20.08.15.
@@ -55,11 +56,10 @@ public class MapPreference extends DialogPreference implements
         GoogleMap.OnMapLongClickListener,
         View.OnClickListener,
         ILocationChangedListener,
-        GoogleMap.OnCameraChangeListener,
+        GoogleMap.OnCameraIdleListener,
         IPermissionGrantedListener{
 
-    /** Geo URI for Warsaw. */
-    public static final String DEFAULT_VALUE = "geo:52.233333,21.016667";  // Warsaw
+    private static final String HOME_LOCATION = "HOME_LOCATION";
 
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
@@ -104,7 +104,7 @@ public class MapPreference extends DialogPreference implements
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return DEFAULT_VALUE;
+        return Constants.DEFAULT_HOME_LOCATION;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class MapPreference extends DialogPreference implements
         else {
             zoom = PreferenceManager.getDefaultSharedPreferences(context).
                     getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
-            String value = getPersistedString(DEFAULT_VALUE);
+            String value = getPersistedString(HOME_LOCATION);
             lat = parseLatitude(value);
             lon = parseLongitude(value);
         }
@@ -184,12 +184,12 @@ public class MapPreference extends DialogPreference implements
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         String value;
         if (restorePersistedValue) {
-            value = getPersistedString(DEFAULT_VALUE);
+            value = getPersistedString(HOME_LOCATION);
             lat = parseLatitude(value);
             lon = parseLongitude(value);
         }
         else {
-            value = DEFAULT_VALUE;
+            value = Constants.DEFAULT_HOME_LOCATION;
             persistString(value);
         }
         lat = parseLatitude(value);
@@ -256,7 +256,7 @@ public class MapPreference extends DialogPreference implements
                 }
 
                 map.setOnMapLongClickListener(MapPreference.this);
-                map.setOnCameraChangeListener(MapPreference.this);
+                map.setOnCameraIdleListener(MapPreference.this);
             }
         });
 
@@ -321,8 +321,8 @@ public class MapPreference extends DialogPreference implements
     }
 
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        zoom = cameraPosition.zoom;
+    public void onCameraIdle() {
+        zoom = map.getCameraPosition().zoom;
     }
 
     @Override

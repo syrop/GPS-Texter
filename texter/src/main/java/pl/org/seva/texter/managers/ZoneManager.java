@@ -20,7 +20,7 @@ package pl.org.seva.texter.managers;
 import android.util.SparseArray;
 
 import pl.org.seva.texter.model.ZoneModel;
-import pl.org.seva.texter.utils.StringUtils;
+import pl.org.seva.texter.utils.Constants;
 
 /**
  * Created by wiktor on 5/26/16.
@@ -64,7 +64,7 @@ public class ZoneManager {
         int max;
         while (check < distance) {  // Calculate min and max.
             min = check;
-            check += StringUtils.KM_INTERVAL;
+            check += Constants.KM_INTERVAL;
         }
         max = check;
         ZoneModel zone = zones.get(min);
