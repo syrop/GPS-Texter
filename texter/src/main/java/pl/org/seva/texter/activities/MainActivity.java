@@ -35,7 +35,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -152,12 +151,7 @@ public class MainActivity extends AppCompatActivity implements
                 tabColor = getResources().getColor(R.color.tabsScrollColor);
             }
             tabs.setDistributeEvenly();
-            tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-                @Override
-                public int getIndicatorColor(int position) {
-                    return tabColor;
-                }
-            });
+            tabs.setCustomTabColorizer(position -> tabColor);
             tabs.setViewPager(pager);
         }
         if (TimerManager.getInstance().getState() == Thread.State.NEW) {
@@ -249,24 +243,18 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/startup_pl.html" :
                 "file:///android_asset/startup_en.html");
 
-        binding.dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processPermissions();
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
-            }
+        binding.dismiss.setOnClickListener(v -> {
+            processPermissions();
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
         });
-        binding.settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-                showSettings = true;  // Only relevant if permission is not granted.
-                if (processPermissions()) {
-                    // Called if permission has already been granted, e.g. when API < 23.
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                }
+        binding.settings.setOnClickListener(v -> {
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
+            showSettings = true;  // Only relevant if permission is not granted.
+            if (processPermissions()) {
+                // Called if permission has already been granted, e.g. when API < 23.
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
         dialog.show();
@@ -288,12 +276,7 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/help_pl.html" :
                 "file:///android_asset/help_en.html");
 
-        binding.ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        binding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 

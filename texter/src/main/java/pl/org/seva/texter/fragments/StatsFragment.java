@@ -202,12 +202,7 @@ public class StatsFragment extends Fragment
         if (activity == null) {
             return;
         }
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                show();
-            }
-        });
+        activity.runOnUiThread(this::show);
     }
 
     public static String getHomeString() {

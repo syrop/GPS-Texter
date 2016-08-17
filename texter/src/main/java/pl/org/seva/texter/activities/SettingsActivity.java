@@ -19,7 +19,6 @@ package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.controller.SMSController;
-import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
@@ -27,7 +26,6 @@ import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -199,15 +197,11 @@ public class SettingsActivity extends AppCompatActivity
                             rationaleShown(Manifest.permission.READ_CONTACTS)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.perm_contacts_rationale).
-                        setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PermissionsManager.getInstance().
-                                onRationaleShown(Manifest.permission.READ_CONTACTS);
-                        processPermissions();
-                    }
-                });
+                        setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            PermissionsManager.getInstance().
+                                    onRationaleShown(Manifest.permission.READ_CONTACTS);
+                            processPermissions();
+                        });
                 builder.create().show();
             }
             else {

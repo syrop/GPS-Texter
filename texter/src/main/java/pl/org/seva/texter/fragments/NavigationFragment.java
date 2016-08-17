@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -77,31 +76,28 @@ public class NavigationFragment extends Fragment implements
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                if (ContextCompat.checkSelfPermission(
-                        getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    map.setMyLocationEnabled(true);
-                }
-                else {
-                    PermissionsManager.getInstance().addPermissionGrantedListener(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            NavigationFragment.this);
-                }
-                LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
-                updateHomeLocation(homeLatLng);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(homeLatLng).zoom(12).build();
-                if (savedInstanceState == null) {
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-                else {
-                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+        mapFragment.getMapAsync(googleMap -> {
+            map = googleMap;
+            if (ContextCompat.checkSelfPermission(
+                    getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
+            }
+            else {
+                PermissionsManager.getInstance().addPermissionGrantedListener(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        NavigationFragment.this);
+            }
+            LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
+            updateHomeLocation(homeLatLng);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(homeLatLng).zoom(12).build();
+            if (savedInstanceState == null) {
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+            else {
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
