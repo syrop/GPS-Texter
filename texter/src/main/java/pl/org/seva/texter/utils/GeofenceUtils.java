@@ -18,6 +18,7 @@
 package pl.org.seva.texter.utils;
 
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class GeofenceUtils {
                             home.latitude,
                             home.longitude,
                             radius)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL |
+                        Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
                     .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setLoiteringDelay(Constants.TIME_IN_ZONE)
                     .build());
@@ -51,4 +54,10 @@ public class GeofenceUtils {
         return result;
     }
 
+    public GeofencingRequest getGeofencingRequest(List<Geofence> geofences) {
+        return new GeofencingRequest.Builder()
+                .setInitialTrigger(0)
+                .addGeofences(geofences)
+                .build();
+    }
 }
