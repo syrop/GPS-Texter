@@ -22,6 +22,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         multiDexEnabled true
+        resConfigs "en", "pl"
 
 //        Jack options disabled de to issue 209504. For more info see:
 //        https://code.google.com/p/android/issues/detail?id=209504
@@ -41,6 +42,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
