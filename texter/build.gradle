@@ -27,11 +27,10 @@ android {
 //        Jack options disabled de to issue 209504. For more info see:
 //        https://code.google.com/p/android/issues/detail?id=209504
 
-//        jackOptions {
-//            enabled false
-//            jackInProcess true
-//        }
-
+        jackOptions {
+            enabled false
+            jackInProcess true
+        }
     }
 
     compileOptions {

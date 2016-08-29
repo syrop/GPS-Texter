@@ -33,8 +33,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean showSettings;
     private boolean shuttingDown;
     private Dialog dialog;
+    ActivityMainBinding binding;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             window.setStatusBarColor(color);
         }
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
@@ -231,10 +234,13 @@ public class MainActivity extends AppCompatActivity implements
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        StartupDialogLayoutBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.startup_dialog_layout);
-        dialog.setContentView(binding.getRoot());
-        WebView web = binding.web;
+        StartupDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.startup_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
 
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
@@ -243,12 +249,12 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/startup_pl.html" :
                 "file:///android_asset/startup_en.html");
 
-        binding.dismiss.setOnClickListener(v -> {
+        dialogBinding.dismiss.setOnClickListener(v -> {
             processPermissions();
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
         });
-        binding.settings.setOnClickListener(v -> {
+        dialogBinding.settings.setOnClickListener(v -> {
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
             showSettings = true;  // Only relevant if permission is not granted.
@@ -264,10 +270,13 @@ public class MainActivity extends AppCompatActivity implements
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        HelpDialogLayoutBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.help_dialog_layout);
-        dialog.setContentView(binding.getRoot());
-        WebView web = binding.web;
+        HelpDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.help_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = Locale.getDefault().getLanguage();
@@ -276,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/help_pl.html" :
                 "file:///android_asset/help_en.html");
 
-        binding.ok.setOnClickListener(v -> dialog.dismiss());
+        dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
