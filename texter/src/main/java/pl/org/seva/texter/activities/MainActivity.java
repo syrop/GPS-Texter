@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.adapters.MainActivityTabAdapter;
+import pl.org.seva.texter.adapters.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SMSController;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements
         fragments.add(NavigationFragment.newInstance());
         fragments.add(HistoryFragment.newInstance());
 
-        MainActivityTabAdapter adapter =
-                new MainActivityTabAdapter(getSupportFragmentManager(), titles).
+        TitledPagerAdapter adapter =
+                new TitledPagerAdapter(getFragmentManager(), titles).
                         setItems(fragments);
 
         ViewPager pager = binding.pager;

@@ -40,7 +40,7 @@ import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
 import pl.org.seva.texter.listeners.IProviderListener;
-import pl.org.seva.texter.preferences.MapPreference;
+import pl.org.seva.texter.preferences.HomeLocationPreference;
 import pl.org.seva.texter.utils.Constants;
 
 public class GPSManager implements LocationListener {
@@ -167,8 +167,8 @@ public class GPSManager implements LocationListener {
         updateDistance();
         String homeLocation = preferences.
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
-        homeLat = MapPreference.parseLatitude(homeLocation);
-        homeLon = MapPreference.parseLongitude(homeLocation);
+        homeLat = HomeLocationPreference.parseLatitude(homeLocation);
+        homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {
             distance = calculateDistance(
                     homeLat,

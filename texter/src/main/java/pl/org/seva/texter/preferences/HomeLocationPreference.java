@@ -52,7 +52,7 @@ import pl.org.seva.texter.utils.Constants;
 /**
  * Created by wiktor on 20.08.15.
  */
-public class MapPreference extends DialogPreference implements
+public class HomeLocationPreference extends DialogPreference implements
         GoogleMap.OnMapLongClickListener,
         View.OnClickListener,
         ILocationChangedListener,
@@ -79,7 +79,7 @@ public class MapPreference extends DialogPreference implements
 
     private SupportMapFragment mapFragment;
 
-    public MapPreference(Context context, AttributeSet attrs) {
+    public HomeLocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
 
@@ -114,7 +114,7 @@ public class MapPreference extends DialogPreference implements
         if (positiveResult) {
             persistString(toString());
             PreferenceManager.getDefaultSharedPreferences(context).edit().
-                    putFloat(ZOOM_PROPERTY_NAME, zoom).commit();
+                    putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
         }
         else {
             zoom = PreferenceManager.getDefaultSharedPreferences(context).
@@ -207,7 +207,7 @@ public class MapPreference extends DialogPreference implements
                 getSupportFragmentManager().findFragmentById(R.id.map);
 
         useCurrentButton = (Button) result.findViewById(R.id.current_location_button);
-        useCurrentButton.setOnClickListener(MapPreference.this);
+        useCurrentButton.setOnClickListener(HomeLocationPreference.this);
         boolean locationPermitted = ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -216,7 +216,7 @@ public class MapPreference extends DialogPreference implements
                 GPSManager.getInstance().isLocationAvailable();
         useCurrentButton.setEnabled(locationAvailable);
         if (!locationAvailable) {
-            GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
+            GPSManager.getInstance().addLocationChangedListener(HomeLocationPreference.this);
         }
         if (!toastShown) {
             Toast.makeText(
@@ -225,7 +225,7 @@ public class MapPreference extends DialogPreference implements
                     Toast.LENGTH_SHORT).show();
             toastShown = true;
         }
-        GPSManager.getInstance().addLocationChangedListener(MapPreference.this);
+        GPSManager.getInstance().addLocationChangedListener(HomeLocationPreference.this);
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -240,7 +240,7 @@ public class MapPreference extends DialogPreference implements
                 else {
                     PermissionsManager.getInstance().addPermissionGrantedListener(
                             Manifest.permission.ACCESS_FINE_LOCATION,
-                            MapPreference.this);
+                            HomeLocationPreference.this);
                 }
                 zoom = PreferenceManager.getDefaultSharedPreferences(context).
                         getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
@@ -255,8 +255,8 @@ public class MapPreference extends DialogPreference implements
                     map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
 
-                map.setOnMapLongClickListener(MapPreference.this);
-                map.setOnCameraIdleListener(MapPreference.this);
+                map.setOnMapLongClickListener(HomeLocationPreference.this);
+                map.setOnCameraIdleListener(HomeLocationPreference.this);
             }
         });
 

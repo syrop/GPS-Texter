@@ -22,7 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -71,7 +71,7 @@ public class NavigationFragment extends Fragment implements
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().
+        MapFragment mapFragment = (MapFragment) getChildFragmentManager().
                 findFragmentById(R.id.map);
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -79,7 +79,7 @@ public class NavigationFragment extends Fragment implements
         mapFragment.getMapAsync(googleMap -> {
             map = googleMap;
             if (ContextCompat.checkSelfPermission(
-                    getContext(),
+                    getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED) {
                 map.setMyLocationEnabled(true);

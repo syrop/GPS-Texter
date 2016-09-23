@@ -18,8 +18,10 @@
 package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.adapters.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SMSController;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
+import pl.org.seva.texter.fragments.SettingsFragment;
 import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
@@ -33,7 +35,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -93,6 +97,17 @@ public class SettingsActivity extends AppCompatActivity
                         this);
             }
         }
+
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(SettingsFragment.newInstance());
+
+        TitledPagerAdapter adapter =
+                new TitledPagerAdapter(getFragmentManager(), null).
+                        setItems(fragments);
+        ViewPager pager = binding.pager;
+        if (pager != null) {
+            pager.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -116,7 +131,6 @@ public class SettingsActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /**
      * All actions that require permissions must be placed here. The methods performs them or
