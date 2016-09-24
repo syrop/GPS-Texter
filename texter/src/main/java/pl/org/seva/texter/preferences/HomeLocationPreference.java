@@ -18,6 +18,7 @@
 package pl.org.seva.texter.preferences;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -77,7 +79,7 @@ public class HomeLocationPreference extends DialogPreference implements
     private GoogleMap map;
     private Button useCurrentButton;
 
-    private SupportMapFragment mapFragment;
+    private MapFragment mapFragment;
 
     public HomeLocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -129,7 +131,7 @@ public class HomeLocationPreference extends DialogPreference implements
             // Without enclosing in the if, throws:
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             ((android.support.v4.app.FragmentActivity) getContext()).
-                    getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+                    getFragmentManager().beginTransaction().remove(mapFragment).commit();
         }
 
         super.onDialogClosed(positiveResult);
@@ -153,7 +155,7 @@ public class HomeLocationPreference extends DialogPreference implements
             // If called after onSaveInstanceState, throws:
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             ((android.support.v4.app.FragmentActivity) getContext()).
-                    getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+                    getFragmentManager().beginTransaction().remove(mapFragment).commit();
             mapFragment = null;
         }
 
@@ -202,9 +204,8 @@ public class HomeLocationPreference extends DialogPreference implements
 
         MapsInitializer.initialize(context);
 
-        mapFragment = (SupportMapFragment)
-                ((android.support.v4.app.FragmentActivity) getContext()).
-                getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (MapFragment)
+                ((Activity) getContext()).getFragmentManager().findFragmentById(R.id.map);
 
         useCurrentButton = (Button) result.findViewById(R.id.current_location_button);
         useCurrentButton.setOnClickListener(HomeLocationPreference.this);
@@ -227,37 +228,34 @@ public class HomeLocationPreference extends DialogPreference implements
         }
         GPSManager.getInstance().addLocationChangedListener(HomeLocationPreference.this);
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                if (ContextCompat.checkSelfPermission(
-                        getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    map.setMyLocationEnabled(true);
-                }
-                else {
-                    PermissionsManager.getInstance().addPermissionGrantedListener(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            HomeLocationPreference.this);
-                }
-                zoom = PreferenceManager.getDefaultSharedPreferences(context).
-                        getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
-
-                updateMarker();
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(lat, lon)).zoom(zoom).build();
-                if (!restored) {
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-                else {
-                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-
-                map.setOnMapLongClickListener(HomeLocationPreference.this);
-                map.setOnCameraIdleListener(HomeLocationPreference.this);
+        mapFragment.getMapAsync(googleMap -> {
+            map = googleMap;
+            if (ContextCompat.checkSelfPermission(
+                    getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
             }
+            else {
+                PermissionsManager.getInstance().addPermissionGrantedListener(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        HomeLocationPreference.this);
+            }
+            zoom = PreferenceManager.getDefaultSharedPreferences(context).
+                    getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
+
+            updateMarker();
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(lat, lon)).zoom(zoom).build();
+            if (!restored) {
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+            else {
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+
+            map.setOnMapLongClickListener(HomeLocationPreference.this);
+            map.setOnCameraIdleListener(HomeLocationPreference.this);
         });
 
         if (!locationPermitted) {
@@ -329,10 +327,9 @@ public class HomeLocationPreference extends DialogPreference implements
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
                 ContextCompat.checkSelfPermission(
-                        getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);  // Requires checking, otherwise compile time error.
+                    getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) ==PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
             useCurrentButton.setEnabled(false);
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
@@ -340,21 +337,18 @@ public class HomeLocationPreference extends DialogPreference implements
     }
 
     private static class SavedState extends BaseSavedState {
-        // Member that holds the setting's value
-        // Change this data type to match the type saved by your Preference
         private double lat;
         private double lon;
         private boolean toastShown;
         private float zoom;
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 
-        public SavedState(Parcel source) {
+        SavedState(Parcel source) {
             super(source);
-            // Get the current preference's value
-            lat = source.readDouble();  // Change this to read the appropriate data type
+            lat = source.readDouble();
             lon = source.readDouble();
             toastShown = source.readInt() != 0;
             zoom = source.readFloat();
@@ -363,14 +357,12 @@ public class HomeLocationPreference extends DialogPreference implements
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            // Write the preference's value
-            dest.writeDouble(lat);  // Change this to write the appropriate data type
+            dest.writeDouble(lat);
             dest.writeDouble(lon);
             dest.writeInt(toastShown ? 1 : 0);
             dest.writeFloat(zoom);
         }
 
-        // Standard creator object using an instance of this class
         public static final Parcelable.Creator<SavedState> CREATOR =
             new Parcelable.Creator<SavedState>() {
 
