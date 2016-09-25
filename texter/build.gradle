@@ -21,7 +21,7 @@ android {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
         targetSdkVersion 24
-        multiDexEnabled true
+        multiDexEnabled false
         resConfigs "en", "pl"
 
 //        Jack options disabled de to issue 209504. For more info see:
@@ -53,5 +53,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.google.android.gms:play-services:9.4.0'
+    compile "com.android.support:appcompat-v7:24.2.1"
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
+    compile 'com.google.android.gms:play-services-location:9.6.1'
 }
