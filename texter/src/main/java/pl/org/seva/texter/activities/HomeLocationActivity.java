@@ -17,11 +17,41 @@
 
 package pl.org.seva.texter.activities;
 
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapsInitializer;
+
+import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 
 /**
  * Created by wiktor on 04.09.16.
  */
 
 public class HomeLocationActivity extends AppCompatActivity {
+
+    private GoogleMap map;
+    private Button useCurrentButton;
+
+    private MapFragment mapFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActivityHomeLocationBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_home_location);
+
+        MapsInitializer.initialize(this);
+        mapFragment = binding.map;
+    }
+
+    public void onUseCurrentLocation(View v) {
+
+    }
 }
