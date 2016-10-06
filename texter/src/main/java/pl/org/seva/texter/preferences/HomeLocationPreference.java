@@ -18,27 +18,21 @@
 package pl.org.seva.texter.preferences;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.DialogPreference;
-import android.preference.PreferenceManager;
+import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,12 +48,12 @@ import pl.org.seva.texter.utils.Constants;
 /**
  * Created by wiktor on 20.08.15.
  */
-public class HomeLocationPreference extends DialogPreference implements
+public class HomeLocationPreference extends Preference implements
         GoogleMap.OnMapLongClickListener,
         View.OnClickListener,
         ILocationChangedListener,
         GoogleMap.OnCameraIdleListener,
-        IPermissionGrantedListener{
+        IPermissionGrantedListener {
 
     private static final String HOME_LOCATION = "HOME_LOCATION";
 
@@ -84,9 +78,6 @@ public class HomeLocationPreference extends DialogPreference implements
     public HomeLocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-
-        setDialogLayoutResource(R.layout.home_location_dialog);
-        setDialogIcon(null);
     }
 
     @Override public void onClick(View v) {
@@ -107,34 +98,6 @@ public class HomeLocationPreference extends DialogPreference implements
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return Constants.DEFAULT_HOME_LOCATION;
-    }
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        GPSManager.getInstance().removeLocationChangedListener(this);
-        toastShown = false;
-        if (positiveResult) {
-            persistString(toString());
-            PreferenceManager.getDefaultSharedPreferences(context).edit().
-                    putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        }
-        else {
-            zoom = PreferenceManager.getDefaultSharedPreferences(context).
-                    getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
-            String value = getPersistedString(HOME_LOCATION);
-            lat = parseLatitude(value);
-            lon = parseLongitude(value);
-        }
-        GPSManager.getInstance().removeLocationChangedListener(this);
-
-        if (mapFragment != null) {
-            // Without enclosing in the if, throws:
-            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            ((android.support.v4.app.FragmentActivity) getContext()).
-                    getFragmentManager().beginTransaction().remove(mapFragment).commit();
-        }
-
-        super.onDialogClosed(positiveResult);
     }
 
     @Override
@@ -196,76 +159,6 @@ public class HomeLocationPreference extends DialogPreference implements
         }
         lat = parseLatitude(value);
         lon = parseLongitude(value);
-    }
-
-    @Override
-    protected View onCreateDialogView() {
-        final View result = super.onCreateDialogView();
-
-        MapsInitializer.initialize(context);
-
-        mapFragment = (MapFragment)
-                ((Activity) getContext()).getFragmentManager().findFragmentById(R.id.map);
-
-        useCurrentButton = (Button) result.findViewById(R.id.current_location_button);
-        useCurrentButton.setOnClickListener(HomeLocationPreference.this);
-        boolean locationPermitted = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
-        boolean locationAvailable = locationPermitted &&
-                GPSManager.getInstance().isLocationAvailable();
-        useCurrentButton.setEnabled(locationAvailable);
-        if (!locationAvailable) {
-            GPSManager.getInstance().addLocationChangedListener(HomeLocationPreference.this);
-        }
-        if (!toastShown) {
-            Toast.makeText(
-                    context,
-                    R.string.long_press,
-                    Toast.LENGTH_SHORT).show();
-            toastShown = true;
-        }
-        GPSManager.getInstance().addLocationChangedListener(HomeLocationPreference.this);
-
-        mapFragment.getMapAsync(googleMap -> {
-            map = googleMap;
-            if (ContextCompat.checkSelfPermission(
-                    getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                map.setMyLocationEnabled(true);
-            }
-            else {
-                PermissionsManager.getInstance().addPermissionGrantedListener(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        HomeLocationPreference.this);
-            }
-            zoom = PreferenceManager.getDefaultSharedPreferences(context).
-                    getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
-
-            updateMarker();
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(lat, lon)).zoom(zoom).build();
-            if (!restored) {
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            else {
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-
-            map.setOnMapLongClickListener(HomeLocationPreference.this);
-            map.setOnCameraIdleListener(HomeLocationPreference.this);
-        });
-
-        if (!locationPermitted) {
-            useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
-        }
-
-        return result;
     }
 
     private void updateMarker() {
