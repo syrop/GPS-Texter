@@ -17,132 +17,32 @@
 
 package pl.org.seva.texter.preferences;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.preference.Preference;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Button;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import pl.org.seva.texter.R;
-import pl.org.seva.texter.listeners.ILocationChangedListener;
-import pl.org.seva.texter.listeners.IPermissionGrantedListener;
-import pl.org.seva.texter.managers.GPSManager;
-import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 
 /**
  * Created by wiktor on 20.08.15.
  */
-public class HomeLocationPreference extends Preference implements
-        GoogleMap.OnMapLongClickListener,
-        View.OnClickListener,
-        ILocationChangedListener,
-        GoogleMap.OnCameraIdleListener,
-        IPermissionGrantedListener {
+public class HomeLocationPreference extends Preference {
 
     private static final String HOME_LOCATION = "HOME_LOCATION";
-
-    private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
-    private static final float ZOOM_DEFAULT_VALUE = 7.5f;
 
     /** Latitude. */
     private double lat;
     /** * Longitude. */
     private double lon;
-    private boolean toastShown;
-    private float zoom;
-    /** True indicates restoring from a saved state. */
-    private boolean restored;
-
-    private final Context context;
-    private GoogleMap map;
-    private Button useCurrentButton;
-
-    private MapFragment mapFragment;
 
     public HomeLocationPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
-    }
-
-    @Override public void onClick(View v) {
-        if (v == useCurrentButton) {
-            LatLng loc = GPSManager.getInstance().getLatLng();
-            if (loc != null) {
-                lat = loc.latitude;
-                lon = loc.longitude;
-                updateMarker();
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(lat, lon)).
-                                zoom(zoom).build();
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        }
     }
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return Constants.DEFAULT_HOME_LOCATION;
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        final Parcelable superState = super.onSaveInstanceState();
-
-        // Create instance of custom BaseSavedState.
-        final SavedState myState = new SavedState(superState);
-        // Set the state's value with the class member that holds current
-        // setting value.
-        myState.lat = lat;
-        myState.lon = lon;
-        myState.toastShown = toastShown;
-        myState.zoom = zoom;
-
-        // Equals null inside the setting activity if map has not been invoked.
-        if (mapFragment != null) {
-            // If called after onSaveInstanceState, throws:
-            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            ((android.support.v4.app.FragmentActivity) getContext()).
-                    getFragmentManager().beginTransaction().remove(mapFragment).commit();
-            mapFragment = null;
-        }
-
-        return myState;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        // Check whether we saved the state in onSaveInstanceState
-        if (state == null || !state.getClass().equals(SavedState.class)) {
-            // Didn't save the state, so call superclass
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        // Cast state to custom BaseSavedState and pass to superclass
-        SavedState myState = (SavedState) state;
-        lat = myState.lat;
-        lon = myState.lon;
-        toastShown = myState.toastShown;
-        zoom = myState.zoom;
-        restored = true;
-
-        super.onRestoreInstanceState(myState.getSuperState());
     }
 
     @Override
@@ -159,18 +59,6 @@ public class HomeLocationPreference extends Preference implements
         }
         lat = parseLatitude(value);
         lon = parseLongitude(value);
-    }
-
-    private void updateMarker() {
-        map.clear();
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(lat, lon)).
-                title(context.getString(R.string.home));
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-        // adding marker
-        map.addMarker(marker);
     }
 
     public String toString() {
@@ -193,79 +81,5 @@ public class HomeLocationPreference extends Preference implements
     public static double parseLongitude(String uri) {
         String str = uri.substring(uri.indexOf(",") + 1);
         return Double.valueOf(str);
-    }
-
-    @Override
-    public void onMapLongClick(LatLng point) {
-        lat = point.latitude;
-        lon = point.longitude;
-        updateMarker();
-        useCurrentButton.setEnabled(true);
-    }
-
-    @Override
-    public void onLocationChanged() {
-        if (map == null || useCurrentButton == null) {
-            return;
-        }
-        useCurrentButton.setEnabled(true);
-    }
-
-    @Override
-    public void onCameraIdle() {
-        zoom = map.getCameraPosition().zoom;
-    }
-
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
-                ContextCompat.checkSelfPermission(
-                    getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) ==PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
-            useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().
-                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
-        }
-    }
-
-    private static class SavedState extends BaseSavedState {
-        private double lat;
-        private double lon;
-        private boolean toastShown;
-        private float zoom;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        SavedState(Parcel source) {
-            super(source);
-            lat = source.readDouble();
-            lon = source.readDouble();
-            toastShown = source.readInt() != 0;
-            zoom = source.readFloat();
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            super.writeToParcel(dest, flags);
-            dest.writeDouble(lat);
-            dest.writeDouble(lon);
-            dest.writeInt(toastShown ? 1 : 0);
-            dest.writeFloat(zoom);
-        }
-
-        public static final Parcelable.Creator<SavedState> CREATOR =
-            new Parcelable.Creator<SavedState>() {
-
-                public SavedState createFromParcel(Parcel in) {
-                    return new SavedState(in);
-                }
-
-                public SavedState[] newArray(int size) {
-                    return new SavedState[size];
-                }
-            };
     }
 }
