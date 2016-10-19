@@ -76,8 +76,6 @@ public class GPSManager implements LocationListener {
     private double homeLon;
     private long time;
 
-    private Context context;
-
     private GPSManager() {
         distanceListeners = new ArrayList<>();
         homeChangedListeners = new ArrayList<>();
@@ -96,16 +94,16 @@ public class GPSManager implements LocationListener {
         return instance;
     }
 
-    public static void shutdown() {
+    public static void shutdown(Context context) {
         synchronized (GPSManager.class) {
             if (instance != null) {
-                instance.removeUpdates();
+                instance.removeUpdates(context);
                 instance = null;
             }
         }
     }
 
-    public String getLocationUrl() {
+    String getLocationUrl() {
         if (location == null) {
             return "";
         }
@@ -135,7 +133,6 @@ public class GPSManager implements LocationListener {
 
     private void requestLocationUpdates(Context context) {
         int updateFrequency = getUpdateFrequency();
-        this.context = context;
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -154,7 +151,7 @@ public class GPSManager implements LocationListener {
         }
     }
 
-    private void removeUpdates() {
+    private void removeUpdates(Context context) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements
             stopService();
             if (shuttingDown) {
                 HistoryManager.shutdown();
-                GPSManager.shutdown();
+                GPSManager.shutdown(this);
                 PermissionsManager.shutdown();
                 SMSManager.shutdown();
                 TimerManager.shutdown();

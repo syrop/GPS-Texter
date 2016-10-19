@@ -276,6 +276,20 @@ public class HomeLocationActivity extends AppCompatActivity implements
         zoom = map.getCameraPosition().zoom;
     }
 
+    public void onUseCurrentLocation(View view) {
+        LatLng loc = GPSManager.getInstance().getLatLng();
+        if (loc != null) {
+            lat = loc.latitude;
+            lon = loc.longitude;
+            updateMarker();
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(lat, lon)).
+                            zoom(zoom).build();
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+
     private static class SavedState implements Parcelable {
         private double lat;
         private double lon;
