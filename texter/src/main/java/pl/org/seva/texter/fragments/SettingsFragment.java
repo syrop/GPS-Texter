@@ -17,11 +17,15 @@
 
 package pl.org.seva.texter.fragments;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.activities.HomeLocationActivity;
 import pl.org.seva.texter.activities.SettingsActivity;
 
 /**
@@ -41,5 +45,14 @@ public class SettingsFragment extends PreferenceFragment {
         if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
             getPreferenceScreen().removePreference(findPreference(SettingsActivity.CATEGORY_SMS));
         }
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        if (preference.getKey().equals(getActivity().getString(R.string.home_location_key))) {
+            Intent intent = new Intent(getActivity(), HomeLocationActivity.class);
+            startActivity(intent);
+        }
+        return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 }

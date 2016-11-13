@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "24.0.3"
 
     dataBinding {
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 25
         multiDexEnabled false
         resConfigs "en", "pl"
 
@@ -51,9 +51,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile "com.android.support:appcompat-v7:24.2.1"
-    compile 'com.google.android.gms:play-services-maps:9.6.1'
-    compile 'com.google.android.gms:play-services-location:9.6.1'
+    compile 'com.android.support:support-v13:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile "com.android.support:appcompat-v7:25.0.0"
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.android.gms:play-services-location:9.8.0'
 }

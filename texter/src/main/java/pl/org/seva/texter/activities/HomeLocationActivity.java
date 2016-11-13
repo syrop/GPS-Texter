@@ -25,6 +25,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -89,9 +90,13 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         ActivityHomeLocationBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_home_location);
-
+        FragmentManager fm = getFragmentManager();
+        mapFragment = (MapFragment) fm.findFragmentByTag("map");
+        if (mapFragment == null) {
+            mapFragment = new MapFragment();
+            fm.beginTransaction().add(binding.mapContainer.getId(), mapFragment, "map").commit();
+        }
         MapsInitializer.initialize(this);
-        mapFragment = binding.map;
         useCurrentButton = binding.currentLocationButton;
 
         boolean locationPermitted = ContextCompat.checkSelfPermission(

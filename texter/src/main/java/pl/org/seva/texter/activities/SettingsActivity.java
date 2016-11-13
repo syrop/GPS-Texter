@@ -124,14 +124,6 @@ public class SettingsActivity extends AppCompatActivity
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * All actions that require permissions must be placed here. The methods performs them or
      * asks for permissions if they haven't been granted already.
