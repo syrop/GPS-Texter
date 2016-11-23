@@ -25,7 +25,7 @@
         <!-- Change name (e.g. by adding .debug) or delete if using in release mode. -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value=" AIzaSyC9T02hLFwG6xRaIC6EifrypCK19hrmQrE "/>
+            android:value=" AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8 "/>
 
         <activity
             android:name="pl.org.seva.texter.activities.MainActivity"

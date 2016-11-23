@@ -41,7 +41,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
@@ -199,8 +198,8 @@ public class SettingsActivity extends AppCompatActivity
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.READ_CONTACTS) &&
-                    !PermissionsManager.getInstance().
-                            rationaleShown(Manifest.permission.READ_CONTACTS)) {
+                    PermissionsManager.getInstance().
+                            isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.perm_contacts_rationale).
                         setPositiveButton(android.R.string.ok, (dialog, which) -> {

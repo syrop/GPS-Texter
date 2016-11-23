@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
+        initGPS(true);
         if (!showStartupDialog()) {
             processPermissions();
         }
