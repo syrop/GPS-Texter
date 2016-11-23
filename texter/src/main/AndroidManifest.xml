@@ -17,15 +17,10 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <!-- Remove .release when using in release mode. -->
-        <meta-data
-        android:name="com.google.android.geo.API_KEY.release"
-        android:value=" AIzaSyA6xLUDawVBKqWklVFNFybZPp8zlQMhdoo "/>
 
-        <!-- Change name (e.g. by adding .debug) or delete if using in release mode. -->
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value=" AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8 "/>
+        android:name="com.google.android.geo.API_KEY"
+        android:value="${googleMapsKey}"/>
 
         <activity
             android:name="pl.org.seva.texter.activities.MainActivity"

@@ -23,6 +23,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled false
         resConfigs "en", "pl"
+        manifestPlaceholders = [ googleMapsKey: "AIzaSyA6xLUDawVBKqWklVFNFybZPp8zlQMhdoo"]
 
 //        Jack options disabled de to issue 209504. For more info see:
 //        https://code.google.com/p/android/issues/detail?id=209504
@@ -43,6 +44,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [ googleMapsKey: "AIzaSyCMsxrnN2emRTKdYAf-S43_WPEgwp5a6I0"]
         }
     }
 }
