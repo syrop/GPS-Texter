@@ -38,8 +38,8 @@ public class PermissionsManager {
 
     private static PermissionsManager instance;
 
-    private final Map<String, List<IPermissionGrantedListener>> grantedMap = new HashMap<>();
-    private final Map<String, List<IPermissionDeniedListener>> deniedMap = new HashMap<>();
+    private final Map<String, List<IPermissionGrantedListener>> grantedPermissionsMap = new HashMap<>();
+    private final Map<String, List<IPermissionDeniedListener>> deniedPermissionsMap = new HashMap<>();
     private final List<String> rationalesShown = new ArrayList<>();
 
     private PermissionsManager() {
@@ -65,18 +65,15 @@ public class PermissionsManager {
     public void addPermissionGrantedListener(
             final String permission,
             final IPermissionGrantedListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (grantedMap) {
-                    List<IPermissionGrantedListener> list = grantedMap.get(permission);
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        grantedMap.put(permission, list);
-                    }
-                    if (!list.contains(listener) && listener != null) {
-                        list.add(listener);
-                    }
+        new Thread(() -> {
+            synchronized (grantedPermissionsMap) {
+                List<IPermissionGrantedListener> list = grantedPermissionsMap.get(permission);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    grantedPermissionsMap.put(permission, list);
+                }
+                if (!list.contains(listener) && listener != null) {
+                    list.add(listener);
                 }
             }
         }).start();
@@ -85,26 +82,22 @@ public class PermissionsManager {
     public void removePermissionGrantedListener(
             final String permission,
             final IPermissionGrantedListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (grantedMap) {
-                    final List<IPermissionGrantedListener> list = grantedMap.get(permission);
-                    if (list != null) {
-                        list.remove(listener);
-                    }
+        new Thread(() -> {
+            synchronized (grantedPermissionsMap) {
+                final List<IPermissionGrantedListener> list = grantedPermissionsMap.get(permission);
+                if (list != null) {
+                    list.remove(listener);
                 }
             }
         }).start();
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean rationaleShown(String permission) {
-        return rationalesShown.contains(permission);
+    public boolean isRationaleNeeded(String permission) {
+        return !rationalesShown.contains(permission);
     }
 
     public void onRationaleShown(String permission) {
-        if (!rationaleShown(permission)) {
+        if (isRationaleNeeded(permission)) {
             rationalesShown.add(permission);
         }
     }
@@ -112,18 +105,15 @@ public class PermissionsManager {
     public void addPermissionDeniedListener(
             final String permission,
             final IPermissionDeniedListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (deniedMap) {
-                    List<IPermissionDeniedListener> list = deniedMap.get(permission);
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        deniedMap.put(permission, list);
-                    }
-                    if (!list.contains(listener) && listener != null) {
-                        list.add(listener);
-                    }
+        new Thread(() -> {
+            synchronized (deniedPermissionsMap) {
+                List<IPermissionDeniedListener> list = deniedPermissionsMap.get(permission);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    deniedPermissionsMap.put(permission, list);
+                }
+                if (!list.contains(listener) && listener != null) {
+                    list.add(listener);
                 }
             }
         }).start();
@@ -132,22 +122,19 @@ public class PermissionsManager {
     public void removePermissionDeniedListener(
             final String permission,
             final IPermissionDeniedListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (grantedMap) {
-                    final List<IPermissionDeniedListener> list = deniedMap.get(permission);
-                    if (list != null) {
-                        list.remove(listener);
-                    }
+        new Thread(() -> {
+            synchronized (deniedPermissionsMap) {
+                final List<IPermissionDeniedListener> list = deniedPermissionsMap.get(permission);
+                if (list != null) {
+                    list.remove(listener);
                 }
             }
         }).start();
     }
 
     private void permissionGranted(String permission) {
-        synchronized (grantedMap) {
-            List<IPermissionGrantedListener> list = grantedMap.get(permission);
+        synchronized (grantedPermissionsMap) {
+            List<IPermissionGrantedListener> list = grantedPermissionsMap.get(permission);
             if (list != null) {
                 for (IPermissionGrantedListener listener : list) {
                     listener.onPermissionGranted(permission);
@@ -157,8 +144,8 @@ public class PermissionsManager {
     }
 
     private void permissionDenied(String permission) {
-        synchronized (grantedMap) {
-            List<IPermissionDeniedListener> list = deniedMap.get(permission);
+        synchronized (deniedPermissionsMap) {
+            List<IPermissionDeniedListener> list = deniedPermissionsMap.get(permission);
             if (list != null) {
                 for (IPermissionDeniedListener listener : list) {
                     listener.onPermissionDenied(permission);

@@ -28,14 +28,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.adapters.MainActivityTabAdapter;
+import pl.org.seva.texter.adapters.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SMSController;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int GOOGLE_REQUEST_CODE = 0;
 
-    public static final int NUMBER_OF_TABS = 3;
+    private static final int NUMBER_OF_TABS = 3;
 
     /** Number of milliseconds that will be taken for a double click. */
     private static final long DOUBLE_CLICK_MILLIS = 5000;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean showSettings;
     private boolean shuttingDown;
     private Dialog dialog;
+    private ActivityMainBinding binding;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             window.setStatusBarColor(color);
         }
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
@@ -132,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements
         fragments.add(NavigationFragment.newInstance());
         fragments.add(HistoryFragment.newInstance());
 
-        MainActivityTabAdapter adapter =
-                new MainActivityTabAdapter(getSupportFragmentManager(), titles).
+        TitledPagerAdapter adapter =
+                new TitledPagerAdapter(getFragmentManager(), titles).
                         setItems(fragments);
 
         ViewPager pager = binding.pager;
@@ -152,12 +154,7 @@ public class MainActivity extends AppCompatActivity implements
                 tabColor = getResources().getColor(R.color.tabsScrollColor);
             }
             tabs.setDistributeEvenly();
-            tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-                @Override
-                public int getIndicatorColor(int position) {
-                    return tabColor;
-                }
-            });
+            tabs.setCustomTabColorizer(position -> tabColor);
             tabs.setViewPager(pager);
         }
         if (TimerManager.getInstance().getState() == Thread.State.NEW) {
@@ -175,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
+        initGPS(true);
         if (!showStartupDialog()) {
             processPermissions();
         }
@@ -237,10 +235,13 @@ public class MainActivity extends AppCompatActivity implements
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        StartupDialogLayoutBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.startup_dialog_layout);
-        dialog.setContentView(binding.getRoot());
-        WebView web = binding.web;
+        StartupDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.startup_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
 
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
@@ -249,24 +250,18 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/startup_pl.html" :
                 "file:///android_asset/startup_en.html");
 
-        binding.dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processPermissions();
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
-            }
+        dialogBinding.dismiss.setOnClickListener(v -> {
+            processPermissions();
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
         });
-        binding.settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-                showSettings = true;  // Only relevant if permission is not granted.
-                if (processPermissions()) {
-                    // Called if permission has already been granted, e.g. when API < 23.
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                }
+        dialogBinding.settings.setOnClickListener(v -> {
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
+            showSettings = true;  // Only relevant if permission is not granted.
+            if (processPermissions()) {
+                // Called if permission has already been granted, e.g. when API < 23.
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
         dialog.show();
@@ -276,10 +271,13 @@ public class MainActivity extends AppCompatActivity implements
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        HelpDialogLayoutBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.help_dialog_layout);
-        dialog.setContentView(binding.getRoot());
-        WebView web = binding.web;
+        HelpDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.help_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = Locale.getDefault().getLanguage();
@@ -288,12 +286,7 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/help_pl.html" :
                 "file:///android_asset/help_en.html");
 
-        binding.ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
@@ -338,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements
             stopService();
             if (shuttingDown) {
                 HistoryManager.shutdown();
-                GPSManager.shutdown();
+                GPSManager.shutdown(this);
                 PermissionsManager.shutdown();
                 SMSManager.shutdown();
                 TimerManager.shutdown();

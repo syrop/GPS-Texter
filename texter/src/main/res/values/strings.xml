@@ -46,6 +46,7 @@
     <!-- Map preferences -->
     <string name="home_location">Home location</string>
     <string name="home_location_summary">Point to measure distance from</string>
+    <string name="home_location_key" translatable="false">pref_home_location</string>
     <string name="long_press">Long press to select home location</string>
     <string name="use_current_location">Use current location</string>
 

@@ -1,40 +1,61 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
 
+    dataBinding {
+        enabled = true;
+    }
+
+// For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
+    dexOptions {
+        dexInProcess true
+//        maxProcessCount 4  // defaults to 4
+        javaMaxHeapSize "2g"
+        preDexLibraries true
+    }
+
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
         targetSdkVersion 25
-        multiDexEnabled true
-//        jackOptions {
-//            enabled false
-//        }
+        multiDexEnabled false
+        resConfigs "en", "pl"
+        manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
 
 //        Jack options disabled de to issue 209504. For more info see:
 //        https://code.google.com/p/android/issues/detail?id=209504
+
+        jackOptions {
+            enabled false
+            jackInProcess true
+        }
     }
 
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles 'proguard-rules.txt'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [ googleMapsKey: "AIzaSyCMsxrnN2emRTKdYAf-S43_WPEgwp5a6I0"]
         }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile "com.android.support:support-v4:25.0.1"
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:support-v13:25.0.1'
     compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.google.android.gms:play-services:10.0.0'
+    compile "com.android.support:appcompat-v7:25.0.1"
+    compile 'com.google.android.gms:play-services-maps:10.0.0'
+    compile 'com.google.android.gms:play-services-location:10.0.0'
 }

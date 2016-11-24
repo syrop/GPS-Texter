@@ -25,6 +25,7 @@ import pl.org.seva.texter.managers.SMSManager;
 import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
+import pl.org.seva.texter.utils.Constants;
 
 /**
  * Created by wiktor on 11.01.16.
@@ -32,11 +33,6 @@ import pl.org.seva.texter.model.ZoneModel;
 public class SMSController implements IDistanceChangedListener {
 
     private static final SMSController INSTANCE = new SMSController();
-
-    /** If the number of measurements in the present zone has reached the trigger, send SMS. */
-    private static final int SMS_TRIGGER = 2;
-    /** Time spend in zone before an SMS is sent. */
-    private static final long TIME_IN_ZONE = 11 * 1000;
 
     private LocationModel lastSentLocation;
     private ZoneModel zone;
@@ -102,8 +98,8 @@ public class SMSController implements IDistanceChangedListener {
                 this.zone = zone;
             }
             else if (zone.getMin() != this.zone.getMin() &&
-                    zone.getCounter() >= SMS_TRIGGER &&
-                    zone.getDelay() >= TIME_IN_ZONE) {
+                    zone.getCounter() >= Constants.SMS_TRIGGER &&
+                    zone.getDelay() >= Constants.TIME_IN_ZONE) {
                 if (this.zone.getMin() > zone.getMin()) {
                     direction = -1;
                 }

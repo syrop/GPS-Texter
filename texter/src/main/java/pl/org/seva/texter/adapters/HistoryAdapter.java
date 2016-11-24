@@ -36,8 +36,8 @@ import pl.org.seva.texter.utils.StringUtils;
  * Created by wiktor on 01.08.15.
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private Context context;
-    private List<LocationModel> values;
+    private final Context context;
+    private final List<LocationModel> values;
 
     public HistoryAdapter(Context context, List<LocationModel> values) {
         this.context = context;
@@ -70,7 +70,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         builder.append(minutes);
         holder.time.setText(builder.toString());
         holder.speed.setText(
-            StringUtils.getSpeedStr(location.getSpeed(),
+            StringUtils.getSpeedString(location.getSpeed(),
             context.getString(R.string.speed_unit)));
     }
 
@@ -79,13 +79,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return values.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView distance;
         private final TextView time;
         private final TextView speed;
 
-        public ViewHolder(HistoryAdapterBinding binding) {
+        ViewHolder(HistoryAdapterBinding binding) {
             super(binding.getRoot());
             distance = binding.distance;
             time = binding.time;

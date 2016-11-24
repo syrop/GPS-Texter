@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -202,12 +202,7 @@ public class StatsFragment extends Fragment
         if (activity == null) {
             return;
         }
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                show();
-            }
-        });
+        activity.runOnUiThread(this::show);
     }
 
     public static String getHomeString() {

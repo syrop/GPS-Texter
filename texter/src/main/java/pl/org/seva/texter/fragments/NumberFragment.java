@@ -18,7 +18,6 @@
 package pl.org.seva.texter.fragments;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -209,21 +208,15 @@ public class NumberFragment extends Fragment implements
                     String[] items = new String[numbers.size()];
                     numbers.toArray(items);
                     new AlertDialog.Builder(getActivity()).
-                            setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    number.setText(numbers.get(which));
-                                }
+                            setItems(items, (dialog, which) -> {
+                                dialog.dismiss();
+                                number.setText(numbers.get(which));
                             }).
                             setTitle(contactName).
                             setCancelable(true).
-                            setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                            setNegativeButton(
+                                    android.R.string.cancel,
+                                    (dialog, which) -> dialog.dismiss()).show();
                 }
                 break;
         }
