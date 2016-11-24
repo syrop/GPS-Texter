@@ -61,7 +61,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private static final String STATE = "STATE";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
-    private static final String HOME_LOCATION_PREFERENCE = "HOME_LOCATION";
 
     /** Latitude. */
     private double lat;
@@ -175,7 +174,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         // Create instance of custom BaseSavedState.
         final HomeLocationActivity.SavedState myState
                 = new HomeLocationActivity.SavedState();
@@ -193,6 +191,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
             getFragmentManager().beginTransaction().remove(mapFragment).commit();
             mapFragment = null;
         }
+        super.onSaveInstanceState(outState);
     }
 
     protected void onRestoreInstanceState(Bundle state) {
@@ -229,12 +228,12 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     private void persistString(String val) {
         PreferenceManager.getDefaultSharedPreferences(this).edit()
-            .putString(HOME_LOCATION_PREFERENCE, val).apply();
+            .putString(SettingsActivity.HOME_LOCATION, val).apply();
     }
 
     private String getPersistedString() {
         return PreferenceManager.getDefaultSharedPreferences(this).
-                getString(HOME_LOCATION_PREFERENCE, Constants.DEFAULT_HOME_LOCATION);
+                getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
     }
 
     private void updateMarker() {
