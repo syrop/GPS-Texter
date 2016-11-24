@@ -73,15 +73,21 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private GoogleMap map;
     private Button useCurrentButton;
     /** True indicates restoring from a saved state. */
-    private boolean restored;
+    private boolean animateCamera = true;
+    private int mapContainerId;
     private MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState);
+            HomeLocationActivity.SavedState myState =
+                    (HomeLocationActivity.SavedState) savedInstanceState.get(STATE);
+            lat = myState.lat;
+            lon = myState.lon;
+            toastShown = myState.toastShown;
+            zoom = myState.zoom;
+            animateCamera = false;
         }
 
         String value = getPersistedString();
@@ -90,12 +96,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         ActivityHomeLocationBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_home_location);
-        FragmentManager fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentByTag("map");
-        if (mapFragment == null) {
-            mapFragment = new MapFragment();
-            fm.beginTransaction().add(binding.mapContainer.getId(), mapFragment, "map").commit();
-        }
+        mapContainerId = binding.mapContainer.getId();
         MapsInitializer.initialize(this);
         useCurrentButton = binding.currentLocationButton;
 
@@ -115,6 +116,23 @@ public class HomeLocationActivity extends AppCompatActivity implements
         }
         GPSManager.getInstance().addLocationChangedListener(HomeLocationActivity.this);
 
+        if (!locationPermitted) {
+            useCurrentButton.setEnabled(false);
+            PermissionsManager.getInstance().addPermissionGrantedListener(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentManager fm = getFragmentManager();
+        mapFragment = (MapFragment) fm.findFragmentByTag("map");
+        if (mapFragment == null) {
+            mapFragment = new MapFragment();
+            fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit();
+        }
         mapFragment.getMapAsync(googleMap -> {
             map = googleMap;
             if (ContextCompat.checkSelfPermission(
@@ -134,23 +152,17 @@ public class HomeLocationActivity extends AppCompatActivity implements
             updateMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(lat, lon)).zoom(zoom).build();
-            if (!restored) {
+            if (animateCamera) {
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
             else {
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
+            animateCamera = false;
 
             map.setOnMapLongClickListener(this);
             map.setOnCameraIdleListener(this);
         });
-
-        if (!locationPermitted) {
-            useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
-        }
     }
 
     @Override
@@ -192,16 +204,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
             mapFragment = null;
         }
         super.onSaveInstanceState(outState);
-    }
-
-    protected void onRestoreInstanceState(Bundle state) {
-        // Cast state to custom BaseSavedState and pass to superclass
-        HomeLocationActivity.SavedState myState = (HomeLocationActivity.SavedState) state.get(STATE);
-        lat = myState.lat;
-        lon = myState.lon;
-        toastShown = myState.toastShown;
-        zoom = myState.zoom;
-        restored = true;
     }
 
     public String toString() {
