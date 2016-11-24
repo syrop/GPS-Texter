@@ -214,9 +214,9 @@ public class NumberFragment extends Fragment implements
                             }).
                             setTitle(contactName).
                             setCancelable(true).
-                            setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                                dialog.dismiss();
-                            }).show();
+                            setNegativeButton(
+                                    android.R.string.cancel,
+                                    (dialog, which) -> dialog.dismiss()).show();
                 }
                 break;
         }

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int GOOGLE_REQUEST_CODE = 0;
 
-    public static final int NUMBER_OF_TABS = 3;
+    private static final int NUMBER_OF_TABS = 3;
 
     /** Number of milliseconds that will be taken for a double click. */
     private static final long DOUBLE_CLICK_MILLIS = 5000;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean showSettings;
     private boolean shuttingDown;
     private Dialog dialog;
-    ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
     @Override
     @SuppressWarnings("deprecation")

@@ -69,6 +69,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private double lon;
     private boolean toastShown;
     private float zoom;
+    private boolean currentLocationAvailable;
 
     private GoogleMap map;
     private Button useCurrentButton;
@@ -161,6 +162,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
+        GPSManager.getInstance().updateHome();
         GPSManager.getInstance().removeLocationChangedListener(this);
 
         if (mapFragment != null) {
@@ -215,12 +217,12 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 Double.toString(lon - (int) lon).substring(2, 8);
     }
 
-    public static double parseLatitude(String uri) {
+    private static double parseLatitude(String uri) {
         String str = uri.substring(uri.indexOf(":") + 1, uri.indexOf(","));
         return Double.valueOf(str);
     }
 
-    public static double parseLongitude(String uri) {
+    private static double parseLongitude(String uri) {
         String str = uri.substring(uri.indexOf(",") + 1);
         return Double.valueOf(str);
     }
@@ -240,10 +242,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         MarkerOptions marker = new MarkerOptions().position(
                 new LatLng(lat, lon)).
                 title(getString(R.string.home));
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-        // adding marker
+        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
         map.addMarker(marker);
     }
 
@@ -252,6 +251,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         if (map == null || useCurrentButton == null) {
             return;
         }
+        currentLocationAvailable = true;
         useCurrentButton.setEnabled(true);
     }
 
@@ -273,7 +273,9 @@ public class HomeLocationActivity extends AppCompatActivity implements
         lat = latLng.latitude;
         lon = latLng.longitude;
         updateMarker();
-        useCurrentButton.setEnabled(true);
+        if (currentLocationAvailable) {
+            useCurrentButton.setEnabled(true);
+        }
     }
 
     @Override

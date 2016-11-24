@@ -112,12 +112,9 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
 
         private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
-        private Drawable mDivider;
+        private final Drawable mDivider;
 
-        /**
-         * Default divider will be used
-         */
-        public DividerItemDecoration(Context context) {
+        DividerItemDecoration(Context context) {
             final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
             mDivider = styledAttributes.getDrawable(0);
             styledAttributes.recycle();

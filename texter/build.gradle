@@ -23,7 +23,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled false
         resConfigs "en", "pl"
-        manifestPlaceholders = [ googleMapsKey: "AIzaSyA6xLUDawVBKqWklVFNFybZPp8zlQMhdoo"]
+        manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
 
 //        Jack options disabled de to issue 209504. For more info see:
 //        https://code.google.com/p/android/issues/detail?id=209504

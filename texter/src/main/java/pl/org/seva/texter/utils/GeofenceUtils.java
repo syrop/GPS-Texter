@@ -27,13 +27,14 @@ import java.util.List;
 /**
  * Created by wiktor on 15.08.16.
  */
-public class GeofenceUtils {
+@SuppressWarnings("unused")
+class GeofenceUtils {
 
     private GeofenceUtils() {
         //
     }
 
-    public List<Geofence> createGeofences(LatLng home, int count) {
+    List<Geofence> createGeofences(LatLng home, int count) {
         List<Geofence> result = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int radius = (i + 1) * Constants.KM_INTERVAL * 1000;

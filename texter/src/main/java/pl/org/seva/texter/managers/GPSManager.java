@@ -174,6 +174,7 @@ public class GPSManager implements LocationListener {
                     location.getLongitude());
         }
         synchronized (homeChangedListeners) {
+            //noinspection Convert2streamapi
             for (IHomeChangedListener l : homeChangedListeners) {
                 l.onHomeChanged();
             }
@@ -382,11 +383,13 @@ public class GPSManager implements LocationListener {
         this.distance = calculateDistance();  // distance in kilometres
         this.time = time;
         synchronized (distanceListeners) {
+            //noinspection Convert2streamapi
             for (IDistanceChangedListener listener : distanceListeners) {
                 listener.onDistanceChanged();
             }
         }
         synchronized (locationChangedListeners) {
+            //noinspection Convert2streamapi
             for (ILocationChangedListener listener : locationChangedListeners) {
                 listener.onLocationChanged();
             }
@@ -444,6 +447,7 @@ public class GPSManager implements LocationListener {
     @Override
     public void onProviderEnabled(String provider) {
         synchronized (providerListeners) {
+            //noinspection Convert2streamapi
             for (IProviderListener listener : providerListeners) {
                 listener.onProviderEnabled();
             }
@@ -453,6 +457,7 @@ public class GPSManager implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         synchronized (providerListeners) {
+            //noinspection Convert2streamapi
             for (IProviderListener listener : providerListeners) {
                 listener.onProviderDisabled();
             }

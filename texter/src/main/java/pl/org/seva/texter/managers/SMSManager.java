@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter.managers;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -53,9 +54,9 @@ public class SMSManager {
 	private static final String SENT = "SMS_SENT";
     private static final String DELIVERED = "SMS_DELIVERED";
 
-	private Context context;
 	private SharedPreferences preferences;
     private String speedUnit;
+    private WeakReference<Context> weakContext;
 
 	private final SmsManager smsManager;
 
@@ -94,9 +95,9 @@ public class SMSManager {
 		if (initialized) {
 			return;
 		}
-		this.context = context;
         this.speedUnit = speedUnit;
 		preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        weakContext = new WeakReference<>(context);
 		initialized = true;
 	}
 
@@ -125,14 +126,20 @@ public class SMSManager {
 
     private void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
         synchronized (broadcastReceivers) {
-            context.registerReceiver(receiver, filter);
+            Context context = weakContext.get();
+            if (context != null) {
+                context.registerReceiver(receiver, filter);
+            }
             broadcastReceivers.add(receiver);
         }
     }
 
     private void unregisterReceiver(BroadcastReceiver receiver) {
         synchronized (broadcastReceivers) {
-            context.unregisterReceiver(receiver);
+            Context context = weakContext.get();
+            if (context != null) {
+                context.unregisterReceiver(receiver);
+            }
             broadcastReceivers.remove(receiver);
         }
     }
@@ -142,8 +149,12 @@ public class SMSManager {
             if (broadcastReceivers.isEmpty()) {
                 return;
             }
-            for (BroadcastReceiver receiver : broadcastReceivers) {
-                context.unregisterReceiver(receiver);
+            Context context = weakContext.get();
+            if (context != null) {
+                //noinspection Convert2streamapi
+                for (BroadcastReceiver receiver : broadcastReceivers) {
+                    context.unregisterReceiver(receiver);
+                }
             }
             broadcastReceivers.clear();
         }
@@ -174,6 +185,7 @@ public class SMSManager {
                         if (location != null) {
                             HistoryManager.getInstance().add(location);
                             synchronized (listeners) {
+                                //noinspection Convert2streamapi
                                 for (ISMSListener listener : listeners) {
                                     listener.onSMSSent();
                                 }
@@ -284,19 +296,22 @@ public class SMSManager {
 		Intent deliveredIntent = new Intent(DELIVERED + id);
 		deliveredIntent.putExtra(TEXT_KEY, intentText);
 
-		PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0);
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
-		registerBroadcastReceiver(id);
         synchronized (listeners) {
+            //noinspection Convert2streamapi
             for (ISMSListener listener : listeners) {
                 listener.onSendingSMS();
             }
         }
-        try {
-            smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
-        }
-        catch (SecurityException ex) {
-            // Ignore, as may indicate the app has no permission to send SMS.
+        Context context = weakContext.get();
+        if (context != null) {
+            PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0);
+            PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
+            registerBroadcastReceiver(id);
+            try {
+                smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
+            } catch (SecurityException ex) {
+                // Ignore, as may indicate the app has no permission to send SMS.
+            }
         }
 	}
 	
