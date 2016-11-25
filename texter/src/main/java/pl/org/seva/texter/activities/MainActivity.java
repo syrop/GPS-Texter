@@ -22,23 +22,24 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,8 +50,11 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.adapters.MainActivityTabAdapter;
+import pl.org.seva.texter.adapters.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.databinding.ActivityMainBinding;
+import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
+import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
 import pl.org.seva.texter.fragments.HistoryFragment;
 import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int GOOGLE_REQUEST_CODE = 0;
 
-    public static final int NUMBER_OF_TABS = 3;
+    private static final int NUMBER_OF_TABS = 3;
 
     /** Number of milliseconds that will be taken for a double click. */
     private static final long DOUBLE_CLICK_MILLIS = 5000;
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean showSettings;
     private boolean shuttingDown;
     private Dialog dialog;
+    private ActivityMainBinding binding;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -112,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             window.setStatusBarColor(color);
         }
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
@@ -122,23 +127,23 @@ public class MainActivity extends AppCompatActivity implements
         SMSController.getInstance().init(getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = binding.toolBar.toolBar;
         setSupportActionBar(toolbar);
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(StatsFragment.newInstance());
         fragments.add(NavigationFragment.newInstance());
         fragments.add(HistoryFragment.newInstance());
 
-        MainActivityTabAdapter adapter =
-                new MainActivityTabAdapter(getSupportFragmentManager(), titles).
+        TitledPagerAdapter adapter =
+                new TitledPagerAdapter(getFragmentManager(), titles).
                         setItems(fragments);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        ViewPager pager = binding.pager;
         if (pager != null) {
             pager.setAdapter(adapter);
         }
 
-        SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        SlidingTabLayout tabs = binding.tabs;
 
         if (tabs != null) {
             final int tabColor;
@@ -149,12 +154,7 @@ public class MainActivity extends AppCompatActivity implements
                 tabColor = getResources().getColor(R.color.tabsScrollColor);
             }
             tabs.setDistributeEvenly();
-            tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-                @Override
-                public int getIndicatorColor(int position) {
-                    return tabColor;
-                }
-            });
+            tabs.setCustomTabColorizer(position -> tabColor);
             tabs.setViewPager(pager);
         }
         if (TimerManager.getInstance().getState() == Thread.State.NEW) {
@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
+        initGPS(true);
         if (!showStartupDialog()) {
             processPermissions();
         }
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        else if (GPSManager.getInstance().isLocationServiceAvailable()) {
+        else if (GPSManager.getInstance().isLocationProviderEnabled()) {
             startService();
         }
         if (addListeners) {
@@ -234,8 +235,13 @@ public class MainActivity extends AppCompatActivity implements
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.startup_dialog_layout);
-        WebView web = (WebView) dialog.findViewById(R.id.web);
+        StartupDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.startup_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
 
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
@@ -244,26 +250,18 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/startup_pl.html" :
                 "file:///android_asset/startup_en.html");
 
-        Button dismiss = (Button) dialog.findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processPermissions();
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
-            }
+        dialogBinding.dismiss.setOnClickListener(v -> {
+            processPermissions();
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
         });
-        Button settings = (Button) dialog.findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-                showSettings = true;  // Only relevant if permission is not granted.
-                if (processPermissions()) {
-                    // Called if permission has already been granted, e.g. when API < 23.
-                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                }
+        dialogBinding.settings.setOnClickListener(v -> {
+            dialog.dismiss();
+            prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
+            showSettings = true;  // Only relevant if permission is not granted.
+            if (processPermissions()) {
+                // Called if permission has already been granted, e.g. when API < 23.
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
         dialog.show();
@@ -273,8 +271,13 @@ public class MainActivity extends AppCompatActivity implements
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.help_dialog_layout);
-        WebView web = (WebView) dialog.findViewById(R.id.web);
+        HelpDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(this),
+                R.layout.help_dialog_layout,
+                (ViewGroup) binding.getRoot(),
+                false);
+        dialog.setContentView(dialogBinding.getRoot());
+        WebView web = dialogBinding.web;
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = Locale.getDefault().getLanguage();
@@ -283,16 +286,10 @@ public class MainActivity extends AppCompatActivity implements
                 "file:///android_asset/help_pl.html" :
                 "file:///android_asset/help_en.html");
 
-        dialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
-    // Method to start the service
     private void startService() {
         if (serviceRunning) {
             return;
@@ -333,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements
             stopService();
             if (shuttingDown) {
                 HistoryManager.shutdown();
-                GPSManager.shutdown();
+                GPSManager.shutdown(this);
                 PermissionsManager.shutdown();
                 SMSManager.shutdown();
                 TimerManager.shutdown();
@@ -384,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
             initGPS(false);  // listeners already added
-            if (GPSManager.getInstance().isLocationServiceAvailable()) {
+            if (GPSManager.getInstance().isLocationProviderEnabled()) {
                 startService();
             }
             PermissionsManager.getInstance().

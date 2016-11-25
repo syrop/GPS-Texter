@@ -21,6 +21,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 
 import pl.org.seva.texter.R;
@@ -29,7 +30,7 @@ import pl.org.seva.texter.activities.MainActivity;
 /**
  * Created by wiktor on 5/17/16.
  */
-public class TexterService extends Service{
+public class TexterService extends Service {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
 
@@ -53,7 +54,10 @@ public class TexterService extends Service{
         Notification n = new Notification.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_text))
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+                        R.drawable.notification :
+                        R.drawable.ic_launcher)
                 .setContentIntent(pIntent)
                 .setAutoCancel(false).build();
 
@@ -61,5 +65,4 @@ public class TexterService extends Service{
 
         return START_STICKY;
     }
-
 }

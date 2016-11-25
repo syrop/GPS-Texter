@@ -15,29 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.utils;
+package pl.org.seva.texter.services;
 
-import android.annotation.SuppressLint;
+import android.app.IntentService;
+import android.content.Intent;
 
 /**
- * Created by wiktor on 28.08.15.
+ * Created by wiktor on 15.08.16.
  */
-public class StringUtils {
+public class GeofenceTransitionsIntentService extends IntentService {
 
-    private StringUtils() {
-        //
+    public GeofenceTransitionsIntentService() {
+        super(GeofenceTransitionsIntentService.class.toString());
     }
 
-    public static String getSpeedString(double speed, String speedUnit) {
-        @SuppressLint("DefaultLocale")
-        String result = String.format("%.1f", speed) + " " + speedUnit;
-        if (result.contains(".0")) {
-            result = result.replace(".0", "");
-        }
-        else if (result.contains(",0")) {
-            result = result.replace(",0", "");
-        }
-        return result;
-    }
+    @Override
+    protected void onHandleIntent(Intent intent) {
 
+    }
 }

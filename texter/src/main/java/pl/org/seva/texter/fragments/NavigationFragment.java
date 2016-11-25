@@ -20,8 +20,9 @@ package pl.org.seva.texter.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,15 +31,15 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
@@ -63,46 +64,44 @@ public class NavigationFragment extends Fragment implements
             LayoutInflater inflater,
             ViewGroup container,
             final Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.navigation_fragment, container, false);
-        distanceTextView = (TextView) v.findViewById(R.id.distance);
+        NavigationFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
+        distanceTextView = binding.distance;
         GPSManager.getInstance().addDistanceChangedListener(this);
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().
+        MapFragment mapFragment = (MapFragment) getChildFragmentManager().
                 findFragmentById(R.id.map);
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                if (ContextCompat.checkSelfPermission(
-                        getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    map.setMyLocationEnabled(true);
-                }
-                else {
-                    PermissionsManager.getInstance().addPermissionGrantedListener(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            NavigationFragment.this);
-                }
-                LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
-                updateHomeLocation(homeLatLng);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(homeLatLng).zoom(12).build();
-                if (savedInstanceState == null) {
-                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-                else {
-                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+        mapFragment.getMapAsync(googleMap -> {
+            map = googleMap;
+            if (ContextCompat.checkSelfPermission(
+                    getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
+            }
+            else {
+                PermissionsManager.getInstance().addPermissionGrantedListener(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        NavigationFragment.this);
+            }
+            LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
+            updateHomeLocation(homeLatLng);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(homeLatLng).zoom(12).build();
+            if (savedInstanceState == null) {
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+            else {
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override

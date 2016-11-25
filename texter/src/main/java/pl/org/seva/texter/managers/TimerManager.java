@@ -68,6 +68,7 @@ public class TimerManager extends Thread {
             synchronized (listeners) {
                 while (running) {
                     listeners.wait(1000);
+                    //noinspection Convert2streamapi
                     for (ITimerListener listener : listeners) {
                         listener.onTimer();
                     }

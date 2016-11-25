@@ -22,8 +22,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
@@ -77,13 +79,16 @@ public class StatsFragment extends Fragment
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
-        View v = inflater.inflate(R.layout.stats_fragment,container,false);
-        distanceTextView = (TextView) v.findViewById(R.id.distance_value);
-        intervalTextView = (TextView) v.findViewById(R.id.interval_value);
-        speedTextView = (TextView) v.findViewById(R.id.speed_value);
-        sendNowButton = (Button) v.findViewById(R.id.send_now_button);
+        StatsFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.stats_fragment, container, false);
+        distanceTextView = binding.distanceValue;
+        intervalTextView = binding.intervalValue;
+        speedTextView = binding.speedValue;
+        sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
-        sendNowButton.setEnabled(distance != 0.0 &&
+        sendNowButton.setEnabled(
+                SMSManager.getInstance().isTextingEnabled() &&
+                distance != 0.0 &&
                 distance != SMSManager.getInstance().getLastSentDistance());
 
         show();
@@ -101,7 +106,7 @@ public class StatsFragment extends Fragment
                     this);
         }
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override
@@ -180,7 +185,7 @@ public class StatsFragment extends Fragment
         boolean resetValues =
                 System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;
         if (distance != SMSManager.getInstance().getLastSentDistance()) {
-            sendNowButton.setEnabled(true);
+            sendNowButton.setEnabled(SMSManager.getInstance().isTextingEnabled());
         }
 
         if (resetValues) {  // reset the values if three hours have passed
@@ -199,12 +204,7 @@ public class StatsFragment extends Fragment
         if (activity == null) {
             return;
         }
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                show();
-            }
-        });
+        activity.runOnUiThread(this::show);
     }
 
     public static String getHomeString() {
@@ -246,7 +246,7 @@ public class StatsFragment extends Fragment
     @Override
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            sendNowButton.setEnabled(true);
+            sendNowButton.setEnabled(SMSManager.getInstance().isTextingEnabled());
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }

@@ -8,18 +8,20 @@
         android:paddingTop="@dimen/dialog_vertical_margin"
         android:paddingBottom="@dimen/dialog_vertical_margin">
 
-        <fragment
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:id="@+id/map"
+        <LinearLayout
+            android:id="@+id/map_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/current_location_button"/>
+            android:layout_above="@+id/current_location_button"
+            android:orientation="vertical"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/current_location_button"
             android:text="@string/use_current_location"
+            style="?android:attr/buttonBarButtonStyle"
+            android:onClick="onUseCurrentLocation"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </layout>

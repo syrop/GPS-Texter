@@ -19,11 +19,12 @@ package pl.org.seva.texter.fragments;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import android.support.v7.widget.RecyclerView;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.HistoryAdapter;
+import pl.org.seva.texter.databinding.HistoryFragmentBinding;
 import pl.org.seva.texter.listeners.ISMSListener;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.SMSManager;
@@ -61,8 +63,9 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
             LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.history_fragment, container, false);
-        historyRecyclerView = (RecyclerView) v.findViewById(R.id.listView);
+        HistoryFragmentBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.history_fragment, container, false);
+        historyRecyclerView = binding.listView;
         historyRecyclerView.setHasFixedSize(true);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new HistoryAdapter(getActivity(), HistoryManager.getInstance().getList());
@@ -73,7 +76,7 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
         SMSManager.getInstance().addSMSListener(this);
         scrollToBottom = true;
 
-        return v;
+        return binding.getRoot();
     }
 
     @Override
@@ -109,12 +112,9 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
 
         private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
-        private Drawable mDivider;
+        private final Drawable mDivider;
 
-        /**
-         * Default divider will be used
-         */
-        public DividerItemDecoration(Context context) {
+        DividerItemDecoration(Context context) {
             final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
             mDivider = styledAttributes.getDrawable(0);
             styledAttributes.recycle();

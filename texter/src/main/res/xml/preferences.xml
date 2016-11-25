@@ -51,10 +51,10 @@
             android:summary="@string/update_frequency_summary"
             android:inputType="number"
             android:defaultValue="1" />-->
-        <pl.org.seva.texter.preferences.MapPreference
+        <pl.org.seva.texter.preferences.HomeLocationPreference
             android:title="@string/home_location"
             android:summary="@string/home_location_summary"
-            android:key="pref_home_location"
+            android:key="@string/home_location_key"
             android:defaultValue=""/>
 
     </PreferenceCategory>

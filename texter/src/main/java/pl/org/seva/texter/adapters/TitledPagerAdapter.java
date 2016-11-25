@@ -17,29 +17,27 @@
 
 package pl.org.seva.texter.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.List;
-
-import pl.org.seva.texter.activities.MainActivity;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
-public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
+public class TitledPagerAdapter extends FragmentPagerAdapter {
 
     private final CharSequence titles[];
     private List<Fragment> items;
 
-    public MainActivityTabAdapter(FragmentManager fm, CharSequence titles[]) {
+    public TitledPagerAdapter(FragmentManager fm, CharSequence titles[]) {
         super(fm);
 
         this.titles = titles;
     }
 
-    public MainActivityTabAdapter setItems(List<Fragment> items) {
+    public TitledPagerAdapter setItems(List<Fragment> items) {
         this.items = items;
         return this;
     }
@@ -51,11 +49,14 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+        if (titles == null || position > titles.length) {
+            return null;
+        }
         return titles[position];
     }
 
     @Override
     public int getCount() {
-        return MainActivity.NUMBER_OF_TABS;
+        return items.size();
     }
 }

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	tools:context="pl.org.seva.texter.activities.MainActivity">
-	<include
-		android:id="@+id/tool_bar"
-		layout="@layout/tool_bar"
-		/>
-    <fragment android:name="pl.org.seva.texter.fragments.SettingsFragment"
-        android:id="@+id/content"
-        android:layout_below="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</RelativeLayout>
+<layout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context="pl.org.seva.texter.activities.MainActivity"
+        android:orientation="vertical">
+		<include
+			android:id="@+id/tool_bar"
+			layout="@layout/tool_bar"
+			/>
+		<android.support.v4.view.ViewPager
+			android:id="@+id/pager"
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			/>
+	</LinearLayout>
+</layout>

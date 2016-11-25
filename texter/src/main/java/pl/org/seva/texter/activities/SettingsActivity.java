@@ -18,25 +18,29 @@
 package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.adapters.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.databinding.ActivitySettingsBinding;
+import pl.org.seva.texter.fragments.SettingsFragment;
 import pl.org.seva.texter.listeners.IPermissionDeniedListener;
 import pl.org.seva.texter.listeners.IPermissionGrantedListener;
 import pl.org.seva.texter.managers.GPSManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
@@ -69,11 +73,12 @@ public class SettingsActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
+        ActivitySettingsBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_settings);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Attaching the layout to the toolbar object
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = binding.toolBar.toolBar;
 
 		setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -91,6 +96,17 @@ public class SettingsActivity extends AppCompatActivity
                         this);
             }
         }
+
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(SettingsFragment.newInstance());
+
+        TitledPagerAdapter adapter =
+                new TitledPagerAdapter(getFragmentManager(), null).
+                        setItems(fragments);
+        ViewPager pager = binding.pager;
+        if (pager != null) {
+            pager.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -106,15 +122,6 @@ public class SettingsActivity extends AppCompatActivity
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     /**
      * All actions that require permissions must be placed here. The methods performs them or
@@ -191,19 +198,15 @@ public class SettingsActivity extends AppCompatActivity
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.READ_CONTACTS) &&
-                    !PermissionsManager.getInstance().
-                            rationaleShown(Manifest.permission.READ_CONTACTS)) {
+                    PermissionsManager.getInstance().
+                            isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.perm_contacts_rationale).
-                        setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PermissionsManager.getInstance().
-                                onRationaleShown(Manifest.permission.READ_CONTACTS);
-                        processPermissions();
-                    }
-                });
+                        setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            PermissionsManager.getInstance().
+                                    onRationaleShown(Manifest.permission.READ_CONTACTS);
+                            processPermissions();
+                        });
                 builder.create().show();
             }
             else {

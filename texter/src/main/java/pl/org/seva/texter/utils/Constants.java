@@ -17,27 +17,23 @@
 
 package pl.org.seva.texter.utils;
 
-import android.annotation.SuppressLint;
-
 /**
- * Created by wiktor on 28.08.15.
+ * Created by wiktor on 15.08.16.
  */
-public class StringUtils {
+public class Constants {
 
-    private StringUtils() {
+    /** Geo URI for Warsaw. */
+    public static final String DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667";  // Warsaw
+
+    /** Send an sms each time this value is passed. */
+    public static final int KM_INTERVAL = 2;  // two kilometers
+
+    /** If the number of measurements in the present zone has reached the trigger, send SMS. */
+    public static final int SMS_TRIGGER = 2;
+    /** Time spend in zone before an SMS is sent. */
+    public static final int TIME_IN_ZONE = 11 * 1000;
+
+    private Constants() {
         //
     }
-
-    public static String getSpeedString(double speed, String speedUnit) {
-        @SuppressLint("DefaultLocale")
-        String result = String.format("%.1f", speed) + " " + speedUnit;
-        if (result.contains(".0")) {
-            result = result.replace(".0", "");
-        }
-        else if (result.contains(",0")) {
-            result = result.replace(",0", "");
-        }
-        return result;
-    }
-
 }

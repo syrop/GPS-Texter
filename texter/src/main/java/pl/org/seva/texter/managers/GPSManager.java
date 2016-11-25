@@ -40,7 +40,8 @@ import pl.org.seva.texter.listeners.IDistanceChangedListener;
 import pl.org.seva.texter.listeners.IHomeChangedListener;
 import pl.org.seva.texter.listeners.ILocationChangedListener;
 import pl.org.seva.texter.listeners.IProviderListener;
-import pl.org.seva.texter.preferences.MapPreference;
+import pl.org.seva.texter.preferences.HomeLocationPreference;
+import pl.org.seva.texter.utils.Constants;
 
 public class GPSManager implements LocationListener {
 
@@ -75,8 +76,6 @@ public class GPSManager implements LocationListener {
     private double homeLon;
     private long time;
 
-    private Context context;
-
     private GPSManager() {
         distanceListeners = new ArrayList<>();
         homeChangedListeners = new ArrayList<>();
@@ -95,16 +94,16 @@ public class GPSManager implements LocationListener {
         return instance;
     }
 
-    public static void shutdown() {
+    public static void shutdown(Context context) {
         synchronized (GPSManager.class) {
             if (instance != null) {
-                instance.removeUpdates();
+                instance.removeUpdates(context);
                 instance = null;
             }
         }
     }
 
-    public String getLocationUrl() {
+    String getLocationUrl() {
         if (location == null) {
             return "";
         }
@@ -134,7 +133,6 @@ public class GPSManager implements LocationListener {
 
     private void requestLocationUpdates(Context context) {
         int updateFrequency = getUpdateFrequency();
-        this.context = context;
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -153,7 +151,7 @@ public class GPSManager implements LocationListener {
         }
     }
 
-    private void removeUpdates() {
+    private void removeUpdates(Context context) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -165,9 +163,9 @@ public class GPSManager implements LocationListener {
     public void updateHome() {
         updateDistance();
         String homeLocation = preferences.
-                getString(SettingsActivity.HOME_LOCATION, MapPreference.DEFAULT_VALUE);
-        homeLat = MapPreference.parseLatitude(homeLocation);
-        homeLon = MapPreference.parseLongitude(homeLocation);
+                getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
+        homeLat = HomeLocationPreference.parseLatitude(homeLocation);
+        homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {
             distance = calculateDistance(
                     homeLat,
@@ -176,6 +174,7 @@ public class GPSManager implements LocationListener {
                     location.getLongitude());
         }
         synchronized (homeChangedListeners) {
+            //noinspection Convert2streamapi
             for (IHomeChangedListener l : homeChangedListeners) {
                 l.onHomeChanged();
             }
@@ -316,7 +315,9 @@ public class GPSManager implements LocationListener {
 	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
 	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+	    boolean isFromSameProvider = isSameProvider(
+                location.getProvider(),
+                currentBestLocation.getProvider());
 
 	    // Determine location quality using a combination of timeliness and accuracy
 	    if (isMoreAccurate) {
@@ -364,14 +365,14 @@ public class GPSManager implements LocationListener {
         return location != null;
     }
 
-    public boolean isLocationServiceAvailable() {
+    public boolean isLocationProviderEnabled() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
             locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) { // removed dependence on previous accuracy
+        if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) {
             return;
         }
         if (!GPSManager.isBetterLocation(location, this.location)) {
@@ -384,11 +385,13 @@ public class GPSManager implements LocationListener {
         this.distance = calculateDistance();  // distance in kilometres
         this.time = time;
         synchronized (distanceListeners) {
+            //noinspection Convert2streamapi
             for (IDistanceChangedListener listener : distanceListeners) {
                 listener.onDistanceChanged();
             }
         }
         synchronized (locationChangedListeners) {
+            //noinspection Convert2streamapi
             for (ILocationChangedListener listener : locationChangedListeners) {
                 listener.onLocationChanged();
             }
@@ -446,6 +449,7 @@ public class GPSManager implements LocationListener {
     @Override
     public void onProviderEnabled(String provider) {
         synchronized (providerListeners) {
+            //noinspection Convert2streamapi
             for (IProviderListener listener : providerListeners) {
                 listener.onProviderEnabled();
             }
@@ -455,6 +459,7 @@ public class GPSManager implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         synchronized (providerListeners) {
+            //noinspection Convert2streamapi
             for (IProviderListener listener : providerListeners) {
                 listener.onProviderDisabled();
             }
