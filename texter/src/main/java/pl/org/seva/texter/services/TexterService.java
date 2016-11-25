@@ -57,7 +57,7 @@ public class TexterService extends Service {
                 .setSmallIcon(
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
                         R.drawable.notification :
-                        R.drawable.ic_launcher)
+                        R.mipmap.ic_launcher)
                 .setContentIntent(pIntent)
                 .setAutoCancel(false).build();
 
