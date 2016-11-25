@@ -315,7 +315,9 @@ public class GPSManager implements LocationListener {
 	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
 	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
+	    boolean isFromSameProvider = isSameProvider(
+                location.getProvider(),
+                currentBestLocation.getProvider());
 
 	    // Determine location quality using a combination of timeliness and accuracy
 	    if (isMoreAccurate) {
@@ -363,14 +365,14 @@ public class GPSManager implements LocationListener {
         return location != null;
     }
 
-    public boolean isLocationServiceAvailable() {
+    public boolean isLocationProviderEnabled() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
             locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) { // removed dependence on previous accuracy
+        if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) {
             return;
         }
         if (!GPSManager.isBetterLocation(location, this.location)) {

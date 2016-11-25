@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        else if (GPSManager.getInstance().isLocationServiceAvailable()) {
+        else if (GPSManager.getInstance().isLocationProviderEnabled()) {
             startService();
         }
         if (addListeners) {
@@ -290,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements
         dialog.show();
     }
 
-    // Method to start the service
     private void startService() {
         if (serviceRunning) {
             return;
@@ -382,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
             initGPS(false);  // listeners already added
-            if (GPSManager.getInstance().isLocationServiceAvailable()) {
+            if (GPSManager.getInstance().isLocationProviderEnabled()) {
                 startService();
             }
             PermissionsManager.getInstance().
