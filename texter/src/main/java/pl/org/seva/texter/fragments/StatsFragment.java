@@ -86,7 +86,9 @@ public class StatsFragment extends Fragment
         speedTextView = binding.speedValue;
         sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
-        sendNowButton.setEnabled(distance != 0.0 &&
+        sendNowButton.setEnabled(
+                SMSManager.getInstance().isTextingEnabled() &&
+                distance != 0.0 &&
                 distance != SMSManager.getInstance().getLastSentDistance());
 
         show();
@@ -183,7 +185,7 @@ public class StatsFragment extends Fragment
         boolean resetValues =
                 System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;
         if (distance != SMSManager.getInstance().getLastSentDistance()) {
-            sendNowButton.setEnabled(true);
+            sendNowButton.setEnabled(SMSManager.getInstance().isTextingEnabled());
         }
 
         if (resetValues) {  // reset the values if three hours have passed
@@ -244,7 +246,7 @@ public class StatsFragment extends Fragment
     @Override
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            sendNowButton.setEnabled(true);
+            sendNowButton.setEnabled(SMSManager.getInstance().isTextingEnabled());
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
