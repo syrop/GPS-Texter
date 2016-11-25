@@ -186,20 +186,14 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // Create instance of custom BaseSavedState.
         final HomeLocationActivity.SavedState myState
                 = new HomeLocationActivity.SavedState();
-        // Set the state's value with the class member that holds current
-        // setting value.
         myState.lat = lat;
         myState.lon = lon;
         myState.toastShown = toastShown;
         myState.zoom = zoom;
 
-        // Equals null inside the setting activity if map has not been invoked.
         if (mapFragment != null) {
-            // If called after onSaveInstanceState, throws:
-            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             getFragmentManager().beginTransaction().remove(mapFragment).commit();
             mapFragment = null;
         }

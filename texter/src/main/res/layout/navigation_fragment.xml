@@ -24,10 +24,10 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"/>
 
-        <fragment
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:id="@+id/map"
+        <LinearLayout
+            android:id="@+id/map_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
     </LinearLayout>
 </layout>

@@ -19,10 +19,12 @@ package pl.org.seva.texter.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,9 @@ public class NavigationFragment extends Fragment implements
 
     private TextView distanceTextView;
     private GoogleMap map;
+    private boolean animateCamera = true;
+    private int mapContainerId;
+    private MapFragment mapFragment;
 
     public static NavigationFragment newInstance() {
         return new NavigationFragment();
@@ -71,10 +76,25 @@ public class NavigationFragment extends Fragment implements
         GPSManager.getInstance().addHomeChangedListener(this);
         show(GPSManager.getInstance().getDistance());
 
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager().
-                findFragmentById(R.id.map);
-
+        if (savedInstanceState != null) {
+            animateCamera = false;
+        }
         MapsInitializer.initialize(getActivity().getApplicationContext());
+        mapContainerId = binding.mapContainer.getId();
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        FragmentManager fm = getFragmentManager();
+        mapFragment = (MapFragment) fm.findFragmentByTag("map");
+        if (mapFragment == null) {
+            mapFragment = new MapFragment();
+            fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit();
+        }
 
         mapFragment.getMapAsync(googleMap -> {
             map = googleMap;
@@ -93,15 +113,14 @@ public class NavigationFragment extends Fragment implements
             updateHomeLocation(homeLatLng);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(homeLatLng).zoom(12).build();
-            if (savedInstanceState == null) {
+            if (animateCamera) {
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
             else {
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
+            animateCamera = false;
         });
-
-        return binding.getRoot();
     }
 
     @Override
@@ -109,6 +128,16 @@ public class NavigationFragment extends Fragment implements
         super.onDestroy();
         GPSManager.getInstance().removeDistanceChangedListener(this);
         GPSManager.getInstance().removeHomeChangedListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mapFragment != null) {
+            // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
+            getFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
+            mapFragment = null;
+        }
+        super.onSaveInstanceState(outState);
     }
 
     private void updateHomeLocation(LatLng home) {
