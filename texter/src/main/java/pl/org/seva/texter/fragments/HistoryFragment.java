@@ -17,11 +17,13 @@
 
 package pl.org.seva.texter.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -56,6 +58,17 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            this.context = activity;
+        }
     }
 
     @Override

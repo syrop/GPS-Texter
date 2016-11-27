@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -117,6 +118,17 @@ public class StatsFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            this.activity = activity;
+        }
+    }
+
     private void show() {
         @SuppressLint("DefaultLocale") String distanceStr = String.format("%.3f km", distance);
 
@@ -124,7 +136,8 @@ public class StatsFragment extends Fragment
             distanceStr = "0 km";
         }
         distanceTextView.setText(distanceStr);
-        int seconds = (int) (System.currentTimeMillis() - TimerManager.getInstance().getResetTime()) / 1000;
+        int seconds = (int) (System.currentTimeMillis() -
+                TimerManager.getInstance().getResetTime()) / 1000;
         int minutes = seconds / 60;
         seconds = seconds % 60;
         int hours = minutes / 60;
