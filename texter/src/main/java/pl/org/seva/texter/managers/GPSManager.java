@@ -367,7 +367,7 @@ public class GPSManager implements LocationListener {
 
     public boolean isLocationProviderEnabled() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     @Override

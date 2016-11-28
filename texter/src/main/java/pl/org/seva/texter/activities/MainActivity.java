@@ -399,6 +399,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onProviderDisabled() {
+        if (GPSManager.getInstance().isLocationProviderEnabled()) {
+            return;
+        }
         stopService();
     }
 }
