@@ -308,11 +308,6 @@ public class GPSManager implements
         }
     }
 
-    /**
-     * Determines whether one Location reading is better than the current Location fix.
-     * @param location  The new Location that you want to evaluate
-     * @param currentBestLocation  The current Location fix, to which you want to compare the new one
-     */
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
             // A new location is always better than no location
@@ -359,9 +354,6 @@ public class GPSManager implements
         return false;
     }
 
-    /**
-     * Checks whether two providers are the same.
-     */
     private static boolean isSameProvider(String provider1, String provider2) {
         if (provider1 == null) {
             return provider2 == null;
@@ -439,15 +431,6 @@ public class GPSManager implements
                 getHomeLng());
     }
 
-    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
-    }
-
     private double calculateSpeed(Location loc1, Location loc2, long time) {
         if (loc1 == null || loc2 == null || this.time == 0 || time == 0 ||
                 loc1.getLatitude() == loc2.getLatitude() &&
@@ -465,6 +448,15 @@ public class GPSManager implements
                 loc2.getLatitude(),
                 loc2.getLongitude());
         return distance / hours;
+    }
+
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
     }
 
     @Override
@@ -499,8 +491,7 @@ public class GPSManager implements
                         googleApiClient,
                         builder.build());
         pendingResult.setResultCallback(locationSettingsResult -> {
-            connected = locationSettingsResult.getLocationSettingsStates().isGpsUsable() ||
-                    locationSettingsResult.getLocationSettingsStates().isNetworkLocationUsable();
+            connected = locationSettingsResult.getLocationSettingsStates().isLocationUsable();
             if (connected) {
                 synchronized (providerListeners) {
                     //noinspection Convert2streamapi
@@ -527,5 +518,4 @@ public class GPSManager implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
 }
