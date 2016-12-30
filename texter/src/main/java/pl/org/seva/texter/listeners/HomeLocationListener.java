@@ -18,10 +18,8 @@
 package pl.org.seva.texter.listeners;
 
 /**
- * Created by wiktor on 5/23/16.
+ * Created by wiktor on 18.10.15.
  */
-public interface IProviderListener {
-    void onProviderEnabled();
-
-    void onProviderDisabled();
+public interface HomeLocationListener {
+    void onHomeChanged();
 }

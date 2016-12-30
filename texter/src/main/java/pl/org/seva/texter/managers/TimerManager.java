@@ -20,18 +20,15 @@ package pl.org.seva.texter.managers;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.org.seva.texter.listeners.ITimerListener;
+import pl.org.seva.texter.listeners.TimerListener;
 
-/**
- * Created by wiktor on 08.09.15.
- */
 public class TimerManager extends Thread {
 
     private static TimerManager instance;
 
     private long resetTime = System.currentTimeMillis();
 
-    private final List<ITimerListener> listeners = new ArrayList<>();
+    private final List<TimerListener> listeners = new ArrayList<>();
 
     private boolean running = true;
 
@@ -69,7 +66,7 @@ public class TimerManager extends Thread {
                 while (running) {
                     listeners.wait(1000);
                     //noinspection Convert2streamapi
-                    for (ITimerListener listener : listeners) {
+                    for (TimerListener listener : listeners) {
                         listener.onTimer();
                     }
                 }
@@ -91,13 +88,13 @@ public class TimerManager extends Thread {
         return resetTime;
     }
 
-    public void addListener(ITimerListener listener) {
+    public void addListener(TimerListener listener) {
         synchronized (listeners) {
             listeners.add(listener);
         }
     }
 
-    public void removeListener(ITimerListener listener) {
+    public void removeListener(TimerListener listener) {
         synchronized (listeners) {
             listeners.remove(listener);
         }

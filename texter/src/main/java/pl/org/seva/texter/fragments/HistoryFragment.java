@@ -36,14 +36,11 @@ import android.support.v7.widget.RecyclerView;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.HistoryAdapter;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
-import pl.org.seva.texter.listeners.ISMSListener;
+import pl.org.seva.texter.listeners.SmsListener;
 import pl.org.seva.texter.managers.HistoryManager;
-import pl.org.seva.texter.managers.SMSManager;
+import pl.org.seva.texter.managers.SmsManager;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
-public class HistoryFragment extends Fragment implements ISMSListener  {
+public class HistoryFragment extends Fragment implements SmsListener {
 
     private HistoryAdapter adapter;
     private RecyclerView historyRecyclerView;
@@ -86,7 +83,7 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
         historyRecyclerView.addOnScrollListener(new OnScrollListener());
-        SMSManager.getInstance().addSMSListener(this);
+        SmsManager.getInstance().addSMSListener(this);
         scrollToBottom = true;
 
         return binding.getRoot();
@@ -95,7 +92,7 @@ public class HistoryFragment extends Fragment implements ISMSListener  {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SMSManager.getInstance().removeSMSListener(this);
+        SmsManager.getInstance().removeSMSListener(this);
     }
 
     @Override

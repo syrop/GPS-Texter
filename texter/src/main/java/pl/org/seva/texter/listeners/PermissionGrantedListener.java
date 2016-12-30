@@ -17,10 +17,7 @@
 
 package pl.org.seva.texter.listeners;
 
-/**
- * Created by wiktor on 5/23/16.
- */
-public interface IPermissionDeniedListener {
+public interface PermissionGrantedListener {
 
-    void onPermissionDenied(String permission);
+    void onPermissionGranted(String permission);
 }

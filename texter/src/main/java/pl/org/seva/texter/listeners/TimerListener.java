@@ -17,10 +17,6 @@
 
 package pl.org.seva.texter.listeners;
 
-/**
- * Created by wiktor on 31.01.16.
- */
-public interface ILocationChangedListener {
-    void onLocationChanged();
-
+public interface TimerListener {
+    void onTimer();
 }

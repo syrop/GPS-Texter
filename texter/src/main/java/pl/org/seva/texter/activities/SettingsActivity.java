@@ -19,12 +19,12 @@ package pl.org.seva.texter.activities;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.TitledPagerAdapter;
-import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.fragments.SettingsFragment;
-import pl.org.seva.texter.listeners.IPermissionDeniedListener;
-import pl.org.seva.texter.listeners.IPermissionGrantedListener;
-import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.listeners.PermissionDeniedListener;
+import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
 import android.Manifest;
@@ -48,7 +48,7 @@ import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
-        IPermissionGrantedListener, IPermissionDeniedListener {
+        PermissionGrantedListener, PermissionDeniedListener {
 
     /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
@@ -173,11 +173,11 @@ public class SettingsActivity extends AppCompatActivity
                 }
                 break;
             case LOCATION_UPDATE_FREQUENCY:
-                GPSManager.getInstance().updateFrequencyChanged(this);
+                GpsManager.getInstance().updateFrequencyChanged(this);
                 break;
             case HOME_LOCATION:
-                GPSManager.getInstance().updateHome();
-                SMSController.getInstance().resetZones();
+                GpsManager.getInstance().updateHome();
+                SmsController.getInstance().resetZones();
                 break;
         }
     }

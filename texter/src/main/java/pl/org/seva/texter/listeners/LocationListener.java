@@ -18,9 +18,9 @@
 package pl.org.seva.texter.listeners;
 
 /**
- * Created by wiktor on 11.01.16.
+ * Created by wiktor on 31.01.16.
  */
-public interface ISMSListener {
-    void onSendingSMS();
-    void onSMSSent();
+public interface LocationListener {
+    void onLocationChanged();
+
 }
