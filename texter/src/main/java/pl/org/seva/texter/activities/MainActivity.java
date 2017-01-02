@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    public void addListeners() {
+    private void addListeners() {
         GpsManager.getInstance().addDistanceChangedListener(SmsController.getInstance());
         GpsManager.getInstance().addProviderListener(this);
     }
@@ -223,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        else if (GpsManager.getInstance().isLocationProviderEnabled()) {
-            startService();
+        else {
+            GpsManager.getInstance().callProviderListener();
         }
 
         return permissionGranted;
@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void startService() {
+        Thread.dumpStack();
         if (serviceRunning) {
             return;
         }
@@ -382,9 +383,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
             initGps();  // listeners already added
-            if (GpsManager.getInstance().isLocationProviderEnabled()) {
-                startService();
-            }
+            GpsManager.getInstance().callProviderListener();
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
             if (showSettings) {
@@ -400,9 +399,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onProviderDisabled() {
-        if (GpsManager.getInstance().isLocationProviderEnabled()) {
-            return;
-        }
         stopService();
     }
 }

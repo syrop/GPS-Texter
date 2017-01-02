@@ -381,10 +381,6 @@ public class GpsManager implements
         return location != null;
     }
 
-    public boolean isLocationProviderEnabled() throws SecurityException {
-        return connected;
-    }
-
     @Override
     public void onLocationChanged(Location location) {
         if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) {
@@ -468,19 +464,10 @@ public class GpsManager implements
         //noinspection MissingPermission
         LocationServices.FusedLocationApi.
                 requestLocationUpdates(googleApiClient, locationRequest, this);
-        synchronized (providerListeners) {
-            //noinspection Convert2streamapi
-            for (ProviderListener listener : providerListeners) {
-                listener.onProviderEnabled();
-            }
-        }
+        callProviderListener();
     }
 
-    private void locationSettingsChanged() {
-        if (locationRequest == null) {
-            return;
-        }
-
+    public void callProviderListener() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         PendingResult<LocationSettingsResult> pendingResult =
@@ -506,6 +493,14 @@ public class GpsManager implements
                 }
             }
         });
+    }
+
+    private void locationSettingsChanged() {
+        if (locationRequest == null) {
+            return;
+        }
+
+        callProviderListener();
     }
 
     @Override
