@@ -49,9 +49,6 @@ import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 
-/**
- * Created by wiktor on 04.09.16.
- */
 public class HomeLocationActivity extends AppCompatActivity implements
         LocationListener,
         PermissionGrantedListener,
