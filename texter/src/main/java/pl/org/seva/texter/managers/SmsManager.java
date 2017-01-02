@@ -51,6 +51,7 @@ public class SmsManager {
     private static final String SPEED_KEY = "pl.org.seva.texter.Speed";
 
 	private static final String SENT = "SMS_SENT";
+    private static final String DELIVERED = "SMS_DELIVERED";
 
 	private SharedPreferences preferences;
     private String speedUnit;
@@ -214,6 +215,15 @@ public class SmsManager {
                 unregisterReceiver(this);
             }
         }, new IntentFilter(SENT + id));
+
+        // When the SMS has been delivered.
+        registerReceiver(new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                unregisterReceiver(this);
+            }
+        }, new IntentFilter(DELIVERED + id));
 	}
 	
 	public void send(LocationModel model) {
@@ -261,6 +271,9 @@ public class SmsManager {
         sentIntent.putExtra(DIRECTION_KEY, location.getDirection());
         sentIntent.putExtra(SPEED_KEY, location.getSpeed());
 
+		Intent deliveredIntent = new Intent(DELIVERED + id);
+		deliveredIntent.putExtra(TEXT_KEY, intentText);
+
         synchronized (listeners) {
             //noinspection Convert2streamapi
             for (SmsListener listener : listeners) {
@@ -270,9 +283,10 @@ public class SmsManager {
         Context context = weakContext.get();
         if (context != null) {
             PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0);
+            PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
             registerBroadcastReceiver(id);
             try {
-                smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, null);
+                smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
             }
             catch (SecurityException ignore) {
                 // Ignore, as may indicate the app has no permission to send SMS.
