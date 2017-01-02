@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void startService() {
-        Thread.dumpStack();
         if (serviceRunning) {
             return;
         }
