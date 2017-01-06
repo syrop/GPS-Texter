@@ -27,9 +27,6 @@ import android.os.IBinder;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activities.MainActivity;
 
-/**
- * Created by wiktor on 5/17/16.
- */
 public class TexterService extends Service {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;

@@ -322,7 +322,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Also called when the screen is rotated.
-        super.onDestroy();
         if (dialog != null) {
             dialog.dismiss();
         }
@@ -338,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements
                 ZoneManager.shutdown();
             }
         }
+        super.onDestroy();
     }
 
     @Override

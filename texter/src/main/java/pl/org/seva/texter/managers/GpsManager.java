@@ -66,7 +66,7 @@ public class GpsManager implements
     private static GpsManager instance;
 
     /** Minimal distance (in meters) that will be counted between two subsequent updates. */
-    private static final float MIN_DISTANCE = 10.0f;
+    private static final float MIN_DISTANCE = 5.0f;
 
     private static final int SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2;
 
@@ -457,10 +457,11 @@ public class GpsManager implements
         connected = true;
         int updateFrequency = getUpdateFrequency();
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-        locationRequest = LocationRequest.create().
-                setInterval(updateFrequency).
-                setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+        locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(updateFrequency)
                 .setSmallestDisplacement(MIN_DISTANCE);
+
         //noinspection MissingPermission
         LocationServices.FusedLocationApi.
                 requestLocationUpdates(googleApiClient, locationRequest, this);
