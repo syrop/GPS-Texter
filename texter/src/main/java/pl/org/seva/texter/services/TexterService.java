@@ -38,8 +38,6 @@ public class TexterService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Let it continue running until it is stopped.
-
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
         // use System.currentTimeMillis() to have a unique ID for the pending intent

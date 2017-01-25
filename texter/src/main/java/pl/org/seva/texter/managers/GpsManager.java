@@ -88,10 +88,12 @@ public class GpsManager implements
 
     private boolean initialized;
     private boolean connected;
+    private boolean paused;
 
     private double homeLat;
     private double homeLon;
     private long time;
+
 
     private GpsManager() {
         distanceListeners = new ArrayList<>();
@@ -494,6 +496,28 @@ public class GpsManager implements
                 }
             }
         });
+    }
+
+    public void pauseUpdates() {
+        if (paused) {
+            return;
+        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+
+        paused = true;
+
+    }
+
+    public void resumeUpdates() {
+        if (!paused) {
+            return;
+        }
+        //noinspection MissingPermission
+        LocationServices.FusedLocationApi.
+                requestLocationUpdates(googleApiClient, locationRequest, this);
+
+        paused = false;
+
     }
 
     private void locationSettingsChanged() {

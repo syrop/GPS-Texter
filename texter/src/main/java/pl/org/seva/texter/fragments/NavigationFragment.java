@@ -47,9 +47,6 @@ import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
 public class NavigationFragment extends Fragment implements
         DistanceListener, HomeLocationListener, PermissionGrantedListener {
 
