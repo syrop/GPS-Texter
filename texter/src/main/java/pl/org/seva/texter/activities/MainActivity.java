@@ -51,7 +51,7 @@ import java.util.Locale;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.TitledPagerAdapter;
-import pl.org.seva.texter.controller.SMSController;
+import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
 import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
@@ -59,18 +59,18 @@ import pl.org.seva.texter.fragments.HistoryFragment;
 import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
-import pl.org.seva.texter.listeners.IPermissionGrantedListener;
-import pl.org.seva.texter.listeners.IProviderListener;
-import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import pl.org.seva.texter.listeners.ProviderListener;
+import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.PermissionsManager;
-import pl.org.seva.texter.managers.SMSManager;
+import pl.org.seva.texter.managers.SmsManager;
 import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.managers.TimerManager;
 
 public class MainActivity extends AppCompatActivity implements
-        IPermissionGrantedListener, IProviderListener {
+        PermissionGrantedListener, ProviderListener {
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
 
-        SMSController.getInstance().init(getPackageManager().
+        SmsController.getInstance().init(getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
         Toolbar toolbar = binding.toolBar.toolBar;
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements
             TimerManager.getInstance().reset();
         }
 
-        SMSManager.getInstance().init(this, getString(R.string.speed_unit));
+        SmsManager.getInstance().init(this, getString(R.string.speed_unit));
 
         int googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (googlePlay != ConnectionResult.SUCCESS) {
@@ -172,7 +172,8 @@ public class MainActivity extends AppCompatActivity implements
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
-        initGPS(true);
+        initGps();
+        addListeners();
         if (!showStartupDialog()) {
             processPermissions();
         }
@@ -186,10 +187,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     private boolean processPermissions() {
         List<String> permissions = new ArrayList<>();
-        if (!initGPS(true)) {
+        addListeners();
+        if (!initGps()) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if (SMSManager.getInstance().isTextingEnabled() && ContextCompat.checkSelfPermission(
+        if (SmsManager.getInstance().isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -208,21 +210,21 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    private boolean initGPS(boolean addListeners) {
-        boolean permissionGranted = GPSManager.getInstance().init(this);
+    private void addListeners() {
+        GpsManager.getInstance().addDistanceChangedListener(SmsController.getInstance());
+        GpsManager.getInstance().addProviderListener(this);
+    }
+
+    private boolean initGps() {
+        boolean permissionGranted = GpsManager.getInstance().init(this);
 
         if (!permissionGranted) {
             PermissionsManager.getInstance().addPermissionGrantedListener(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     this);
         }
-        else if (GPSManager.getInstance().isLocationProviderEnabled()) {
-            startService();
-        }
-        if (addListeners) {
-            // Condition is false on calling it second time, after permission was granted.
-            GPSManager.getInstance().addDistanceChangedListener(SMSController.getInstance());
-            GPSManager.getInstance().addProviderListener(this);
+        else {
+            GpsManager.getInstance().callProviderListener();
         }
 
         return permissionGranted;
@@ -298,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements
         serviceRunning = true;
     }
 
-    // Method to stop the service
     private void stopService() {
         if (!serviceRunning) {
             return;
@@ -321,22 +322,22 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         // Also called when the screen is rotated.
-        super.onDestroy();
         if (dialog != null) {
             dialog.dismiss();
         }
         if (action != null && action.equals(Intent.ACTION_MAIN)) {
             // Condition is false when activity has been launched from a notification.
-            stopService();
             if (shuttingDown) {
+                stopService();
                 HistoryManager.shutdown();
-                GPSManager.shutdown(this);
+                GpsManager.shutdown(this);
                 PermissionsManager.shutdown();
-                SMSManager.shutdown();
+                SmsManager.shutdown();
                 TimerManager.shutdown();
                 ZoneManager.shutdown();
             }
         }
+        super.onDestroy();
     }
 
     @Override
@@ -380,10 +381,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onPermissionGranted(String permission) {
         if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            initGPS(false);  // listeners already added
-            if (GPSManager.getInstance().isLocationProviderEnabled()) {
-                startService();
-            }
+            initGps();  // listeners already added
+            GpsManager.getInstance().callProviderListener();
             PermissionsManager.getInstance().
                     removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
             if (showSettings) {
@@ -399,9 +398,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onProviderDisabled() {
-        if (GPSManager.getInstance().isLocationProviderEnabled()) {
-            return;
-        }
         stopService();
     }
 }

@@ -43,18 +43,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
-import pl.org.seva.texter.listeners.ILocationChangedListener;
-import pl.org.seva.texter.listeners.IPermissionGrantedListener;
-import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.listeners.LocationListener;
+import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 
-/**
- * Created by wiktor on 04.09.16.
- */
 public class HomeLocationActivity extends AppCompatActivity implements
-        ILocationChangedListener,
-        IPermissionGrantedListener,
+        LocationListener,
+        PermissionGrantedListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
@@ -105,7 +102,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED;
         boolean locationAvailable = locationPermitted &&
-                GPSManager.getInstance().isLocationAvailable();
+                GpsManager.getInstance().isLocationAvailable();
         useCurrentButton.setEnabled(locationAvailable);
         if (!toastShown) {
             Toast.makeText(
@@ -114,7 +111,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                     Toast.LENGTH_SHORT).show();
             toastShown = true;
         }
-        GPSManager.getInstance().addLocationChangedListener(HomeLocationActivity.this);
+        GpsManager.getInstance().addLocationChangedListener(HomeLocationActivity.this);
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
@@ -167,14 +164,14 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        GPSManager.getInstance().removeLocationChangedListener(this);
+        GpsManager.getInstance().removeLocationChangedListener(this);
         toastShown = false;
 
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        GPSManager.getInstance().updateHome();
-        GPSManager.getInstance().removeLocationChangedListener(this);
+        GpsManager.getInstance().updateHome();
+        GpsManager.getInstance().removeLocationChangedListener(this);
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -279,7 +276,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     }
 
     public void onUseCurrentLocation(View view) {
-        LatLng loc = GPSManager.getInstance().getLatLng();
+        LatLng loc = GpsManager.getInstance().getLatLng();
         if (loc != null) {
             lat = loc.latitude;
             lon = loc.longitude;

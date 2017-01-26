@@ -32,18 +32,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activities.SettingsActivity;
-import pl.org.seva.texter.listeners.ISMSListener;
+import pl.org.seva.texter.listeners.SmsListener;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.StringUtils;
 
-public class SMSManager {
+public class SmsManager {
 
-	private static SMSManager instance;
+	private static SmsManager instance;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
@@ -58,7 +57,7 @@ public class SMSManager {
     private String speedUnit;
     private WeakReference<Context> weakContext;
 
-	private final SmsManager smsManager;
+	private final android.telephony.SmsManager smsManager;
 
     private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
 
@@ -66,11 +65,11 @@ public class SMSManager {
 	
 	private boolean initialized;
 
-    public static SMSManager getInstance() {
+    public static SmsManager getInstance() {
         if (instance == null ) {
-            synchronized (SMSManager.class) {
+            synchronized (SmsManager.class) {
                 if (instance == null) {
-                    instance = new SMSManager();
+                    instance = new SmsManager();
                 }
             }
         }
@@ -79,17 +78,16 @@ public class SMSManager {
 
     public static void shutdown() {
         instance.unregisterReceivers();
-        synchronized (SMSManager.class) {
+        synchronized (SmsManager.class) {
             instance = null;
         }
     }
 
-
-    private SMSManager() {
-		smsManager = SmsManager.getDefault();
+    private SmsManager() {
+		smsManager = android.telephony.SmsManager.getDefault();
 	}
 
-    private final List<ISMSListener> listeners = new ArrayList<>();
+    private final List<SmsListener> listeners = new ArrayList<>();
 	
 	public void init(final Context context, String speedUnit) {
 		if (initialized) {
@@ -101,14 +99,14 @@ public class SMSManager {
 		initialized = true;
 	}
 
-    public void addSMSListener(ISMSListener listener) {
+    public void addSMSListener(SmsListener listener) {
         synchronized (listeners) {
             removeSMSListener(listener);
             listeners.add(listener);
         }
     }
 
-    public void removeSMSListener(ISMSListener listener) {
+    public void removeSMSListener(SmsListener listener) {
         synchronized (listeners) {
             listeners.remove(listener);
         }
@@ -186,28 +184,28 @@ public class SMSManager {
                             HistoryManager.getInstance().add(location);
                             synchronized (listeners) {
                                 //noinspection Convert2streamapi
-                                for (ISMSListener listener : listeners) {
+                                for (SmsListener listener : listeners) {
                                     listener.onSMSSent();
                                 }
                             }
                         }
                         break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                    case android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         Toast.makeText(
                                 arg0,
                                 arg0.getString(R.string.generic_failure),
                                 Toast.LENGTH_SHORT).show();
                         break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                    case android.telephony.SmsManager.RESULT_ERROR_NO_SERVICE:
                         Toast.makeText(
                                 arg0,
                                 arg0.getString(R.string.no_service),
                                 Toast.LENGTH_SHORT).show();
                         break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                    case android.telephony.SmsManager.RESULT_ERROR_NULL_PDU:
                         Toast.makeText(arg0, "Null PDU", Toast.LENGTH_SHORT).show();
                         break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                    case android.telephony.SmsManager.RESULT_ERROR_RADIO_OFF:
                         Toast.makeText(
                                 arg0,
                                 arg0.getString(R.string.radio_off),
@@ -223,29 +221,9 @@ public class SMSManager {
         {
             @Override
             public void onReceive(Context arg0, Intent arg1) {
-            String text = arg1.getStringExtra(TEXT_KEY);
-            switch (getResultCode())
-            {
-                case Activity.RESULT_OK:
-                    StringBuilder deliveredBuilder =
-                            new StringBuilder(arg0.getString(R.string.delivered));
-                    if (text != null) {
-                        deliveredBuilder.append(": ").append(text);
-                    }
-                    Toast.makeText(arg0, deliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
-                    break;
-                case Activity.RESULT_CANCELED:
-                    StringBuilder notDeliveredBuilder =
-                            new StringBuilder(arg0.getString(R.string.not_delivered));
-                    if (text != null) {
-                        notDeliveredBuilder.append(": ").append(text);
-                    }
-                    Toast.makeText(arg0, notDeliveredBuilder.toString(), Toast.LENGTH_SHORT).show();
-                    break;
+                unregisterReceiver(this);
             }
-            unregisterReceiver(this);
-            }
-        }, new IntentFilter(DELIVERED + id));        
+        }, new IntentFilter(DELIVERED + id));
 	}
 	
 	public void send(LocationModel model) {
@@ -271,7 +249,7 @@ public class SMSManager {
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
-            smsBuilder.append(" ").append(GPSManager.getInstance().getLocationUrl());
+            smsBuilder.append(" ").append(GpsManager.getInstance().getLocationUrl());
         }
         @SuppressLint("DefaultLocale")
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";
@@ -298,7 +276,7 @@ public class SMSManager {
 
         synchronized (listeners) {
             //noinspection Convert2streamapi
-            for (ISMSListener listener : listeners) {
+            for (SmsListener listener : listeners) {
                 listener.onSendingSMS();
             }
         }
@@ -309,7 +287,8 @@ public class SMSManager {
             registerBroadcastReceiver(id);
             try {
                 smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
-            } catch (SecurityException ex) {
+            }
+            catch (SecurityException ignore) {
                 // Ignore, as may indicate the app has no permission to send SMS.
             }
         }

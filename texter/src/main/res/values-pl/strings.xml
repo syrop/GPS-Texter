@@ -32,8 +32,6 @@
 
     <!-- Messages -->
     <string name="sent">Wysłano</string>
-    <string name="delivered">Dostarczono</string>
-    <string name="not_delivered">Nie dostarczono</string>
     <string name="generic_failure">Niemożliwe do dostarczenia</string>
     <string name="no_service">Brak sieci</string>
     <string name="radio_off">Brak połączenia</string>

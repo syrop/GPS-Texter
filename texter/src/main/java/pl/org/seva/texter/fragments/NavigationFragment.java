@@ -24,7 +24,6 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,17 +41,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.listeners.IDistanceChangedListener;
-import pl.org.seva.texter.listeners.IHomeChangedListener;
-import pl.org.seva.texter.listeners.IPermissionGrantedListener;
-import pl.org.seva.texter.managers.GPSManager;
+import pl.org.seva.texter.listeners.DistanceListener;
+import pl.org.seva.texter.listeners.HomeLocationListener;
+import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class NavigationFragment extends Fragment implements
-        IDistanceChangedListener, IHomeChangedListener, IPermissionGrantedListener {
+        DistanceListener, HomeLocationListener, PermissionGrantedListener {
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -72,9 +71,9 @@ public class NavigationFragment extends Fragment implements
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        GPSManager.getInstance().addDistanceChangedListener(this);
-        GPSManager.getInstance().addHomeChangedListener(this);
-        show(GPSManager.getInstance().getDistance());
+        GpsManager.getInstance().addDistanceChangedListener(this);
+        GpsManager.getInstance().addHomeChangedListener(this);
+        show(GpsManager.getInstance().getDistance());
 
         if (savedInstanceState != null) {
             animateCamera = false;
@@ -109,7 +108,7 @@ public class NavigationFragment extends Fragment implements
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         NavigationFragment.this);
             }
-            LatLng homeLatLng = GPSManager.getInstance().getHomeLatLng();
+            LatLng homeLatLng = GpsManager.getInstance().getHomeLatLng();
             updateHomeLocation(homeLatLng);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(homeLatLng).zoom(12).build();
@@ -126,8 +125,8 @@ public class NavigationFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GPSManager.getInstance().removeDistanceChangedListener(this);
-        GPSManager.getInstance().removeHomeChangedListener(this);
+        GpsManager.getInstance().removeDistanceListener(this);
+        GpsManager.getInstance().removeHomeChangedListener(this);
     }
 
     @Override
@@ -165,12 +164,12 @@ public class NavigationFragment extends Fragment implements
 
     @Override
     public void onDistanceChanged() {
-        show(GPSManager.getInstance().getDistance());
+        show(GpsManager.getInstance().getDistance());
     }
 
     @Override
     public void onHomeChanged() {
-        updateHomeLocation(GPSManager.getInstance().getHomeLatLng());
+        updateHomeLocation(GpsManager.getInstance().getHomeLatLng());
     }
 
     @Override
