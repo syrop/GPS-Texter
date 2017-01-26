@@ -53,7 +53,7 @@
                     android:text=""/>
 
                 <TextView
-                    android:id="@+id/interval_label"
+                    android:id="@+id/update_interval_label"
                     android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,13 +61,20 @@
                     android:text="@string/time_since_update" />
 
                 <TextView
-                    android:id="@+id/interval_value"
+                    android:id="@+id/update_interval_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:ignore="HardcodedText"
                     android:textSize="24sp"
                     android:text=""/>
 
+                <TextView
+                    android:id="@+id/stationary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    android:text="@string/stationary"/>
             </LinearLayout>
         </ScrollView>
         <Button

@@ -38,6 +38,7 @@ import java.util.Calendar;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import pl.org.seva.texter.managers.ActivityRecognitionManager;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SmsManager;
@@ -52,9 +53,11 @@ public class StatsFragment extends Fragment implements
 
     private static String homeString;
     private static String hourString;
+    private static String stationaryString;
 
     private TextView distanceTextView;
     private TextView intervalTextView;
+    private TextView stationaryTextView;
     private TextView speedTextView;
     private Button sendNowButton;
 
@@ -63,9 +66,12 @@ public class StatsFragment extends Fragment implements
 
     private double distance;
     private double speed;
+    private boolean stationary;
 
     private Subscription distanceSubscription = Subscriptions.empty();
     private Subscription timerSubscription = Subscriptions.empty();
+    private Subscription stationarySubscription = Subscriptions.empty();
+    private Subscription movingSubscription = Subscriptions.empty();
 
     private Activity activity;
 
@@ -80,10 +86,12 @@ public class StatsFragment extends Fragment implements
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
+        stationaryString = getActivity().getString(R.string.stationary);
         StatsFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.stats_fragment, container, false);
         distanceTextView = binding.distanceValue;
-        intervalTextView = binding.intervalValue;
+        intervalTextView = binding.updateIntervalValue;
+        stationaryTextView = binding.stationary;
         speedTextView = binding.speedValue;
         sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
@@ -110,7 +118,25 @@ public class StatsFragment extends Fragment implements
                     this);
         }
 
+        stationarySubscription = ActivityRecognitionManager
+                .getInstance()
+                .stationaryListener()
+                .subscribe(ignore -> deviceIsStationary());
+
+        movingSubscription = ActivityRecognitionManager
+                .getInstance()
+                .movingListener()
+                .subscribe(ignore -> deviceIsMoving());
+
         return binding.getRoot();
+    }
+
+    private void deviceIsStationary() {
+        stationary = true;
+    }
+
+    private void deviceIsMoving() {
+        stationary = false;
     }
 
     @Override
@@ -165,6 +191,7 @@ public class StatsFragment extends Fragment implements
             timeStrBuilder.setLength(0);
             timeStrBuilder.append("0 s");
         }
+        stationaryTextView.setVisibility(stationary ? View.VISIBLE : View.GONE);
         intervalTextView.setText(timeStrBuilder.toString());
         if (speed == 0.0 || distance == 0.0) {
             speedTextView.setVisibility(View.INVISIBLE);
@@ -194,6 +221,8 @@ public class StatsFragment extends Fragment implements
         distanceSubscription.unsubscribe();
         smsSendingSubscription.unsubscribe();
         homeChangedSubscription.unsubscribe();
+        stationarySubscription.unsubscribe();
+        movingSubscription.unsubscribe();
     }
 
     private void onDistanceChanged() {

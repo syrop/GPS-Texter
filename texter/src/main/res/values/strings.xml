@@ -5,6 +5,7 @@
     <string name="app_name">GPS Texter</string>
     <string name="distance">Distance from home:</string>
     <string name="time_since_update">Time since update:</string>
+    <string name="stationary">[The device is stationary.]</string>
     <string name="speed">Speed:</string>
     <string name="speed_unit">km/h</string>
     <string name="hour">h</string>

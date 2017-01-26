@@ -4,6 +4,7 @@
     <string name="app_name">GPS Texter</string>
     <string name="distance">Odległość od domu:</string>
     <string name="time_since_update">Czas od pomiaru:</string>
+    <string name="stationary">[Urządzenie się nie porusza.]</string>
     <string name="speed">Prędkość:</string>
     <string name="speed_unit">km/godz</string>
     <string name="hour">godz</string>

@@ -14,12 +14,17 @@ import com.google.android.gms.location.ActivityRecognition;
 import java.lang.ref.WeakReference;
 
 import pl.org.seva.texter.services.ActivityRecognitionIntentService;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
-class ActivityRecognitionManager implements
+public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long ACTIVITY_RECOGNITION_INTERVAL = 3000;
+    private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
+
+    private static final PublishSubject<Void> stationarySubject = PublishSubject.create();
+    private static final PublishSubject<Void> movingSubject = PublishSubject.create();
 
     private boolean initialized;
     private GoogleApiClient googleApiClient;
@@ -96,5 +101,21 @@ class ActivityRecognitionManager implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public Observable<Void> stationaryListener() {
+        return stationarySubject;
+    }
+
+    public Observable<Void> movingListener() {
+        return movingSubject;
+    }
+
+    public void stationary() {
+        stationarySubject.onNext(null);
+    }
+
+    public void moving() {
+        movingSubject.onNext(null);
     }
 }
