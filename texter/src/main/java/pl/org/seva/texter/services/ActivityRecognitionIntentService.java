@@ -20,11 +20,19 @@ public class ActivityRecognitionIntentService extends IntentService {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
-                GpsManager.getInstance().pauseUpdates();
+                stationary();
             }
             else {
-                GpsManager.getInstance().resumeUpdates();
+                moving();
             }
         }
+    }
+
+    private void stationary() {
+        GpsManager.getInstance().pauseUpdates();
+    }
+
+    private void moving() {
+        GpsManager.getInstance().resumeUpdates();
     }
 }

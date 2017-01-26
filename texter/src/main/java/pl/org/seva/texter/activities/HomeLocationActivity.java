@@ -43,14 +43,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
-import pl.org.seva.texter.listeners.LocationListener;
 import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public class HomeLocationActivity extends AppCompatActivity implements
-        LocationListener,
         PermissionGrantedListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
@@ -58,6 +58,8 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private static final String STATE = "STATE";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
+
+    private Subscription locationChangedSubscription = Subscriptions.empty();
 
     /** Latitude. */
     private double lat;
@@ -111,7 +113,8 @@ public class HomeLocationActivity extends AppCompatActivity implements
                     Toast.LENGTH_SHORT).show();
             toastShown = true;
         }
-        GpsManager.getInstance().addLocationChangedListener(HomeLocationActivity.this);
+        locationChangedSubscription = GpsManager.getInstance().locationChangedListener().subscribe(
+                ignore -> onLocationChanged());
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
@@ -164,14 +167,13 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        GpsManager.getInstance().removeLocationChangedListener(this);
+        locationChangedSubscription.unsubscribe();
         toastShown = false;
 
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
         GpsManager.getInstance().updateHome();
-        GpsManager.getInstance().removeLocationChangedListener(this);
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -238,8 +240,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         map.addMarker(marker);
     }
 
-    @Override
-    public void onLocationChanged() {
+    private void onLocationChanged() {
         if (map == null || useCurrentButton == null) {
             return;
         }

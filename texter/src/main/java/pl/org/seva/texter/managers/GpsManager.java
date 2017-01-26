@@ -43,25 +43,20 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import pl.org.seva.texter.activities.SettingsActivity;
-import pl.org.seva.texter.listeners.DistanceListener;
-import pl.org.seva.texter.listeners.HomeLocationListener;
-import pl.org.seva.texter.listeners.LocationListener;
-import pl.org.seva.texter.listeners.ProviderListener;
 import pl.org.seva.texter.preferences.HomeLocationPreference;
 import pl.org.seva.texter.utils.Constants;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class GpsManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
-    private static final double ACCURACY_THRESHOLD = 0.1;  // a hundred meters
+    private static final double ACCURACY_THRESHOLD = 0.1;  // equals to one hundred meters
 
-    private static final double EARTH_RADIUS = 6371.0;  // in kilometers
+    private static final double EARTH_RADIUS = 6371.0;  // [km]
 
     private static GpsManager instance;
 
@@ -74,10 +69,12 @@ public class GpsManager implements
 
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
-    private final List<DistanceListener> distanceListeners;
-    private final List<HomeLocationListener> homeChangedListeners;
-    private final List<LocationListener> locationChangedListeners;
-    private final List<ProviderListener> providerListeners;
+
+    private final PublishSubject<Void> distanceSubject;
+    private final PublishSubject<Void> homeChangedSubject;
+    private final PublishSubject<Void> providerEnabledSubject;
+    private final PublishSubject<Void> providerDisabledSubject;
+    private final PublishSubject<Void> locationChangedSubject;
 
     /** Location last received from the update. */
     private Location location;
@@ -96,10 +93,11 @@ public class GpsManager implements
 
 
     private GpsManager() {
-        distanceListeners = new ArrayList<>();
-        homeChangedListeners = new ArrayList<>();
-        locationChangedListeners = new ArrayList<>();
-        providerListeners = new ArrayList<>();
+        distanceSubject = PublishSubject.create();
+        homeChangedSubject = PublishSubject.create();
+        locationChangedSubject = PublishSubject.create();
+        providerEnabledSubject = PublishSubject.create();
+        providerDisabledSubject = PublishSubject.create();
     }
 
     public static GpsManager getInstance() {
@@ -120,6 +118,7 @@ public class GpsManager implements
                 instance = null;
             }
         }
+        ActivityRecognitionManager.shutdown();
     }
 
     String getLocationUrl() {
@@ -182,12 +181,7 @@ public class GpsManager implements
                     location.getLatitude(),
                     location.getLongitude());
         }
-        synchronized (homeChangedListeners) {
-            //noinspection Convert2streamapi
-            for (HomeLocationListener l : homeChangedListeners) {
-                l.onHomeChanged();
-            }
-        }
+        homeChangedSubject.onNext(null);
     }
 
     /**
@@ -238,73 +232,27 @@ public class GpsManager implements
 
     private void initWithPermissions(Context context) {
         requestLocationUpdates(context);
+        ActivityRecognitionManager.getInstance().init(context);
     }
 
-    public void addDistanceChangedListener(DistanceListener listener) {
-        if (listener == null) {
-            return;
-        }
-        synchronized (distanceListeners) {
-            distanceListeners.remove(listener);
-            distanceListeners.add(listener);
-        }
+    public Observable<Void> distanceChangedListener() {
+        return distanceSubject;
     }
 
-    public void removeDistanceListener(DistanceListener listener) {
-        if (listener == null) {
-            return;
-        }
-        synchronized (distanceListeners) {
-            distanceListeners.remove(listener);
-        }
+    public Observable<Void> homeChangedListener() {
+        return homeChangedSubject;
     }
 
-    public void addHomeChangedListener(HomeLocationListener listener) {
-        synchronized (homeChangedListeners) {
-            removeHomeChangedListener(listener);
-            homeChangedListeners.add(listener);
-        }
+    public Observable<Void> locationChangedListener() {
+        return locationChangedSubject;
     }
 
-    public void removeHomeChangedListener(HomeLocationListener listener) {
-        if (listener == null) {
-            return;
-        }
-        synchronized (homeChangedListeners) {
-            homeChangedListeners.remove(listener);
-        }
+    public Observable<Void> providerEnabledListener() {
+        return providerEnabledSubject;
     }
 
-    public void addLocationChangedListener(LocationListener listener) {
-        synchronized (locationChangedListeners) {
-            removeLocationChangedListener(listener);
-            locationChangedListeners.add(listener);
-        }
-    }
-
-    public void removeLocationChangedListener(LocationListener listener) {
-        if (listener == null) {
-            return;
-        }
-        synchronized (locationChangedListeners) {
-            locationChangedListeners.remove(listener);
-        }
-    }
-
-    public void addProviderListener(ProviderListener listener) {
-        synchronized (providerListeners) {
-            removeProviderListener(listener);
-            providerListeners.add(listener);
-        }
-    }
-
-    private void removeProviderListener(ProviderListener listener) {
-        if (listener == null) {
-            return;
-        }
-        synchronized (providerListeners) {
-            providerListeners.remove(listener);
-        }
+    public Observable<Void> providerDisabledListener() {
+        return providerDisabledSubject;
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {
@@ -397,18 +345,8 @@ public class GpsManager implements
         this.location = location;
         this.distance = calculateDistance();  // distance in kilometres
         this.time = time;
-        synchronized (distanceListeners) {
-            //noinspection Convert2streamapi
-            for (DistanceListener listener : distanceListeners) {
-                listener.onDistanceChanged();
-            }
-        }
-        synchronized (locationChangedListeners) {
-            //noinspection Convert2streamapi
-            for (LocationListener listener : locationChangedListeners) {
-                listener.onLocationChanged();
-            }
-        }
+        distanceSubject.onNext(null);
+        locationChangedSubject.onNext(null);
     }
 
     private void updateDistance() {
@@ -480,20 +418,10 @@ public class GpsManager implements
         pendingResult.setResultCallback(locationSettingsResult -> {
             connected = locationSettingsResult.getLocationSettingsStates().isLocationUsable();
             if (connected) {
-                synchronized (providerListeners) {
-                    //noinspection Convert2streamapi
-                    for (ProviderListener listener : providerListeners) {
-                        listener.onProviderEnabled();
-                    }
-                }
+                providerEnabledSubject.onNext(null);
             }
             else {
-                synchronized (providerListeners) {
-                    //noinspection Convert2streamapi
-                    for (ProviderListener listener : providerListeners) {
-                        listener.onProviderDisabled();
-                    }
-                }
+                providerDisabledSubject.onNext(null);
             }
         });
     }
@@ -505,7 +433,6 @@ public class GpsManager implements
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
 
         paused = true;
-
     }
 
     public void resumeUpdates() {
@@ -517,7 +444,6 @@ public class GpsManager implements
                 requestLocationUpdates(googleApiClient, locationRequest, this);
 
         paused = false;
-
     }
 
     private void locationSettingsChanged() {

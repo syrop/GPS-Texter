@@ -17,20 +17,21 @@
 
 package pl.org.seva.texter.managers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import pl.org.seva.texter.listeners.TimerListener;
+import rx.Observable;
+import rx.Subscription;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import rx.subscriptions.Subscriptions;
 
-public class TimerManager extends Thread {
+public class TimerManager {
 
     private static TimerManager instance;
 
     private long resetTime = System.currentTimeMillis();
-
-    private final List<TimerListener> listeners = new ArrayList<>();
-
-    private boolean running = true;
+    private Subscription timerSubscription = Subscriptions.empty();
+    private final PublishSubject<Void> timerSubject = PublishSubject.create();
 
     private TimerManager() {
     }
@@ -47,56 +48,35 @@ public class TimerManager extends Thread {
     }
 
     public static void shutdown() {
-        instance.end();
-        synchronized (TimerManager.class) {
+        if (instance != null) {
+            instance.instanceShutdown();
             instance = null;
         }
     }
 
-    private void end() {
-        synchronized (listeners) {
-            running = false;
-            listeners.notify();
-        }
+    private void instanceShutdown() {
+        timerSubscription.unsubscribe();
     }
 
-    public void run() {
-        try {
-            synchronized (listeners) {
-                while (running) {
-                    listeners.wait(1000);
-                    //noinspection Convert2streamapi
-                    for (TimerListener listener : listeners) {
-                        listener.onTimer();
-                    }
-                }
-            }
-        }
-        catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+    private void createTimerSubscription() {
+        timerSubscription.unsubscribe();
+        timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .doOnNext(ignore -> timerSubject.onNext(null))
+                .repeat()
+                .subscribe();
     }
 
     public void reset() {
         resetTime = System.currentTimeMillis();
-        synchronized (listeners) {
-            listeners.notify();
-        }
+        createTimerSubscription();
     }
 
     public long getResetTime() {
         return resetTime;
     }
 
-    public void addListener(TimerListener listener) {
-        synchronized (listeners) {
-            listeners.add(listener);
-        }
-    }
-
-    public void removeListener(TimerListener listener) {
-        synchronized (listeners) {
-            listeners.remove(listener);
-        }
+    public Observable<Void> timerListener() {
+        return timerSubject;
     }
 }

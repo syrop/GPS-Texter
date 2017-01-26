@@ -19,7 +19,6 @@ package pl.org.seva.texter.controller;
 
 import java.util.Calendar;
 
-import pl.org.seva.texter.listeners.DistanceListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.SmsManager;
 import pl.org.seva.texter.managers.ZoneManager;
@@ -27,7 +26,7 @@ import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
 import pl.org.seva.texter.utils.Constants;
 
-public class SmsController implements DistanceListener {
+public class SmsController {
 
     private static final SmsController INSTANCE = new SmsController();
 
@@ -71,7 +70,6 @@ public class SmsController implements DistanceListener {
         zone = null;
     }
 
-    @Override
     public void onDistanceChanged() {
         double distance = GpsManager.getInstance().getDistance();
         double speed = GpsManager.getInstance().getSpeed();

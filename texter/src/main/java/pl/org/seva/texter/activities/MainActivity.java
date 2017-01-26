@@ -60,7 +60,6 @@ import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
 import pl.org.seva.texter.listeners.PermissionGrantedListener;
-import pl.org.seva.texter.listeners.ProviderListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.PermissionsManager;
@@ -69,8 +68,7 @@ import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.managers.TimerManager;
 
-public class MainActivity extends AppCompatActivity implements
-        PermissionGrantedListener, ProviderListener {
+public class MainActivity extends AppCompatActivity implements PermissionGrantedListener {
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -157,9 +155,6 @@ public class MainActivity extends AppCompatActivity implements
             tabs.setCustomTabColorizer(position -> tabColor);
             tabs.setViewPager(pager);
         }
-        if (TimerManager.getInstance().getState() == Thread.State.NEW) {
-            TimerManager.getInstance().start();
-        }
         else if (savedInstanceState == null && action != null && action.equals(Intent.ACTION_MAIN)) {
             TimerManager.getInstance().reset();
         }
@@ -211,8 +206,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void addListeners() {
-        GpsManager.getInstance().addDistanceChangedListener(SmsController.getInstance());
-        GpsManager.getInstance().addProviderListener(this);
+        GpsManager.getInstance().distanceChangedListener().subscribe(
+                ignore -> SmsController.getInstance().onDistanceChanged());
+        GpsManager.getInstance().providerEnabledListener().subscribe(
+                ignore -> onProviderEnabled());
+        GpsManager.getInstance().providerDisabledListener().subscribe(
+                ignore -> onProviderDisabled());
     }
 
     private boolean initGps() {
@@ -391,13 +390,11 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onProviderEnabled() {
+    private void onProviderEnabled() {
         startService();
     }
 
-    @Override
-    public void onProviderDisabled() {
+    private void onProviderDisabled() {
         stopService();
     }
 }

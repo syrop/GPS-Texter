@@ -36,16 +36,19 @@ import android.support.v7.widget.RecyclerView;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapters.HistoryAdapter;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
-import pl.org.seva.texter.listeners.SmsListener;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.SmsManager;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
-public class HistoryFragment extends Fragment implements SmsListener {
+public class HistoryFragment extends Fragment {
 
     private HistoryAdapter adapter;
     private RecyclerView historyRecyclerView;
     private boolean scrollToBottom;
     private Context context;
+
+    private Subscription smsSentSubscription = Subscriptions.empty();
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -83,7 +86,8 @@ public class HistoryFragment extends Fragment implements SmsListener {
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
         historyRecyclerView.addOnScrollListener(new OnScrollListener());
-        SmsManager.getInstance().addSMSListener(this);
+        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
+                ignore -> onSMsSent());
         scrollToBottom = true;
 
         return binding.getRoot();
@@ -92,19 +96,14 @@ public class HistoryFragment extends Fragment implements SmsListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SmsManager.getInstance().removeSMSListener(this);
+        smsSentSubscription.unsubscribe();
     }
 
-    @Override
-    public void onSMSSent() {
+    private void onSMsSent() {
         adapter.notifyDataSetChanged();
         if (scrollToBottom) {
             historyRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
         }
-    }
-
-    @Override
-    public void onSendingSMS() {
     }
 
     private class OnScrollListener extends RecyclerView.OnScrollListener {

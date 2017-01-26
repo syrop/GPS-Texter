@@ -36,9 +36,10 @@ import android.widget.Toast;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activities.SettingsActivity;
-import pl.org.seva.texter.listeners.SmsListener;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.StringUtils;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class SmsManager {
 
@@ -60,6 +61,9 @@ public class SmsManager {
 	private final android.telephony.SmsManager smsManager;
 
     private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
+
+    private final PublishSubject<Void> smsSendingSubject;
+    private final PublishSubject<Void> smsSentSubject;
 
     private double lastSentDistance;
 	
@@ -85,10 +89,10 @@ public class SmsManager {
 
     private SmsManager() {
 		smsManager = android.telephony.SmsManager.getDefault();
+        smsSendingSubject = PublishSubject.create();
+        smsSentSubject = PublishSubject.create();
 	}
 
-    private final List<SmsListener> listeners = new ArrayList<>();
-	
 	public void init(final Context context, String speedUnit) {
 		if (initialized) {
 			return;
@@ -99,17 +103,12 @@ public class SmsManager {
 		initialized = true;
 	}
 
-    public void addSMSListener(SmsListener listener) {
-        synchronized (listeners) {
-            removeSMSListener(listener);
-            listeners.add(listener);
-        }
+	public Observable<Void> smsSendingListener() {
+        return smsSendingSubject;
     }
 
-    public void removeSMSListener(SmsListener listener) {
-        synchronized (listeners) {
-            listeners.remove(listener);
-        }
+    public Observable<Void> smsSentListener() {
+        return smsSentSubject;
     }
 
 	private String getPhoneNumber() {
@@ -182,12 +181,7 @@ public class SmsManager {
                         Toast.makeText(arg0, sentBuilder.toString(), length).show();
                         if (location != null) {
                             HistoryManager.getInstance().add(location);
-                            synchronized (listeners) {
-                                //noinspection Convert2streamapi
-                                for (SmsListener listener : listeners) {
-                                    listener.onSMSSent();
-                                }
-                            }
+                            smsSentSubject.onNext(null);
                         }
                         break;
                     case android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE:
@@ -274,12 +268,8 @@ public class SmsManager {
 		Intent deliveredIntent = new Intent(DELIVERED + id);
 		deliveredIntent.putExtra(TEXT_KEY, intentText);
 
-        synchronized (listeners) {
-            //noinspection Convert2streamapi
-            for (SmsListener listener : listeners) {
-                listener.onSendingSMS();
-            }
-        }
+        smsSendingSubject.onNext(null);
+
         Context context = weakContext.get();
         if (context != null) {
             PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0);

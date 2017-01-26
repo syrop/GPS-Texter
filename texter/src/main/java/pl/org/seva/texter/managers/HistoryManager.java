@@ -22,9 +22,6 @@ import java.util.List;
 
 import pl.org.seva.texter.model.LocationModel;
 
-/**
- * Created by wiktor on 01.08.15.
- */
 public class HistoryManager {
     private static HistoryManager instance;
 

@@ -37,23 +37,17 @@ import java.util.Calendar;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
-import pl.org.seva.texter.listeners.DistanceListener;
-import pl.org.seva.texter.listeners.HomeLocationListener;
 import pl.org.seva.texter.listeners.PermissionGrantedListener;
-import pl.org.seva.texter.listeners.SmsListener;
-import pl.org.seva.texter.listeners.TimerListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.managers.SmsManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.managers.TimerManager;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
-public class StatsFragment extends Fragment
-        implements DistanceListener, TimerListener,
-        View.OnClickListener, SmsListener, HomeLocationListener,
+public class StatsFragment extends Fragment implements
+        View.OnClickListener,
         PermissionGrantedListener {
 
     private static String homeString;
@@ -64,8 +58,14 @@ public class StatsFragment extends Fragment
     private TextView speedTextView;
     private Button sendNowButton;
 
+    private Subscription homeChangedSubscription = Subscriptions.empty();
+    private Subscription smsSendingSubscription = Subscriptions.empty();
+
     private double distance;
     private double speed;
+
+    private Subscription distanceSubscription = Subscriptions.empty();
+    private Subscription timerSubscription = Subscriptions.empty();
 
     private Activity activity;
 
@@ -93,10 +93,13 @@ public class StatsFragment extends Fragment
                 distance != SmsManager.getInstance().getLastSentDistance());
 
         show();
-        TimerManager.getInstance().addListener(this);
-        SmsManager.getInstance().addSMSListener(this);
-        GpsManager.getInstance().addDistanceChangedListener(this);
-        GpsManager.getInstance().addHomeChangedListener(this);
+        timerSubscription = TimerManager.getInstance().timerListener().subscribe(ignore -> onTimer());
+        smsSendingSubscription = SmsManager.getInstance().smsSendingListener().subscribe(
+                ignore -> onSendingSms());
+        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
+                ignore -> onDistanceChanged());
+        homeChangedSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
+                ignore -> onHomeChanged());
 
         if (ContextCompat.checkSelfPermission(
                 getActivity(),
@@ -187,14 +190,13 @@ public class StatsFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        TimerManager.getInstance().removeListener(this);
-        GpsManager.getInstance().removeDistanceListener(this);
-        SmsManager.getInstance().removeSMSListener(this);
-        GpsManager.getInstance().removeHomeChangedListener(this);
+        timerSubscription.unsubscribe();
+        distanceSubscription.unsubscribe();
+        smsSendingSubscription.unsubscribe();
+        homeChangedSubscription.unsubscribe();
     }
 
-    @Override
-    public void onDistanceChanged() {
+    private void onDistanceChanged() {
         boolean resetValues =
                 System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;
         if (distance != SmsManager.getInstance().getLastSentDistance()) {
@@ -212,8 +214,7 @@ public class StatsFragment extends Fragment
         show();
     }
 
-    @Override
-    public void onTimer() {
+    private void onTimer() {
         if (activity == null) {
             return;
         }
@@ -241,17 +242,11 @@ public class StatsFragment extends Fragment
         }
     }
 
-    @Override
-    public void onSendingSMS() {
+    private void onSendingSms() {
         sendNowButton.setEnabled(false);
     }
 
-    @Override
-    public void onSMSSent() {
-    }
-
-    @Override
-    public void onHomeChanged() {
+    private void onHomeChanged() {
         distance = GpsManager.getInstance().getDistance();
         show();
     }

@@ -15,11 +15,11 @@ import java.lang.ref.WeakReference;
 
 import pl.org.seva.texter.services.ActivityRecognitionIntentService;
 
-public class ActivityRecognitionManager implements
+class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long ACTIVITY_RECOGNITION_INTERVAL = 5000;
+    private static final long ACTIVITY_RECOGNITION_INTERVAL = 3000;
 
     private boolean initialized;
     private GoogleApiClient googleApiClient;
@@ -39,7 +39,7 @@ public class ActivityRecognitionManager implements
         return instance;
     }
 
-    public static void shutdown(Context context) {
+    static void shutdown() {
         synchronized (ActivityRecognitionManager.class) {
             if (instance != null) {
                 instance.instanceShutdown();
@@ -53,7 +53,7 @@ public class ActivityRecognitionManager implements
         googleApiClient.disconnect();
     }
 
-    public void init(Context context) {
+    void init(Context context) {
         if (initialized) {
             return;
         }

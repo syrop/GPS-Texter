@@ -41,20 +41,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.listeners.DistanceListener;
-import pl.org.seva.texter.listeners.HomeLocationListener;
 import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public class NavigationFragment extends Fragment implements
-        DistanceListener, HomeLocationListener, PermissionGrantedListener {
+        PermissionGrantedListener {
 
     private TextView distanceTextView;
     private GoogleMap map;
     private boolean animateCamera = true;
     private int mapContainerId;
     private MapFragment mapFragment;
+
+    private Subscription homeLocationSubscription = Subscriptions.empty();
+
+    private Subscription distanceSubscription = Subscriptions.empty();
 
     public static NavigationFragment newInstance() {
         return new NavigationFragment();
@@ -68,8 +72,10 @@ public class NavigationFragment extends Fragment implements
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        GpsManager.getInstance().addDistanceChangedListener(this);
-        GpsManager.getInstance().addHomeChangedListener(this);
+        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
+                ignore -> onDistanceChanged());
+        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
+                ignore -> onHomeChanged());
         show(GpsManager.getInstance().getDistance());
 
         if (savedInstanceState != null) {
@@ -122,8 +128,8 @@ public class NavigationFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GpsManager.getInstance().removeDistanceListener(this);
-        GpsManager.getInstance().removeHomeChangedListener(this);
+        distanceSubscription.unsubscribe();
+        homeLocationSubscription.unsubscribe();
     }
 
     @Override
@@ -159,13 +165,11 @@ public class NavigationFragment extends Fragment implements
         distanceTextView.setText(distanceStr);
     }
 
-    @Override
-    public void onDistanceChanged() {
+    private void onDistanceChanged() {
         show(GpsManager.getInstance().getDistance());
     }
 
-    @Override
-    public void onHomeChanged() {
+    private void onHomeChanged() {
         updateHomeLocation(GpsManager.getInstance().getHomeLatLng());
     }
 
@@ -176,7 +180,7 @@ public class NavigationFragment extends Fragment implements
                 map.setMyLocationEnabled(true);
             }
             catch (SecurityException ex) {
-                // won't happen in the permission granted listener
+                // won't happen in the permission granted timerListener
                 ex.printStackTrace();
             }
             PermissionsManager.getInstance().
