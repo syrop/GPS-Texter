@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     /** Obtained from intent, may be null. */
     private String action;
     private boolean serviceRunning;
-    private boolean showSettings;
+    private boolean showSettingsWhenPermissionGranted;
     private boolean shuttingDown;
     private Dialog dialog;
     private ActivityMainBinding binding;
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBinding.settings.setOnClickListener(v -> {
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-            showSettings = true;  // Only relevant if permission is not granted.
+            showSettingsWhenPermissionGranted = true;  // Only relevant if permission is not granted.
             if (processPermissions()) {
                 // Called if permission has already been granted, e.g. when API < 23.
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -387,8 +387,8 @@ public class MainActivity extends AppCompatActivity {
     public void onLocationPermissionGranted() {
         initGps();  // listeners already added
         GpsManager.getInstance().callProviderListener();
-        if (showSettings) {
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        if (showSettingsWhenPermissionGranted) {
+            startActivity(new Intent(this, SettingsActivity.class));
         }
     }
 

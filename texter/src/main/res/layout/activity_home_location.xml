@@ -17,7 +17,7 @@
             android:id="@+id/current_location_button"
             android:text="@string/use_current_location"
             style="?android:attr/buttonBarButtonStyle"
-            android:onClick="onUseCurrentLocation"
+            android:onClick="onUseCurrentLocationButtonClicked"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </layout>

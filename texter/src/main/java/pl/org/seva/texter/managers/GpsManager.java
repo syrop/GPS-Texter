@@ -180,7 +180,7 @@ public class GpsManager implements
         movingSubscription.unsubscribe();
     }
 
-    public void updateHomeLocation() {
+    public void onHomeLocationChanged() {
         updateDistance();
         String homeLocation = preferences.
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
@@ -229,7 +229,7 @@ public class GpsManager implements
             }
         }, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
-        updateHomeLocation();
+        onHomeLocationChanged();
 
         if (granted) {
             AfterPermissionGranted(activity);

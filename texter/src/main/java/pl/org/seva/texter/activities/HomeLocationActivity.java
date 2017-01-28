@@ -175,7 +175,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        GpsManager.getInstance().updateHomeLocation();
+        GpsManager.getInstance().onHomeLocationChanged();
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -273,7 +273,8 @@ public class HomeLocationActivity extends AppCompatActivity implements
         zoom = map.getCameraPosition().zoom;
     }
 
-    public void onUseCurrentLocation(View view) {
+    public void onUseCurrentLocationButtonClicked(View view) {
+        useCurrentButton.setEnabled(false);
         LatLng loc = GpsManager.getInstance().getLatLng();
         if (loc != null) {
             lat = loc.latitude;

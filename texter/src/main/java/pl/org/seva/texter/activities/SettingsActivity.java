@@ -85,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
             if (!processPermissions()) {
-                setPermissionListeners();
+                setReadContactsPermissionListeners();
             }
         }
 
@@ -101,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
-    private void setPermissionListeners() {
+    private void setReadContactsPermissionListeners() {
         PermissionsManager
                 .getInstance()
                 .permissionDeniedListener()
@@ -163,7 +163,7 @@ public class SettingsActivity extends AppCompatActivity
             case SMS_ENABLED:  // off by default
                 if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {
                     if (!processPermissions()) {
-                        setPermissionListeners();
+                        setReadContactsPermissionListeners();
                     }
                 }
                 break;
@@ -171,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity
                 GpsManager.getInstance().updateFrequencyChanged(this);
                 break;
             case HOME_LOCATION:
-                GpsManager.getInstance().updateHomeLocation();
+                GpsManager.getInstance().onHomeLocationChanged();
                 SmsController.getInstance().resetZones();
                 break;
         }
