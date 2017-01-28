@@ -54,8 +54,10 @@ public class ActivityRecognitionManager implements
     }
 
     private void instanceShutdown() {
-        ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, pendingIntent);
-        googleApiClient.disconnect();
+        if (googleApiClient != null) {
+            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, pendingIntent);
+            googleApiClient.disconnect();
+        }
     }
 
     void init(Context context) {
