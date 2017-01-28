@@ -24,19 +24,19 @@ public class ActivityRecognitionIntentService extends IntentService {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
-                stationary();
+                onDeviceStationary();
             }
             else {
-                moving();
+                onDeviceMoving();
             }
         }
     }
 
-    private void stationary() {
+    private void onDeviceStationary() {
         handler.post(() -> ActivityRecognitionManager.getInstance().stationary());
     }
 
-    private void moving() {
+    private void onDeviceMoving() {
         handler.post(() -> ActivityRecognitionManager.getInstance().moving());
     }
 }
