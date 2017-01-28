@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
-        initGps();
         addGpsListeners();
         if (!showStartupDialog()) {
             processPermissions();

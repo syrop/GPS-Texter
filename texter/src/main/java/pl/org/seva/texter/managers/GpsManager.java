@@ -249,23 +249,23 @@ public class GpsManager implements
     }
 
     public Observable<Void> distanceChangedListener() {
-        return distanceSubject;
+        return distanceSubject.asObservable();
     }
 
     public Observable<Void> homeChangedListener() {
-        return homeChangedSubject;
+        return homeChangedSubject.asObservable();
     }
 
     public Observable<Void> locationChangedListener() {
-        return locationChangedSubject;
+        return locationChangedSubject.asObservable();
     }
 
     public Observable<Void> providerEnabledListener() {
-        return providerEnabledSubject;
+        return providerEnabledSubject.asObservable();
     }
 
     public Observable<Void> providerDisabledListener() {
-        return providerDisabledSubject;
+        return providerDisabledSubject.asObservable();
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {

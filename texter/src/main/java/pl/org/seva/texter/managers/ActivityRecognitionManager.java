@@ -106,11 +106,11 @@ public class ActivityRecognitionManager implements
     }
 
     public Observable<Void> stationaryListener() {
-        return stationarySubject;
+        return stationarySubject.asObservable();
     }
 
     public Observable<Void> movingListener() {
-        return movingSubject;
+        return movingSubject.asObservable();
     }
 
     public void stationary() {

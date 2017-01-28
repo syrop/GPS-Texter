@@ -78,6 +78,6 @@ public class TimerManager {
     }
 
     public Observable<Void> timerListener() {
-        return timerSubject;
+        return timerSubject.asObservable();
     }
 }

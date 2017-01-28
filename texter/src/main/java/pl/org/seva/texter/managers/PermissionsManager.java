@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class PermissionsManager {
@@ -57,8 +58,8 @@ public class PermissionsManager {
         }
     }
 
-    public PublishSubject<String> permissionGrantedListener() {
-        return permissionGrantedSubject;
+    public Observable<String> permissionGrantedListener() {
+        return permissionGrantedSubject.asObservable();
     }
 
     public boolean isRationaleNeeded(String permission) {
@@ -71,8 +72,8 @@ public class PermissionsManager {
         }
     }
 
-    public PublishSubject<String> permissionDeniedListener() {
-        return permissionDeniedSubject;
+    public Observable<String> permissionDeniedListener() {
+        return permissionDeniedSubject.asObservable();
     }
 
     private void onPermissionGranted(String permission) {
