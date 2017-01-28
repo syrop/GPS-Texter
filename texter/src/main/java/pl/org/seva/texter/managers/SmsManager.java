@@ -104,11 +104,11 @@ public class SmsManager {
 	}
 
 	public Observable<Void> smsSendingListener() {
-        return smsSendingSubject;
+        return smsSendingSubject.asObservable();
     }
 
     public Observable<Void> smsSentListener() {
-        return smsSentSubject;
+        return smsSentSubject.asObservable();
     }
 
 	private String getPhoneNumber() {

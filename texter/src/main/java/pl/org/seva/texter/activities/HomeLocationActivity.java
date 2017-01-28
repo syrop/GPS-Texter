@@ -43,7 +43,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
@@ -51,7 +50,6 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
 public class HomeLocationActivity extends AppCompatActivity implements
-        PermissionGrantedListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
@@ -67,7 +65,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private double lon;
     private boolean toastShown;
     private float zoom;
-    private boolean currentLocationAvailable;
+    private boolean isCurrentLocationAvailable;
 
     private GoogleMap map;
     private Button useCurrentButton;
@@ -118,10 +116,16 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
+            setLocationPermissionListeners();
         }
+    }
+
+    private void setLocationPermissionListeners() {
+        PermissionsManager
+                .getInstance()
+                .permissionGrantedListener()
+                .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                .subscribe(ignore -> onLocationPermissionGranted());
     }
 
     @Override
@@ -142,9 +146,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 map.setMyLocationEnabled(true);
             }
             else {
-                PermissionsManager.getInstance().addPermissionGrantedListener(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        this);
+                setLocationPermissionListeners();
             }
             zoom = PreferenceManager.getDefaultSharedPreferences(this).
                     getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
@@ -173,7 +175,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        GpsManager.getInstance().updateHome();
+        GpsManager.getInstance().onHomeLocationChanged();
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -244,20 +246,15 @@ public class HomeLocationActivity extends AppCompatActivity implements
         if (map == null || useCurrentButton == null) {
             return;
         }
-        currentLocationAvailable = true;
+        isCurrentLocationAvailable = true;
         useCurrentButton.setEnabled(true);
     }
 
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    private void onLocationPermissionGranted() {
+        if (map != null) {
+            //noinspection MissingPermission
             map.setMyLocationEnabled(true);
             useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().
-                removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 
@@ -266,7 +263,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         lat = latLng.latitude;
         lon = latLng.longitude;
         updateMarker();
-        if (currentLocationAvailable) {
+        if (isCurrentLocationAvailable) {
             useCurrentButton.setEnabled(true);
         }
     }
@@ -276,7 +273,8 @@ public class HomeLocationActivity extends AppCompatActivity implements
         zoom = map.getCameraPosition().zoom;
     }
 
-    public void onUseCurrentLocation(View view) {
+    public void onUseCurrentLocationButtonClicked(View view) {
+        useCurrentButton.setEnabled(false);
         LatLng loc = GpsManager.getInstance().getLatLng();
         if (loc != null) {
             lat = loc.latitude;

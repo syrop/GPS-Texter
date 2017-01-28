@@ -172,13 +172,15 @@ public class GpsManager implements
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-        googleApiClient.disconnect();
+        if (googleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            googleApiClient.disconnect();
+        }
         stationarySubscription.unsubscribe();
         movingSubscription.unsubscribe();
     }
 
-    public void updateHome() {
+    public void onHomeLocationChanged() {
         updateDistance();
         String homeLocation = preferences.
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
@@ -227,20 +229,17 @@ public class GpsManager implements
             }
         }, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
-        if (location == null) {
-            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        }
-        updateHome();
+        onHomeLocationChanged();
 
         if (granted) {
-            initWithPermissions(activity);
+            AfterPermissionGranted(activity);
             initialized = true;
         }
 
         return granted;
     }
 
-    private void initWithPermissions(Context context) {
+    private void AfterPermissionGranted(Context context) {
         requestLocationUpdates(context);
         ActivityRecognitionManager.getInstance().init(context);
         stationarySubscription = ActivityRecognitionManager.getInstance().stationaryListener()
@@ -250,23 +249,23 @@ public class GpsManager implements
     }
 
     public Observable<Void> distanceChangedListener() {
-        return distanceSubject;
+        return distanceSubject.asObservable();
     }
 
     public Observable<Void> homeChangedListener() {
-        return homeChangedSubject;
+        return homeChangedSubject.asObservable();
     }
 
     public Observable<Void> locationChangedListener() {
-        return locationChangedSubject;
+        return locationChangedSubject.asObservable();
     }
 
     public Observable<Void> providerEnabledListener() {
-        return providerEnabledSubject;
+        return providerEnabledSubject.asObservable();
     }
 
     public Observable<Void> providerDisabledListener() {
-        return providerDisabledSubject;
+        return providerDisabledSubject.asObservable();
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {
@@ -409,6 +408,12 @@ public class GpsManager implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         connected = true;
+
+        if (location == null) {
+            //noinspection MissingPermission
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        }
+
         int updateFrequency = getUpdateFrequency();
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         locationRequest = LocationRequest.create()

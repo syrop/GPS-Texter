@@ -34,6 +34,7 @@ public class TimerManager {
     private final PublishSubject<Void> timerSubject = PublishSubject.create();
 
     private TimerManager() {
+        createTimerSubscription();
     }
 
     public static TimerManager getInstance() {
@@ -77,6 +78,6 @@ public class TimerManager {
     }
 
     public Observable<Void> timerListener() {
-        return timerSubject;
+        return timerSubject.asObservable();
     }
 }

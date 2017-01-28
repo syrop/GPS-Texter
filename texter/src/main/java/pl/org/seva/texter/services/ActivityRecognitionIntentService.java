@@ -12,7 +12,7 @@ import pl.org.seva.texter.managers.ActivityRecognitionManager;
 
 public class ActivityRecognitionIntentService extends IntentService {
 
-    private Handler handler;
+    private final Handler handler;
 
     public ActivityRecognitionIntentService() {
         super(ActivityRecognitionIntentService.class.getSimpleName());

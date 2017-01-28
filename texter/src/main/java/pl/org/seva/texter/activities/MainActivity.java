@@ -59,7 +59,6 @@ import pl.org.seva.texter.fragments.HistoryFragment;
 import pl.org.seva.texter.fragments.StatsFragment;
 import pl.org.seva.texter.fragments.NavigationFragment;
 import pl.org.seva.texter.layouts.SlidingTabLayout;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.HistoryManager;
 import pl.org.seva.texter.managers.PermissionsManager;
@@ -68,7 +67,7 @@ import pl.org.seva.texter.managers.ZoneManager;
 import pl.org.seva.texter.services.TexterService;
 import pl.org.seva.texter.managers.TimerManager;
 
-public class MainActivity extends AppCompatActivity implements PermissionGrantedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
     /** Obtained from intent, may be null. */
     private String action;
     private boolean serviceRunning;
-    private boolean showSettings;
+    private boolean showSettingsWhenPermissionGranted;
     private boolean shuttingDown;
     private Dialog dialog;
     private ActivityMainBinding binding;
@@ -167,8 +166,7 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
-        initGps();
-        addListeners();
+        addGpsListeners();
         if (!showStartupDialog()) {
             processPermissions();
         }
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
      */
     private boolean processPermissions() {
         List<String> permissions = new ArrayList<>();
-        addListeners();
+        addGpsListeners();
         if (!initGps()) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
@@ -205,22 +203,30 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
         return false;
     }
 
-    private void addListeners() {
-        GpsManager.getInstance().distanceChangedListener().subscribe(
+    private void addGpsListeners() {
+        GpsManager
+                .getInstance()
+                .distanceChangedListener().subscribe(
                 ignore -> SmsController.getInstance().onDistanceChanged());
-        GpsManager.getInstance().providerEnabledListener().subscribe(
-                ignore -> onProviderEnabled());
-        GpsManager.getInstance().providerDisabledListener().subscribe(
-                ignore -> onProviderDisabled());
+        GpsManager
+                .getInstance()
+                .providerEnabledListener()
+                .subscribe(ignore -> onProviderEnabled());
+        GpsManager
+                .getInstance()
+                .providerDisabledListener()
+                .subscribe(ignore -> onProviderDisabled());
     }
 
     private boolean initGps() {
         boolean permissionGranted = GpsManager.getInstance().init(this);
 
         if (!permissionGranted) {
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
+            PermissionsManager
+                    .getInstance()
+                    .permissionGrantedListener()
+                    .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                    .subscribe(ignore -> onLocationPermissionGranted());
         }
         else {
             GpsManager.getInstance().callProviderListener();
@@ -259,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
         dialogBinding.settings.setOnClickListener(v -> {
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
-            showSettings = true;  // Only relevant if permission is not granted.
+            showSettingsWhenPermissionGranted = true;  // Only relevant if permission is not granted.
             if (processPermissions()) {
                 // Called if permission has already been granted, e.g. when API < 23.
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -377,16 +383,11 @@ public class MainActivity extends AppCompatActivity implements PermissionGranted
         }
     }
 
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            initGps();  // listeners already added
-            GpsManager.getInstance().callProviderListener();
-            PermissionsManager.getInstance().
-                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
-            if (showSettings) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
+    private void onLocationPermissionGranted() {
+        initGps();  // listeners already added
+        GpsManager.getInstance().callProviderListener();
+        if (showSettingsWhenPermissionGranted) {
+            startActivity(new Intent(this, SettingsActivity.class));
         }
     }
 

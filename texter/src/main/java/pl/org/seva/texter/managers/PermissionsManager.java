@@ -21,12 +21,10 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import pl.org.seva.texter.listeners.PermissionDeniedListener;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class PermissionsManager {
 
@@ -35,8 +33,9 @@ public class PermissionsManager {
 
     private static PermissionsManager instance;
 
-    private final Map<String, List<PermissionGrantedListener>> grantedPermissionsMap = new HashMap<>();
-    private final Map<String, List<PermissionDeniedListener>> deniedPermissionsMap = new HashMap<>();
+    private final PublishSubject<String> permissionGrantedSubject = PublishSubject.create();
+    private final PublishSubject<String> permissionDeniedSubject = PublishSubject.create();
+
     private final List<String> rationalesShown = new ArrayList<>();
 
     private PermissionsManager() {
@@ -59,34 +58,8 @@ public class PermissionsManager {
         }
     }
 
-    public void addPermissionGrantedListener(
-            final String permission,
-            final PermissionGrantedListener listener) {
-        new Thread(() -> {
-            synchronized (grantedPermissionsMap) {
-                List<PermissionGrantedListener> list = grantedPermissionsMap.get(permission);
-                if (list == null) {
-                    list = new ArrayList<>();
-                    grantedPermissionsMap.put(permission, list);
-                }
-                if (!list.contains(listener) && listener != null) {
-                    list.add(listener);
-                }
-            }
-        }).start();
-    }
-
-    public void removePermissionGrantedListener(
-            final String permission,
-            final PermissionGrantedListener listener) {
-        new Thread(() -> {
-            synchronized (grantedPermissionsMap) {
-                final List<PermissionGrantedListener> list = grantedPermissionsMap.get(permission);
-                if (list != null) {
-                    list.remove(listener);
-                }
-            }
-        }).start();
+    public Observable<String> permissionGrantedListener() {
+        return permissionGrantedSubject.asObservable();
     }
 
     public boolean isRationaleNeeded(String permission) {
@@ -99,56 +72,18 @@ public class PermissionsManager {
         }
     }
 
-    public void addPermissionDeniedListener(
-            final String permission,
-            final PermissionDeniedListener listener) {
-        new Thread(() -> {
-            synchronized (deniedPermissionsMap) {
-                List<PermissionDeniedListener> list = deniedPermissionsMap.get(permission);
-                if (list == null) {
-                    list = new ArrayList<>();
-                    deniedPermissionsMap.put(permission, list);
-                }
-                if (!list.contains(listener) && listener != null) {
-                    list.add(listener);
-                }
-            }
-        }).start();
+    public Observable<String> permissionDeniedListener() {
+        return permissionDeniedSubject.asObservable();
     }
 
-    public void removePermissionDeniedListener(
-            final String permission,
-            final PermissionDeniedListener listener) {
-        new Thread(() -> {
-            synchronized (deniedPermissionsMap) {
-                final List<PermissionDeniedListener> list = deniedPermissionsMap.get(permission);
-                if (list != null) {
-                    list.remove(listener);
-                }
-            }
-        }).start();
+    private void onPermissionGranted(String permission) {
+        permissionGrantedSubject.onNext(permission);
+        permissionGrantedSubject.onCompleted();
     }
 
-    private void permissionGranted(String permission) {
-        synchronized (grantedPermissionsMap) {
-            List<PermissionGrantedListener> list = grantedPermissionsMap.get(permission);
-            if (list != null) {
-                for (PermissionGrantedListener listener : list) {
-                    listener.onPermissionGranted(permission);
-                }
-            }
-        }
-    }
-
-    private void permissionDenied(String permission) {
-        synchronized (deniedPermissionsMap) {
-            List<PermissionDeniedListener> list = deniedPermissionsMap.get(permission);
-            if (list != null) {
-                for (PermissionDeniedListener listener : list) {
-                    listener.onPermissionDenied(permission);
-                }
-            }
-        }
+    private void onPermissionDenied(String permission) {
+        permissionDeniedSubject.onNext(permission);
+        permissionDeniedSubject.onCompleted();
     }
 
     public void onRequestPermissionsResult(
@@ -156,12 +91,12 @@ public class PermissionsManager {
             @NonNull int[] grantResults) {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             for (String permission : permissions) {
-                permissionGranted(permission);
+                onPermissionGranted(permission);
             }
         }
         else {
             for (String permission : permissions) {
-                permissionDenied(permission);
+                onPermissionDenied(permission);
             }
         }
     }
