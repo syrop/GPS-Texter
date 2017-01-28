@@ -187,7 +187,7 @@ public class SettingsActivity extends AppCompatActivity
         }
     }
 
-    public void onShowContactsPermissionDenied() {
+    private void onShowContactsPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.READ_CONTACTS) &&

@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onLocationPermissionGranted() {
+    private void onLocationPermissionGranted() {
         initGps();  // listeners already added
         GpsManager.getInstance().callProviderListener();
         if (showSettingsWhenPermissionGranted) {

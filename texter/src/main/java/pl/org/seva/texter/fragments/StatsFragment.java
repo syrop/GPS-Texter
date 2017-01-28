@@ -278,7 +278,7 @@ public class StatsFragment extends Fragment implements
         show();
     }
 
-    public void onLocationPermissionGranted() {
+    private void onLocationPermissionGranted() {
         sendNowButton.setEnabled(SmsManager.getInstance().isTextingEnabled());
     }
 }

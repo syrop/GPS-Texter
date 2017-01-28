@@ -173,7 +173,7 @@ public class NavigationFragment extends Fragment {
         updateHomeLocation(GpsManager.getInstance().getHomeLatLng());
     }
 
-    public void onLocationPermissionGranted() {
+    private void onLocationPermissionGranted() {
         if (map != null) {
             //noinspection MissingPermission
             map.setMyLocationEnabled(true);

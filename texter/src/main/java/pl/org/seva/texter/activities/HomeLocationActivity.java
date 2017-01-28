@@ -250,7 +250,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         useCurrentButton.setEnabled(true);
     }
 
-    public void onLocationPermissionGranted() {
+    private void onLocationPermissionGranted() {
         if (map != null) {
             //noinspection MissingPermission
             map.setMyLocationEnabled(true);
