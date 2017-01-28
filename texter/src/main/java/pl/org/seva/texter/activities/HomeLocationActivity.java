@@ -65,7 +65,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private double lon;
     private boolean toastShown;
     private float zoom;
-    private boolean currentLocationAvailable;
+    private boolean isCurrentLocationAvailable;
 
     private GoogleMap map;
     private Button useCurrentButton;
@@ -116,11 +116,11 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
-            setPermissionListeners();
+            setLocationPermissionListeners();
         }
     }
 
-    private void setPermissionListeners() {
+    private void setLocationPermissionListeners() {
         PermissionsManager
                 .getInstance()
                 .permissionGrantedListener()
@@ -146,7 +146,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 map.setMyLocationEnabled(true);
             }
             else {
-                setPermissionListeners();
+                setLocationPermissionListeners();
             }
             zoom = PreferenceManager.getDefaultSharedPreferences(this).
                     getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
@@ -175,7 +175,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        GpsManager.getInstance().updateHome();
+        GpsManager.getInstance().updateHomeLocation();
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -246,7 +246,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         if (map == null || useCurrentButton == null) {
             return;
         }
-        currentLocationAvailable = true;
+        isCurrentLocationAvailable = true;
         useCurrentButton.setEnabled(true);
     }
 
@@ -263,7 +263,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         lat = latLng.latitude;
         lon = latLng.longitude;
         updateMarker();
-        if (currentLocationAvailable) {
+        if (isCurrentLocationAvailable) {
             useCurrentButton.setEnabled(true);
         }
     }

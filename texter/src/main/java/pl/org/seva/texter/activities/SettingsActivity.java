@@ -171,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity
                 GpsManager.getInstance().updateFrequencyChanged(this);
                 break;
             case HOME_LOCATION:
-                GpsManager.getInstance().updateHome();
+                GpsManager.getInstance().updateHomeLocation();
                 SmsController.getInstance().resetZones();
                 break;
         }

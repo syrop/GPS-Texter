@@ -180,7 +180,7 @@ public class GpsManager implements
         movingSubscription.unsubscribe();
     }
 
-    public void updateHome() {
+    public void updateHomeLocation() {
         updateDistance();
         String homeLocation = preferences.
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
@@ -229,20 +229,17 @@ public class GpsManager implements
             }
         }, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
-        if (location == null) {
-            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        }
-        updateHome();
+        updateHomeLocation();
 
         if (granted) {
-            initWithPermissions(activity);
+            AfterPermissionGranted(activity);
             initialized = true;
         }
 
         return granted;
     }
 
-    private void initWithPermissions(Context context) {
+    private void AfterPermissionGranted(Context context) {
         requestLocationUpdates(context);
         ActivityRecognitionManager.getInstance().init(context);
         stationarySubscription = ActivityRecognitionManager.getInstance().stationaryListener()
@@ -411,6 +408,12 @@ public class GpsManager implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         connected = true;
+
+        if (location == null) {
+            //noinspection MissingPermission
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        }
+
         int updateFrequency = getUpdateFrequency();
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         locationRequest = LocationRequest.create()
