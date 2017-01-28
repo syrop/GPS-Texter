@@ -37,7 +37,6 @@ import java.util.Calendar;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.ActivityRecognitionManager;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
@@ -48,12 +47,10 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
 public class StatsFragment extends Fragment implements
-        View.OnClickListener,
-        PermissionGrantedListener {
+        View.OnClickListener {
 
     private static String homeString;
     private static String hourString;
-    private static String stationaryString;
 
     private TextView distanceTextView;
     private TextView intervalTextView;
@@ -86,7 +83,6 @@ public class StatsFragment extends Fragment implements
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
-        stationaryString = getActivity().getString(R.string.stationary);
         StatsFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.stats_fragment, container, false);
         distanceTextView = binding.distanceValue;
@@ -113,9 +109,11 @@ public class StatsFragment extends Fragment implements
                 getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
+            PermissionsManager
+                    .getInstance()
+                    .permissionGrantedListener()
+                    .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                    .subscribe(ignore -> onLocationPermissionGranted());
         }
 
         stationarySubscription = ActivityRecognitionManager
@@ -280,12 +278,7 @@ public class StatsFragment extends Fragment implements
         show();
     }
 
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            sendNowButton.setEnabled(SmsManager.getInstance().isTextingEnabled());
-            PermissionsManager.getInstance().
-                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
-        }
+    public void onLocationPermissionGranted() {
+        sendNowButton.setEnabled(SmsManager.getInstance().isTextingEnabled());
     }
 }

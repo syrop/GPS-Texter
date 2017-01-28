@@ -41,14 +41,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
-public class NavigationFragment extends Fragment implements
-        PermissionGrantedListener {
+public class NavigationFragment extends Fragment {
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -107,9 +105,11 @@ public class NavigationFragment extends Fragment implements
                 map.setMyLocationEnabled(true);
             }
             else {
-                PermissionsManager.getInstance().addPermissionGrantedListener(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        NavigationFragment.this);
+                PermissionsManager
+                        .getInstance()
+                        .permissionGrantedListener()
+                        .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                        .subscribe(ignore -> onLocationPermissionGranted());
             }
             LatLng homeLatLng = GpsManager.getInstance().getHomeLatLng();
             updateHomeLocation(homeLatLng);
@@ -173,18 +173,10 @@ public class NavigationFragment extends Fragment implements
         updateHomeLocation(GpsManager.getInstance().getHomeLatLng());
     }
 
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null) {
-            try {
-                map.setMyLocationEnabled(true);
-            }
-            catch (SecurityException ex) {
-                // won't happen in the permission granted timerListener
-                ex.printStackTrace();
-            }
-            PermissionsManager.getInstance().
-                    removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
+    public void onLocationPermissionGranted() {
+        if (map != null) {
+            //noinspection MissingPermission
+            map.setMyLocationEnabled(true);
         }
     }
 }

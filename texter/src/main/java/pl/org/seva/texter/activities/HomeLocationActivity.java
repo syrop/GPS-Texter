@@ -43,7 +43,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
-import pl.org.seva.texter.listeners.PermissionGrantedListener;
 import pl.org.seva.texter.managers.GpsManager;
 import pl.org.seva.texter.managers.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
@@ -51,7 +50,6 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
 public class HomeLocationActivity extends AppCompatActivity implements
-        PermissionGrantedListener,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
@@ -118,10 +116,16 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().addPermissionGrantedListener(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    this);
+            setPermissionListeners();
         }
+    }
+
+    private void setPermissionListeners() {
+        PermissionsManager
+                .getInstance()
+                .permissionGrantedListener()
+                .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                .subscribe(ignore -> onLocationPermissionGranted());
     }
 
     @Override
@@ -142,9 +146,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 map.setMyLocationEnabled(true);
             }
             else {
-                PermissionsManager.getInstance().addPermissionGrantedListener(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        this);
+                setPermissionListeners();
             }
             zoom = PreferenceManager.getDefaultSharedPreferences(this).
                     getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
@@ -248,16 +250,11 @@ public class HomeLocationActivity extends AppCompatActivity implements
         useCurrentButton.setEnabled(true);
     }
 
-    @Override
-    public void onPermissionGranted(String permission) {
-        if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && map != null &&
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    public void onLocationPermissionGranted() {
+        if (map != null) {
+            //noinspection MissingPermission
             map.setMyLocationEnabled(true);
             useCurrentButton.setEnabled(false);
-            PermissionsManager.getInstance().
-                removePermissionGrantedListener(Manifest.permission.ACCESS_FINE_LOCATION, this);
         }
     }
 
