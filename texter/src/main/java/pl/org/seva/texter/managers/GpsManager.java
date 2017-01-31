@@ -382,6 +382,9 @@ public class GpsManager implements
                         loc1.getLongitude() == loc2.getLongitude()) {
             return 0.0;
         }
+        if (time == 0.0) {
+            return 0.0;
+        }
         return Calculator.calculateSpeed(loc1, loc2, time);
     }
 

@@ -1,32 +1,44 @@
+/*
+ * Copyright (C) 2016 Wiktor Nizio
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.org.seva.texter.utils;
 
 import android.location.Location;
 
 public class Calculator {
 
-    private static final double EARTH_RADIUS = 6371.0;  // [km]
-
-    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
+    static {
+        System.loadLibrary("native-lib");
     }
 
     public static double calculateSpeed(Location loc1, Location loc2, long time) {
-        double seconds = (double) time / 1000.0;
-        double hours = seconds / 3600.0;
-        if (hours == 0.0) {
-            return 0.0;
-        }
-        double distance = Calculator.calculateDistance(
+        return speed(
                 loc1.getLatitude(),
                 loc1.getLongitude(),
                 loc2.getLatitude(),
-                loc2.getLongitude());
-        return distance / hours;
+                loc2.getLongitude(),
+                time);
+    }
+
+    private static native double distance(double lat1, double lon1, double lat2, double lon2);
+    private static native double speed(double lat1, double lon1, double lat2, double lon2, long time);
+
+    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        return distance(lat1, lon1, lat2, lon2);
     }
 
     private Calculator() {
