@@ -17,3 +17,4 @@
 #}
 -dontwarn java.lang.invoke**
 -dontwarn sun.misc.Unsafe
+-keep class rx.internal.util.unsafe.** { *; }
