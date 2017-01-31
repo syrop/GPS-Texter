@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import pl.org.seva.texter.activities.SettingsActivity;
 import pl.org.seva.texter.preferences.HomeLocationPreference;
+import pl.org.seva.texter.utils.Calculator;
 import pl.org.seva.texter.utils.Constants;
 import rx.Observable;
 import rx.Subscription;
@@ -60,8 +61,6 @@ public class GpsManager implements
     private static final String TAG = GpsManager.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 0.1;  // equals to one hundred meters
-
-    private static final double EARTH_RADIUS = 6371.0;  // [km]
 
     private static GpsManager instance;
 
@@ -187,7 +186,7 @@ public class GpsManager implements
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {
-            distance = calculateDistance(
+            distance = Calculator.calculateDistance(
                     homeLat,
                     homeLon,
                     location.getLatitude(),
@@ -354,9 +353,9 @@ public class GpsManager implements
         }
         TimerManager.getInstance().reset();
         long time = System.currentTimeMillis();
-        speed = calculateSpeed(this.location, location, time - this.time);
+        speed = calculateSpeedOrReturnZero(this.location, location, time - this.time);
         this.location = location;
-        this.distance = calculateDistance();  // distance in kilometres
+        this.distance = calculateCurrentDistance();  // distance in kilometres
         this.time = time;
         distanceSubject.onNext(null);
         locationChangedSubject.onNext(null);
@@ -366,43 +365,24 @@ public class GpsManager implements
         if (location == null) {
             return;
         }
-        distance = calculateDistance();
+        distance = calculateCurrentDistance();
     }
 
-    private double calculateDistance() {
-        return calculateDistance(  // distance in kilometres
+    private double calculateCurrentDistance() {
+        return Calculator.calculateDistance(  // distance in kilometres
                 location.getLatitude(),
                 location.getLongitude(),
                 getHomeLat(),
                 getHomeLng());
     }
 
-    private double calculateSpeed(Location loc1, Location loc2, long time) {
+    private double calculateSpeedOrReturnZero(Location loc1, Location loc2, long time) {
         if (loc1 == null || loc2 == null || this.time == 0 || time == 0 ||
                 loc1.getLatitude() == loc2.getLatitude() &&
                         loc1.getLongitude() == loc2.getLongitude()) {
             return 0.0;
         }
-        double seconds = (double) time / 1000.0;
-        double hours = seconds / 3600.0;
-        if (hours == 0.0) {
-            return 0.0;
-        }
-        double distance = calculateDistance(
-                loc1.getLatitude(),
-                loc1.getLongitude(),
-                loc2.getLatitude(),
-                loc2.getLongitude());
-        return distance / hours;
-    }
-
-    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
+        return Calculator.calculateSpeed(loc1, loc2, time);
     }
 
     @Override
