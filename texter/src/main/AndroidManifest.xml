@@ -42,7 +42,6 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".service.TexterService"/>
-        <service android:name=".service.GeofenceTransitionsIntentService"/>
         <service android:name=".service.ActivityRecognitionIntentService" />
 
 

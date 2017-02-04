@@ -51,6 +51,7 @@ import java.util.Locale;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.TitledPagerAdapter;
+import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
@@ -64,7 +65,6 @@ import pl.org.seva.texter.manager.HistoryManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.ZoneManager;
-import pl.org.seva.texter.service.TexterService;
 import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     private long clickTime;
     /** Obtained from intent, may be null. */
     private String action;
-    private boolean serviceRunning;
     private boolean showSettingsWhenPermissionGranted;
     private boolean shuttingDown;
     private Dialog dialog;
@@ -166,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show();
         }
 
-        addGpsListeners();
         if (!showStartupDialog()) {
             processPermissions();
         }
@@ -180,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean processPermissions() {
         List<String> permissions = new ArrayList<>();
-        addGpsListeners();
         if (!initGps()) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
@@ -201,21 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
 
         return false;
-    }
-
-    private void addGpsListeners() {
-        GpsManager
-                .getInstance()
-                .distanceChangedListener().subscribe(
-                ignore -> SmsController.getInstance().onDistanceChanged());
-        GpsManager
-                .getInstance()
-                .providerEnabledListener()
-                .subscribe(ignore -> onProviderEnabled());
-        GpsManager
-                .getInstance()
-                .providerDisabledListener()
-                .subscribe(ignore -> onProviderDisabled());
     }
 
     private boolean initGps() {
@@ -297,21 +279,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void startService() {
-        if (serviceRunning) {
-            return;
-        }
-        startService(new Intent(getBaseContext(), TexterService.class));
-        serviceRunning = true;
-    }
 
-    private void stopService() {
-        if (!serviceRunning) {
-            return;
-        }
-        stopService(new Intent(getBaseContext(), TexterService.class));
-        serviceRunning = false;
-    }
 
     @Override
     public void onRequestPermissionsResult(
@@ -343,6 +311,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onDestroy();
+    }
+
+    private void stopService() {
+        ((TexterApplication) getApplication()).stopService();
     }
 
     @Override
@@ -389,13 +361,5 @@ public class MainActivity extends AppCompatActivity {
         if (showSettingsWhenPermissionGranted) {
             startActivity(new Intent(this, SettingsActivity.class));
         }
-    }
-
-    private void onProviderEnabled() {
-        startService();
-    }
-
-    private void onProviderDisabled() {
-        stopService();
     }
 }

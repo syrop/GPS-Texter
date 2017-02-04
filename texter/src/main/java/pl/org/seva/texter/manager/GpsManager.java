@@ -33,7 +33,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,16 +48,12 @@ import pl.org.seva.texter.preference.HomeLocationPreference;
 import pl.org.seva.texter.utils.Calculator;
 import pl.org.seva.texter.utils.Constants;
 import rx.Observable;
-import rx.Subscription;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.Subscriptions;
 
 public class GpsManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
-
-    private static final String TAG = GpsManager.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 0.1;  // equals to one hundred meters
 
@@ -80,9 +75,6 @@ public class GpsManager implements
     private final PublishSubject<Void> providerDisabledSubject;
     private final PublishSubject<Void> locationChangedSubject;
 
-    private Subscription stationarySubscription = Subscriptions.empty();
-    private Subscription movingSubscription = Subscriptions.empty();
-
     /** Location last received from the update. */
     private Location location;
     /** Last calculated distance. */
@@ -92,7 +84,6 @@ public class GpsManager implements
 
     private boolean initialized;
     private boolean connected;
-    private boolean paused;
 
     private double homeLat;
     private double homeLon;
@@ -175,8 +166,6 @@ public class GpsManager implements
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
             googleApiClient.disconnect();
         }
-        stationarySubscription.unsubscribe();
-        movingSubscription.unsubscribe();
     }
 
     public void onHomeLocationChanged() {
@@ -241,10 +230,6 @@ public class GpsManager implements
     private void AfterPermissionGranted(Context context) {
         requestLocationUpdates(context);
         ActivityRecognitionManager.getInstance().init(context);
-        stationarySubscription = ActivityRecognitionManager.getInstance().stationaryListener()
-                .subscribe(ignore -> pauseUpdates());
-        movingSubscription = ActivityRecognitionManager.getInstance().movingListener()
-                .subscribe(ignore -> resumeUpdates());
     }
 
     public Observable<Void> distanceChangedListener() {
@@ -426,28 +411,6 @@ public class GpsManager implements
                 providerDisabledSubject.onNext(null);
             }
         });
-    }
-
-    private void pauseUpdates() {
-        if (paused) {
-            return;
-        }
-        Log.d(TAG, "Pause updates.");
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-
-        paused = true;
-    }
-
-    private void resumeUpdates() {
-        if (!paused) {
-            return;
-        }
-        Log.d(TAG, "Resume updates.");
-        //noinspection MissingPermission
-        LocationServices.FusedLocationApi.
-                requestLocationUpdates(googleApiClient, locationRequest, this);
-
-        paused = false;
     }
 
     private void locationSettingsChanged() {
