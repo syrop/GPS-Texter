@@ -70,10 +70,6 @@ public class NavigationFragment extends Fragment {
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
-                ignore -> onDistanceChanged());
-        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
-                ignore -> onHomeChanged());
         show(GpsManager.getInstance().getDistance());
 
         if (savedInstanceState != null) {
@@ -88,6 +84,11 @@ public class NavigationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
+                ignore -> onDistanceChanged());
+        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
+                ignore -> onHomeChanged());
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -123,6 +124,13 @@ public class NavigationFragment extends Fragment {
             }
             animateCamera = false;
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        distanceSubscription.unsubscribe();
+        homeLocationSubscription.unsubscribe();
     }
 
     @Override

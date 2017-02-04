@@ -116,6 +116,19 @@ public class StatsFragment extends Fragment implements
                     .subscribe(ignore -> onLocationPermissionGranted());
         }
 
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stationarySubscription.unsubscribe();
+        movingSubscription.unsubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         stationarySubscription = ActivityRecognitionManager
                 .getInstance()
                 .stationaryListener()
@@ -125,8 +138,6 @@ public class StatsFragment extends Fragment implements
                 .getInstance()
                 .movingListener()
                 .subscribe(ignore -> deviceIsMoving());
-
-        return binding.getRoot();
     }
 
     private void deviceIsStationary() {

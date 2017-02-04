@@ -27,14 +27,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.fragments.NumberFragment;
+import pl.org.seva.texter.fragments.PhoneNumberFragment;
 
 /**
  * Created by wiktor on 5/20/16.
  */
 public class NumberPreference extends DialogPreference {
 
-    private NumberFragment numberFragment;
+    private PhoneNumberFragment numberFragment;
     private String number;
 
     public NumberPreference(Context context, AttributeSet attrs) {
@@ -47,7 +47,7 @@ public class NumberPreference extends DialogPreference {
     @Override
     protected View onCreateDialogView() {
         View result = super.onCreateDialogView();
-        numberFragment = (NumberFragment)
+        numberFragment = (PhoneNumberFragment)
                 ((android.support.v4.app.FragmentActivity) getContext()).
                         getSupportFragmentManager().findFragmentById(R.id.number_fragment);
         numberFragment.setNumber(number);

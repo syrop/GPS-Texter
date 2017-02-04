@@ -86,17 +86,22 @@ public class HistoryFragment extends Fragment {
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
         historyRecyclerView.addOnScrollListener(new OnScrollListener());
-        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
-                ignore -> onSMsSent());
         scrollToBottom = true;
 
         return binding.getRoot();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         smsSentSubscription.unsubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
+                ignore -> onSMsSent());
     }
 
     private void onSMsSent() {
