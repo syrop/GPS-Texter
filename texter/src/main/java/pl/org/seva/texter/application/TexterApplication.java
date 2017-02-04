@@ -2,13 +2,15 @@ package pl.org.seva.texter.application;
 
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
-import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
+
+    private static final String TAG = TexterApplication.class.getSimpleName();
 
     private boolean serviceRunning;
 
@@ -52,21 +54,27 @@ public class TexterApplication extends MultiDexApplication {
 
     private void onDeviceMoving() {
         isDeviceStationary = false;
-        startService();
+        if (isProviderEnabled) {
+            startService();
+        }
     }
 
     private void onProviderEnabled() {
+        Log.d(TAG, "Provider is enabled");
         isProviderEnabled = true;
-        startService();
+        if (!isDeviceStationary) {
+            startService();
+        }
     }
 
     private void onProviderDisabled() {
+        Log.d(TAG, "Provider is disabled");
         isProviderEnabled = false;
         stopService();
     }
 
     private void startService() {
-        if (serviceRunning || isDeviceStationary || !isProviderEnabled) {
+        if (serviceRunning) {
             return;
         }
         startService(new Intent(getBaseContext(), TexterService.class));
