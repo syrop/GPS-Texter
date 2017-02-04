@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,10 +34,10 @@ import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.adapters.HistoryAdapter;
+import pl.org.seva.texter.adapter.HistoryAdapter;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
-import pl.org.seva.texter.managers.HistoryManager;
-import pl.org.seva.texter.managers.SmsManager;
+import pl.org.seva.texter.manager.HistoryManager;
+import pl.org.seva.texter.manager.SmsManager;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
@@ -86,17 +86,22 @@ public class HistoryFragment extends Fragment {
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
         historyRecyclerView.addOnScrollListener(new OnScrollListener());
-        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
-                ignore -> onSMsSent());
         scrollToBottom = true;
 
         return binding.getRoot();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         smsSentSubscription.unsubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
+                ignore -> onSMsSent());
     }
 
     private void onSMsSent() {

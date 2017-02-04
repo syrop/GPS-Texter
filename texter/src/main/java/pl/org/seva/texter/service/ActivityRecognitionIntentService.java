@@ -1,4 +1,4 @@
-package pl.org.seva.texter.services;
+package pl.org.seva.texter.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
-import pl.org.seva.texter.managers.ActivityRecognitionManager;
+import pl.org.seva.texter.manager.ActivityRecognitionManager;
 
 public class ActivityRecognitionIntentService extends IntentService {
 

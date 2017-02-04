@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -41,8 +41,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.PermissionsManager;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.PermissionsManager;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 
@@ -70,10 +70,6 @@ public class NavigationFragment extends Fragment {
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
-                ignore -> onDistanceChanged());
-        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
-                ignore -> onHomeChanged());
         show(GpsManager.getInstance().getDistance());
 
         if (savedInstanceState != null) {
@@ -88,6 +84,11 @@ public class NavigationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
+                ignore -> onDistanceChanged());
+        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
+                ignore -> onHomeChanged());
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -123,6 +124,13 @@ public class NavigationFragment extends Fragment {
             }
             animateCamera = false;
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        distanceSubscription.unsubscribe();
+        homeLocationSubscription.unsubscribe();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package pl.org.seva.texter.managers;
+package pl.org.seva.texter.manager;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,7 +13,7 @@ import com.google.android.gms.location.ActivityRecognition;
 
 import java.lang.ref.WeakReference;
 
-import pl.org.seva.texter.services.ActivityRecognitionIntentService;
+import pl.org.seva.texter.service.ActivityRecognitionIntentService;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 

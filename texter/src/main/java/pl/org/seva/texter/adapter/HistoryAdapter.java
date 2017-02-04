@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.adapters;
+package pl.org.seva.texter.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

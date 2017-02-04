@@ -9,7 +9,7 @@
         android:paddingTop="@dimen/dialog_vertical_margin"
         android:paddingBottom="@dimen/dialog_vertical_margin">
         <fragment
-            android:name="pl.org.seva.texter.fragments.NumberFragment"
+            android:name="pl.org.seva.texter.fragment.PhoneNumberFragment"
             android:id="@+id/number_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

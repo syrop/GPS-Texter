@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.preferences;
+package pl.org.seva.texter.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -27,14 +27,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.fragments.NumberFragment;
+import pl.org.seva.texter.fragment.PhoneNumberFragment;
 
 /**
  * Created by wiktor on 5/20/16.
  */
 public class NumberPreference extends DialogPreference {
 
-    private NumberFragment numberFragment;
+    private PhoneNumberFragment numberFragment;
     private String number;
 
     public NumberPreference(Context context, AttributeSet attrs) {
@@ -47,7 +47,7 @@ public class NumberPreference extends DialogPreference {
     @Override
     protected View onCreateDialogView() {
         View result = super.onCreateDialogView();
-        numberFragment = (NumberFragment)
+        numberFragment = (PhoneNumberFragment)
                 ((android.support.v4.app.FragmentActivity) getContext()).
                         getSupportFragmentManager().findFragmentById(R.id.number_fragment);
         numberFragment.setNumber(number);

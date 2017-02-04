@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package pl.org.seva.texter.layouts;
+package pl.org.seva.texter.layout;
 
 import android.content.Context;
 import android.graphics.Canvas;

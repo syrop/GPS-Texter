@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -45,10 +45,7 @@ import java.util.List;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NumberFragmentBinding;
 
-/**
- * Created by wiktor on 5/20/16.
- */
-public class NumberFragment extends Fragment implements
+public class PhoneNumberFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         AdapterView.OnItemClickListener {
 
