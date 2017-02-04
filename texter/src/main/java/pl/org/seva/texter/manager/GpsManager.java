@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.managers;
+package pl.org.seva.texter.manager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -44,8 +44,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.model.LatLng;
 
-import pl.org.seva.texter.activities.SettingsActivity;
-import pl.org.seva.texter.preferences.HomeLocationPreference;
+import pl.org.seva.texter.activity.SettingsActivity;
+import pl.org.seva.texter.preference.HomeLocationPreference;
 import pl.org.seva.texter.utils.Calculator;
 import pl.org.seva.texter.utils.Constants;
 import rx.Observable;

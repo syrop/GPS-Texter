@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -41,8 +41,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.PermissionsManager;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.PermissionsManager;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 

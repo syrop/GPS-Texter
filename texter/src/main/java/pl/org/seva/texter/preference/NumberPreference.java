@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.preferences;
+package pl.org.seva.texter.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -27,7 +27,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.fragments.PhoneNumberFragment;
+import pl.org.seva.texter.fragment.PhoneNumberFragment;
 
 /**
  * Created by wiktor on 5/20/16.

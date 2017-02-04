@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.managers;
+package pl.org.seva.texter.manager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.activities.SettingsActivity;
+import pl.org.seva.texter.activity.SettingsActivity;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.StringUtils;
 import rx.Observable;

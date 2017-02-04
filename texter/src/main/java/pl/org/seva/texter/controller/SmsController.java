@@ -19,9 +19,9 @@ package pl.org.seva.texter.controller;
 
 import java.util.Calendar;
 
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.SmsManager;
-import pl.org.seva.texter.managers.ZoneManager;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.SmsManager;
+import pl.org.seva.texter.manager.ZoneManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
 import pl.org.seva.texter.utils.Constants;

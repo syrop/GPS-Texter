@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.services;
+package pl.org.seva.texter.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -25,7 +25,7 @@ import android.os.Build;
 import android.os.IBinder;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.activities.MainActivity;
+import pl.org.seva.texter.activity.MainActivity;
 
 public class TexterService extends Service {
 

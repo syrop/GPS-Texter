@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.preferences;
+package pl.org.seva.texter.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;

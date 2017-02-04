@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.activities;
+package pl.org.seva.texter.activity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -50,22 +50,22 @@ import java.util.List;
 import java.util.Locale;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.adapters.TitledPagerAdapter;
+import pl.org.seva.texter.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
 import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
-import pl.org.seva.texter.fragments.HistoryFragment;
-import pl.org.seva.texter.fragments.StatsFragment;
-import pl.org.seva.texter.fragments.NavigationFragment;
-import pl.org.seva.texter.layouts.SlidingTabLayout;
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.HistoryManager;
-import pl.org.seva.texter.managers.PermissionsManager;
-import pl.org.seva.texter.managers.SmsManager;
-import pl.org.seva.texter.managers.ZoneManager;
-import pl.org.seva.texter.services.TexterService;
-import pl.org.seva.texter.managers.TimerManager;
+import pl.org.seva.texter.fragment.HistoryFragment;
+import pl.org.seva.texter.fragment.StatsFragment;
+import pl.org.seva.texter.fragment.NavigationFragment;
+import pl.org.seva.texter.layout.SlidingTabLayout;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.HistoryManager;
+import pl.org.seva.texter.manager.PermissionsManager;
+import pl.org.seva.texter.manager.SmsManager;
+import pl.org.seva.texter.manager.ZoneManager;
+import pl.org.seva.texter.service.TexterService;
+import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
 

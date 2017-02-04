@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.activities;
+package pl.org.seva.texter.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -43,8 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.PermissionsManager;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;

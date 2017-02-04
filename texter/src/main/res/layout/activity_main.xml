@@ -5,14 +5,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="pl.org.seva.texter.activities.MainActivity">
+        tools:context="pl.org.seva.texter.activity.MainActivity">
         <include
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar" />
 
         <!-- Setting tools:targetApi to lollipop prevents the warning that android:elevation -->
         <!-- parameter is not available prior to API 21. -->
-        <pl.org.seva.texter.layouts.SlidingTabLayout
+        <pl.org.seva.texter.layout.SlidingTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,8 +25,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.activities.HomeLocationActivity;
-import pl.org.seva.texter.activities.SettingsActivity;
+import pl.org.seva.texter.activity.HomeLocationActivity;
+import pl.org.seva.texter.activity.SettingsActivity;
 
 /**
  * Created by wiktor on 16.08.15.

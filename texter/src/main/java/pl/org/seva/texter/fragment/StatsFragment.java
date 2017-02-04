@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.fragments;
+package pl.org.seva.texter.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -37,12 +37,12 @@ import java.util.Calendar;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
-import pl.org.seva.texter.managers.ActivityRecognitionManager;
-import pl.org.seva.texter.managers.GpsManager;
-import pl.org.seva.texter.managers.PermissionsManager;
-import pl.org.seva.texter.managers.SmsManager;
+import pl.org.seva.texter.manager.ActivityRecognitionManager;
+import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.PermissionsManager;
+import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.model.LocationModel;
-import pl.org.seva.texter.managers.TimerManager;
+import pl.org.seva.texter.manager.TimerManager;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 

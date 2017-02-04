@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.managers;
+package pl.org.seva.texter.manager;
 
 import java.util.ArrayList;
 import java.util.List;
