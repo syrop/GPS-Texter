@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,6 +55,8 @@ public class GpsManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
+
+    private static final String TAG = GpsManager.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 0.1;  // equals to one hundred meters
 
@@ -84,11 +87,11 @@ public class GpsManager implements
 
     private boolean initialized;
     private boolean connected;
+    private boolean paused;
 
     private double homeLat;
     private double homeLon;
     private long time;
-
 
     private GpsManager() {
         distanceSubject = PublishSubject.create();
@@ -129,10 +132,8 @@ public class GpsManager implements
     /**
      * @return minimum time between two subsequent updates from one provider (in millis)
      */
-    private int getUpdateFrequency() {
-        String timeStr = preferences.getString(SettingsActivity.LOCATION_UPDATE_FREQUENCY, "");
-        int seconds = timeStr.length() > 0 ? Integer.valueOf(timeStr) : 0;
-        return seconds * 1000;
+    private long getUpdateFrequency() {
+        return Constants.LOCATION_UPDATE_FREQUENCY;
     }
 
     public double getDistance() {
@@ -141,10 +142,6 @@ public class GpsManager implements
 
     public double getSpeed() {
         return speed;
-    }
-
-    public void updateFrequencyChanged(Context context) {
-        requestLocationUpdates(context);
     }
 
     private void requestLocationUpdates(Context context) {
@@ -220,14 +217,14 @@ public class GpsManager implements
         onHomeLocationChanged();
 
         if (granted) {
-            AfterPermissionGranted(activity);
+            afterPermissionGranted(activity);
             initialized = true;
         }
 
         return granted;
     }
 
-    private void AfterPermissionGranted(Context context) {
+    private void afterPermissionGranted(Context context) {
         requestLocationUpdates(context);
         ActivityRecognitionManager.getInstance().init(context);
     }
@@ -382,7 +379,7 @@ public class GpsManager implements
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
 
-        int updateFrequency = getUpdateFrequency();
+        long updateFrequency = getUpdateFrequency();
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -411,6 +408,30 @@ public class GpsManager implements
                 providerDisabledSubject.onNext(null);
             }
         });
+    }
+
+    public void pauseUpdates() {
+        if (paused || googleApiClient == null) {
+            return;
+        }
+        Log.d(TAG, "Pause updates.");
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+
+        paused = true;
+    }
+
+    public void resumeUpdates(Context context) {
+        if (!paused || ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Log.d(TAG, "Resume updates.");
+        //noinspection MissingPermission
+        LocationServices.FusedLocationApi.
+                requestLocationUpdates(googleApiClient, locationRequest, this);
+
+        paused = false;
     }
 
     private void locationSettingsChanged() {

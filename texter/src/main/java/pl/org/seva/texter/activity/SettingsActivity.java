@@ -56,8 +56,6 @@ public class SettingsActivity extends AppCompatActivity
     public static final String SMS_NUMBER = "pref_phone_number";
     /** Beyond this distance from home, no messages will be sent. */
     public static final String MAXIMUM_DISTANCE = "pref_max_distance";
-    /** Request updates every so many seconds. */
-    public static final String LOCATION_UPDATE_FREQUENCY = "pref_update_frequency";
     /** Location to measure distance from. */
     public static final String HOME_LOCATION = "pref_home_location";
     /** If true, time will be sent with every SMS. */
@@ -166,9 +164,6 @@ public class SettingsActivity extends AppCompatActivity
                         setReadContactsPermissionListeners();
                     }
                 }
-                break;
-            case LOCATION_UPDATE_FREQUENCY:
-                GpsManager.getInstance().updateFrequencyChanged(this);
                 break;
             case HOME_LOCATION:
                 GpsManager.getInstance().onHomeLocationChanged();

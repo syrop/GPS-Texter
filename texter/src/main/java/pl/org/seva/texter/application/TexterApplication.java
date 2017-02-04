@@ -18,15 +18,11 @@ public class TexterApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        addGpsListeners();
+        addGpsProviderListeners();
         addActivityRecognitionListeners();
     }
 
-    private void addGpsListeners() {
-        GpsManager
-                .getInstance()
-                .distanceChangedListener().subscribe(
-                ignore -> SmsController.getInstance().onDistanceChanged());
+    private void addGpsProviderListeners() {
         GpsManager
                 .getInstance()
                 .providerEnabledListener()

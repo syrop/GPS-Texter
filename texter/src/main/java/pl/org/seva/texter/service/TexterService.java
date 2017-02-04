@@ -26,10 +26,16 @@ import android.os.IBinder;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activity.MainActivity;
+import pl.org.seva.texter.controller.SmsController;
+import pl.org.seva.texter.manager.GpsManager;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public class TexterService extends Service {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
+
+    private Subscription distanceSubscription = Subscriptions.empty();
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -38,6 +44,7 @@ public class TexterService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
         // use System.currentTimeMillis() to have a unique ID for the pending intent
@@ -55,9 +62,29 @@ public class TexterService extends Service {
                         R.mipmap.ic_launcher)
                 .setContentIntent(pIntent)
                 .setAutoCancel(false).build();
+        createDistanceSubscription();
+        GpsManager.getInstance().resumeUpdates(this);
 
         startForeground(ONGOING_NOTIFICATION_ID, n);
 
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        removeDistanceSubscription();
+        GpsManager.getInstance().pauseUpdates();
+        super.onDestroy();
+    }
+
+    private void createDistanceSubscription() {
+        distanceSubscription = GpsManager
+                .getInstance()
+                .distanceChangedListener().subscribe(
+                ignore -> SmsController.getInstance().onDistanceChanged());
+    }
+
+    private void removeDistanceSubscription() {
+        distanceSubscription.unsubscribe();
     }
 }

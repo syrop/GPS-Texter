@@ -33,6 +33,8 @@ public class Constants {
     /** Time spend in zone before an SMS is sent. */
     public static final int TIME_IN_ZONE = 11 * 1000;
 
+    public static final long LOCATION_UPDATE_FREQUENCY = 1000;  // [ms]
+
     private Constants() {
         //
     }
