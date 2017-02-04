@@ -44,7 +44,6 @@
         <service android:name=".service.TexterService"/>
         <service android:name=".service.ActivityRecognitionIntentService" />
 
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
