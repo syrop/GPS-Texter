@@ -58,7 +58,7 @@ public class GpsManager implements
 
     private static final String TAG = GpsManager.class.getSimpleName();
 
-    private static final double ACCURACY_THRESHOLD = 0.1;  // equals to one hundred meters
+    private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
 
     private static GpsManager instance;
 
@@ -311,7 +311,7 @@ public class GpsManager implements
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location.getAccuracy() >= ACCURACY_THRESHOLD * 1000.0) {
+        if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
         if (!GpsManager.isBetterLocation(location, this.location)) {
