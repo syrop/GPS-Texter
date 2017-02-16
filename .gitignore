@@ -3,7 +3,6 @@
 .gradle/
 build/
 local.properties
-texter/build/
 captures/
 java_pid3835.hprof
 projectFilesBackup/
