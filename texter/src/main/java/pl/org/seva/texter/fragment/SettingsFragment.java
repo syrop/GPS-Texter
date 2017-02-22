@@ -28,9 +28,6 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.activity.HomeLocationActivity;
 import pl.org.seva.texter.activity.SettingsActivity;
 
-/**
- * Created by wiktor on 16.08.15.
- */
 public class SettingsFragment extends PreferenceFragment {
 
     public static SettingsFragment newInstance() {
