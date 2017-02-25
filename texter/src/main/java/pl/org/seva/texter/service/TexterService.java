@@ -61,7 +61,8 @@ public class TexterService extends Service {
                         R.drawable.notification :
                         R.mipmap.ic_launcher)
                 .setContentIntent(pIntent)
-                .setAutoCancel(false).build();
+                .setAutoCancel(false)
+                .build();
         createDistanceSubscription();
         GpsManager.getInstance().resumeUpdates(this);
 
