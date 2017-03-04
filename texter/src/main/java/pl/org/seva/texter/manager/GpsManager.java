@@ -44,12 +44,12 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.model.LatLng;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.activity.SettingsActivity;
 import pl.org.seva.texter.preference.HomeLocationPreference;
 import pl.org.seva.texter.utils.Calculator;
 import pl.org.seva.texter.utils.Constants;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class GpsManager implements
         GoogleApiClient.ConnectionCallbacks,
@@ -230,23 +230,23 @@ public class GpsManager implements
     }
 
     public Observable<Void> distanceChangedListener() {
-        return distanceSubject.asObservable();
+        return distanceSubject.hide();
     }
 
     public Observable<Void> homeChangedListener() {
-        return homeChangedSubject.asObservable();
+        return homeChangedSubject.hide();
     }
 
     public Observable<Void> locationChangedListener() {
-        return locationChangedSubject.asObservable();
+        return locationChangedSubject.hide();
     }
 
     public Observable<Void> providerEnabledListener() {
-        return providerEnabledSubject.asObservable();
+        return providerEnabledSubject.hide();
     }
 
     public Observable<Void> providerDisabledListener() {
-        return providerDisabledSubject.asObservable();
+        return providerDisabledSubject.hide();
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {

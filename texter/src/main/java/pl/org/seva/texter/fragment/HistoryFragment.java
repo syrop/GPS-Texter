@@ -33,13 +33,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.HistoryAdapter;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
 import pl.org.seva.texter.manager.HistoryManager;
 import pl.org.seva.texter.manager.SmsManager;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class HistoryFragment extends Fragment {
 
@@ -48,7 +48,7 @@ public class HistoryFragment extends Fragment {
     private boolean scrollToBottom;
     private Context context;
 
-    private Subscription smsSentSubscription = Subscriptions.empty();
+    private Disposable smsSentSubscription = Disposables.empty();
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -94,7 +94,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        smsSentSubscription.unsubscribe();
+        smsSentSubscription.dispose();
     }
 
     @Override

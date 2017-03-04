@@ -41,13 +41,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnMapLongClickListener,
@@ -57,7 +57,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
 
-    private Subscription locationChangedSubscription = Subscriptions.empty();
+    private Disposable locationChangedSubscription = Disposables.empty();
 
     /** Latitude. */
     private double lat;
@@ -169,7 +169,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        locationChangedSubscription.unsubscribe();
+        locationChangedSubscription.dispose();
         toastShown = false;
 
         persistString(toString());

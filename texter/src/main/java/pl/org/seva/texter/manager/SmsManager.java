@@ -17,12 +17,6 @@
 
 package pl.org.seva.texter.manager;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -34,12 +28,18 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activity.SettingsActivity;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.StringUtils;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class SmsManager {
 
@@ -104,11 +104,11 @@ public class SmsManager {
 	}
 
 	public Observable<Void> smsSendingListener() {
-        return smsSendingSubject.asObservable();
+        return smsSendingSubject.hide();
     }
 
     public Observable<Void> smsSentListener() {
-        return smsSentSubject.asObservable();
+        return smsSentSubject.hide();
     }
 
 	private String getPhoneNumber() {

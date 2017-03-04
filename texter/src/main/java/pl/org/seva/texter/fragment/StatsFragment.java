@@ -20,12 +20,12 @@ package pl.org.seva.texter.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,16 +35,16 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
-import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.manager.TimerManager;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import pl.org.seva.texter.model.LocationModel;
 
 public class StatsFragment extends Fragment implements
         View.OnClickListener {
@@ -58,17 +58,17 @@ public class StatsFragment extends Fragment implements
     private TextView speedTextView;
     private Button sendNowButton;
 
-    private Subscription homeChangedSubscription = Subscriptions.empty();
-    private Subscription smsSendingSubscription = Subscriptions.empty();
+    private Disposable homeChangedSubscription = Disposables.empty();
+    private Disposable smsSendingSubscription = Disposables.empty();
 
     private double distance;
     private double speed;
     private boolean stationary;
 
-    private Subscription distanceSubscription = Subscriptions.empty();
-    private Subscription timerSubscription = Subscriptions.empty();
-    private Subscription stationarySubscription = Subscriptions.empty();
-    private Subscription movingSubscription = Subscriptions.empty();
+    private Disposable distanceSubscription = Disposables.empty();
+    private Disposable timerSubscription = Disposables.empty();
+    private Disposable stationarySubscription = Disposables.empty();
+    private Disposable movingSubscription = Disposables.empty();
 
     private Activity activity;
 
@@ -122,8 +122,8 @@ public class StatsFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        stationarySubscription.unsubscribe();
-        movingSubscription.unsubscribe();
+        stationarySubscription.dispose();
+        movingSubscription.dispose();
     }
 
     @Override
@@ -226,12 +226,12 @@ public class StatsFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timerSubscription.unsubscribe();
-        distanceSubscription.unsubscribe();
-        smsSendingSubscription.unsubscribe();
-        homeChangedSubscription.unsubscribe();
-        stationarySubscription.unsubscribe();
-        movingSubscription.unsubscribe();
+        timerSubscription.dispose();
+        distanceSubscription.dispose();
+        smsSendingSubscription.dispose();
+        homeChangedSubscription.dispose();
+        stationarySubscription.dispose();
+        movingSubscription.dispose();
     }
 
     private void onDistanceChanged() {

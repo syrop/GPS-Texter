@@ -19,18 +19,18 @@ package pl.org.seva.texter.manager;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class TimerManager {
 
     private static TimerManager instance;
 
     private long resetTime = System.currentTimeMillis();
-    private Subscription timerSubscription = Subscriptions.empty();
+    private Disposable timerSubscription = Disposables.empty();
     private final PublishSubject<Void> timerSubject = PublishSubject.create();
 
     private TimerManager() {
@@ -56,11 +56,11 @@ public class TimerManager {
     }
 
     private void instanceShutdown() {
-        timerSubscription.unsubscribe();
+        timerSubscription.dispose();
     }
 
     private void createTimerSubscription() {
-        timerSubscription.unsubscribe();
+        timerSubscription.dispose();
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .doOnNext(ignore -> timerSubject.onNext(null))
@@ -78,6 +78,6 @@ public class TimerManager {
     }
 
     public Observable<Void> timerListener() {
-        return timerSubject.asObservable();
+        return timerSubject.hide();
     }
 }

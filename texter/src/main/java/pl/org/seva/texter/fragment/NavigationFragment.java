@@ -39,12 +39,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.PermissionsManager;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class NavigationFragment extends Fragment {
 
@@ -54,9 +54,9 @@ public class NavigationFragment extends Fragment {
     private int mapContainerId;
     private MapFragment mapFragment;
 
-    private Subscription homeLocationSubscription = Subscriptions.empty();
+    private Disposable homeLocationSubscription = Disposables.empty();
 
-    private Subscription distanceSubscription = Subscriptions.empty();
+    private Disposable distanceSubscription = Disposables.empty();
 
     public static NavigationFragment newInstance() {
         return new NavigationFragment();
@@ -129,15 +129,15 @@ public class NavigationFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        distanceSubscription.unsubscribe();
-        homeLocationSubscription.unsubscribe();
+        distanceSubscription.dispose();
+        homeLocationSubscription.dispose();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        distanceSubscription.unsubscribe();
-        homeLocationSubscription.unsubscribe();
+        distanceSubscription.dispose();
+        homeLocationSubscription.dispose();
     }
 
     @Override

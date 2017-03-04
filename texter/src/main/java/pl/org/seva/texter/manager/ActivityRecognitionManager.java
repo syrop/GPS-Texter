@@ -13,9 +13,9 @@ import com.google.android.gms.location.ActivityRecognition;
 
 import java.lang.ref.WeakReference;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.service.ActivityRecognitionIntentService;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
@@ -106,11 +106,11 @@ public class ActivityRecognitionManager implements
     }
 
     public Observable<Void> stationaryListener() {
-        return stationarySubject.asObservable();
+        return stationarySubject.hide();
     }
 
     public Observable<Void> movingListener() {
-        return movingSubject.asObservable();
+        return movingSubject.hide();
     }
 
     public void stationary() {

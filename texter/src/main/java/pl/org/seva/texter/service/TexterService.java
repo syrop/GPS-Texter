@@ -24,18 +24,18 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activity.MainActivity;
 import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.manager.GpsManager;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 public class TexterService extends Service {
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
 
-    private Subscription distanceSubscription = Subscriptions.empty();
+    private Disposable distanceSubscription = Disposables.empty();
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -86,6 +86,6 @@ public class TexterService extends Service {
     }
 
     private void removeDistanceSubscription() {
-        distanceSubscription.unsubscribe();
+        distanceSubscription.dispose();
     }
 }
