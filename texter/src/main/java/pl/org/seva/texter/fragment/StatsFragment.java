@@ -35,8 +35,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
@@ -58,17 +57,11 @@ public class StatsFragment extends Fragment implements
     private TextView speedTextView;
     private Button sendNowButton;
 
-    private Disposable homeChangedSubscription = Disposables.empty();
-    private Disposable smsSendingSubscription = Disposables.empty();
+    private CompositeDisposable composite = new CompositeDisposable();
 
     private double distance;
     private double speed;
     private boolean stationary;
-
-    private Disposable distanceSubscription = Disposables.empty();
-    private Disposable timerSubscription = Disposables.empty();
-    private Disposable stationarySubscription = Disposables.empty();
-    private Disposable movingSubscription = Disposables.empty();
 
     private Activity activity;
 
@@ -96,14 +89,20 @@ public class StatsFragment extends Fragment implements
                 distance != 0.0 &&
                 distance != SmsManager.getInstance().getLastSentDistance());
 
-        show();
-        timerSubscription = TimerManager.getInstance().timerListener().subscribe(ignore -> onTimer());
-        smsSendingSubscription = SmsManager.getInstance().smsSendingListener().subscribe(
-                ignore -> onSendingSms());
-        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
-                ignore -> onDistanceChanged());
-        homeChangedSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
-                ignore -> onHomeChanged());
+        showStats();
+        composite.addAll(
+                TimerManager.getInstance().timerListener().subscribe(ignore -> onTimer()),
+                SmsManager.getInstance().smsSendingListener().subscribe(ignore -> onSendingSms()),
+                GpsManager.getInstance().distanceChangedListener().subscribe(ignore -> onDistanceChanged()),
+                GpsManager.getInstance().homeChangedListener().subscribe(ignore -> onHomeChanged()),
+                ActivityRecognitionManager
+                    .getInstance()
+                    .stationaryListener()
+                    .subscribe(ignore -> deviceIsStationary()),
+                ActivityRecognitionManager
+                    .getInstance()
+                    .movingListener()
+                    .subscribe(ignore -> deviceIsMoving()));
 
         if (ContextCompat.checkSelfPermission(
                 getActivity(),
@@ -117,27 +116,6 @@ public class StatsFragment extends Fragment implements
         }
 
         return binding.getRoot();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        stationarySubscription.dispose();
-        movingSubscription.dispose();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        stationarySubscription = ActivityRecognitionManager
-                .getInstance()
-                .stationaryListener()
-                .subscribe(ignore -> deviceIsStationary());
-
-        movingSubscription = ActivityRecognitionManager
-                .getInstance()
-                .movingListener()
-                .subscribe(ignore -> deviceIsMoving());
     }
 
     private void deviceIsStationary() {
@@ -167,7 +145,7 @@ public class StatsFragment extends Fragment implements
         }
     }
 
-    private void show() {
+    private void showStats() {
         @SuppressLint("DefaultLocale") String distanceStr = String.format("%.3f km", distance);
 
         if (distance == 0.0) {
@@ -226,12 +204,7 @@ public class StatsFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timerSubscription.dispose();
-        distanceSubscription.dispose();
-        smsSendingSubscription.dispose();
-        homeChangedSubscription.dispose();
-        stationarySubscription.dispose();
-        movingSubscription.dispose();
+        composite.clear();
     }
 
     private void onDistanceChanged() {
@@ -249,14 +222,14 @@ public class StatsFragment extends Fragment implements
             this.distance = GpsManager.getInstance().getDistance();
             this.speed = GpsManager.getInstance().getSpeed();
         }
-        show();
+        showStats();
     }
 
     private void onTimer() {
         if (activity == null) {
             return;
         }
-        activity.runOnUiThread(this::show);
+        activity.runOnUiThread(this::showStats);
     }
 
     public static String getHomeString() {
@@ -286,7 +259,7 @@ public class StatsFragment extends Fragment implements
 
     private void onHomeChanged() {
         distance = GpsManager.getInstance().getDistance();
-        show();
+        showStats();
     }
 
     private void onLocationPermissionGranted() {

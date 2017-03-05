@@ -39,8 +39,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.manager.GpsManager;
@@ -54,9 +53,7 @@ public class NavigationFragment extends Fragment {
     private int mapContainerId;
     private MapFragment mapFragment;
 
-    private Disposable homeLocationSubscription = Disposables.empty();
-
-    private Disposable distanceSubscription = Disposables.empty();
+    CompositeDisposable composite = new CompositeDisposable();
 
     public static NavigationFragment newInstance() {
         return new NavigationFragment();
@@ -85,10 +82,9 @@ public class NavigationFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        distanceSubscription = GpsManager.getInstance().distanceChangedListener().subscribe(
-                ignore -> onDistanceChanged());
-        homeLocationSubscription = GpsManager.getInstance().homeChangedListener().subscribe(
-                ignore -> onHomeChanged());
+        composite.addAll(
+                GpsManager.getInstance().distanceChangedListener().subscribe(ignore -> onDistanceChanged()),
+                GpsManager.getInstance().homeChangedListener().subscribe(ignore -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -127,17 +123,9 @@ public class NavigationFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        distanceSubscription.dispose();
-        homeLocationSubscription.dispose();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-        distanceSubscription.dispose();
-        homeLocationSubscription.dispose();
+        composite.clear();
     }
 
     @Override
