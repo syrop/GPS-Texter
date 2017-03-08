@@ -72,11 +72,11 @@ public class GpsManager implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    private final PublishSubject<Void> distanceSubject;
-    private final PublishSubject<Void> homeChangedSubject;
-    private final PublishSubject<Void> providerEnabledSubject;
-    private final PublishSubject<Void> providerDisabledSubject;
-    private final PublishSubject<Void> locationChangedSubject;
+    private final PublishSubject<Object> distanceSubject;
+    private final PublishSubject<Object> homeChangedSubject;
+    private final PublishSubject<Object> providerEnabledSubject;
+    private final PublishSubject<Object> providerDisabledSubject;
+    private final PublishSubject<Object> locationChangedSubject;
 
     /** Location last received from the update. */
     private Location location;
@@ -178,7 +178,7 @@ public class GpsManager implements
                     location.getLatitude(),
                     location.getLongitude());
         }
-        homeChangedSubject.onNext(null);
+        homeChangedSubject.onNext(0);
     }
 
     /**
@@ -229,23 +229,23 @@ public class GpsManager implements
         ActivityRecognitionManager.getInstance().init(context);
     }
 
-    public Observable<Void> distanceChangedListener() {
+    public Observable<Object> distanceChangedListener() {
         return distanceSubject.hide();
     }
 
-    public Observable<Void> homeChangedListener() {
+    public Observable<Object> homeChangedListener() {
         return homeChangedSubject.hide();
     }
 
-    public Observable<Void> locationChangedListener() {
+    public Observable<Object> locationChangedListener() {
         return locationChangedSubject.hide();
     }
 
-    public Observable<Void> providerEnabledListener() {
+    public Observable<Object> providerEnabledListener() {
         return providerEnabledSubject.hide();
     }
 
-    public Observable<Void> providerDisabledListener() {
+    public Observable<Object> providerDisabledListener() {
         return providerDisabledSubject.hide();
     }
 
@@ -323,8 +323,8 @@ public class GpsManager implements
         this.location = location;
         this.distance = calculateCurrentDistance();  // distance in kilometres
         this.time = time;
-        distanceSubject.onNext(null);
-        locationChangedSubject.onNext(null);
+        distanceSubject.onNext(0);
+        locationChangedSubject.onNext(0);
     }
 
     private void updateDistance() {
@@ -386,10 +386,10 @@ public class GpsManager implements
         pendingResult.setResultCallback(locationSettingsResult -> {
             connected = locationSettingsResult.getLocationSettingsStates().isLocationUsable();
             if (connected) {
-                providerEnabledSubject.onNext(null);
+                providerEnabledSubject.onNext(0);
             }
             else {
-                providerDisabledSubject.onNext(null);
+                providerDisabledSubject.onNext(0);
             }
         });
     }

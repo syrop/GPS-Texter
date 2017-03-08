@@ -31,7 +31,7 @@ public class TimerManager {
 
     private long resetTime = System.currentTimeMillis();
     private Disposable timerSubscription = Disposables.empty();
-    private final PublishSubject<Void> timerSubject = PublishSubject.create();
+    private final PublishSubject<Object> timerSubject = PublishSubject.create();
 
     private TimerManager() {
         createTimerSubscription();
@@ -63,7 +63,7 @@ public class TimerManager {
         timerSubscription.dispose();
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .observeOn(Schedulers.io())
-                .doOnNext(ignore -> timerSubject.onNext(null))
+                .doOnNext(ignore -> timerSubject.onNext(0))
                 .repeat()
                 .subscribe();
     }
@@ -77,7 +77,7 @@ public class TimerManager {
         return resetTime;
     }
 
-    public Observable<Void> timerListener() {
+    public Observable<Object> timerListener() {
         return timerSubject.hide();
     }
 }

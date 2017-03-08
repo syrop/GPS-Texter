@@ -23,8 +23,8 @@ public class ActivityRecognitionManager implements
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
 
-    private static final PublishSubject<Void> stationarySubject = PublishSubject.create();
-    private static final PublishSubject<Void> movingSubject = PublishSubject.create();
+    private static final PublishSubject<Object> stationarySubject = PublishSubject.create();
+    private static final PublishSubject<Object> movingSubject = PublishSubject.create();
 
     private boolean initialized;
     private GoogleApiClient googleApiClient;
@@ -105,19 +105,19 @@ public class ActivityRecognitionManager implements
 
     }
 
-    public Observable<Void> stationaryListener() {
+    public Observable<Object> stationaryListener() {
         return stationarySubject.hide();
     }
 
-    public Observable<Void> movingListener() {
+    public Observable<Object> movingListener() {
         return movingSubject.hide();
     }
 
     public void stationary() {
-        stationarySubject.onNext(null);
+        stationarySubject.onNext(0);
     }
 
     public void moving() {
-        movingSubject.onNext(null);
+        movingSubject.onNext(0);
     }
 }

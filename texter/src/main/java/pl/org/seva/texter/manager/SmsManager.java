@@ -62,8 +62,8 @@ public class SmsManager {
 
     private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
 
-    private final PublishSubject<Void> smsSendingSubject;
-    private final PublishSubject<Void> smsSentSubject;
+    private final PublishSubject<Object> smsSendingSubject;
+    private final PublishSubject<Object> smsSentSubject;
 
     private double lastSentDistance;
 	
@@ -103,11 +103,11 @@ public class SmsManager {
 		initialized = true;
 	}
 
-	public Observable<Void> smsSendingListener() {
+	public Observable<Object> smsSendingListener() {
         return smsSendingSubject.hide();
     }
 
-    public Observable<Void> smsSentListener() {
+    public Observable<Object> smsSentListener() {
         return smsSentSubject.hide();
     }
 
@@ -181,7 +181,7 @@ public class SmsManager {
                         Toast.makeText(arg0, sentBuilder.toString(), length).show();
                         if (location != null) {
                             HistoryManager.getInstance().add(location);
-                            smsSentSubject.onNext(null);
+                            smsSentSubject.onNext(0);
                         }
                         break;
                     case android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE:
@@ -268,7 +268,7 @@ public class SmsManager {
 		Intent deliveredIntent = new Intent(DELIVERED + id);
 		deliveredIntent.putExtra(TEXT_KEY, intentText);
 
-        smsSendingSubject.onNext(null);
+        smsSendingSubject.onNext(0);
 
         Context context = weakContext.get();
         if (context != null) {
