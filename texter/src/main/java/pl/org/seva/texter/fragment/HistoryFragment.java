@@ -101,7 +101,7 @@ public class HistoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
-                ignore -> onSMsSent());
+                __ -> onSMsSent());
     }
 
     private void onSMsSent() {

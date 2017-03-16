@@ -53,7 +53,7 @@ public class NavigationFragment extends Fragment {
     private int mapContainerId;
     private MapFragment mapFragment;
 
-    CompositeDisposable composite = new CompositeDisposable();
+    private final CompositeDisposable composite = new CompositeDisposable();
 
     public static NavigationFragment newInstance() {
         return new NavigationFragment();
@@ -83,8 +83,8 @@ public class NavigationFragment extends Fragment {
         super.onResume();
 
         composite.addAll(
-                GpsManager.getInstance().distanceChangedListener().subscribe(ignore -> onDistanceChanged()),
-                GpsManager.getInstance().homeChangedListener().subscribe(ignore -> onHomeChanged()));
+                GpsManager.getInstance().distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                GpsManager.getInstance().homeChangedListener().subscribe(__ -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -106,7 +106,7 @@ public class NavigationFragment extends Fragment {
                         .getInstance()
                         .permissionGrantedListener()
                         .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                        .subscribe(ignore -> onLocationPermissionGranted());
+                        .subscribe(__ -> onLocationPermissionGranted());
             }
             LatLng homeLatLng = GpsManager.getInstance().getHomeLatLng();
             updateHomeLocation(homeLatLng);

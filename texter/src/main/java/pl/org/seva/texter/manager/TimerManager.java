@@ -63,7 +63,7 @@ public class TimerManager {
         timerSubscription.dispose();
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .observeOn(Schedulers.io())
-                .doOnNext(ignore -> timerSubject.onNext(0))
+                .doOnNext(__ -> timerSubject.onNext(0))
                 .repeat()
                 .subscribe();
     }

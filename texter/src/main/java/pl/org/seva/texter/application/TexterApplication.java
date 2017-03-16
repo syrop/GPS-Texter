@@ -28,23 +28,23 @@ public class TexterApplication extends MultiDexApplication {
         GpsManager
                 .getInstance()
                 .providerEnabledListener()
-                .subscribe(ignore -> onProviderEnabled());
+                .subscribe(__ -> onProviderEnabled());
         GpsManager
                 .getInstance()
                 .providerDisabledListener()
-                .subscribe(ignore -> onProviderDisabled());
+                .subscribe(__ -> onProviderDisabled());
     }
 
     private void addActivityRecognitionListeners() {
         ActivityRecognitionManager
                 .getInstance()
                 .stationaryListener()
-                .subscribe(ignore -> onDeviceStationary());
+                .subscribe(__ -> onDeviceStationary());
 
         ActivityRecognitionManager
                 .getInstance()
                 .movingListener()
-                .subscribe(ignore -> onDeviceMoving());
+                .subscribe(__ -> onDeviceMoving());
     }
 
     private void onDeviceStationary() {

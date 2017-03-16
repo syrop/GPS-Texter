@@ -91,18 +91,18 @@ public class StatsFragment extends Fragment implements
 
         showStats();
         composite.addAll(
-                TimerManager.getInstance().timerListener().subscribe(ignore -> onTimer()),
-                SmsManager.getInstance().smsSendingListener().subscribe(ignore -> onSendingSms()),
-                GpsManager.getInstance().distanceChangedListener().subscribe(ignore -> onDistanceChanged()),
-                GpsManager.getInstance().homeChangedListener().subscribe(ignore -> onHomeChanged()),
+                TimerManager.getInstance().timerListener().subscribe(__ -> onTimer()),
+                SmsManager.getInstance().smsSendingListener().subscribe(__ -> onSendingSms()),
+                GpsManager.getInstance().distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                GpsManager.getInstance().homeChangedListener().subscribe(__ -> onHomeChanged()),
                 ActivityRecognitionManager
                     .getInstance()
                     .stationaryListener()
-                    .subscribe(ignore -> deviceIsStationary()),
+                    .subscribe(__ -> deviceIsStationary()),
                 ActivityRecognitionManager
                     .getInstance()
                     .movingListener()
-                    .subscribe(ignore -> deviceIsMoving()));
+                    .subscribe(__ -> deviceIsMoving()));
 
         if (ContextCompat.checkSelfPermission(
                 getActivity(),
@@ -112,7 +112,7 @@ public class StatsFragment extends Fragment implements
                     .getInstance()
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                    .subscribe(ignore -> onLocationPermissionGranted());
+                    .subscribe(__ -> onLocationPermissionGranted());
         }
 
         return binding.getRoot();

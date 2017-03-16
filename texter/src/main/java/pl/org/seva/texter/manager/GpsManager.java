@@ -371,8 +371,8 @@ public class GpsManager implements
                 .setSmallestDisplacement(MIN_DISTANCE);
 
         //noinspection MissingPermission
-        LocationServices.FusedLocationApi.
-                requestLocationUpdates(googleApiClient, locationRequest, this);
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(googleApiClient, locationRequest, this);
         callProviderListener();
     }
 

@@ -112,7 +112,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
             toastShown = true;
         }
         locationChangedSubscription = GpsManager.getInstance().locationChangedListener().subscribe(
-                ignore -> onLocationChanged());
+                __ -> onLocationChanged());
 
         if (!locationPermitted) {
             useCurrentButton.setEnabled(false);
@@ -125,7 +125,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 .getInstance()
                 .permissionGrantedListener()
                 .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                .subscribe(ignore -> onLocationPermissionGranted());
+                .subscribe(__ -> onLocationPermissionGranted());
     }
 
     @Override

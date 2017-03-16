@@ -104,7 +104,7 @@ public class SettingsActivity extends AppCompatActivity
                 .getInstance()
                 .permissionDeniedListener()
                 .filter(permission -> permission.equals(Manifest.permission.READ_CONTACTS))
-                .subscribe(ignore -> onShowContactsPermissionDenied());
+                .subscribe(__ -> onShowContactsPermissionDenied());
     }
 
     @Override

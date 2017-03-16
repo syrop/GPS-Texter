@@ -47,7 +47,7 @@ public class TexterService extends Service {
         super.onStartCommand(intent, flags, startId);
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
-        // use System.currentTimeMillis() to have a unique ID for the pending intent
+        // Use System.currentTimeMillis() to have a unique ID for the pending intent.
         PendingIntent pIntent = PendingIntent.getActivity(
                 this,
                 (int) System.currentTimeMillis(),
@@ -82,7 +82,7 @@ public class TexterService extends Service {
         distanceSubscription = GpsManager
                 .getInstance()
                 .distanceChangedListener().subscribe(
-                ignore -> SmsController.getInstance().onDistanceChanged());
+                __ -> SmsController.getInstance().onDistanceChanged());
     }
 
     private void removeDistanceSubscription() {

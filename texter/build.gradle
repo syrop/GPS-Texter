@@ -63,9 +63,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile "com.android.support:appcompat-v7:25.2.0"
+    compile 'com.android.support:support-v13:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile "com.android.support:appcompat-v7:25.3.0"
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'io.reactivex.rxjava2:rxjava:2.0.6'

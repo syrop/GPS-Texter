@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                     .getInstance()
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                    .subscribe(ignore -> onLocationPermissionGranted());
+                    .subscribe(__ -> onLocationPermissionGranted());
         }
         else {
             GpsManager.getInstance().callProviderListener();
