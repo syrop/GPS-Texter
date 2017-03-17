@@ -29,9 +29,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 import io.reactivex.Observable;
@@ -60,8 +58,6 @@ public class SmsManager {
 
 	private final android.telephony.SmsManager smsManager;
 
-    private final List<BroadcastReceiver> broadcastReceivers = new ArrayList<>();
-
     private final PublishSubject<Object> smsSendingSubject;
     private final PublishSubject<Object> smsSentSubject;
 
@@ -78,13 +74,6 @@ public class SmsManager {
             }
         }
         return instance;
-    }
-
-    public static void shutdown() {
-        instance.unregisterReceivers();
-        synchronized (SmsManager.class) {
-            instance = null;
-        }
     }
 
     private SmsManager() {
@@ -122,42 +111,19 @@ public class SmsManager {
     }
 
     private void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
-        synchronized (broadcastReceivers) {
-            Context context = weakContext.get();
-            if (context != null) {
-                context.registerReceiver(receiver, filter);
-            }
-            broadcastReceivers.add(receiver);
+        Context context = weakContext.get();
+        if (context != null) {
+            context.registerReceiver(receiver, filter);
         }
     }
 
     private void unregisterReceiver(BroadcastReceiver receiver) {
-        synchronized (broadcastReceivers) {
-            Context context = weakContext.get();
-            if (context != null) {
-                context.unregisterReceiver(receiver);
-            }
-            broadcastReceivers.remove(receiver);
+        Context context = weakContext.get();
+        if (context != null) {
+            context.unregisterReceiver(receiver);
         }
     }
 
-    private void unregisterReceivers() {
-        synchronized (broadcastReceivers) {
-            if (broadcastReceivers.isEmpty()) {
-                return;
-            }
-            Context context = weakContext.get();
-            if (context != null) {
-                //noinspection Convert2streamapi
-                for (BroadcastReceiver receiver : broadcastReceivers) {
-                    context.unregisterReceiver(receiver);
-                }
-            }
-            broadcastReceivers.clear();
-        }
-
-    }
-	
 	private void registerBroadcastReceiver(String id) {
         // When the SMS has been sent.
         registerReceiver(new BroadcastReceiver()

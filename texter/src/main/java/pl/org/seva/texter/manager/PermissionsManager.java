@@ -52,12 +52,6 @@ public class PermissionsManager {
         return instance;
     }
 
-    public static void shutdown() {
-        synchronized (PermissionsManager.class) {
-            instance = null;
-        }
-    }
-
     public Observable<String> permissionGrantedListener() {
         return permissionGrantedSubject.hide();
     }

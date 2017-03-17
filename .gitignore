@@ -4,7 +4,6 @@
 build/
 local.properties
 captures/
-java_pid3835.hprof
 projectFilesBackup/
 texter/.externalNativeBuild/
 texter/texter-release.apk

@@ -61,10 +61,8 @@ import pl.org.seva.texter.fragment.StatsFragment;
 import pl.org.seva.texter.fragment.NavigationFragment;
 import pl.org.seva.texter.layout.SlidingTabLayout;
 import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.HistoryManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
-import pl.org.seva.texter.manager.ZoneManager;
 import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -302,12 +300,6 @@ public class MainActivity extends AppCompatActivity {
             // Condition is false when activity has been launched from a notification.
             if (shuttingDown) {
                 stopService();
-                HistoryManager.shutdown();
-                GpsManager.shutdown(this);
-                PermissionsManager.shutdown();
-                SmsManager.shutdown();
-                TimerManager.shutdown();
-                ZoneManager.shutdown();
             }
         }
         super.onDestroy();

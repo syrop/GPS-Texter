@@ -57,7 +57,7 @@ public class StatsFragment extends Fragment implements
     private TextView speedTextView;
     private Button sendNowButton;
 
-    private CompositeDisposable composite = new CompositeDisposable();
+    private final CompositeDisposable composite = new CompositeDisposable();
 
     private double distance;
     private double speed;

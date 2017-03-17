@@ -112,16 +112,6 @@ public class GpsManager implements
         return instance;
     }
 
-    public static void shutdown(Context context) {
-        synchronized (GpsManager.class) {
-            if (instance != null) {
-                instance.instanceShutdown(context);
-                instance = null;
-            }
-        }
-        ActivityRecognitionManager.shutdown();
-    }
-
     String getLocationUrl() {
         if (location == null) {
             return "";
@@ -150,18 +140,6 @@ public class GpsManager implements
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
             googleApiClient.connect();
-        }
-    }
-
-    private void instanceShutdown(Context context) {
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        if (googleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-            googleApiClient.disconnect();
         }
     }
 

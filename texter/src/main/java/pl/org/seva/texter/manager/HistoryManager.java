@@ -45,12 +45,6 @@ public class HistoryManager {
         return instance;
     }
 
-    public static void shutdown() {
-        synchronized (HistoryManager.class) {
-            instance = null;
-        }
-    }
-
     public List<LocationModel> getList() {
         return list;
     }

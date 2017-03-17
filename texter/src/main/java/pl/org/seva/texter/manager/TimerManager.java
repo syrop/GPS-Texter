@@ -48,17 +48,6 @@ public class TimerManager {
         return instance;
     }
 
-    public static void shutdown() {
-        if (instance != null) {
-            instance.instanceShutdown();
-            instance = null;
-        }
-    }
-
-    private void instanceShutdown() {
-        timerSubscription.dispose();
-    }
-
     private void createTimerSubscription() {
         timerSubscription.dispose();
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())

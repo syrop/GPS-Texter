@@ -22,9 +22,6 @@ import android.util.SparseArray;
 import pl.org.seva.texter.model.ZoneModel;
 import pl.org.seva.texter.utils.Constants;
 
-/**
- * Created by wiktor on 5/26/16.
- */
 public class ZoneManager {
 
     private static ZoneManager instance;
@@ -40,12 +37,6 @@ public class ZoneManager {
             }
         }
         return instance;
-    }
-
-    public static void shutdown() {
-        synchronized (ZoneManager.class) {
-            instance = null;
-        }
     }
 
     private ZoneManager() {

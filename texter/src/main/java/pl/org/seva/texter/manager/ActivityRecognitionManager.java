@@ -29,7 +29,6 @@ public class ActivityRecognitionManager implements
     private boolean initialized;
     private GoogleApiClient googleApiClient;
     private WeakReference<Context> weakContext;
-    private PendingIntent pendingIntent;
 
     private static ActivityRecognitionManager instance;
 
@@ -42,22 +41,6 @@ public class ActivityRecognitionManager implements
             }
         }
         return instance;
-    }
-
-    static void shutdown() {
-        synchronized (ActivityRecognitionManager.class) {
-            if (instance != null) {
-                instance.instanceShutdown();
-                instance = null;
-            }
-        }
-    }
-
-    private void instanceShutdown() {
-        if (googleApiClient != null) {
-            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, pendingIntent);
-            googleApiClient.disconnect();
-        }
     }
 
     void init(Context context) {
@@ -84,7 +67,7 @@ public class ActivityRecognitionManager implements
             return;
         }
         Intent intent = new Intent(context, ActivityRecognitionIntentService.class);
-        pendingIntent = PendingIntent.getService(
+        PendingIntent pendingIntent = PendingIntent.getService(
                 context,
                 0,
                 intent,

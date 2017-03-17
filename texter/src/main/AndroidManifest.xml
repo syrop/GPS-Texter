@@ -17,7 +17,8 @@
         android:label="@string/app_name"
         android:name=".application.TexterApplication"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:extractNativeLibs="false">
 
         <meta-data
         android:name="com.google.android.geo.API_KEY"
