@@ -52,7 +52,7 @@ import java.util.Locale;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.application.TexterApplication;
-import pl.org.seva.texter.controller.SmsController;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
 import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
@@ -66,6 +66,10 @@ import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private SmsManager smsManager;
+    private GpsManager gpsManager;
+    private PermissionsManager permissionsManager;
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -96,6 +100,14 @@ public class MainActivity extends AppCompatActivity {
         if (action == null) {
             finish();
         }
+
+        Graph graph = ((TexterApplication) getApplication()).getGraph();
+        TimerManager timerManager = graph.timerManager();
+        smsManager = graph.smsManager();
+        gpsManager = graph.gpsManager();
+        permissionsManager = graph.permissionsManager();
+        graph.activityRecognitionManager().init(this);
+
         // Set up colors depending on SDK version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -118,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
 
-        SmsController.getInstance().init(getPackageManager().
+        graph.smsController().init(getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
         Toolbar toolbar = binding.toolBar.toolBar;
@@ -152,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
             tabs.setViewPager(pager);
         }
         else if (savedInstanceState == null && action != null && action.equals(Intent.ACTION_MAIN)) {
-            TimerManager.getInstance().reset();
+            timerManager.reset();
         }
 
-        SmsManager.getInstance().init(this, getString(R.string.speed_unit));
+        smsManager.init(this, getString(R.string.speed_unit));
 
         int googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (googlePlay != ConnectionResult.SUCCESS) {
@@ -169,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * All actions that require permissions must be placed here. The methods performs them or
+     * All actions that require permissions must be placed here. The method performs them or
      * asks for permissions if they haven't been granted already.
      *
      * @return true if all permissions had been granted before calling the method
@@ -179,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         if (!initGps()) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if (SmsManager.getInstance().isTextingEnabled() && ContextCompat.checkSelfPermission(
+        if (smsManager.isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -199,17 +211,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean initGps() {
-        boolean permissionGranted = GpsManager.getInstance().init(this);
+        boolean permissionGranted = gpsManager.init(this);
 
         if (!permissionGranted) {
-            PermissionsManager
-                    .getInstance()
+            permissionsManager
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                     .subscribe(__ -> onLocationPermissionGranted());
         }
         else {
-            GpsManager.getInstance().callProviderListener();
+            gpsManager.callProviderListener();
         }
 
         return permissionGranted;
@@ -286,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
         if (requestCode == PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
-            PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
+            permissionsManager.onRequestPermissionsResult(permissions, grantResults);
         }
     }
 
@@ -349,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onLocationPermissionGranted() {
         initGps();  // listeners already added
-        GpsManager.getInstance().callProviderListener();
+        gpsManager.callProviderListener();
         if (showSettingsWhenPermissionGranted) {
             startActivity(new Intent(this, SettingsActivity.class));
         }

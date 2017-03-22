@@ -32,6 +32,9 @@ import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.R;
@@ -39,9 +42,16 @@ import pl.org.seva.texter.activity.SettingsActivity;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.utils.StringUtils;
 
+@Singleton
 public class SmsManager {
 
-	private static SmsManager instance;
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    protected HistoryManager historyManager;
+
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    protected LastLocationManager lastLocationManager;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
@@ -65,18 +75,7 @@ public class SmsManager {
 	
 	private boolean initialized;
 
-    public static SmsManager getInstance() {
-        if (instance == null ) {
-            synchronized (SmsManager.class) {
-                if (instance == null) {
-                    instance = new SmsManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private SmsManager() {
+    @Inject public SmsManager() {
 		smsManager = android.telephony.SmsManager.getDefault();
         smsSendingSubject = PublishSubject.create();
         smsSentSubject = PublishSubject.create();
@@ -146,7 +145,7 @@ public class SmsManager {
                     	}
                         Toast.makeText(arg0, sentBuilder.toString(), length).show();
                         if (location != null) {
-                            HistoryManager.getInstance().add(location);
+                            historyManager.add(location);
                             smsSentSubject.onNext(0);
                         }
                         break;
@@ -209,7 +208,7 @@ public class SmsManager {
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
-            smsBuilder.append(" ").append(GpsManager.getInstance().getLocationUrl());
+            smsBuilder.append(" ").append(lastLocationManager.getLocationUrl());
         }
         @SuppressLint("DefaultLocale")
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";

@@ -8,9 +8,12 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 
 public class ActivityRecognitionIntentService extends IntentService {
+
+    private ActivityRecognitionManager activityRecognitionManager;
 
     private final Handler handler;
 
@@ -21,6 +24,7 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        activityRecognitionManager = ((TexterApplication) getApplication()).getGraph().activityRecognitionManager();
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
@@ -33,10 +37,10 @@ public class ActivityRecognitionIntentService extends IntentService {
     }
 
     private void onDeviceStationary() {
-        handler.post(() -> ActivityRecognitionManager.getInstance().stationary());
+        handler.post(() -> activityRecognitionManager.stationary());
     }
 
     private void onDeviceMoving() {
-        handler.post(() -> ActivityRecognitionManager.getInstance().moving());
+        handler.post(() -> activityRecognitionManager.moving());
     }
 }

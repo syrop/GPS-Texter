@@ -23,33 +23,24 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
+@Singleton
 public class PermissionsManager {
 
     public static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0;
     public static final int PERMISSION_READ_CONTACTS_REQUEST = 1;
-
-    private static PermissionsManager instance;
 
     private final PublishSubject<String> permissionGrantedSubject = PublishSubject.create();
     private final PublishSubject<String> permissionDeniedSubject = PublishSubject.create();
 
     private final List<String> rationalesShown = new ArrayList<>();
 
-    private PermissionsManager() {
-    }
-
-    public static PermissionsManager getInstance() {
-        if (instance == null ) {
-            synchronized (PermissionsManager.class) {
-                if (instance == null) {
-                    instance = new PermissionsManager();
-                }
-            }
-        }
-        return instance;
+    @Inject PermissionsManager() {
     }
 
     public Observable<String> permissionGrantedListener() {

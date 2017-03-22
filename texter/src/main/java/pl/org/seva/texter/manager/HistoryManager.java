@@ -20,29 +20,21 @@ package pl.org.seva.texter.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import pl.org.seva.texter.model.LocationModel;
 
+@Singleton
 public class HistoryManager {
-    private static HistoryManager instance;
 
     private boolean mock = true;
 
     private final List<LocationModel> list;
 
-    private HistoryManager() {
+    @Inject public HistoryManager() {
         list = new ArrayList<>();
         list.add(new LocationModel());
-    }
-
-    public static HistoryManager getInstance() {
-        if (instance == null ) {
-            synchronized (HistoryManager.class) {
-                if (instance == null) {
-                    instance = new HistoryManager();
-                }
-            }
-        }
-        return instance;
     }
 
     public List<LocationModel> getList() {

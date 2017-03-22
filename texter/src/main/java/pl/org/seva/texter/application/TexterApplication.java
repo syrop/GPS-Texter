@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import pl.org.seva.texter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.dagger.DaggerGraph;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
@@ -17,32 +17,31 @@ public class TexterApplication extends MultiDexApplication {
     private boolean isDeviceStationary;
     private boolean isProviderEnabled;
 
+    private Graph graph;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        graph = DaggerGraph.create();
         addGpsProviderListeners();
         addActivityRecognitionListeners();
     }
 
     private void addGpsProviderListeners() {
-        GpsManager
-                .getInstance()
+        graph.gpsManager()
                 .providerEnabledListener()
                 .subscribe(__ -> onProviderEnabled());
-        GpsManager
-                .getInstance()
+        graph.gpsManager()
                 .providerDisabledListener()
                 .subscribe(__ -> onProviderDisabled());
     }
 
     private void addActivityRecognitionListeners() {
-        ActivityRecognitionManager
-                .getInstance()
+        graph.activityRecognitionManager()
                 .stationaryListener()
                 .subscribe(__ -> onDeviceStationary());
 
-        ActivityRecognitionManager
-                .getInstance()
+        graph.activityRecognitionManager()
                 .movingListener()
                 .subscribe(__ -> onDeviceMoving());
     }
@@ -87,5 +86,9 @@ public class TexterApplication extends MultiDexApplication {
         }
         stopService(new Intent(getBaseContext(), TexterService.class));
         serviceRunning = false;
+    }
+
+    public Graph getGraph() {
+        return graph;
     }
 }

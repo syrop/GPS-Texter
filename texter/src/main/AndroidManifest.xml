@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:name=".application.TexterApplication"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         android:extractNativeLibs="false">
 
         <meta-data

@@ -37,9 +37,12 @@ import java.util.Calendar;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.TimerManager;
@@ -47,6 +50,13 @@ import pl.org.seva.texter.model.LocationModel;
 
 public class StatsFragment extends Fragment implements
         View.OnClickListener {
+
+    private GpsManager gpsManager;
+    private ActivityRecognitionManager activityRecognitionManager;
+    private TimerManager timerManager;
+    private SmsManager smsManager;
+    private PermissionsManager permissionsManager;
+    private LastLocationManager lastLocationManager;
 
     private static String homeString;
     private static String hourString;
@@ -71,8 +81,8 @@ public class StatsFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = GpsManager.getInstance().getDistance();
-        speed = GpsManager.getInstance().getSpeed();
+        distance = lastLocationManager.getDistance();
+        speed = lastLocationManager.getSpeed();
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
@@ -85,22 +95,20 @@ public class StatsFragment extends Fragment implements
         sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
         sendNowButton.setEnabled(
-                SmsManager.getInstance().isTextingEnabled() &&
+                smsManager.isTextingEnabled() &&
                 distance != 0.0 &&
-                distance != SmsManager.getInstance().getLastSentDistance());
+                distance != smsManager.getLastSentDistance());
 
         showStats();
         composite.addAll(
-                TimerManager.getInstance().timerListener().subscribe(__ -> onTimer()),
-                SmsManager.getInstance().smsSendingListener().subscribe(__ -> onSendingSms()),
-                GpsManager.getInstance().distanceChangedListener().subscribe(__ -> onDistanceChanged()),
-                GpsManager.getInstance().homeChangedListener().subscribe(__ -> onHomeChanged()),
-                ActivityRecognitionManager
-                    .getInstance()
+                timerManager.timerListener().subscribe(__ -> onTimer()),
+                smsManager.smsSendingListener().subscribe(__ -> onSendingSms()),
+                gpsManager.distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()),
+                activityRecognitionManager
                     .stationaryListener()
                     .subscribe(__ -> deviceIsStationary()),
-                ActivityRecognitionManager
-                    .getInstance()
+                activityRecognitionManager
                     .movingListener()
                     .subscribe(__ -> deviceIsMoving()));
 
@@ -108,8 +116,7 @@ public class StatsFragment extends Fragment implements
                 getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-            PermissionsManager
-                    .getInstance()
+            permissionsManager
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                     .subscribe(__ -> onLocationPermissionGranted());
@@ -131,6 +138,7 @@ public class StatsFragment extends Fragment implements
         super.onAttach(context);
         if (context instanceof  Activity) {
             this.activity = (Activity) context;
+            initDependencies();
         }
     }
 
@@ -142,7 +150,18 @@ public class StatsFragment extends Fragment implements
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             this.activity = activity;
+            initDependencies();
         }
+    }
+
+    private void initDependencies() {
+        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
+        gpsManager = graph.gpsManager();
+        activityRecognitionManager = graph.activityRecognitionManager();
+        timerManager = graph.timerManager();
+        smsManager = graph.smsManager();
+        permissionsManager = graph.permissionsManager();
+        lastLocationManager = graph.lastLocationManager();
     }
 
     private void showStats() {
@@ -153,7 +172,7 @@ public class StatsFragment extends Fragment implements
         }
         distanceTextView.setText(distanceStr);
         int seconds = (int) (System.currentTimeMillis() -
-                TimerManager.getInstance().getResetTime()) / 1000;
+                timerManager.getResetTime()) / 1000;
         int minutes = seconds / 60;
         seconds = seconds % 60;
         int hours = minutes / 60;
@@ -209,9 +228,9 @@ public class StatsFragment extends Fragment implements
 
     private void onDistanceChanged() {
         boolean resetValues =
-                System.currentTimeMillis() - TimerManager.getInstance().getResetTime() > 3 * 3600 * 1000;
-        if (distance != SmsManager.getInstance().getLastSentDistance()) {
-            sendNowButton.setEnabled(SmsManager.getInstance().isTextingEnabled());
+                System.currentTimeMillis() - timerManager.getResetTime() > 3 * 3600 * 1000;
+        if (distance != smsManager.getLastSentDistance()) {
+            sendNowButton.setEnabled(smsManager.isTextingEnabled());
         }
 
         if (resetValues) {  // reset the values if three hours have passed
@@ -219,8 +238,8 @@ public class StatsFragment extends Fragment implements
             this.distance = 0.0;
         }
         else {
-            this.distance = GpsManager.getInstance().getDistance();
-            this.speed = GpsManager.getInstance().getSpeed();
+            this.distance = lastLocationManager.getDistance();
+            this.speed = lastLocationManager.getSpeed();
         }
         showStats();
     }
@@ -241,7 +260,7 @@ public class StatsFragment extends Fragment implements
         if (v == sendNowButton) {
             sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(TimerManager.getInstance().getResetTime());
+            calendar.setTimeInMillis(timerManager.getResetTime());
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
             minutes += calendar.get(Calendar.MINUTE);
             LocationModel location = new LocationModel();
@@ -249,7 +268,7 @@ public class StatsFragment extends Fragment implements
             location.setDirection(0);
             location.setTime(minutes);
             location.setSpeed(speed);
-            SmsManager.getInstance().send(location);
+            smsManager.send(location);
         }
     }
 
@@ -258,11 +277,11 @@ public class StatsFragment extends Fragment implements
     }
 
     private void onHomeChanged() {
-        distance = GpsManager.getInstance().getDistance();
+        distance = lastLocationManager.getDistance();
         showStats();
     }
 
     private void onLocationPermissionGranted() {
-        sendNowButton.setEnabled(SmsManager.getInstance().isTextingEnabled());
+        sendNowButton.setEnabled(smsManager.isTextingEnabled());
     }
 }

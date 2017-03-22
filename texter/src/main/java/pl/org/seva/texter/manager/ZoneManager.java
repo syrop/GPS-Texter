@@ -19,28 +19,18 @@ package pl.org.seva.texter.manager;
 
 import android.util.SparseArray;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import pl.org.seva.texter.model.ZoneModel;
 import pl.org.seva.texter.utils.Constants;
 
+@Singleton
 public class ZoneManager {
 
-    private static ZoneManager instance;
+    private final SparseArray<ZoneModel> zones = new SparseArray<>();
 
-    private final SparseArray<ZoneModel> zones;
-
-    public static ZoneManager getInstance() {
-        if (instance == null ) {
-            synchronized (ZoneManager.class) {
-                if (instance == null) {
-                    instance = new ZoneManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private ZoneManager() {
-        zones = new SparseArray<>();
+    @Inject ZoneManager() {
     }
 
     // Needs to be called from a synchronized block.

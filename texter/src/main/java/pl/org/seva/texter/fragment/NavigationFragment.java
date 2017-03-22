@@ -19,9 +19,12 @@ package pl.org.seva.texter.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,11 +44,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 
 public class NavigationFragment extends Fragment {
+
+    private GpsManager gpsManager;
+    private PermissionsManager permissionsManager;
+    private LastLocationManager lastLocationManager;
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -67,7 +77,7 @@ public class NavigationFragment extends Fragment {
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        show(GpsManager.getInstance().getDistance());
+        show(lastLocationManager.getDistance());
 
         if (savedInstanceState != null) {
             animateCamera = false;
@@ -83,8 +93,8 @@ public class NavigationFragment extends Fragment {
         super.onResume();
 
         composite.addAll(
-                GpsManager.getInstance().distanceChangedListener().subscribe(__ -> onDistanceChanged()),
-                GpsManager.getInstance().homeChangedListener().subscribe(__ -> onHomeChanged()));
+                gpsManager.distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -102,13 +112,12 @@ public class NavigationFragment extends Fragment {
                 map.setMyLocationEnabled(true);
             }
             else {
-                PermissionsManager
-                        .getInstance()
+                permissionsManager
                         .permissionGrantedListener()
                         .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                         .subscribe(__ -> onLocationPermissionGranted());
             }
-            LatLng homeLatLng = GpsManager.getInstance().getHomeLatLng();
+            LatLng homeLatLng = gpsManager.getHomeLatLng();
             updateHomeLocation(homeLatLng);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(homeLatLng).zoom(12).build();
@@ -120,6 +129,32 @@ public class NavigationFragment extends Fragment {
             }
             animateCamera = false;
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            initDependencies((Activity) context);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    // http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            initDependencies(activity);
+        }
+    }
+
+    private void initDependencies(Activity activity) {
+        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
+        gpsManager = graph.gpsManager();
+        permissionsManager = graph.permissionsManager();
+        lastLocationManager = graph.lastLocationManager();
     }
 
     @Override
@@ -162,11 +197,11 @@ public class NavigationFragment extends Fragment {
     }
 
     private void onDistanceChanged() {
-        show(GpsManager.getInstance().getDistance());
+        show(lastLocationManager.getDistance());
     }
 
     private void onHomeChanged() {
-        updateHomeLocation(GpsManager.getInstance().getHomeLatLng());
+        updateHomeLocation(gpsManager.getHomeLatLng());
     }
 
     private void onLocationPermissionGranted() {

@@ -19,33 +19,24 @@ package pl.org.seva.texter.manager;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
+@Singleton
 public class TimerManager {
-
-    private static TimerManager instance;
 
     private long resetTime = System.currentTimeMillis();
     private Disposable timerSubscription = Disposables.empty();
     private final PublishSubject<Object> timerSubject = PublishSubject.create();
 
-    private TimerManager() {
+    @Inject public TimerManager() {
         createTimerSubscription();
-    }
-
-    public static TimerManager getInstance() {
-        if (instance == null) {
-            synchronized (TimerManager.class) {
-                if (instance == null) {
-                    instance = new TimerManager();
-                }
-            }
-        }
-        return instance;
     }
 
     private void createTimerSubscription() {

@@ -44,6 +44,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.maps.model.LatLng;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.activity.SettingsActivity;
@@ -51,16 +54,24 @@ import pl.org.seva.texter.preference.HomeLocationPreference;
 import pl.org.seva.texter.utils.Calculator;
 import pl.org.seva.texter.utils.Constants;
 
+@Singleton
 public class GpsManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected LastLocationManager lastLocationManager;
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected TimerManager timerManager;
+
+    @SuppressWarnings("WeakerAccess")
+    @Inject public GpsManager() {
+    }
+
     private static final String TAG = GpsManager.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
-
-    private static GpsManager instance;
 
     /** Minimal distance (in meters) that will be counted between two subsequent updates. */
     private static final float MIN_DISTANCE = 5.0f;
@@ -72,18 +83,11 @@ public class GpsManager implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    private final PublishSubject<Object> distanceSubject;
-    private final PublishSubject<Object> homeChangedSubject;
-    private final PublishSubject<Object> providerEnabledSubject;
-    private final PublishSubject<Object> providerDisabledSubject;
-    private final PublishSubject<Object> locationChangedSubject;
-
-    /** Location last received from the update. */
-    private Location location;
-    /** Last calculated distance. */
-    private double distance;
-    /** Last calculated speed. */
-    private double speed;
+    private final PublishSubject<Object> distanceSubject = PublishSubject.create();
+    private final PublishSubject<Object> homeChangedSubject = PublishSubject.create();
+    private final PublishSubject<Object> providerEnabledSubject = PublishSubject.create();
+    private final PublishSubject<Object> providerDisabledSubject = PublishSubject.create();
+    private final PublishSubject<Object> locationChangedSubject = PublishSubject.create();
 
     private boolean initialized;
     private boolean connected;
@@ -93,45 +97,12 @@ public class GpsManager implements
     private double homeLon;
     private long time;
 
-    private GpsManager() {
-        distanceSubject = PublishSubject.create();
-        homeChangedSubject = PublishSubject.create();
-        locationChangedSubject = PublishSubject.create();
-        providerEnabledSubject = PublishSubject.create();
-        providerDisabledSubject = PublishSubject.create();
-    }
-
-    public static GpsManager getInstance() {
-        if (instance == null) {
-            synchronized (GpsManager.class) {
-                if (instance == null) {
-                    instance = new GpsManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    String getLocationUrl() {
-        if (location == null) {
-            return "";
-        }
-        return "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
-    }
-
     /**
      * @return minimum time between two subsequent updates from one provider (in millis)
      */
+    @SuppressWarnings("SameReturnValue")
     private long getUpdateFrequency() {
         return Constants.LOCATION_UPDATE_FREQUENCY;
-    }
-
-    public double getDistance() {
-        return distance;
-    }
-
-    public double getSpeed() {
-        return speed;
     }
 
     private void requestLocationUpdates(Context context) {
@@ -149,12 +120,12 @@ public class GpsManager implements
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
-        if (location != null) {
-            distance = Calculator.calculateDistance(
+        if (lastLocationManager.getLocation() != null) {
+            lastLocationManager.setDistance(Calculator.calculateDistance(
                     homeLat,
                     homeLon,
-                    location.getLatitude(),
-                    location.getLongitude());
+                    lastLocationManager.getLocation().getLatitude(),
+                    lastLocationManager.getLocation().getLongitude()));
         }
         homeChangedSubject.onNext(0);
     }
@@ -195,16 +166,11 @@ public class GpsManager implements
         onHomeLocationChanged();
 
         if (granted) {
-            afterPermissionGranted(activity);
+            requestLocationUpdates(activity);
             initialized = true;
         }
 
         return granted;
-    }
-
-    private void afterPermissionGranted(Context context) {
-        requestLocationUpdates(context);
-        ActivityRecognitionManager.getInstance().init(context);
     }
 
     public Observable<Object> distanceChangedListener() {
@@ -276,46 +242,36 @@ public class GpsManager implements
         return new LatLng(getHomeLat(), getHomeLng());
     }
 
-    public LatLng getLatLng() {
-        if (location == null) {
-            return null;
-        }
-        return new LatLng(location.getLatitude(), location.getLongitude());
-    }
-
-    public boolean isLocationAvailable() {
-        return location != null;
-    }
-
     @Override
     public void onLocationChanged(Location location) {
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!GpsManager.isBetterLocation(location, this.location)) {
+        if (!GpsManager.isBetterLocation(location, lastLocationManager.getLocation())) {
             return;
         }
-        TimerManager.getInstance().reset();
+        timerManager.reset();
         long time = System.currentTimeMillis();
-        speed = calculateSpeedOrReturnZero(this.location, location, time - this.time);
-        this.location = location;
-        this.distance = calculateCurrentDistance();  // distance in kilometres
+        lastLocationManager.setSpeed(
+                calculateSpeedOrReturnZero(lastLocationManager.getLocation(), location, time - this.time));
+        lastLocationManager.setLocation(location);
+        lastLocationManager.setDistance(calculateCurrentDistance());  // distance in kilometres
         this.time = time;
         distanceSubject.onNext(0);
         locationChangedSubject.onNext(0);
     }
 
     private void updateDistance() {
-        if (location == null) {
+        if (lastLocationManager.getLocation() == null) {
             return;
         }
-        distance = calculateCurrentDistance();
+        lastLocationManager.setDistance(calculateCurrentDistance());
     }
 
     private double calculateCurrentDistance() {
         return Calculator.calculateDistance(  // distance in kilometres
-                location.getLatitude(),
-                location.getLongitude(),
+                lastLocationManager.getLocation().getLatitude(),
+                lastLocationManager.getLocation().getLongitude(),
                 getHomeLat(),
                 getHomeLng());
     }
@@ -336,9 +292,9 @@ public class GpsManager implements
     public void onConnected(@Nullable Bundle bundle) {
         connected = true;
 
-        if (location == null) {
+        if (lastLocationManager.getLocation() == null) {
             //noinspection MissingPermission
-            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            lastLocationManager.setLocation(LocationServices.FusedLocationApi.getLastLocation(googleApiClient));
         }
 
         long updateFrequency = getUpdateFrequency();

@@ -19,28 +19,34 @@ package pl.org.seva.texter.controller;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.ZoneManager;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.model.ZoneModel;
 import pl.org.seva.texter.utils.Constants;
 
+@Singleton
 public class SmsController {
 
-    private static final SmsController INSTANCE = new SmsController();
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected SmsManager smsManager;
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected ZoneManager zoneManager;
+    @Inject protected GpsManager gpsManager;
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected LastLocationManager lastLocationManager;
 
     private LocationModel lastSentLocation;
     private ZoneModel zone;
     private boolean smsInSystem;
     private boolean initialized;
 
-    private SmsController() {
-        // do nothing
-    }
-
-    public static SmsController getInstance() {
-        return INSTANCE;
+    @Inject public SmsController() {
     }
 
     public void init(boolean smsInSystem) {
@@ -55,24 +61,24 @@ public class SmsController {
         if (!smsInSystem) {
             return;
         }
-        if (!SmsManager.getInstance().isTextingEnabled()) {
+        if (!smsManager.isTextingEnabled()) {
             return;
         }
         if (this.lastSentLocation != null && this.lastSentLocation.equals(model)) {
             return;
         }
         this.lastSentLocation = model;
-        SmsManager.getInstance().send(model);
+        smsManager.send(model);
     }
 
     public synchronized void resetZones() {
-        ZoneManager.getInstance().clear();
+        zoneManager.clear();
         zone = null;
     }
 
     public void onDistanceChanged() {
-        double distance = GpsManager.getInstance().getDistance();
-        double speed = GpsManager.getInstance().getSpeed();
+        double distance = lastLocationManager.getDistance();
+        double speed = lastLocationManager.getSpeed();
 
         long time = System.currentTimeMillis();
         int direction = 0; // alternatively (int) Math.signum(this.distance - distance);
@@ -88,7 +94,7 @@ public class SmsController {
         location.setSpeed(speed);
 
         synchronized (this) {
-            ZoneModel zone = ZoneManager.getInstance().zone(distance);
+            ZoneModel zone = zoneManager.zone(distance);
             if (this.zone == null) {
                 this.zone = zone;
             }
@@ -104,7 +110,7 @@ public class SmsController {
                 location.setDirection(direction);  // calculated specifically for zone border
 
                 if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
-                        SmsManager.getInstance().getMaxSentDistance()) {
+                        smsManager.getMaxSentDistance()) {
                     sendSMS(location);
                 }
                 this.zone = zone;

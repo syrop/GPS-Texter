@@ -37,11 +37,16 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.HistoryAdapter;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
 import pl.org.seva.texter.manager.HistoryManager;
 import pl.org.seva.texter.manager.SmsManager;
 
 public class HistoryFragment extends Fragment {
+
+    private HistoryManager historyManager;
+    private SmsManager smsManager;
 
     private HistoryAdapter adapter;
     private RecyclerView historyRecyclerView;
@@ -58,6 +63,9 @@ public class HistoryFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        if (context instanceof  Activity) {
+            initDependencies((Activity) context);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -68,7 +76,14 @@ public class HistoryFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             this.context = activity;
+            initDependencies(activity);
         }
+    }
+
+    private void  initDependencies(Activity activity) {
+        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
+        historyManager = graph.historyManager();
+        smsManager = graph.smsManager();
     }
 
     @Override
@@ -81,7 +96,7 @@ public class HistoryFragment extends Fragment {
         historyRecyclerView = binding.listView;
         historyRecyclerView.setHasFixedSize(true);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HistoryAdapter(getActivity(), HistoryManager.getInstance().getList());
+        adapter = new HistoryAdapter(getActivity(), historyManager.getList());
         historyRecyclerView.setAdapter(adapter);
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
@@ -100,7 +115,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        smsSentSubscription = SmsManager.getInstance().smsSentListener().subscribe(
+        smsSentSubscription = smsManager.smsSentListener().subscribe(
                 __ -> onSMsSent());
     }
 

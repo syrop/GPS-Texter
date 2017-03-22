@@ -19,7 +19,9 @@ package pl.org.seva.texter.activity;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.TitledPagerAdapter;
+import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.controller.SmsController;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.fragment.SettingsFragment;
 import pl.org.seva.texter.manager.GpsManager;
@@ -47,6 +49,10 @@ import java.util.List;
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private PermissionsManager permissionsManager;
+    private GpsManager gpsManager;
+    private SmsController smsController;
+
     /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
 
@@ -68,6 +74,12 @@ public class SettingsActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        Graph graph = ((TexterApplication) getApplication()).getGraph();
+        permissionsManager = graph.permissionsManager();
+        gpsManager = graph.gpsManager();
+        smsController = graph.smsController();
+
         ActivitySettingsBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_settings);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -100,8 +112,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void setReadContactsPermissionListeners() {
-        PermissionsManager
-                .getInstance()
+        permissionsManager
                 .permissionDeniedListener()
                 .filter(permission -> permission.equals(Manifest.permission.READ_CONTACTS))
                 .subscribe(__ -> onShowContactsPermissionDenied());
@@ -166,8 +177,8 @@ public class SettingsActivity extends AppCompatActivity
                 }
                 break;
             case HOME_LOCATION:
-                GpsManager.getInstance().onHomeLocationChanged();
-                SmsController.getInstance().resetZones();
+                gpsManager.onHomeLocationChanged();
+                smsController.resetZones();
                 break;
         }
     }
@@ -178,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
         if (requestCode == PermissionsManager.PERMISSION_READ_CONTACTS_REQUEST) {
-            PermissionsManager.getInstance().onRequestPermissionsResult(permissions, grantResults);
+            permissionsManager.onRequestPermissionsResult(permissions, grantResults);
         }
     }
 
@@ -186,13 +197,13 @@ public class SettingsActivity extends AppCompatActivity
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.READ_CONTACTS) &&
-                PermissionsManager.getInstance().
-                        isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
+                permissionsManager
+                        .isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.perm_contacts_rationale).
                     setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        PermissionsManager.getInstance().
-                                onRationaleShown(Manifest.permission.READ_CONTACTS);
+                        permissionsManager
+                                .onRationaleShown(Manifest.permission.READ_CONTACTS);
                         processPermissions();
                     });
             builder.create().show();

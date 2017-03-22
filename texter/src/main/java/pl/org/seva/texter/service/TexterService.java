@@ -28,10 +28,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.activity.MainActivity;
+import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.manager.GpsManager;
 
 public class TexterService extends Service {
+
+    private GpsManager gpsManager;
+    private SmsController smsController;
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
 
@@ -45,6 +49,8 @@ public class TexterService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        gpsManager = ((TexterApplication) getApplication()).getGraph().gpsManager();
+        smsController = ((TexterApplication) getApplication()).getGraph().smsController();
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
         // Use System.currentTimeMillis() to have a unique ID for the pending intent.
@@ -64,7 +70,7 @@ public class TexterService extends Service {
                 .setAutoCancel(false)
                 .build();
         createDistanceSubscription();
-        GpsManager.getInstance().resumeUpdates(this);
+        gpsManager.resumeUpdates(this);
 
         startForeground(ONGOING_NOTIFICATION_ID, n);
 
@@ -74,15 +80,14 @@ public class TexterService extends Service {
     @Override
     public void onDestroy() {
         removeDistanceSubscription();
-        GpsManager.getInstance().pauseUpdates();
+        gpsManager.pauseUpdates();
         super.onDestroy();
     }
 
     private void createDistanceSubscription() {
-        distanceSubscription = GpsManager
-                .getInstance()
+        distanceSubscription = gpsManager
                 .distanceChangedListener().subscribe(
-                __ -> SmsController.getInstance().onDistanceChanged());
+                __ -> smsController.onDistanceChanged());
     }
 
     private void removeDistanceSubscription() {

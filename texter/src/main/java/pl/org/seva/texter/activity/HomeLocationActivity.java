@@ -41,17 +41,32 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 
 public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
+
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject
+    protected GpsManager gpsManager;
+
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject
+    protected LastLocationManager lastLocationManager;
+
+    @SuppressWarnings("CanBeFinal")
+    @Inject
+    PermissionsManager permissionsManager;
 
     private static final String STATE = "STATE";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
@@ -102,7 +117,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED;
         boolean locationAvailable = locationPermitted &&
-                GpsManager.getInstance().isLocationAvailable();
+                lastLocationManager.isLocationAvailable();
         useCurrentButton.setEnabled(locationAvailable);
         if (!toastShown) {
             Toast.makeText(
@@ -111,7 +126,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                     Toast.LENGTH_SHORT).show();
             toastShown = true;
         }
-        locationChangedSubscription = GpsManager.getInstance().locationChangedListener().subscribe(
+        locationChangedSubscription = gpsManager.locationChangedListener().subscribe(
                 __ -> onLocationChanged());
 
         if (!locationPermitted) {
@@ -121,8 +136,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
     }
 
     private void setLocationPermissionListeners() {
-        PermissionsManager
-                .getInstance()
+        permissionsManager
                 .permissionGrantedListener()
                 .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                 .subscribe(__ -> onLocationPermissionGranted());
@@ -175,7 +189,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         persistString(toString());
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
-        GpsManager.getInstance().onHomeLocationChanged();
+        gpsManager.onHomeLocationChanged();
 
         if (mapFragment != null) {
             // Without enclosing in the if, throws:
@@ -273,9 +287,9 @@ public class HomeLocationActivity extends AppCompatActivity implements
         zoom = map.getCameraPosition().zoom;
     }
 
-    public void onUseCurrentLocationButtonClicked(View view) {
+    public void onUseCurrentLocationButtonClicked(@SuppressWarnings("UnusedParameters") View view) {
         useCurrentButton.setEnabled(false);
-        LatLng loc = GpsManager.getInstance().getLatLng();
+        LatLng loc = lastLocationManager.getLatLng();
         if (loc != null) {
             lat = loc.latitude;
             lon = loc.longitude;

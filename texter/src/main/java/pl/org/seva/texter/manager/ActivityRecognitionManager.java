@@ -13,10 +13,14 @@ import com.google.android.gms.location.ActivityRecognition;
 
 import java.lang.ref.WeakReference;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.service.ActivityRecognitionIntentService;
 
+@Singleton
 public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -30,20 +34,10 @@ public class ActivityRecognitionManager implements
     private GoogleApiClient googleApiClient;
     private WeakReference<Context> weakContext;
 
-    private static ActivityRecognitionManager instance;
-
-    public static ActivityRecognitionManager getInstance() {
-        if (instance == null) {
-            synchronized (ActivityRecognitionManager.class) {
-                if (instance == null) {
-                    instance = new ActivityRecognitionManager();
-                }
-            }
-        }
-        return instance;
+    @Inject ActivityRecognitionManager() {
     }
 
-    void init(Context context) {
+    public void init(Context context) {
         if (initialized) {
             return;
         }
