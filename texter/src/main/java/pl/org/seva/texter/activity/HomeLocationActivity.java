@@ -41,11 +41,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import javax.inject.Inject;
-
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.LastLocationManager;
@@ -56,17 +56,9 @@ public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    protected GpsManager gpsManager;
-
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    protected LastLocationManager lastLocationManager;
-
-    @SuppressWarnings("CanBeFinal")
-    @Inject
-    PermissionsManager permissionsManager;
+    private GpsManager gpsManager;
+    private LastLocationManager lastLocationManager;
+    private PermissionsManager permissionsManager;
 
     private static final String STATE = "STATE";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
@@ -101,6 +93,11 @@ public class HomeLocationActivity extends AppCompatActivity implements
             zoom = myState.zoom;
             animateCamera = false;
         }
+
+        Graph graph = ((TexterApplication) getApplication()).getGraph();
+        gpsManager = graph.gpsManager();
+        lastLocationManager = graph.lastLocationManager();
+        permissionsManager = graph.permissionsManager();
 
         String value = getPersistedString();
         lat = parseLatitude(value);
