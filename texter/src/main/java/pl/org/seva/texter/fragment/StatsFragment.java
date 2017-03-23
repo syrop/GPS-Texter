@@ -210,7 +210,7 @@ public class StatsFragment extends Fragment implements
 
     private String getSpeedStr() {
         @SuppressLint("DefaultLocale")
-        String result = String.format("%.1f", speed) + " " + activity.getString(R.string.speed_unit);
+        String result = String.format("%.1f", stationary ? 0.0 : speed) + " " + activity.getString(R.string.speed_unit);
         if (result.contains(".0")) {
             result = result.replace(".0", "");
         }
