@@ -45,6 +45,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -244,9 +247,16 @@ public class MainActivity extends AppCompatActivity {
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
-        web.loadUrl(language.equals("pl") ?
-                "file:///android_asset/startup_pl.html" :
-                "file:///android_asset/startup_en.html");
+        try {
+            String content = IOUtils.toString(
+                    getAssets().open(language.equals("pl") ? "startup_pl.html" : "startup_en.html"),
+                    "UTF-8")
+                    .replace("[APP_VERSION]", getVersionName());
+            web.loadData(content, "text/html", "UTF-8");
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         dialogBinding.dismiss.setOnClickListener(v -> {
             processPermissions();
@@ -280,15 +290,29 @@ public class MainActivity extends AppCompatActivity {
 
         String language = Locale.getDefault().getLanguage();
 
-        web.loadUrl(language.equals("pl") ?
-                "file:///android_asset/help_pl.html" :
-                "file:///android_asset/help_en.html");
+        try {
+            String content = IOUtils.toString(
+                        getAssets().open(language.equals("pl") ? "help_pl.html" : "help_en.html"),
+                        "UTF-8")
+                    .replace("[APP_VERSION]", getVersionName());
+            web.loadData(content, "text/html", "UTF-8");
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
-
+    private String getVersionName() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        }
+        catch (PackageManager.NameNotFoundException ex) {
+            return getString(R.string.app_version_unknown);
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(
