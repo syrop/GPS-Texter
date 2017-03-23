@@ -41,6 +41,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
@@ -116,6 +117,16 @@ public class SettingsActivity extends AppCompatActivity
                 .permissionDeniedListener()
                 .filter(permission -> permission.equals(Manifest.permission.READ_CONTACTS))
                 .subscribe(__ -> onShowContactsPermissionDenied());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
