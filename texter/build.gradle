@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -25,11 +24,8 @@ android {
         resConfigs "en", "pl"
         manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
 
-//        Jack options disabled de to issue 209504. For more info see:
-//        https://code.google.com/p/android/issues/detail?id=209504
-
         jackOptions {
-            enabled false
+            enabled true
             jackInProcess true
         }
     }
