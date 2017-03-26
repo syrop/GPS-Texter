@@ -36,6 +36,7 @@ public class SmsController {
     @Inject protected SmsManager smsManager;
     @SuppressWarnings("WeakerAccess")
     @Inject protected ZoneManager zoneManager;
+    @SuppressWarnings("WeakerAccess")
     @Inject protected GpsManager gpsManager;
 
     private LocationModel lastSentLocation;

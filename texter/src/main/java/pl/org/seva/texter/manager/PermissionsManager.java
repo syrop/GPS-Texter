@@ -51,6 +51,7 @@ public class PermissionsManager {
         return !rationalesShown.contains(permission);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void onRationaleShown(String permission) {
         if (isRationaleNeeded(permission)) {
             rationalesShown.add(permission);
