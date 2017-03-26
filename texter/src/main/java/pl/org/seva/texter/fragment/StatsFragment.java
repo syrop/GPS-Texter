@@ -42,7 +42,6 @@ import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.TimerManager;
@@ -56,7 +55,6 @@ public class StatsFragment extends Fragment implements
     private TimerManager timerManager;
     private SmsManager smsManager;
     private PermissionsManager permissionsManager;
-    private LastLocationManager lastLocationManager;
 
     private static String homeString;
     private static String hourString;
@@ -81,8 +79,8 @@ public class StatsFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = lastLocationManager.getDistance();
-        speed = lastLocationManager.getSpeed();
+        distance = gpsManager.getDistance();
+        speed = gpsManager.getSpeed();
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
@@ -161,7 +159,6 @@ public class StatsFragment extends Fragment implements
         timerManager = graph.timerManager();
         smsManager = graph.smsManager();
         permissionsManager = graph.permissionsManager();
-        lastLocationManager = graph.lastLocationManager();
     }
 
     private void showStats() {
@@ -238,8 +235,8 @@ public class StatsFragment extends Fragment implements
             this.distance = 0.0;
         }
         else {
-            this.distance = lastLocationManager.getDistance();
-            this.speed = lastLocationManager.getSpeed();
+            this.distance = gpsManager.getDistance();
+            this.speed = gpsManager.getSpeed();
         }
         showStats();
     }
@@ -277,7 +274,7 @@ public class StatsFragment extends Fragment implements
     }
 
     private void onHomeChanged() {
-        distance = lastLocationManager.getDistance();
+        distance = gpsManager.getDistance();
         showStats();
     }
 

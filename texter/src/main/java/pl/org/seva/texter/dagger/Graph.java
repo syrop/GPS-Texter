@@ -24,7 +24,6 @@ import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.HistoryManager;
-import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.TimerManager;
@@ -39,5 +38,4 @@ public interface Graph {
     SmsManager smsManager();
     TimerManager timerManager();
     SmsController smsController();
-    LastLocationManager lastLocationManager();
 }

@@ -51,7 +51,7 @@ public class SmsManager {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    protected LastLocationManager lastLocationManager;
+    protected GpsManager gpsManager;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
@@ -208,7 +208,7 @@ public class SmsManager {
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
-            smsBuilder.append(" ").append(lastLocationManager.getLocationUrl());
+            smsBuilder.append(" ").append(gpsManager.getLocationUrl());
         }
         @SuppressLint("DefaultLocale")
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";

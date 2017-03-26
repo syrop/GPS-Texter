@@ -48,14 +48,12 @@ import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
 import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 
 public class NavigationFragment extends Fragment {
 
     private GpsManager gpsManager;
     private PermissionsManager permissionsManager;
-    private LastLocationManager lastLocationManager;
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -77,7 +75,7 @@ public class NavigationFragment extends Fragment {
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        show(lastLocationManager.getDistance());
+        show(gpsManager.getDistance());
 
         if (savedInstanceState != null) {
             animateCamera = false;
@@ -154,7 +152,6 @@ public class NavigationFragment extends Fragment {
         Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
         gpsManager = graph.gpsManager();
         permissionsManager = graph.permissionsManager();
-        lastLocationManager = graph.lastLocationManager();
     }
 
     @Override
@@ -197,7 +194,7 @@ public class NavigationFragment extends Fragment {
     }
 
     private void onDistanceChanged() {
-        show(lastLocationManager.getDistance());
+        show(gpsManager.getDistance());
     }
 
     private void onHomeChanged() {

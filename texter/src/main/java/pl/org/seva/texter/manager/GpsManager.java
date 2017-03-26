@@ -61,8 +61,6 @@ public class GpsManager implements
         com.google.android.gms.location.LocationListener {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject protected LastLocationManager lastLocationManager;
-    @SuppressWarnings("WeakerAccess")
     @Inject protected TimerManager timerManager;
 
     @SuppressWarnings("WeakerAccess")
@@ -89,6 +87,13 @@ public class GpsManager implements
     private final PublishSubject<Object> providerDisabledSubject = PublishSubject.create();
     private final PublishSubject<Object> locationChangedSubject = PublishSubject.create();
 
+    /** Location last received from the update. */
+    private Location location;
+    /** Last calculated distance. */
+    private double distance;
+    /** Last calculated speed. */
+    private double speed;
+
     private boolean initialized;
     private boolean connected;
     private boolean paused;
@@ -97,12 +102,27 @@ public class GpsManager implements
     private double homeLon;
     private long time;
 
+    String getLocationUrl() {
+        if (location == null) {
+            return "";
+        }
+        return "http://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
+    }
+
     /**
      * @return minimum time between two subsequent updates from one provider (in millis)
      */
     @SuppressWarnings("SameReturnValue")
     private long getUpdateFrequency() {
         return Constants.LOCATION_UPDATE_FREQUENCY;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     private void requestLocationUpdates(Context context) {
@@ -120,12 +140,12 @@ public class GpsManager implements
                 getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
-        if (lastLocationManager.getLocation() != null) {
-            lastLocationManager.setDistance(Calculator.calculateDistance(
+        if (location != null) {
+            distance = Calculator.calculateDistance(
                     homeLat,
                     homeLon,
-                    lastLocationManager.getLocation().getLatitude(),
-                    lastLocationManager.getLocation().getLongitude()));
+                    location.getLatitude(),
+                    location.getLongitude());
         }
         homeChangedSubject.onNext(0);
     }
@@ -242,36 +262,46 @@ public class GpsManager implements
         return new LatLng(getHomeLat(), getHomeLng());
     }
 
+    public LatLng getLatLng() {
+        if (location == null) {
+            return null;
+        }
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public boolean isLocationAvailable() {
+        return location != null;
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!GpsManager.isBetterLocation(location, lastLocationManager.getLocation())) {
+        if (!GpsManager.isBetterLocation(location, this.location)) {
             return;
         }
         timerManager.reset();
         long time = System.currentTimeMillis();
-        lastLocationManager.setSpeed(
-                calculateSpeedOrReturnZero(lastLocationManager.getLocation(), location, time - this.time));
-        lastLocationManager.setLocation(location);
-        lastLocationManager.setDistance(calculateCurrentDistance());  // distance in kilometres
+        speed = calculateSpeedOrReturnZero(this.location, location, time - this.time);
+        this.location = location;
+        this.distance = calculateCurrentDistance();  // distance in kilometres
         this.time = time;
         distanceSubject.onNext(0);
         locationChangedSubject.onNext(0);
     }
 
     private void updateDistance() {
-        if (lastLocationManager.getLocation() == null) {
+        if (location == null) {
             return;
         }
-        lastLocationManager.setDistance(calculateCurrentDistance());
+        distance = calculateCurrentDistance();
     }
 
     private double calculateCurrentDistance() {
         return Calculator.calculateDistance(  // distance in kilometres
-                lastLocationManager.getLocation().getLatitude(),
-                lastLocationManager.getLocation().getLongitude(),
+                location.getLatitude(),
+                location.getLongitude(),
                 getHomeLat(),
                 getHomeLng());
     }
@@ -292,9 +322,9 @@ public class GpsManager implements
     public void onConnected(@Nullable Bundle bundle) {
         connected = true;
 
-        if (lastLocationManager.getLocation() == null) {
+        if (location == null) {
             //noinspection MissingPermission
-            lastLocationManager.setLocation(LocationServices.FusedLocationApi.getLastLocation(googleApiClient));
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
 
         long updateFrequency = getUpdateFrequency();

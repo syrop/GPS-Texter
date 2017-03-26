@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.SmsManager;
 import pl.org.seva.texter.manager.ZoneManager;
 import pl.org.seva.texter.model.LocationModel;
@@ -38,8 +37,6 @@ public class SmsController {
     @SuppressWarnings("WeakerAccess")
     @Inject protected ZoneManager zoneManager;
     @Inject protected GpsManager gpsManager;
-    @SuppressWarnings("WeakerAccess")
-    @Inject protected LastLocationManager lastLocationManager;
 
     private LocationModel lastSentLocation;
     private ZoneModel zone;
@@ -77,8 +74,8 @@ public class SmsController {
     }
 
     public void onDistanceChanged() {
-        double distance = lastLocationManager.getDistance();
-        double speed = lastLocationManager.getSpeed();
+        double distance = gpsManager.getDistance();
+        double speed = gpsManager.getSpeed();
 
         long time = System.currentTimeMillis();
         int direction = 0; // alternatively (int) Math.signum(this.distance - distance);

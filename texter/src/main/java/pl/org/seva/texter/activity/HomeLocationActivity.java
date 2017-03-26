@@ -48,7 +48,6 @@ import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.LastLocationManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.utils.Constants;
 
@@ -57,7 +56,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnCameraIdleListener {
 
     private GpsManager gpsManager;
-    private LastLocationManager lastLocationManager;
     private PermissionsManager permissionsManager;
 
     private static final String STATE = "STATE";
@@ -96,7 +94,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
         Graph graph = ((TexterApplication) getApplication()).getGraph();
         gpsManager = graph.gpsManager();
-        lastLocationManager = graph.lastLocationManager();
         permissionsManager = graph.permissionsManager();
 
         String value = getPersistedString();
@@ -114,7 +111,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED;
         boolean locationAvailable = locationPermitted &&
-                lastLocationManager.isLocationAvailable();
+                gpsManager.isLocationAvailable();
         useCurrentButton.setEnabled(locationAvailable);
         if (!toastShown) {
             Toast.makeText(
@@ -286,7 +283,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     public void onUseCurrentLocationButtonClicked(@SuppressWarnings("UnusedParameters") View view) {
         useCurrentButton.setEnabled(false);
-        LatLng loc = lastLocationManager.getLatLng();
+        LatLng loc = gpsManager.getLatLng();
         if (loc != null) {
             lat = loc.latitude;
             lon = loc.longitude;
