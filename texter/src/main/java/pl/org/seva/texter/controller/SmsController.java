@@ -44,7 +44,7 @@ public class SmsController {
     private boolean smsInSystem;
     private boolean initialized;
 
-    @Inject public SmsController() {
+    @Inject SmsController() {
     }
 
     public void init(boolean smsInSystem) {
