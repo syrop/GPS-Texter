@@ -157,15 +157,10 @@ public class GpsManager implements
      * called again.
      *
      * @param activity the calling activity
-     * @return true if actions requiring the permission have been performed
      */
-    public boolean init(Activity activity) {
-        boolean granted = ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
+    public void init(Activity activity) {
         if (initialized) {
-            return granted;
+            return;
         }
         preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         if (googleApiClient == null) {
@@ -184,13 +179,7 @@ public class GpsManager implements
         }, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
         onHomeLocationChanged();
-
-        if (granted) {
-            requestLocationUpdates(activity);
-            initialized = true;
-        }
-
-        return granted;
+        requestLocationUpdates(activity);
     }
 
     public Observable<Object> distanceChangedListener() {

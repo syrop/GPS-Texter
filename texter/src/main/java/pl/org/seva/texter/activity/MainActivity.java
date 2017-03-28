@@ -191,8 +191,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean processPermissions() {
         List<String> permissions = new ArrayList<>();
-        if (!initGps()) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        else  {
+            initGps();
         }
         if (smsManager.isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
@@ -382,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onLocationPermissionGranted() {
-        initGps();  // listeners already added
+        initGps();
         gpsManager.callProviderListener();
         if (showSettingsWhenPermissionGranted) {
             startActivity(new Intent(this, SettingsActivity.class));
