@@ -196,6 +196,10 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionsManager
+                    .permissionGrantedListener()
+                    .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                    .subscribe(__ -> onLocationPermissionGranted());
         }
         else  {
             initGps();
@@ -219,20 +223,9 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean initGps() {
-        boolean permissionGranted = gpsManager.init(this);
-
-        if (!permissionGranted) {
-            permissionsManager
-                    .permissionGrantedListener()
-                    .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                    .subscribe(__ -> onLocationPermissionGranted());
-        }
-        else {
-            gpsManager.callProviderListener();
-        }
-
-        return permissionGranted;
+    private void initGps() {
+        gpsManager.init(this);
+        gpsManager.callProviderListener();
     }
 
     private boolean showStartupDialog() {

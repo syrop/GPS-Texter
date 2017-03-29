@@ -32,7 +32,7 @@ public class HistoryManager {
 
     private final List<LocationModel> list;
 
-    @Inject public HistoryManager() {
+    @Inject HistoryManager() {
         list = new ArrayList<>();
         list.add(new LocationModel());
     }

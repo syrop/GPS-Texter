@@ -22,6 +22,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled false
         resConfigs "en", "pl"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
 
         jackOptions {
