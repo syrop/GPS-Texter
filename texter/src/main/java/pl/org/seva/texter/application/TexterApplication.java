@@ -22,7 +22,7 @@ public class TexterApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        graph = DaggerGraph.create();
+        graph = createGraph();
         addGpsProviderListeners();
         addActivityRecognitionListeners();
     }
@@ -44,6 +44,10 @@ public class TexterApplication extends MultiDexApplication {
         graph.activityRecognitionManager()
                 .movingListener()
                 .subscribe(__ -> onDeviceMoving());
+    }
+
+    protected Graph createGraph() {
+        return DaggerGraph.create();
     }
 
     private void onDeviceStationary() {
