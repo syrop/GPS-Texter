@@ -8,12 +8,14 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+import javax.inject.Inject;
+
 import pl.org.seva.texter.application.TexterApplication;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 
 public class ActivityRecognitionIntentService extends IntentService {
 
-    private ActivityRecognitionManager activityRecognitionManager;
+    @Inject ActivityRecognitionManager activityRecognitionManager;
 
     private final Handler handler;
 
@@ -24,7 +26,7 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        activityRecognitionManager = ((TexterApplication) getApplication()).getGraph().activityRecognitionManager();
+        ((TexterApplication) getApplication()).getGraph().inject(this);
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {

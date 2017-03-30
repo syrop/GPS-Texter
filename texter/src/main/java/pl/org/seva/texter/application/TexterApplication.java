@@ -4,11 +4,18 @@ import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import pl.org.seva.texter.dagger.DaggerGraph;
 import pl.org.seva.texter.dagger.Graph;
+import pl.org.seva.texter.manager.ActivityRecognitionManager;
+import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
+
+    @Inject GpsManager gpsManager;
+    @Inject ActivityRecognitionManager activityRecognitionManager;
 
     private static final String TAG = TexterApplication.class.getSimpleName();
 
@@ -23,25 +30,26 @@ public class TexterApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         graph = createGraph();
+        graph.inject(this);
         addGpsProviderListeners();
         addActivityRecognitionListeners();
     }
 
     private void addGpsProviderListeners() {
-        graph.gpsManager()
+        gpsManager
                 .providerEnabledListener()
                 .subscribe(__ -> onProviderEnabled());
-        graph.gpsManager()
+        gpsManager
                 .providerDisabledListener()
                 .subscribe(__ -> onProviderDisabled());
     }
 
     private void addActivityRecognitionListeners() {
-        graph.activityRecognitionManager()
+        activityRecognitionManager
                 .stationaryListener()
                 .subscribe(__ -> onDeviceStationary());
 
-        graph.activityRecognitionManager()
+        activityRecognitionManager
                 .movingListener()
                 .subscribe(__ -> onDeviceMoving());
     }

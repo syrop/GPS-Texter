@@ -24,6 +24,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
@@ -34,8 +36,8 @@ import pl.org.seva.texter.manager.GpsManager;
 
 public class TexterService extends Service {
 
-    private GpsManager gpsManager;
-    private SmsController smsController;
+    @Inject GpsManager gpsManager;
+    @Inject SmsController smsController;
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
 
@@ -49,8 +51,7 @@ public class TexterService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        gpsManager = ((TexterApplication) getApplication()).getGraph().gpsManager();
-        smsController = ((TexterApplication) getApplication()).getGraph().smsController();
+        ((TexterApplication) getApplication()).getGraph().inject(this);
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
         // Use System.currentTimeMillis() to have a unique ID for the pending intent.

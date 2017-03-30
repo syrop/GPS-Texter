@@ -20,22 +20,26 @@ package pl.org.seva.texter.dagger;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import pl.org.seva.texter.controller.SmsController;
-import pl.org.seva.texter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.HistoryManager;
-import pl.org.seva.texter.manager.PermissionsManager;
-import pl.org.seva.texter.manager.SmsManager;
-import pl.org.seva.texter.manager.TimerManager;
+import pl.org.seva.texter.activity.HomeLocationActivity;
+import pl.org.seva.texter.activity.MainActivity;
+import pl.org.seva.texter.activity.SettingsActivity;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.fragment.HistoryFragment;
+import pl.org.seva.texter.fragment.NavigationFragment;
+import pl.org.seva.texter.fragment.StatsFragment;
+import pl.org.seva.texter.service.ActivityRecognitionIntentService;
+import pl.org.seva.texter.service.TexterService;
 
 @Singleton
 @Component(modules = { pl.org.seva.texter.dagger.TexterModule.class })
 public interface Graph {
-    ActivityRecognitionManager activityRecognitionManager();
-    GpsManager gpsManager();
-    HistoryManager historyManager();
-    PermissionsManager permissionsManager();
-    SmsManager smsManager();
-    TimerManager timerManager();
-    SmsController smsController();
+    void inject(TexterService texterService);
+    void inject(NavigationFragment navigationFragment);
+    void inject(MainActivity mainActivity);
+    void inject(HomeLocationActivity homeLocationActivity);
+    void inject(SettingsActivity settingsActivity);
+    void inject(ActivityRecognitionIntentService activityRecognitionIntentService);
+    void inject(StatsFragment statsFragment);
+    void inject(HistoryFragment historyFragment);
+    void inject(TexterApplication texterApplication);
 }

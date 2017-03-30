@@ -41,6 +41,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
@@ -55,8 +57,8 @@ public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
-    private GpsManager gpsManager;
-    private PermissionsManager permissionsManager;
+    @Inject GpsManager gpsManager;
+    @Inject PermissionsManager permissionsManager;
 
     private static final String STATE = "STATE";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
@@ -93,8 +95,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         }
 
         Graph graph = ((TexterApplication) getApplication()).getGraph();
-        gpsManager = graph.gpsManager();
-        permissionsManager = graph.permissionsManager();
+        graph.inject(this);
 
         String value = getPersistedString();
         lat = parseLatitude(value);

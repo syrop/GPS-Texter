@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.application.TexterApplication;
@@ -52,8 +54,8 @@ import pl.org.seva.texter.manager.PermissionsManager;
 
 public class NavigationFragment extends Fragment {
 
-    private GpsManager gpsManager;
-    private PermissionsManager permissionsManager;
+    @Inject GpsManager gpsManager;
+    @Inject PermissionsManager permissionsManager;
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -150,8 +152,7 @@ public class NavigationFragment extends Fragment {
 
     private void initDependencies(Activity activity) {
         Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        gpsManager = graph.gpsManager();
-        permissionsManager = graph.permissionsManager();
+        graph.inject(this);
     }
 
     @Override

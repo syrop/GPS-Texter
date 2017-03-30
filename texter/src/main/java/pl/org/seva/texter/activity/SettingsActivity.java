@@ -47,12 +47,14 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private PermissionsManager permissionsManager;
-    private GpsManager gpsManager;
-    private SmsController smsController;
+    @Inject PermissionsManager permissionsManager;
+    @Inject GpsManager gpsManager;
+    @Inject SmsController smsController;
 
     /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
@@ -77,9 +79,7 @@ public class SettingsActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
         Graph graph = ((TexterApplication) getApplication()).getGraph();
-        permissionsManager = graph.permissionsManager();
-        gpsManager = graph.gpsManager();
-        smsController = graph.smsController();
+        graph.inject(this);
 
         ActivitySettingsBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_settings);

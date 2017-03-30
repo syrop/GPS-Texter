@@ -35,6 +35,8 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.application.TexterApplication;
@@ -50,11 +52,11 @@ import pl.org.seva.texter.model.LocationModel;
 public class StatsFragment extends Fragment implements
         View.OnClickListener {
 
-    private GpsManager gpsManager;
-    private ActivityRecognitionManager activityRecognitionManager;
-    private TimerManager timerManager;
-    private SmsManager smsManager;
-    private PermissionsManager permissionsManager;
+    @Inject GpsManager gpsManager;
+    @Inject ActivityRecognitionManager activityRecognitionManager;
+    @Inject TimerManager timerManager;
+    @Inject SmsManager smsManager;
+    @Inject PermissionsManager permissionsManager;
 
     private static String homeString;
     private static String hourString;
@@ -154,11 +156,7 @@ public class StatsFragment extends Fragment implements
 
     private void initDependencies() {
         Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        gpsManager = graph.gpsManager();
-        activityRecognitionManager = graph.activityRecognitionManager();
-        timerManager = graph.timerManager();
-        smsManager = graph.smsManager();
-        permissionsManager = graph.permissionsManager();
+        graph.inject(this);
     }
 
     private void showStats() {

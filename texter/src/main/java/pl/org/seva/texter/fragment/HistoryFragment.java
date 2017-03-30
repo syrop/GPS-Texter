@@ -33,6 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
@@ -45,8 +47,8 @@ import pl.org.seva.texter.manager.SmsManager;
 
 public class HistoryFragment extends Fragment {
 
-    private HistoryManager historyManager;
-    private SmsManager smsManager;
+    @Inject HistoryManager historyManager;
+    @Inject SmsManager smsManager;
 
     private HistoryAdapter adapter;
     private RecyclerView historyRecyclerView;
@@ -82,8 +84,7 @@ public class HistoryFragment extends Fragment {
 
     private void  initDependencies(Activity activity) {
         Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        historyManager = graph.historyManager();
-        smsManager = graph.smsManager();
+        graph.inject(this);
     }
 
     @Override

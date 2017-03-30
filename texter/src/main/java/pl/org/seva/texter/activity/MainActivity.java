@@ -52,9 +52,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.controller.SmsController;
 import pl.org.seva.texter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
@@ -63,6 +66,7 @@ import pl.org.seva.texter.fragment.HistoryFragment;
 import pl.org.seva.texter.fragment.StatsFragment;
 import pl.org.seva.texter.fragment.NavigationFragment;
 import pl.org.seva.texter.layout.SlidingTabLayout;
+import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.PermissionsManager;
 import pl.org.seva.texter.manager.SmsManager;
@@ -70,9 +74,12 @@ import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SmsManager smsManager;
-    private GpsManager gpsManager;
-    private PermissionsManager permissionsManager;
+    @Inject SmsManager smsManager;
+    @Inject GpsManager gpsManager;
+    @Inject PermissionsManager permissionsManager;
+    @Inject TimerManager timerManager;
+    @Inject ActivityRecognitionManager activityRecognitionManager;
+    @Inject SmsController smsController;
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -105,11 +112,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Graph graph = ((TexterApplication) getApplication()).getGraph();
-        TimerManager timerManager = graph.timerManager();
-        smsManager = graph.smsManager();
-        gpsManager = graph.gpsManager();
-        permissionsManager = graph.permissionsManager();
-        graph.activityRecognitionManager().init(this);
+        graph.inject(this);
+        activityRecognitionManager.init(this);
 
         // Set up colors depending on SDK version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
 
-        graph.smsController().init(getPackageManager().
+        smsController.init(getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
         Toolbar toolbar = binding.toolBar.toolBar;
