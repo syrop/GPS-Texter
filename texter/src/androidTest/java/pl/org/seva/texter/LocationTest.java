@@ -12,6 +12,12 @@ import javax.inject.Inject;
 import pl.org.seva.texter.activity.MainActivity;
 import pl.org.seva.texter.manager.GpsManager;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static pl.org.seva.texter.matcher.DistanceMatcher.distance;
+
 @RunWith(AndroidJUnit4.class)
 public class LocationTest {
 
@@ -23,10 +29,10 @@ public class LocationTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
             MainActivity.class,
             true,
-            false);
+            true);
 
     @Test
     public void test() {
-
+        onView(withId(R.id.distance_value)).check(matches(withText(distance())));
     }
 }
