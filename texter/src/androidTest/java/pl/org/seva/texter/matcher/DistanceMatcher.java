@@ -25,7 +25,7 @@ import pl.org.seva.texter.TestConstants;
 
 public class DistanceMatcher extends BaseMatcher<String> {
 
-    private double expectedDistance;
+    private final double expectedDistance;
 
     public static Matcher<String> distance(double expectedDistance) {
         return new DistanceMatcher(expectedDistance);

@@ -52,8 +52,11 @@ import javax.inject.Inject;
 public class SettingsActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsController smsController;
 
     /** If device is not enabled to send SMS, this entire category will be hidden. */

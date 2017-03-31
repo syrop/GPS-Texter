@@ -54,7 +54,9 @@ import pl.org.seva.texter.manager.PermissionsManager;
 
 public class NavigationFragment extends Fragment {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
 
     private TextView distanceTextView;

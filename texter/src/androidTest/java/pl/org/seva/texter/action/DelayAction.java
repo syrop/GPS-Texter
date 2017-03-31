@@ -27,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 
 public class DelayAction implements ViewAction {
 
-    private long millis;
+    private final long millis;
 
     public static ViewAction delay(long millis) {
         return new DelayAction(millis);

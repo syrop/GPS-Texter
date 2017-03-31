@@ -31,7 +31,9 @@ import pl.org.seva.texter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
 
     private static final String TAG = TexterApplication.class.getSimpleName();
@@ -71,7 +73,7 @@ public class TexterApplication extends MultiDexApplication {
                 .subscribe(__ -> onDeviceMoving());
     }
 
-    protected Graph createGraph() {
+    Graph createGraph() {
         return DaggerGraph.create();
     }
 

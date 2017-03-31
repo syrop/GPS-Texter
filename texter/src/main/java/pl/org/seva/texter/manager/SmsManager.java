@@ -75,7 +75,8 @@ public class SmsManager {
 	
 	private boolean initialized;
 
-    @Inject public SmsManager() {
+    @Inject
+    protected SmsManager() {
 		smsManager = android.telephony.SmsManager.getDefault();
         smsSendingSubject = PublishSubject.create();
         smsSentSubject = PublishSubject.create();

@@ -47,7 +47,9 @@ import pl.org.seva.texter.manager.SmsManager;
 
 public class HistoryFragment extends Fragment {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject HistoryManager historyManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsManager smsManager;
 
     private HistoryAdapter adapter;

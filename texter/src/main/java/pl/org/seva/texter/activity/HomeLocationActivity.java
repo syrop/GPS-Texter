@@ -57,7 +57,9 @@ public class HomeLocationActivity extends AppCompatActivity implements
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnCameraIdleListener {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
 
     private static final String STATE = "STATE";

@@ -47,12 +47,12 @@ public class LocationTest {
 
     private static final int DURATION_IN_SECONDS = 50;
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     SmsManager smsManager;
 
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
+    public final ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
             MainActivity.class,
             true,
             true);

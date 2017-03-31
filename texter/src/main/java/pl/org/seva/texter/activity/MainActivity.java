@@ -74,11 +74,17 @@ import pl.org.seva.texter.manager.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsManager smsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject TimerManager timerManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsController smsController;
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";

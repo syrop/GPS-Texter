@@ -52,10 +52,15 @@ import pl.org.seva.texter.model.LocationModel;
 public class StatsFragment extends Fragment implements
         View.OnClickListener {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject TimerManager timerManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsManager smsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
 
     private static String homeString;

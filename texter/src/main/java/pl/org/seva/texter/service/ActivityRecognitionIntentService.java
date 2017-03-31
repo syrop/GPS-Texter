@@ -32,6 +32,7 @@ import pl.org.seva.texter.manager.ActivityRecognitionManager;
 
 public class ActivityRecognitionIntentService extends IntentService {
 
+    @SuppressWarnings("WeakerAccess")
     @Inject ActivityRecognitionManager activityRecognitionManager;
 
     private final Handler handler;

@@ -36,7 +36,9 @@ import pl.org.seva.texter.manager.GpsManager;
 
 public class TexterService extends Service {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsController smsController;
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
