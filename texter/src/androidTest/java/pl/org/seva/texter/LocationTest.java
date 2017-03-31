@@ -3,6 +3,7 @@ package pl.org.seva.texter;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,13 +11,17 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 
 import pl.org.seva.texter.activity.MainActivity;
-import pl.org.seva.texter.manager.GpsManager;
+import pl.org.seva.texter.application.TexterApplication;
+import pl.org.seva.texter.dagger.MockGraph;
+import pl.org.seva.texter.manager.SmsManager;
+import pl.org.seva.texter.mockmanager.MockSmsManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
 import static pl.org.seva.texter.action.DelayAction.delay;
 import static pl.org.seva.texter.matcher.DistanceMatcher.distance;
 
@@ -27,13 +32,19 @@ public class LocationTest {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    GpsManager gpsManager;
+    SmsManager smsManager;
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
             MainActivity.class,
             true,
             true);
+
+    @Before
+    public void setUp() {
+        MockGraph graph = (MockGraph) ((TexterApplication) activityRule.getActivity().getApplication()).getGraph();
+        graph.inject(this);
+    }
 
     @Test
     public void test() {
@@ -42,5 +53,6 @@ public class LocationTest {
             onView(isRoot()).perform(delay(1000));
             onView(withId(R.id.distance_value)).check(matches(withText(distance(i * TestConstants.DISTANCE_STEP))));
         }
+        assertEquals(TestConstants.EXPECTED_MESSAGES_SENT, ((MockSmsManager) smsManager).getMessagesSent());
     }
 }

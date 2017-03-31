@@ -12,6 +12,8 @@ import pl.org.seva.texter.manager.SmsManager;
 @Singleton
 public class MockSmsManager extends SmsManager {
 
+    private int messagesSent;
+
     public MockSmsManager(GpsManager gpsManager, HistoryManager historyManager) {
         this.gpsManager = gpsManager;
         this.historyManager = historyManager;
@@ -22,11 +24,16 @@ public class MockSmsManager extends SmsManager {
             PendingIntent sentIntent,
             PendingIntent deliveredIntent) throws SecurityException {
         try {
+            messagesSent++;
             sentIntent.send(Activity.RESULT_OK);
 
         }
         catch (PendingIntent.CanceledException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public int getMessagesSent() {
+        return messagesSent;
     }
 }
