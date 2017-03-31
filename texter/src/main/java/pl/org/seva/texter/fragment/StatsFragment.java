@@ -102,8 +102,8 @@ public class StatsFragment extends Fragment implements
         showStats();
         composite.addAll(
                 timerManager.timerListener().subscribe(__ -> onTimer()),
-                smsManager.smsSendingListener().subscribe(__ -> onSendingSms()),
-                gpsManager.distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                smsManager.smsSendingListener().subscribe(__ -> getActivity().runOnUiThread(this::onSendingSms)),
+                gpsManager.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
                 gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()),
                 activityRecognitionManager
                     .stationaryListener()

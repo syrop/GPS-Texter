@@ -94,12 +94,11 @@ public class GpsManager implements
     /** Last calculated speed. */
     private double speed;
 
-    private boolean initialized;
     private boolean connected;
     private boolean paused;
 
-    private double homeLat;
-    private double homeLon;
+    protected double homeLat;
+    protected double homeLon;
     private long time;
 
     String getLocationUrl() {
@@ -159,9 +158,6 @@ public class GpsManager implements
      * @param activity the calling activity
      */
     public void init(Activity activity) {
-        if (initialized) {
-            return;
-        }
         preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(activity)
@@ -267,7 +263,7 @@ public class GpsManager implements
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!GpsManager.isBetterLocation(location, this.location)) {
+        if (!isBetterLocation(location, this.location)) {
             return;
         }
         timerManager.reset();

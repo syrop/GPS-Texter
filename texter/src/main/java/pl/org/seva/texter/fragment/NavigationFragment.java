@@ -93,7 +93,7 @@ public class NavigationFragment extends Fragment {
         super.onResume();
 
         composite.addAll(
-                gpsManager.distanceChangedListener().subscribe(__ -> onDistanceChanged()),
+                gpsManager.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
                 gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();

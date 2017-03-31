@@ -8,12 +8,14 @@ import pl.org.seva.texter.TestConstants;
 
 public class DistanceMatcher extends BaseMatcher<String> {
 
-    public static Matcher<String> distance() {
-        return new DistanceMatcher();
+    private double expectedDistance;
+
+    public static Matcher<String> distance(double expectedDistance) {
+        return new DistanceMatcher(expectedDistance);
     }
 
-    private DistanceMatcher() {
-
+    private DistanceMatcher(double expectedDistance) {
+        this.expectedDistance = expectedDistance;
     }
 
     @Override
@@ -23,13 +25,13 @@ public class DistanceMatcher extends BaseMatcher<String> {
         }
         String str = (String) item;
         double distance = Double.valueOf(str.substring(0, str.indexOf(' ')));
-        double delta = Math.abs(TestConstants.DISTANCE - distance);
+        double delta = Math.abs(expectedDistance - distance);
 
-        return delta < TestConstants.TOLERANCE;
+        return delta < TestConstants.DISTANCE_TOLERANCE;
     }
 
     @Override
     public void describeTo(Description description) {
-
+        description.appendText("is in appropriate range from " + expectedDistance);
     }
 }
