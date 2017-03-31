@@ -128,7 +128,7 @@ public class SmsManager {
         registerReceiver(new BroadcastReceiver()
         {
             public void onReceive(Context arg0, Intent arg1) {
-            	String text = arg1.getStringExtra(TEXT_KEY);
+                String text = arg1.getStringExtra(TEXT_KEY);
                 LocationModel location = new LocationModel().
                     setDistance(arg1.getDoubleExtra(DISTANCE_KEY, 0.0)).
                     setTime(arg1.getIntExtra(MINUTES_KEY, 0)).
@@ -241,13 +241,20 @@ public class SmsManager {
             PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0);
             registerBroadcastReceiver(id);
             try {
-                smsManager.sendTextMessage(getPhoneNumber(), null, text, sentPI, deliveredPI);
+                sendTextMessage(text, sentPI, deliveredPI);
             }
             catch (SecurityException ignore) {
                 // Ignore, as may indicate the app has no permission to send SMS.
             }
         }
 	}
+
+	protected void sendTextMessage(
+	        String text,
+            PendingIntent sentIntent,
+            PendingIntent deliveredIntent) throws SecurityException {
+        smsManager.sendTextMessage(getPhoneNumber(), null, text, sentIntent, deliveredIntent);
+    }
 	
 	private void checkInit() {
 		if (!initialized) {

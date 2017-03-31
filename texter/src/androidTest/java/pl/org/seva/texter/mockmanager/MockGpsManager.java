@@ -1,4 +1,4 @@
-package pl.org.seva.texter;
+package pl.org.seva.texter.mockmanager;
 
 import android.location.Location;
 
@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import pl.org.seva.texter.TestConstants;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.TimerManager;
 import pl.org.seva.texter.preference.HomeLocationPreference;

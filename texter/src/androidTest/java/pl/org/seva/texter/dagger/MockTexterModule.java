@@ -7,10 +7,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.texter.MockGpsManager;
+import pl.org.seva.texter.manager.HistoryManager;
+import pl.org.seva.texter.manager.SmsManager;
+import pl.org.seva.texter.mockmanager.MockGpsManager;
 import pl.org.seva.texter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.manager.GpsManager;
 import pl.org.seva.texter.manager.TimerManager;
+import pl.org.seva.texter.mockmanager.MockSmsManager;
 
 @Module
 class MockTexterModule {
@@ -19,6 +22,12 @@ class MockTexterModule {
     @Singleton
     GpsManager provideGpsManager(TimerManager timerManager) {
         return new MockGpsManager(timerManager);
+    }
+
+    @Provides
+    @Singleton
+    SmsManager provideSmsManager(GpsManager gpsManager, HistoryManager historyManager) {
+        return new MockSmsManager(gpsManager, historyManager);
     }
 
     @Provides
