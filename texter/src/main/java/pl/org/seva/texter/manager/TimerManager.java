@@ -35,7 +35,7 @@ public class TimerManager {
     private Disposable timerSubscription = Disposables.empty();
     private final PublishSubject<Object> timerSubject = PublishSubject.create();
 
-    @Inject public TimerManager() {
+    @Inject TimerManager() {
         createTimerSubscription();
     }
 

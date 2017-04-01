@@ -61,7 +61,7 @@ public class GpsManager implements
         com.google.android.gms.location.LocationListener {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject protected TimerManager timerManager;
+    @Inject public TimerManager timerManager;
 
     @SuppressWarnings("WeakerAccess")
     @Inject public GpsManager() {

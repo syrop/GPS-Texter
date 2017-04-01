@@ -33,11 +33,11 @@ import pl.org.seva.texter.utils.Constants;
 public class SmsController {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject protected SmsManager smsManager;
+    @Inject SmsManager smsManager;
     @SuppressWarnings("WeakerAccess")
-    @Inject protected ZoneManager zoneManager;
+    @Inject ZoneManager zoneManager;
     @SuppressWarnings("WeakerAccess")
-    @Inject protected GpsManager gpsManager;
+    @Inject GpsManager gpsManager;
 
     private LocationModel lastSentLocation;
     private ZoneModel zone;
@@ -55,7 +55,7 @@ public class SmsController {
         this.smsInSystem = smsInSystem;
     }
 
-    private void sendSMS(LocationModel model) {
+    private void sendSms(LocationModel model) {
         if (!smsInSystem) {
             return;
         }
@@ -109,7 +109,7 @@ public class SmsController {
 
                 if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
                         smsManager.getMaxSentDistance()) {
-                    sendSMS(location);
+                    sendSms(location);
                 }
                 this.zone = zone;
             }
