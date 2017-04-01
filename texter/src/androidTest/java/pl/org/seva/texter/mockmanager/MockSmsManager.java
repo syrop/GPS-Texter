@@ -36,14 +36,11 @@ public class MockSmsManager extends SmsManager {
         this.historyManager = historyManager;
     }
 
-    protected void sendTextMessage(
-            String text,
-            PendingIntent sentIntent,
-            PendingIntent deliveredIntent) throws SecurityException {
+    protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)
+            throws SecurityException {
         try {
             messagesSent++;
             sentIntent.send(Activity.RESULT_OK);
-
         }
         catch (PendingIntent.CanceledException ex) {
             ex.printStackTrace();
