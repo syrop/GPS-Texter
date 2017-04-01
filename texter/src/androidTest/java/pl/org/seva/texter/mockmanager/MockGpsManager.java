@@ -57,4 +57,14 @@ public class MockGpsManager extends GpsManager {
                 .repeat()
                 .subscribe();
     }
+
+    @Override
+    public Observable<Object> providerEnabledListener() {
+        return Observable.just(0);
+    }
+
+    @Override
+    public Observable<Object> providerDisabledListener() {
+        return Observable.empty();
+    }
 }
