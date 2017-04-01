@@ -56,7 +56,7 @@ class MockTexterModule {
     }
 
     private void mockReturnValues(ActivityRecognitionManager activityRecognitionManager) {
-        Mockito.when(activityRecognitionManager.stationaryListener()).thenReturn(PublishSubject.create().hide());
-        Mockito.when(activityRecognitionManager.movingListener()).thenReturn(PublishSubject.create().hide());
+        Mockito.when(activityRecognitionManager.stationaryListener()).thenReturn(PublishSubject.empty());
+        Mockito.when(activityRecognitionManager.movingListener()).thenReturn(PublishSubject.empty());
     }
 }
