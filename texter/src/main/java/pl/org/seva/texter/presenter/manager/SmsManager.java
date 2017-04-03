@@ -180,64 +180,7 @@ public class SmsManager {
 
 	private void registerBroadcastReceiver(String id) {
         // When the SMS has been sent.
-        registerReceiver(new BroadcastReceiver()
-        {
-            public void onReceive(Context arg0, Intent arg1) {
-                String text = arg1.getStringExtra(TEXT_KEY);
-                Sms location = new Sms().
-                    setDistance(arg1.getDoubleExtra(DISTANCE_KEY, 0.0)).
-                    setTime(arg1.getIntExtra(MINUTES_KEY, 0)).
-                    setDirection(arg1.getIntExtra(DIRECTION_KEY, 0)).
-                    setSpeed(arg1.getDoubleExtra(SPEED_KEY, 0.0));
-                switch (getResultCode())
-                {
-                    case Activity.RESULT_OK:
-                    	StringBuilder sentBuilder = new StringBuilder(arg0.getString(R.string.sent));
-                    	int length = Toast.LENGTH_SHORT;
-                    	if (text != null) {
-                    		sentBuilder.append(": ").append(text);
-                    		length = Toast.LENGTH_SHORT;
-                    	}
-                        Toast.makeText(arg0, sentBuilder.toString(), length).show();
-                        if (location != null) {
-                            smsCache.add(location);
-                            smsSentSubject.onNext(0);
-                        }
-                        break;
-                    case android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(
-                                arg0,
-                                arg0.getString(R.string.generic_failure),
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case android.telephony.SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(
-                                arg0,
-                                arg0.getString(R.string.no_service),
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case android.telephony.SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(arg0, "Null PDU", Toast.LENGTH_SHORT).show();
-                        break;
-                    case android.telephony.SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(
-                                arg0,
-                                arg0.getString(R.string.radio_off),
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                unregisterReceiver(this);
-            }
-        }, new IntentFilter(SENT + id));
-
-        // When the SMS has been delivered.
-        registerReceiver(new BroadcastReceiver()
-        {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                unregisterReceiver(this);
-            }
-        }, new IntentFilter(DELIVERED + id));
+        registerReceiver(new SmsSentReceiver(), new IntentFilter(SENT + id));
 	}
 	
 	public void send(Sms model) {
@@ -339,5 +282,56 @@ public class SmsManager {
 
     public boolean isTextingEnabled() {
         return preferences.getBoolean(SettingsActivity.SMS_ENABLED, false);
+    }
+
+    private class SmsSentReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra(TEXT_KEY);
+            Sms location = new Sms().
+                    setDistance(intent.getDoubleExtra(DISTANCE_KEY, 0.0)).
+                    setTime(intent.getIntExtra(MINUTES_KEY, 0)).
+                    setDirection(intent.getIntExtra(DIRECTION_KEY, 0)).
+                    setSpeed(intent.getDoubleExtra(SPEED_KEY, 0.0));
+            switch (getResultCode())
+            {
+                case Activity.RESULT_OK:
+                    StringBuilder sentBuilder = new StringBuilder(context.getString(R.string.sent));
+                    int length = Toast.LENGTH_SHORT;
+                    if (text != null) {
+                        sentBuilder.append(": ").append(text);
+                        length = Toast.LENGTH_SHORT;
+                    }
+                    Toast.makeText(context, sentBuilder.toString(), length).show();
+                    if (location != null) {
+                        smsCache.add(location);
+                        smsSentSubject.onNext(0);
+                    }
+                    break;
+                case android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.generic_failure),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case android.telephony.SmsManager.RESULT_ERROR_NO_SERVICE:
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.no_service),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case android.telephony.SmsManager.RESULT_ERROR_NULL_PDU:
+                    Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show();
+                    break;
+                case android.telephony.SmsManager.RESULT_ERROR_RADIO_OFF:
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.radio_off),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            unregisterReceiver(this);
+        }
     }
 }
