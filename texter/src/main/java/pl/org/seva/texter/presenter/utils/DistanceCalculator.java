@@ -19,7 +19,7 @@ package pl.org.seva.texter.presenter.utils;
 
 import android.location.Location;
 
-public class Calculator {
+public class DistanceCalculator {
 
     static {
         System.loadLibrary("native-lib");
@@ -41,7 +41,7 @@ public class Calculator {
         return distance(lat1, lon1, lat2, lon2);
     }
 
-    private Calculator() {
+    private DistanceCalculator() {
         //
     }
 }

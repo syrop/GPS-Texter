@@ -20,23 +20,23 @@ package pl.org.seva.texter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class LocationModel implements Parcelable {
+public class Sms implements Parcelable {
     private double distance;  // in kilometers
     private  int minutes; // in minutes since midnight
     private int direction;
     private double speed;
 
-    public LocationModel() {
+    public Sms() {
         // required in order to implement Parcelable
     }
 
     @Override
     public boolean equals(Object o) {
         // ignore direction
-        if (!(o instanceof LocationModel)) {
+        if (!(o instanceof Sms)) {
             return false;
         }
-        LocationModel model = (LocationModel) o;
+        Sms model = (Sms) o;
         return model.distance == distance && model.minutes == minutes && model.speed == speed;
     }
 
@@ -49,14 +49,14 @@ public class LocationModel implements Parcelable {
         return result;
     }
 
-    private LocationModel(Parcel in) {
+    private Sms(Parcel in) {
         distance = in.readDouble();
         minutes = in.readInt();
         direction = in.readInt();
         speed = in.readDouble();
     }
 
-    public LocationModel setDistance(double distance) {
+    public Sms setDistance(double distance) {
         this.distance = distance;
         return this;
     }
@@ -65,7 +65,7 @@ public class LocationModel implements Parcelable {
         return distance;
     }
 
-    public LocationModel setSpeed(double speed) {
+    public Sms setSpeed(double speed) {
         this.speed = speed;
         return this;
     }
@@ -86,7 +86,7 @@ public class LocationModel implements Parcelable {
         }
     }
 
-    public LocationModel setTime(int minutes) {
+    public Sms setTime(int minutes) {
         this.minutes = minutes;
         return this;
     }
@@ -95,7 +95,7 @@ public class LocationModel implements Parcelable {
         return minutes;
     }
 
-    public LocationModel setDirection(int direction) {
+    public Sms setDirection(int direction) {
         this.direction = direction;
         return this;
     }
@@ -115,13 +115,13 @@ public class LocationModel implements Parcelable {
         out.writeDouble(speed);
     }
 
-    public static final Parcelable.Creator<LocationModel> CREATOR = new Parcelable.Creator<LocationModel>() {
-        public LocationModel createFromParcel(Parcel in) {
-            return new LocationModel(in);
+    public static final Parcelable.Creator<Sms> CREATOR = new Parcelable.Creator<Sms>() {
+        public Sms createFromParcel(Parcel in) {
+            return new Sms(in);
         }
 
-        public LocationModel[] newArray(int size) {
-            return new LocationModel[size];
+        public Sms[] newArray(int size) {
+            return new Sms[size];
         }
     };
 }

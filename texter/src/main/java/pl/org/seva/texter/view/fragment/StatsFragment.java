@@ -46,8 +46,8 @@ import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.presenter.manager.GpsManager;
 import pl.org.seva.texter.presenter.manager.PermissionsManager;
 import pl.org.seva.texter.presenter.manager.SmsManager;
-import pl.org.seva.texter.presenter.manager.TimerManager;
-import pl.org.seva.texter.model.LocationModel;
+import pl.org.seva.texter.presenter.utils.Timer;
+import pl.org.seva.texter.model.Sms;
 
 public class StatsFragment extends Fragment implements
         View.OnClickListener {
@@ -57,7 +57,8 @@ public class StatsFragment extends Fragment implements
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject TimerManager timerManager;
+    @Inject
+    Timer timer;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsManager smsManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
@@ -106,7 +107,7 @@ public class StatsFragment extends Fragment implements
 
         showStats();
         composite.addAll(
-                timerManager.timerListener().subscribe(__ -> onTimer()),
+                timer.timerListener().subscribe(__ -> onTimer()),
                 smsManager.smsSendingListener().subscribe(__ -> getActivity().runOnUiThread(this::onSendingSms)),
                 gpsManager.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
                 gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()),
@@ -172,7 +173,7 @@ public class StatsFragment extends Fragment implements
         }
         distanceTextView.setText(distanceStr);
         int seconds = (int) (System.currentTimeMillis() -
-                timerManager.getResetTime()) / 1000;
+                timer.getResetTime()) / 1000;
         int minutes = seconds / 60;
         seconds = seconds % 60;
         int hours = minutes / 60;
@@ -228,7 +229,7 @@ public class StatsFragment extends Fragment implements
 
     private void onDistanceChanged() {
         boolean resetValues =
-                System.currentTimeMillis() - timerManager.getResetTime() > 3 * 3600 * 1000;
+                System.currentTimeMillis() - timer.getResetTime() > 3 * 3600 * 1000;
         if (distance != smsManager.getLastSentDistance()) {
             sendNowButton.setEnabled(smsManager.isTextingEnabled());
         }
@@ -260,10 +261,10 @@ public class StatsFragment extends Fragment implements
         if (v == sendNowButton) {
             sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(timerManager.getResetTime());
+            calendar.setTimeInMillis(timer.getResetTime());
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
             minutes += calendar.get(Calendar.MINUTE);
-            LocationModel location = new LocationModel();
+            Sms location = new Sms();
             location.setDistance(distance);
             location.setDirection(0);
             location.setTime(minutes);

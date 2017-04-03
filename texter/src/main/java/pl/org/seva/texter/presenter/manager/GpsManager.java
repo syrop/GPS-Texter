@@ -49,9 +49,10 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.view.activity.SettingsActivity;
 import pl.org.seva.texter.view.preference.HomeLocationPreference;
-import pl.org.seva.texter.presenter.utils.Calculator;
+import pl.org.seva.texter.presenter.utils.DistanceCalculator;
 import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton
@@ -61,7 +62,7 @@ public class GpsManager implements
         com.google.android.gms.location.LocationListener {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject public TimerManager timerManager;
+    @Inject public Timer timer;
 
     @SuppressWarnings("WeakerAccess")
     @Inject public GpsManager() {
@@ -140,7 +141,7 @@ public class GpsManager implements
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {
-            distance = Calculator.calculateDistance(
+            distance = DistanceCalculator.calculateDistance(
                     homeLat,
                     homeLon,
                     location.getLatitude(),
@@ -266,7 +267,7 @@ public class GpsManager implements
         if (!isBetterLocation(location, this.location)) {
             return;
         }
-        timerManager.reset();
+        timer.reset();
         long time = System.currentTimeMillis();
         speed = calculateSpeedOrReturnZero(this.location, location, time - this.time);
         this.location = location;
@@ -284,7 +285,7 @@ public class GpsManager implements
     }
 
     private double calculateCurrentDistance() {
-        return Calculator.calculateDistance(  // distance in kilometres
+        return DistanceCalculator.calculateDistance(  // distance in kilometres
                 location.getLatitude(),
                 location.getLongitude(),
                 getHomeLat(),
@@ -300,7 +301,7 @@ public class GpsManager implements
         if (time == 0.0) {
             return 0.0;
         }
-        return Calculator.calculateSpeed(loc1, loc2, time);
+        return DistanceCalculator.calculateSpeed(loc1, loc2, time);
     }
 
     @Override

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,25 +23,26 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import pl.org.seva.texter.model.LocationModel;
+import pl.org.seva.texter.model.Sms;
 
 @Singleton
-public class HistoryManager {
+public class SmsCache {
 
     private boolean mock = true;
 
-    private final List<LocationModel> list;
+    private final List<Sms> list;
 
-    @Inject HistoryManager() {
+    @Inject
+    SmsCache() {
         list = new ArrayList<>();
-        list.add(new LocationModel());
+        list.add(new Sms());
     }
 
-    public List<LocationModel> getList() {
+    public List<Sms> getList() {
         return list;
     }
 
-    public void add(LocationModel model) {
+    public void add(Sms model) {
         if (mock) {
             list.clear();
             mock = false;

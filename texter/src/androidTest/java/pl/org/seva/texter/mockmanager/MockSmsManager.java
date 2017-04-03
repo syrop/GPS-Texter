@@ -23,19 +23,19 @@ import android.app.PendingIntent;
 import javax.inject.Singleton;
 
 import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.HistoryManager;
+import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.presenter.manager.SmsManager;
-import pl.org.seva.texter.presenter.manager.ZoneManager;
+import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Singleton
 public class MockSmsManager extends SmsManager {
 
     private int messagesSent;
 
-    public MockSmsManager(GpsManager gpsManager, HistoryManager historyManager, ZoneManager zoneManager) {
+    public MockSmsManager(GpsManager gpsManager, SmsCache smsCache, ZoneCalculator zoneCalculator) {
         this.gpsManager = gpsManager;
-        this.historyManager = historyManager;
-        this.zoneManager = zoneManager;
+        this.smsCache = smsCache;
+        this.zoneCalculator = zoneCalculator;
     }
 
     protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)

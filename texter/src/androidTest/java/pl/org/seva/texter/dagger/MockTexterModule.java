@@ -24,28 +24,28 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.texter.presenter.manager.HistoryManager;
+import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.presenter.manager.SmsManager;
 import pl.org.seva.texter.mockmanager.MockGpsManager;
 import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.TimerManager;
+import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.mockmanager.MockSmsManager;
-import pl.org.seva.texter.presenter.manager.ZoneManager;
+import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Module
 class MockTexterModule {
 
     @Provides
     @Singleton
-    GpsManager provideGpsManager(TimerManager timerManager) {
-        return new MockGpsManager(timerManager);
+    GpsManager provideGpsManager(Timer timer) {
+        return new MockGpsManager(timer);
     }
 
     @Provides
     @Singleton
-    SmsManager provideSmsManager(GpsManager gpsManager, HistoryManager historyManager, ZoneManager zoneManager) {
-        return new MockSmsManager(gpsManager, historyManager, zoneManager);
+    SmsManager provideSmsManager(GpsManager gpsManager, SmsCache smsCache, ZoneCalculator zoneCalculator) {
+        return new MockSmsManager(gpsManager, smsCache, zoneCalculator);
     }
 
     @Provides

@@ -69,7 +69,7 @@ import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.presenter.manager.GpsManager;
 import pl.org.seva.texter.presenter.manager.PermissionsManager;
 import pl.org.seva.texter.presenter.manager.SmsManager;
-import pl.org.seva.texter.presenter.manager.TimerManager;
+import pl.org.seva.texter.presenter.utils.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PermissionsManager permissionsManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject TimerManager timerManager;
+    @Inject
+    Timer timer;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
 
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             tabs.setViewPager(pager);
         }
         else if (savedInstanceState == null && action != null && action.equals(Intent.ACTION_MAIN)) {
-            timerManager.reset();
+            timer.reset();
         }
 
         smsManager.init(this, getString(R.string.speed_unit));

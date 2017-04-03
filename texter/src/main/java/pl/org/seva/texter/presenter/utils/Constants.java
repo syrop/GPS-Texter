@@ -25,9 +25,9 @@ public class Constants {
     /** Send an sms each time this value is passed. */
     public static final int KM_INTERVAL = 2;  // two kilometers
 
-    /** If the number of measurements in the present zone has reached the trigger, send SMS. */
+    /** If the number of measurements in the present calculateZone has reached the trigger, send SMS. */
     public static final int SMS_TRIGGER = 2;
-    /** Time spend in zone before an SMS is sent. */
+    /** Time spend in calculateZone before an SMS is sent. */
     public static final int TIME_IN_ZONE = 11 * 1000;
 
     public static final long LOCATION_UPDATE_FREQUENCY = 1000;  // [ms]

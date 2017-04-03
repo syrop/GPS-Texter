@@ -15,31 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.utils;
 
 import android.util.SparseArray;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import pl.org.seva.texter.model.ZoneModel;
-import pl.org.seva.texter.presenter.utils.Constants;
+import pl.org.seva.texter.model.DistanceZone;
 
 @Singleton
-public class ZoneManager {
+public class ZoneCalculator {
 
-    private final SparseArray<ZoneModel> zones = new SparseArray<>();
+    private final SparseArray<DistanceZone> zones = new SparseArray<>();
 
-    @Inject ZoneManager() {
+    @Inject
+    ZoneCalculator() {
     }
 
     // Needs to be called from a synchronized block.
-    void clear() {
+    public void clearCache() {
         zones.clear();
     }
 
     // Needs to be called from a synchronized block.
-    ZoneModel zone(double distance) {
+    public DistanceZone calculateZone(double distance) {
         int check = 0;
         int min = 0;
         int max;
@@ -48,10 +48,10 @@ public class ZoneManager {
             check += Constants.KM_INTERVAL;
         }
         max = check;
-        ZoneModel zone = zones.get(min);
+        DistanceZone zone = zones.get(min);
         if (zone == null) {
-            clear();
-            zone = new ZoneModel(min, max);
+            clearCache();
+            zone = new DistanceZone(min, max);
             zone.increaseCounter();
             zones.put(min, zone);
         }

@@ -38,17 +38,18 @@ import javax.inject.Inject;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.view.adapter.HistoryAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
-import pl.org.seva.texter.presenter.manager.HistoryManager;
 import pl.org.seva.texter.presenter.manager.SmsManager;
 
 public class HistoryFragment extends Fragment {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject HistoryManager historyManager;
+    @Inject
+    SmsCache smsCache;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SmsManager smsManager;
 
@@ -99,7 +100,7 @@ public class HistoryFragment extends Fragment {
         historyRecyclerView = binding.listView;
         historyRecyclerView.setHasFixedSize(true);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HistoryAdapter(getActivity(), historyManager.getList());
+        adapter = new HistoryAdapter(getActivity(), smsCache.getList());
         historyRecyclerView.setAdapter(adapter);
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();

@@ -20,13 +20,13 @@ package pl.org.seva.texter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ZoneModel implements Parcelable {
+public class DistanceZone implements Parcelable {
     private final int min;
     private final int max;
     private int counter;
     private final long time;
 
-    public ZoneModel(int min, int max) {
+    public DistanceZone(int min, int max) {
         this.min = min;
         this.max = max;
         time = System.currentTimeMillis();
@@ -70,18 +70,18 @@ public class ZoneModel implements Parcelable {
         out.writeLong(time);
     }
 
-    public static final Parcelable.Creator<ZoneModel> CREATOR =
-            new Parcelable.Creator<ZoneModel>() {
-        public ZoneModel createFromParcel(Parcel in) {
-            return new ZoneModel(in);
+    public static final Parcelable.Creator<DistanceZone> CREATOR =
+            new Parcelable.Creator<DistanceZone>() {
+        public DistanceZone createFromParcel(Parcel in) {
+            return new DistanceZone(in);
         }
 
-        public ZoneModel[] newArray(int size) {
-            return new ZoneModel[size];
+        public DistanceZone[] newArray(int size) {
+            return new DistanceZone[size];
         }
     };
 
-    private ZoneModel(Parcel in) {
+    private DistanceZone(Parcel in) {
         min = in.readInt();
         max = in.readInt();
         counter = in.readInt();

@@ -29,14 +29,14 @@ import java.util.List;
 
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.HistoryAdapterBinding;
-import pl.org.seva.texter.model.LocationModel;
+import pl.org.seva.texter.model.Sms;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private final Context context;
-    private final List<LocationModel> values;
+    private final List<Sms> values;
 
-    public HistoryAdapter(Context context, List<LocationModel> values) {
+    public HistoryAdapter(Context context, List<Sms> values) {
         this.context = context;
         this.values = values;
     }
@@ -51,7 +51,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LocationModel location = values.get(position);
+        Sms location = values.get(position);
 
         @SuppressLint("DefaultLocale")
         String distanceStr =

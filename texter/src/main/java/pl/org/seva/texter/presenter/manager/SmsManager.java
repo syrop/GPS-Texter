@@ -38,21 +38,23 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.model.ZoneModel;
+import pl.org.seva.texter.model.DistanceZone;
 import pl.org.seva.texter.presenter.utils.Constants;
+import pl.org.seva.texter.presenter.utils.SmsCache;
+import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 import pl.org.seva.texter.view.activity.SettingsActivity;
-import pl.org.seva.texter.model.LocationModel;
+import pl.org.seva.texter.model.Sms;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
 @Singleton
 public class SmsManager {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject protected HistoryManager historyManager;
+    @Inject protected SmsCache smsCache;
     @SuppressWarnings("WeakerAccess")
     @Inject protected GpsManager gpsManager;
     @SuppressWarnings("WeakerAccess")
-    @Inject protected ZoneManager zoneManager;
+    @Inject protected ZoneCalculator zoneCalculator;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
@@ -76,8 +78,8 @@ public class SmsManager {
 	
 	private boolean initialized;
 
-    private LocationModel lastSentLocation;
-    private ZoneModel zone;
+    private Sms lastSentLocation;
+    private DistanceZone zone;
 
 
     @Inject
@@ -108,14 +110,14 @@ public class SmsManager {
         int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
         minutes += calendar.get(Calendar.MINUTE);
 
-        LocationModel location = new LocationModel();
+        Sms location = new Sms();
         location.setDistance(distance);
         location.setDirection(direction);
         location.setTime(minutes);
         location.setSpeed(speed);
 
         synchronized (this) {
-            ZoneModel zone = zoneManager.zone(distance);
+            DistanceZone zone = zoneCalculator.calculateZone(distance);
             if (this.zone == null) {
                 this.zone = zone;
             }
@@ -128,7 +130,7 @@ public class SmsManager {
                 else {
                     direction = 1;
                 }
-                location.setDirection(direction);  // calculated specifically for zone border
+                location.setDirection(direction);  // calculated specifically for calculateZone border
 
                 if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
                         getMaxSentDistance()) {
@@ -140,7 +142,7 @@ public class SmsManager {
     }
 
     public synchronized void resetZones() {
-        zoneManager.clear();
+        zoneCalculator.clearCache();
         zone = null;
     }
 
@@ -182,7 +184,7 @@ public class SmsManager {
         {
             public void onReceive(Context arg0, Intent arg1) {
                 String text = arg1.getStringExtra(TEXT_KEY);
-                LocationModel location = new LocationModel().
+                Sms location = new Sms().
                     setDistance(arg1.getDoubleExtra(DISTANCE_KEY, 0.0)).
                     setTime(arg1.getIntExtra(MINUTES_KEY, 0)).
                     setDirection(arg1.getIntExtra(DIRECTION_KEY, 0)).
@@ -198,7 +200,7 @@ public class SmsManager {
                     	}
                         Toast.makeText(arg0, sentBuilder.toString(), length).show();
                         if (location != null) {
-                            historyManager.add(location);
+                            smsCache.add(location);
                             smsSentSubject.onNext(0);
                         }
                         break;
@@ -238,7 +240,7 @@ public class SmsManager {
         }, new IntentFilter(DELIVERED + id));
 	}
 	
-	public void send(LocationModel model) {
+	public void send(Sms model) {
         if (!isTextingEnabled()) {
             return;
         }
@@ -282,7 +284,7 @@ public class SmsManager {
         return lastSentDistance;
     }
 
-    private void send(String text, String intentText, LocationModel location) {
+    private void send(String text, String intentText, Sms location) {
         String id = UUID.randomUUID().toString();
 		Intent sentIntent = new Intent(SENT + id);
 		sentIntent.putExtra(TEXT_KEY, intentText);

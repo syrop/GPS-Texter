@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,13 +29,14 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 @Singleton
-public class TimerManager {
+public class Timer {
 
     private long resetTime = System.currentTimeMillis();
     private Disposable timerSubscription = Disposables.empty();
     private final PublishSubject<Object> timerSubject = PublishSubject.create();
 
-    @Inject TimerManager() {
+    @Inject
+    Timer() {
         createTimerSubscription();
     }
 

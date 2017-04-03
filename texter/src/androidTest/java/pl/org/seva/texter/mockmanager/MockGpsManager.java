@@ -27,7 +27,7 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
 import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.TimerManager;
+import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.view.preference.HomeLocationPreference;
 import pl.org.seva.texter.presenter.utils.Constants;
 
@@ -38,8 +38,8 @@ public class MockGpsManager extends GpsManager {
 
     private int ticks = -1;
 
-    public MockGpsManager(TimerManager timerManager) {
-        this.timerManager = timerManager;
+    public MockGpsManager(Timer timer) {
+        this.timer = timer;
         String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
         homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation);
         homeLon = HomeLocationPreference.parseLongitude(defaultHomeLocation);
