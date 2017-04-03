@@ -18,8 +18,10 @@
 package pl.org.seva.texter.presenter.manager;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +29,8 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.DetectedActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -35,12 +39,13 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.texter.presenter.service.ActivityRecognitionIntentService;
 
 @Singleton
 public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+
+    private static final String ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent";
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
 
@@ -77,8 +82,10 @@ public class ActivityRecognitionManager implements
         if (context == null) {
             return;
         }
-        Intent intent = new Intent(context, ActivityRecognitionIntentService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(
+        context.registerReceiver(new ActivityRecognitionReceiver(), new IntentFilter(ACTIVITY_RECOGNITION_INTENT));
+        Intent intent = new Intent(ACTIVITY_RECOGNITION_INTENT);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
                 intent,
@@ -107,11 +114,27 @@ public class ActivityRecognitionManager implements
         return movingSubject.hide();
     }
 
-    public void stationary() {
+    private void onDeviceStationary() {
         stationarySubject.onNext(0);
     }
 
-    public void moving() {
+    private void onDeviceMoving() {
         movingSubject.onNext(0);
+    }
+
+    private class ActivityRecognitionReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ActivityRecognitionResult.hasResult(intent)) {
+                ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+                if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
+                    onDeviceStationary();
+                }
+                else {
+                    onDeviceMoving();
+                }
+            }
+        }
     }
 }

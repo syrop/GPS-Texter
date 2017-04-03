@@ -27,7 +27,6 @@ import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.view.fragment.HistoryFragment;
 import pl.org.seva.texter.view.fragment.NavigationFragment;
 import pl.org.seva.texter.view.fragment.StatsFragment;
-import pl.org.seva.texter.presenter.service.ActivityRecognitionIntentService;
 import pl.org.seva.texter.presenter.service.TexterService;
 
 @Singleton
@@ -38,7 +37,6 @@ public interface Graph {
     void inject(MainActivity mainActivity);
     void inject(HomeLocationActivity homeLocationActivity);
     void inject(SettingsActivity settingsActivity);
-    void inject(ActivityRecognitionIntentService activityRecognitionIntentService);
     void inject(StatsFragment statsFragment);
     void inject(HistoryFragment historyFragment);
     void inject(TexterApplication texterApplication);

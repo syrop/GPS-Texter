@@ -43,7 +43,6 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".presenter.service.TexterService"/>
-        <service android:name=".presenter.service.ActivityRecognitionIntentService" />
 
         <meta-data
             android:name="com.google.android.gms.version"
