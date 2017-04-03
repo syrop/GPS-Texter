@@ -19,9 +19,6 @@ package pl.org.seva.texter.presenter.utils;
 
 import android.annotation.SuppressLint;
 
-/**
- * Created by wiktor on 28.08.15.
- */
 public class StringUtils {
 
     private StringUtils() {

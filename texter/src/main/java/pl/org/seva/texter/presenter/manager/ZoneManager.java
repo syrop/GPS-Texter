@@ -34,12 +34,12 @@ public class ZoneManager {
     }
 
     // Needs to be called from a synchronized block.
-    public void clear() {
+    void clear() {
         zones.clear();
     }
 
     // Needs to be called from a synchronized block.
-    public ZoneModel zone(double distance) {
+    ZoneModel zone(double distance) {
         int check = 0;
         int min = 0;
         int max;

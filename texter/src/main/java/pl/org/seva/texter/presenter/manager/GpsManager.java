@@ -50,7 +50,7 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.view.activity.SettingsActivity;
-import pl.org.seva.texter.presenter.preference.HomeLocationPreference;
+import pl.org.seva.texter.view.preference.HomeLocationPreference;
 import pl.org.seva.texter.presenter.utils.Calculator;
 import pl.org.seva.texter.presenter.utils.Constants;
 

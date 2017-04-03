@@ -23,9 +23,6 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
 public class TitledPagerAdapter extends FragmentPagerAdapter {
 
     private final CharSequence titles[];

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.preference;
+package pl.org.seva.texter.view.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -24,9 +24,6 @@ import android.util.AttributeSet;
 
 import pl.org.seva.texter.presenter.utils.Constants;
 
-/**
- * Created by wiktor on 20.08.15.
- */
 public class HomeLocationPreference extends Preference {
 
     private static final String HOME_LOCATION = "HOME_LOCATION";

@@ -32,9 +32,6 @@ import pl.org.seva.texter.databinding.HistoryAdapterBinding;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
-/**
- * Created by wiktor on 01.08.15.
- */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private final Context context;
     private final List<LocationModel> values;

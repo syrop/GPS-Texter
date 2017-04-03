@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.preference;
+package pl.org.seva.texter.view.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -29,9 +29,6 @@ import android.view.View;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.view.fragment.PhoneNumberFragment;
 
-/**
- * Created by wiktor on 5/20/16.
- */
 public class NumberPreference extends DialogPreference {
 
     private PhoneNumberFragment numberFragment;

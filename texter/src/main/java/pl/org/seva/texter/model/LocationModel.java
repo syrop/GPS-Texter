@@ -20,9 +20,6 @@ package pl.org.seva.texter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by wiktor on 01.08.15.
- */
 public class LocationModel implements Parcelable {
     private double distance;  // in kilometers
     private  int minutes; // in minutes since midnight

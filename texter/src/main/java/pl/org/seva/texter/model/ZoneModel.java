@@ -20,9 +20,6 @@ package pl.org.seva.texter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by wiktor on 28.08.15.
- */
 public class ZoneModel implements Parcelable {
     private final int min;
     private final int max;

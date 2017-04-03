@@ -17,9 +17,6 @@
 
 package pl.org.seva.texter.presenter.utils;
 
-/**
- * Created by wiktor on 15.08.16.
- */
 public class Constants {
 
     /** Geo URI for Warsaw. */

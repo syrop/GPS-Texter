@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
 import pl.org.seva.texter.presenter.manager.GpsManager;
 import pl.org.seva.texter.presenter.manager.TimerManager;
-import pl.org.seva.texter.presenter.preference.HomeLocationPreference;
+import pl.org.seva.texter.view.preference.HomeLocationPreference;
 import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton

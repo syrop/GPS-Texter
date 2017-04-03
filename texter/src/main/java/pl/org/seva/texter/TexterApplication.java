@@ -31,15 +31,14 @@ import pl.org.seva.texter.presenter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
 
+    private static final String TAG = TexterApplication.class.getSimpleName();
+
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
 
-    private static final String TAG = TexterApplication.class.getSimpleName();
-
-    private boolean serviceRunning;
-
+    private boolean isServiceRunning;
     private boolean isDeviceStationary;
     private boolean isProviderEnabled;
 
@@ -104,19 +103,19 @@ public class TexterApplication extends MultiDexApplication {
     }
 
     private void startService() {
-        if (serviceRunning) {
+        if (isServiceRunning) {
             return;
         }
         startService(new Intent(getBaseContext(), TexterService.class));
-        serviceRunning = true;
+        isServiceRunning = true;
     }
 
     public void stopService() {
-        if (!serviceRunning) {
+        if (!isServiceRunning) {
             return;
         }
         stopService(new Intent(getBaseContext(), TexterService.class));
-        serviceRunning = false;
+        isServiceRunning = false;
     }
 
     public Graph getGraph() {
