@@ -22,9 +22,9 @@ import android.app.PendingIntent;
 
 import javax.inject.Singleton;
 
-import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.HistoryManager;
-import pl.org.seva.texter.manager.SmsManager;
+import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.presenter.manager.HistoryManager;
+import pl.org.seva.texter.presenter.manager.SmsManager;
 
 @Singleton
 public class MockSmsManager extends SmsManager {

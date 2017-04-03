@@ -17,7 +17,7 @@
 
 package pl.org.seva.texter;
 
-import pl.org.seva.texter.utils.Calculator;
+import pl.org.seva.texter.presenter.utils.Calculator;
 
 public class TestConstants {
 

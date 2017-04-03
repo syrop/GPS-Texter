@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Wiktor Nizio
+ * Copyright (C) 2016 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.utils;
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import android.annotation.SuppressLint;
 
-public class MockTexterApplication extends TexterApplication {
+/**
+ * Created by wiktor on 28.08.15.
+ */
+public class StringUtils {
 
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
+    private StringUtils() {
+        //
     }
+
+    public static String getSpeedString(double speed, String speedUnit) {
+        @SuppressLint("DefaultLocale")
+        String result = String.format("%.1f", speed) + " " + speedUnit;
+        if (result.contains(".0")) {
+            result = result.replace(".0", "");
+        }
+        else if (result.contains(",0")) {
+            result = result.replace(",0", "");
+        }
+        return result;
+    }
+
 }

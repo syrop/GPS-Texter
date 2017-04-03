@@ -26,10 +26,10 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
-import pl.org.seva.texter.manager.GpsManager;
-import pl.org.seva.texter.manager.TimerManager;
-import pl.org.seva.texter.preference.HomeLocationPreference;
-import pl.org.seva.texter.utils.Constants;
+import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.presenter.manager.TimerManager;
+import pl.org.seva.texter.presenter.preference.HomeLocationPreference;
+import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton
 public class MockGpsManager extends GpsManager {

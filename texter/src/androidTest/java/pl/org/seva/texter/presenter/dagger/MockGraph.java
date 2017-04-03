@@ -15,16 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.dagger;
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import javax.inject.Singleton;
 
-public class MockTexterApplication extends TexterApplication {
+import dagger.Component;
+import pl.org.seva.texter.LocationTest;
 
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
-    }
+@Singleton
+@Component(modules = { pl.org.seva.texter.presenter.dagger.MockTexterModule.class })
+public interface MockGraph extends Graph {
+    void inject(LocationTest locationTest);
 }

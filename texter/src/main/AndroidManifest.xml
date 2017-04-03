@@ -15,7 +15,7 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".application.TexterApplication"
+        android:name=".TexterApplication"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         android:extractNativeLibs="false">
@@ -25,7 +25,7 @@
         android:value="${googleMapsKey}"/>
 
         <activity
-            android:name="pl.org.seva.texter.activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,17 +33,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pl.org.seva.texter.activity.SettingsActivity"
+            android:name=".view.activity.SettingsActivity"
             android:theme="@style/FixForPreferenceThemeOverlay"
             android:label="@string/app_name_settings"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.HomeLocationActivity"
+        <activity android:name=".view.activity.HomeLocationActivity"
             android:theme="@style/FixForPreferenceThemeOverlay"
             android:label="@string/app_name_settings"
             android:screenOrientation="portrait" />
 
-        <service android:name=".service.TexterService"/>
-        <service android:name=".service.ActivityRecognitionIntentService" />
+        <service android:name=".presenter.service.TexterService"/>
+        <service android:name=".presenter.service.ActivityRecognitionIntentService" />
 
         <meta-data
             android:name="com.google.android.gms.version"

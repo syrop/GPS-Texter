@@ -10,7 +10,7 @@
             android:title="@string/enable_sms"
             android:defaultValue="false" />
 
-        <pl.org.seva.texter.preference.NumberPreference
+        <pl.org.seva.texter.presenter.preference.NumberPreference
             android:dependency="pref_enable_sms"
             android:key="pref_phone_number"
             android:title="@string/telephone_number"
@@ -46,7 +46,7 @@
     <PreferenceCategory
         android:title="@string/location_settings">
         <!--suppress AndroidDomInspection -->
-        <pl.org.seva.texter.preference.HomeLocationPreference
+        <pl.org.seva.texter.presenter.preference.HomeLocationPreference
             android:title="@string/home_location"
             android:summary="@string/home_location_summary"
             android:key="@string/home_location_key"
