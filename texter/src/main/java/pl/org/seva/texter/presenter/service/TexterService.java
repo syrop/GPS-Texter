@@ -30,17 +30,19 @@ import javax.inject.Inject;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.presenter.manager.SmsManager;
+import pl.org.seva.texter.presenter.source.LocationSource;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.manager.GpsManager;
 
 public class TexterService extends Service {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject GpsManager gpsManager;
+    @Inject
+    LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsManager smsManager;
+    @Inject
+    SmsSender smsSender;
 
     private static final int ONGOING_NOTIFICATION_ID = 1;
 
@@ -74,7 +76,7 @@ public class TexterService extends Service {
                 .setAutoCancel(false)
                 .build();
         createDistanceSubscription();
-        gpsManager.resumeUpdates(this);
+        locationSource.resumeUpdates(this);
 
         startForeground(ONGOING_NOTIFICATION_ID, n);
 
@@ -84,16 +86,16 @@ public class TexterService extends Service {
     @Override
     public void onDestroy() {
         removeDistanceSubscription();
-        gpsManager.pauseUpdates();
+        locationSource.pauseUpdates();
         super.onDestroy();
     }
 
     private void createDistanceSubscription() {
-        distanceSubscription = gpsManager
+        distanceSubscription = locationSource
                 .distanceChangedListener()
                 .filter(__ -> getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY))
                 .subscribe(
-                __ -> smsManager.onDistanceChanged());
+                __ -> smsSender.onDistanceChanged());
     }
 
     private void removeDistanceSubscription() {

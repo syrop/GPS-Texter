@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -39,20 +39,17 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.model.DistanceZone;
-import pl.org.seva.texter.presenter.utils.Constants;
-import pl.org.seva.texter.presenter.utils.SmsCache;
-import pl.org.seva.texter.presenter.utils.ZoneCalculator;
+import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.view.activity.SettingsActivity;
 import pl.org.seva.texter.model.Sms;
-import pl.org.seva.texter.presenter.utils.StringUtils;
 
 @Singleton
-public class SmsManager {
+public class SmsSender {
 
     @SuppressWarnings("WeakerAccess")
     @Inject protected SmsCache smsCache;
     @SuppressWarnings("WeakerAccess")
-    @Inject protected GpsManager gpsManager;
+    @Inject protected LocationSource locationSource;
     @SuppressWarnings("WeakerAccess")
     @Inject protected ZoneCalculator zoneCalculator;
 
@@ -83,7 +80,7 @@ public class SmsManager {
 
 
     @Inject
-    protected SmsManager() {
+    protected SmsSender() {
 		smsManager = android.telephony.SmsManager.getDefault();
         smsSendingSubject = PublishSubject.create();
         smsSentSubject = PublishSubject.create();
@@ -100,8 +97,8 @@ public class SmsManager {
 	}
 
     public void onDistanceChanged() {
-        double distance = gpsManager.getDistance();
-        double speed = gpsManager.getSpeed();
+        double distance = locationSource.getDistance();
+        double speed = locationSource.getSpeed();
 
         long time = System.currentTimeMillis();
         int direction = 0; // alternatively (int) Math.signum(this.distance - distance);
@@ -214,7 +211,7 @@ public class SmsManager {
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
-            smsBuilder.append(" ").append(gpsManager.getLocationUrl());
+            smsBuilder.append(" ").append(locationSource.getLocationUrl());
         }
         @SuppressLint("DefaultLocale")
         String intentDistanceStr = String.format("%.1f", distance) + model.getSign() + " km";

@@ -25,8 +25,8 @@ import javax.inject.Inject;
 
 import pl.org.seva.texter.presenter.dagger.DaggerGraph;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
+import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.service.TexterService;
 
 public class TexterApplication extends MultiDexApplication {
@@ -34,9 +34,11 @@ public class TexterApplication extends MultiDexApplication {
     private static final String TAG = TexterApplication.class.getSimpleName();
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject GpsManager gpsManager;
+    @Inject
+    LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ActivityRecognitionManager activityRecognitionManager;
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
 
     private boolean isServiceRunning;
     private boolean isDeviceStationary;
@@ -54,20 +56,20 @@ public class TexterApplication extends MultiDexApplication {
     }
 
     private void addGpsProviderListeners() {
-        gpsManager
+        locationSource
                 .providerEnabledListener()
                 .subscribe(__ -> onProviderEnabled());
-        gpsManager
+        locationSource
                 .providerDisabledListener()
                 .subscribe(__ -> onProviderDisabled());
     }
 
     private void addActivityRecognitionListeners() {
-        activityRecognitionManager
+        activityRecognitionSource
                 .stationaryListener()
                 .subscribe(__ -> onDeviceStationary());
 
-        activityRecognitionManager
+        activityRecognitionSource
                 .movingListener()
                 .subscribe(__ -> onDeviceMoving());
     }

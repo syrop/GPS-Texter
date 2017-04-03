@@ -43,7 +43,7 @@ import pl.org.seva.texter.view.adapter.HistoryAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.HistoryFragmentBinding;
-import pl.org.seva.texter.presenter.manager.SmsManager;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 
 public class HistoryFragment extends Fragment {
 
@@ -51,7 +51,8 @@ public class HistoryFragment extends Fragment {
     @Inject
     SmsCache smsCache;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsManager smsManager;
+    @Inject
+    SmsSender smsSender;
 
     private HistoryAdapter adapter;
     private RecyclerView historyRecyclerView;
@@ -119,7 +120,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        smsSentSubscription = smsManager.smsSentListener().subscribe(
+        smsSentSubscription = smsSender.smsSentListener().subscribe(
                 __ -> onSMsSent());
     }
 

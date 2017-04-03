@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mockmanager;
+package pl.org.seva.texter.mockimplementations;
 
 import android.location.Location;
 
@@ -26,19 +26,19 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
-import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.view.preference.HomeLocationPreference;
 import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton
-public class MockGpsManager extends GpsManager {
+public class MockLocationSource extends LocationSource {
 
     private static final String MOCK_PROVIDER_NAME = "Mock provider";
 
     private int ticks = -1;
 
-    public MockGpsManager(Timer timer) {
+    public MockLocationSource(Timer timer) {
         this.timer = timer;
         String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
         homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation);

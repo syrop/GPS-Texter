@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.source;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -41,7 +41,7 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @Singleton
-public class ActivityRecognitionManager implements
+public class ActivityRecognitionSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -56,7 +56,8 @@ public class ActivityRecognitionManager implements
     private GoogleApiClient googleApiClient;
     private WeakReference<Context> weakContext;
 
-    @Inject ActivityRecognitionManager() {
+    @Inject
+    ActivityRecognitionSource() {
     }
 
     public void init(Context context) {

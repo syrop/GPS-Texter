@@ -24,13 +24,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.PublishSubject;
+import pl.org.seva.texter.mockimplementations.MockSmsSender;
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
+import pl.org.seva.texter.presenter.source.LocationSource;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.SmsCache;
-import pl.org.seva.texter.presenter.manager.SmsManager;
-import pl.org.seva.texter.mockmanager.MockGpsManager;
-import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.mockimplementations.MockLocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
-import pl.org.seva.texter.mockmanager.MockSmsManager;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Module
@@ -38,26 +38,26 @@ class MockTexterModule {
 
     @Provides
     @Singleton
-    GpsManager provideGpsManager(Timer timer) {
-        return new MockGpsManager(timer);
+    LocationSource provideGpsManager(Timer timer) {
+        return new MockLocationSource(timer);
     }
 
     @Provides
     @Singleton
-    SmsManager provideSmsManager(GpsManager gpsManager, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        return new MockSmsManager(gpsManager, smsCache, zoneCalculator);
+    SmsSender provideSmsManager(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
+        return new MockSmsSender(locationSource, smsCache, zoneCalculator);
     }
 
     @Provides
     @Singleton
-    ActivityRecognitionManager provideActivityRecognitionManager() {
-        ActivityRecognitionManager result = Mockito.mock(ActivityRecognitionManager.class);
+    ActivityRecognitionSource provideActivityRecognitionManager() {
+        ActivityRecognitionSource result = Mockito.mock(ActivityRecognitionSource.class);
         mockReturnValues(result);
         return result;
     }
 
-    private void mockReturnValues(ActivityRecognitionManager activityRecognitionManager) {
-        Mockito.when(activityRecognitionManager.stationaryListener()).thenReturn(PublishSubject.empty());
-        Mockito.when(activityRecognitionManager.movingListener()).thenReturn(PublishSubject.empty());
+    private void mockReturnValues(ActivityRecognitionSource activityRecognitionSource) {
+        Mockito.when(activityRecognitionSource.stationaryListener()).thenReturn(PublishSubject.empty());
+        Mockito.when(activityRecognitionSource.movingListener()).thenReturn(PublishSubject.empty());
     }
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.source;
 
 import android.Manifest;
 import android.app.Activity;
@@ -56,7 +56,7 @@ import pl.org.seva.texter.presenter.utils.DistanceCalculator;
 import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton
-public class GpsManager implements
+public class LocationSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
@@ -65,10 +65,10 @@ public class GpsManager implements
     @Inject public Timer timer;
 
     @SuppressWarnings("WeakerAccess")
-    @Inject public GpsManager() {
+    @Inject public LocationSource() {
     }
 
-    private static final String TAG = GpsManager.class.getSimpleName();
+    private static final String TAG = LocationSource.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
 
@@ -102,7 +102,7 @@ public class GpsManager implements
     protected double homeLon;
     private long time;
 
-    String getLocationUrl() {
+    public String getLocationUrl() {
         if (location == null) {
             return "";
         }

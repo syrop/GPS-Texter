@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.manager;
+package pl.org.seva.texter.presenter.utils;
 
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -30,7 +30,7 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @Singleton
-public class PermissionsManager {
+public class PermissionsUtils {
 
     public static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0;
     public static final int PERMISSION_READ_CONTACTS_REQUEST = 1;
@@ -40,7 +40,8 @@ public class PermissionsManager {
 
     private final List<String> rationalesShown = new ArrayList<>();
 
-    @Inject PermissionsManager() {
+    @Inject
+    PermissionsUtils() {
     }
 
     public Observable<String> permissionGrantedListener() {

@@ -27,10 +27,10 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.dagger.MockGraph;
-import pl.org.seva.texter.presenter.manager.SmsManager;
-import pl.org.seva.texter.mockmanager.MockSmsManager;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -47,8 +47,7 @@ public class LocationTest {
     private static final int DURATION_IN_SECONDS = 50;
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    SmsManager smsManager;
+    @Inject SmsSender smsSender;
 
     @Rule
     public final ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
@@ -69,6 +68,6 @@ public class LocationTest {
             onView(isRoot()).perform(delay(1000));
             onView(withId(R.id.distance_value)).check(matches(withText(distance(i * TestConstants.DISTANCE_STEP))));
         }
-        assertEquals(TestConstants.EXPECTED_MESSAGES_SENT, ((MockSmsManager) smsManager).getMessagesSent());
+        assertEquals(TestConstants.EXPECTED_MESSAGES_SENT, ((MockSmsSender) smsSender).getMessagesSent());
     }
 }

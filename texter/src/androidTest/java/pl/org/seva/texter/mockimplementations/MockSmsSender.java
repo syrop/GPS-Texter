@@ -15,25 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mockmanager;
+package pl.org.seva.texter.mockimplementations;
 
 import android.app.Activity;
 import android.app.PendingIntent;
 
 import javax.inject.Singleton;
 
-import pl.org.seva.texter.presenter.manager.GpsManager;
+import pl.org.seva.texter.presenter.source.LocationSource;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.SmsCache;
-import pl.org.seva.texter.presenter.manager.SmsManager;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Singleton
-public class MockSmsManager extends SmsManager {
+public class MockSmsSender extends SmsSender {
 
     private int messagesSent;
 
-    public MockSmsManager(GpsManager gpsManager, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        this.gpsManager = gpsManager;
+    public MockSmsSender(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
+        this.locationSource = locationSource;
         this.smsCache = smsCache;
         this.zoneCalculator = zoneCalculator;
     }

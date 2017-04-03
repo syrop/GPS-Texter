@@ -55,6 +55,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
+import pl.org.seva.texter.presenter.utils.PermissionsUtils;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
@@ -65,25 +68,26 @@ import pl.org.seva.texter.view.fragment.HistoryFragment;
 import pl.org.seva.texter.view.fragment.StatsFragment;
 import pl.org.seva.texter.view.fragment.NavigationFragment;
 import pl.org.seva.texter.view.layout.SlidingTabLayout;
-import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.PermissionsManager;
-import pl.org.seva.texter.presenter.manager.SmsManager;
+import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsManager smsManager;
+    @Inject
+    SmsSender smsSender;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject GpsManager gpsManager;
+    @Inject
+    LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject PermissionsManager permissionsManager;
+    @Inject
+    PermissionsUtils permissionsUtils;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     Timer timer;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ActivityRecognitionManager activityRecognitionManager;
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         Graph graph = ((TexterApplication) getApplication()).getGraph();
         graph.inject(this);
-        activityRecognitionManager.init(this);
+        activityRecognitionSource.init(this);
 
         // Set up colors depending on SDK version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -175,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             timer.reset();
         }
 
-        smsManager.init(this, getString(R.string.speed_unit));
+        smsSender.init(this, getString(R.string.speed_unit));
 
         int googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (googlePlay != ConnectionResult.SUCCESS) {
@@ -201,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            permissionsManager
+            permissionsUtils
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                     .subscribe(__ -> onLocationPermissionGranted());
@@ -209,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         else  {
             initGps();
         }
-        if (smsManager.isTextingEnabled() && ContextCompat.checkSelfPermission(
+        if (smsSender.isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -223,14 +227,14 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(
                 this,
                 arr,
-                PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
+                PermissionsUtils.PERMISSION_ACCESS_FINE_LOCATION_REQUEST);
 
         return false;
     }
 
     private void initGps() {
-        gpsManager.init(this);
-        gpsManager.callProviderListener();
+        locationSource.init(this);
+        locationSource.callProviderListener();
     }
 
     private boolean showStartupDialog() {
@@ -324,8 +328,8 @@ public class MainActivity extends AppCompatActivity {
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
-        if (requestCode == PermissionsManager.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
-            permissionsManager.onRequestPermissionsResult(permissions, grantResults);
+        if (requestCode == PermissionsUtils.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
+            permissionsUtils.onRequestPermissionsResult(permissions, grantResults);
         }
     }
 
@@ -387,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onLocationPermissionGranted() {
         initGps();
-        gpsManager.callProviderListener();
+        locationSource.callProviderListener();
         if (showSettingsWhenPermissionGranted) {
             startActivity(new Intent(this, SettingsActivity.class));
         }

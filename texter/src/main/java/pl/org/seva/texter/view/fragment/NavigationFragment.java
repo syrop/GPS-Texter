@@ -49,15 +49,17 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.NavigationFragmentBinding;
-import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.PermissionsManager;
+import pl.org.seva.texter.presenter.source.LocationSource;
+import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 
 public class NavigationFragment extends Fragment {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject GpsManager gpsManager;
+    @Inject
+    LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject PermissionsManager permissionsManager;
+    @Inject
+    PermissionsUtils permissionsUtils;
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -79,7 +81,7 @@ public class NavigationFragment extends Fragment {
         NavigationFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
         distanceTextView = binding.distance;
-        show(gpsManager.getDistance());
+        show(locationSource.getDistance());
 
         if (savedInstanceState != null) {
             animateCamera = false;
@@ -95,8 +97,8 @@ public class NavigationFragment extends Fragment {
         super.onResume();
 
         composite.addAll(
-                gpsManager.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
-                gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()));
+                locationSource.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
+                locationSource.homeChangedListener().subscribe(__ -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -114,12 +116,12 @@ public class NavigationFragment extends Fragment {
                 map.setMyLocationEnabled(true);
             }
             else {
-                permissionsManager
+                permissionsUtils
                         .permissionGrantedListener()
                         .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                         .subscribe(__ -> onLocationPermissionGranted());
             }
-            LatLng homeLatLng = gpsManager.getHomeLatLng();
+            LatLng homeLatLng = locationSource.getHomeLatLng();
             updateHomeLocation(homeLatLng);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(homeLatLng).zoom(12).build();
@@ -197,11 +199,11 @@ public class NavigationFragment extends Fragment {
     }
 
     private void onDistanceChanged() {
-        show(gpsManager.getDistance());
+        show(locationSource.getDistance());
     }
 
     private void onHomeChanged() {
-        updateHomeLocation(gpsManager.getHomeLatLng());
+        updateHomeLocation(locationSource.getHomeLatLng());
     }
 
     private void onLocationPermissionGranted() {

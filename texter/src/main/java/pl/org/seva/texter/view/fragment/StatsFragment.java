@@ -42,10 +42,10 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.StatsFragmentBinding;
-import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
-import pl.org.seva.texter.presenter.manager.GpsManager;
-import pl.org.seva.texter.presenter.manager.PermissionsManager;
-import pl.org.seva.texter.presenter.manager.SmsManager;
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
+import pl.org.seva.texter.presenter.source.LocationSource;
+import pl.org.seva.texter.presenter.utils.PermissionsUtils;
+import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.model.Sms;
 
@@ -53,16 +53,20 @@ public class StatsFragment extends Fragment implements
         View.OnClickListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject GpsManager gpsManager;
+    @Inject
+    LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ActivityRecognitionManager activityRecognitionManager;
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     Timer timer;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsManager smsManager;
+    @Inject
+    SmsSender smsSender;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject PermissionsManager permissionsManager;
+    @Inject
+    PermissionsUtils permissionsUtils;
 
     private static String homeString;
     private static String hourString;
@@ -87,8 +91,8 @@ public class StatsFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        distance = gpsManager.getDistance();
-        speed = gpsManager.getSpeed();
+        distance = locationSource.getDistance();
+        speed = locationSource.getSpeed();
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
@@ -101,20 +105,20 @@ public class StatsFragment extends Fragment implements
         sendNowButton = binding.sendNowButton;
         sendNowButton.setOnClickListener(this);
         sendNowButton.setEnabled(
-                smsManager.isTextingEnabled() &&
+                smsSender.isTextingEnabled() &&
                 distance != 0.0 &&
-                distance != smsManager.getLastSentDistance());
+                distance != smsSender.getLastSentDistance());
 
         showStats();
         composite.addAll(
                 timer.timerListener().subscribe(__ -> onTimer()),
-                smsManager.smsSendingListener().subscribe(__ -> getActivity().runOnUiThread(this::onSendingSms)),
-                gpsManager.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
-                gpsManager.homeChangedListener().subscribe(__ -> onHomeChanged()),
-                activityRecognitionManager
+                smsSender.smsSendingListener().subscribe(__ -> getActivity().runOnUiThread(this::onSendingSms)),
+                locationSource.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
+                locationSource.homeChangedListener().subscribe(__ -> onHomeChanged()),
+                activityRecognitionSource
                     .stationaryListener()
                     .subscribe(__ -> deviceIsStationary()),
-                activityRecognitionManager
+                activityRecognitionSource
                     .movingListener()
                     .subscribe(__ -> deviceIsMoving()));
 
@@ -122,7 +126,7 @@ public class StatsFragment extends Fragment implements
                 getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-            permissionsManager
+            permissionsUtils
                     .permissionGrantedListener()
                     .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
                     .subscribe(__ -> onLocationPermissionGranted());
@@ -230,8 +234,8 @@ public class StatsFragment extends Fragment implements
     private void onDistanceChanged() {
         boolean resetValues =
                 System.currentTimeMillis() - timer.getResetTime() > 3 * 3600 * 1000;
-        if (distance != smsManager.getLastSentDistance()) {
-            sendNowButton.setEnabled(smsManager.isTextingEnabled());
+        if (distance != smsSender.getLastSentDistance()) {
+            sendNowButton.setEnabled(smsSender.isTextingEnabled());
         }
 
         if (resetValues) {  // reset the values if three hours have passed
@@ -239,8 +243,8 @@ public class StatsFragment extends Fragment implements
             this.distance = 0.0;
         }
         else {
-            this.distance = gpsManager.getDistance();
-            this.speed = gpsManager.getSpeed();
+            this.distance = locationSource.getDistance();
+            this.speed = locationSource.getSpeed();
         }
         showStats();
     }
@@ -269,7 +273,7 @@ public class StatsFragment extends Fragment implements
             location.setDirection(0);
             location.setTime(minutes);
             location.setSpeed(speed);
-            smsManager.send(location);
+            smsSender.send(location);
         }
     }
 
@@ -278,11 +282,11 @@ public class StatsFragment extends Fragment implements
     }
 
     private void onHomeChanged() {
-        distance = gpsManager.getDistance();
+        distance = locationSource.getDistance();
         showStats();
     }
 
     private void onLocationPermissionGranted() {
-        sendNowButton.setEnabled(smsManager.isTextingEnabled());
+        sendNowButton.setEnabled(smsSender.isTextingEnabled());
     }
 }
