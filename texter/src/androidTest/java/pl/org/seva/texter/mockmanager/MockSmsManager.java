@@ -25,15 +25,17 @@ import javax.inject.Singleton;
 import pl.org.seva.texter.presenter.manager.GpsManager;
 import pl.org.seva.texter.presenter.manager.HistoryManager;
 import pl.org.seva.texter.presenter.manager.SmsManager;
+import pl.org.seva.texter.presenter.manager.ZoneManager;
 
 @Singleton
 public class MockSmsManager extends SmsManager {
 
     private int messagesSent;
 
-    public MockSmsManager(GpsManager gpsManager, HistoryManager historyManager) {
+    public MockSmsManager(GpsManager gpsManager, HistoryManager historyManager, ZoneManager zoneManager) {
         this.gpsManager = gpsManager;
         this.historyManager = historyManager;
+        this.zoneManager = zoneManager;
     }
 
     protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)

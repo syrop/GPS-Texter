@@ -57,7 +57,6 @@ import javax.inject.Inject;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.controller.SmsController;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
@@ -84,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject TimerManager timerManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionManager activityRecognitionManager;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsController smsController;
 
     private static final String PREF_STARTUP_SHOWN = "pref_startup_shown";
 
@@ -142,9 +139,6 @@ public class MainActivity extends AppCompatActivity {
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
-
-        smsController.init(getPackageManager().
-                hasSystemFeature(PackageManager.FEATURE_TELEPHONY));
 
         Toolbar toolbar = binding.toolBar.toolBar;
         setSupportActionBar(toolbar);

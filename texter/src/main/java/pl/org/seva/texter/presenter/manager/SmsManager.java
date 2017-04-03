@@ -38,6 +38,8 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.model.ZoneModel;
+import pl.org.seva.texter.presenter.utils.Constants;
 import pl.org.seva.texter.view.activity.SettingsActivity;
 import pl.org.seva.texter.model.LocationModel;
 import pl.org.seva.texter.presenter.utils.StringUtils;
@@ -46,12 +48,11 @@ import pl.org.seva.texter.presenter.utils.StringUtils;
 public class SmsManager {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject
-    protected HistoryManager historyManager;
-
+    @Inject protected HistoryManager historyManager;
     @SuppressWarnings("WeakerAccess")
-    @Inject
-    protected GpsManager gpsManager;
+    @Inject protected GpsManager gpsManager;
+    @SuppressWarnings("WeakerAccess")
+    @Inject protected ZoneManager zoneManager;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
     private static final String DISTANCE_KEY = "pl.org.seva.texter.Distance";
@@ -75,6 +76,10 @@ public class SmsManager {
 	
 	private boolean initialized;
 
+    private LocationModel lastSentLocation;
+    private ZoneModel zone;
+
+
     @Inject
     protected SmsManager() {
 		smsManager = android.telephony.SmsManager.getDefault();
@@ -92,6 +97,53 @@ public class SmsManager {
 		initialized = true;
 	}
 
+    public void onDistanceChanged() {
+        double distance = gpsManager.getDistance();
+        double speed = gpsManager.getSpeed();
+
+        long time = System.currentTimeMillis();
+        int direction = 0; // alternatively (int) Math.signum(this.distance - distance);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
+        minutes += calendar.get(Calendar.MINUTE);
+
+        LocationModel location = new LocationModel();
+        location.setDistance(distance);
+        location.setDirection(direction);
+        location.setTime(minutes);
+        location.setSpeed(speed);
+
+        synchronized (this) {
+            ZoneModel zone = zoneManager.zone(distance);
+            if (this.zone == null) {
+                this.zone = zone;
+            }
+            else if (zone.getMin() != this.zone.getMin() &&
+                    zone.getCounter() >= Constants.SMS_TRIGGER &&
+                    zone.getDelay() >= Constants.TIME_IN_ZONE) {
+                if (this.zone.getMin() > zone.getMin()) {
+                    direction = -1;
+                }
+                else {
+                    direction = 1;
+                }
+                location.setDirection(direction);  // calculated specifically for zone border
+
+                if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
+                        getMaxSentDistance()) {
+                    send(location);
+                }
+                this.zone = zone;
+            }
+        }
+    }
+
+    public synchronized void resetZones() {
+        zoneManager.clear();
+        zone = null;
+    }
+
 	public Observable<Object> smsSendingListener() {
         return smsSendingSubject.hide();
     }
@@ -105,7 +157,7 @@ public class SmsManager {
 		return numberStr.length() > 0 ? numberStr : "0";
 	}
 
-    public int getMaxSentDistance() {
+    private int getMaxSentDistance() {
         String numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "");
         return numberStr.length() > 0 ? Integer.valueOf(numberStr) : 0;
     }
@@ -187,6 +239,14 @@ public class SmsManager {
 	}
 	
 	public void send(LocationModel model) {
+        if (!isTextingEnabled()) {
+            return;
+        }
+        if (this.lastSentLocation != null && this.lastSentLocation.equals(model)) {
+            return;
+        }
+        this.lastSentLocation = model;
+
         if (getPhoneNumber().equals("0")) {
             return;
         }

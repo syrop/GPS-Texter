@@ -15,16 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.receiver;
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
-
-public class MockTexterApplication extends TexterApplication {
-
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
-    }
+public interface DistanceReceiver {
+    void onDishtanceChanged();
 }

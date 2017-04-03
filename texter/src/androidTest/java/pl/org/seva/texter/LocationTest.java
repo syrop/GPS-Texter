@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 
 import pl.org.seva.texter.view.activity.MainActivity;
-import pl.org.seva.texter.presenter.dagger.MockGraph;
+import pl.org.seva.texter.dagger.MockGraph;
 import pl.org.seva.texter.presenter.manager.SmsManager;
 import pl.org.seva.texter.mockmanager.MockSmsManager;
 

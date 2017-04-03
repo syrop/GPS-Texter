@@ -20,5 +20,5 @@ package pl.org.seva.texter.presenter.dagger;
 import dagger.Module;
 
 @Module
-class TexterModule {
+public class TexterModule {
 }

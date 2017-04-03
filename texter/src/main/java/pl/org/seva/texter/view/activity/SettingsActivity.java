@@ -18,9 +18,9 @@
 package pl.org.seva.texter.view.activity;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.presenter.manager.SmsManager;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.controller.SmsController;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.view.fragment.SettingsFragment;
@@ -57,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject GpsManager gpsManager;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SmsController smsController;
+    @Inject SmsManager smsManager;
 
     /** If device is not enabled to send SMS, this entire category will be hidden. */
     public static final String CATEGORY_SMS = "category_sms";
@@ -192,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity
                 break;
             case HOME_LOCATION:
                 gpsManager.onHomeLocationChanged();
-                smsController.resetZones();
+                smsManager.resetZones();
                 break;
         }
     }

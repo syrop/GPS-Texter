@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.dagger;
+package pl.org.seva.texter.dagger;
 
 import org.mockito.Mockito;
 
@@ -31,6 +31,7 @@ import pl.org.seva.texter.presenter.manager.ActivityRecognitionManager;
 import pl.org.seva.texter.presenter.manager.GpsManager;
 import pl.org.seva.texter.presenter.manager.TimerManager;
 import pl.org.seva.texter.mockmanager.MockSmsManager;
+import pl.org.seva.texter.presenter.manager.ZoneManager;
 
 @Module
 class MockTexterModule {
@@ -43,8 +44,8 @@ class MockTexterModule {
 
     @Provides
     @Singleton
-    SmsManager provideSmsManager(GpsManager gpsManager, HistoryManager historyManager) {
-        return new MockSmsManager(gpsManager, historyManager);
+    SmsManager provideSmsManager(GpsManager gpsManager, HistoryManager historyManager, ZoneManager zoneManager) {
+        return new MockSmsManager(gpsManager, historyManager, zoneManager);
     }
 
     @Provides
