@@ -25,7 +25,15 @@ public class DistanceCalculator {
         System.loadLibrary("native-lib");
     }
 
-    public static double calculateSpeed(Location loc1, Location loc2, long time) {
+    private DistanceCalculator() {
+    }
+
+    public static double distanceInKm(double lat1, double lon1, double lat2, double lon2) {
+        return distance(lat1, lon1, lat2, lon2);
+    }
+
+
+    public static double speedInKph(Location loc1, Location loc2, long time) {
         return speed(
                 loc1.getLatitude(),
                 loc1.getLongitude(),
@@ -36,12 +44,4 @@ public class DistanceCalculator {
 
     private static native double distance(double lat1, double lon1, double lat2, double lon2);
     private static native double speed(double lat1, double lon1, double lat2, double lon2, long time);
-
-    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        return distance(lat1, lon1, lat2, lon2);
-    }
-
-    private DistanceCalculator() {
-        //
-    }
 }
