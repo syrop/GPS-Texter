@@ -55,11 +55,9 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 public class NavigationFragment extends Fragment {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    LocationSource locationSource;
+    @Inject LocationSource locationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    PermissionsUtils permissionsUtils;
+    @Inject PermissionsUtils permissionsUtils;
 
     private TextView distanceTextView;
     private GoogleMap map;
@@ -97,8 +95,10 @@ public class NavigationFragment extends Fragment {
         super.onResume();
 
         composite.addAll(
-                locationSource.distanceChangedListener().subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
-                locationSource.homeChangedListener().subscribe(__ -> onHomeChanged()));
+                locationSource.distanceChangedListener()
+                        .subscribe(__ -> getActivity().runOnUiThread(this::onDistanceChanged)),
+                locationSource.homeChangedListener()
+                        .subscribe(__ -> onHomeChanged()));
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");
@@ -107,39 +107,39 @@ public class NavigationFragment extends Fragment {
             fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit();
         }
 
-        mapFragment.getMapAsync(googleMap -> {
-            map = googleMap;
-            if (ContextCompat.checkSelfPermission(
-                    getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                map.setMyLocationEnabled(true);
-            }
-            else {
-                permissionsUtils
-                        .permissionGrantedListener()
-                        .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                        .subscribe(__ -> onLocationPermissionGranted());
-            }
-            LatLng homeLatLng = locationSource.getHomeLatLng();
-            updateHomeLocation(homeLatLng);
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(homeLatLng).zoom(12).build();
-            if (animateCamera) {
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            else {
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            animateCamera = false;
-        });
+        mapFragment.getMapAsync(this::onGoogleMapReady);
+    }
+
+    private void onGoogleMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        if (ContextCompat.checkSelfPermission(
+                getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+        }
+        else {
+            permissionsUtils.permissionGrantedListener()
+                    .filter(permission -> permission.equals(Manifest.permission.ACCESS_FINE_LOCATION))
+                    .subscribe(__ -> onLocationPermissionGranted());
+        }
+        LatLng homeLatLng = locationSource.getHomeLatLng();
+        updateHomeLocation(homeLatLng);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(homeLatLng).zoom(12).build();
+        if (animateCamera) {
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        animateCamera = false;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof Activity) {
-            initDependencies((Activity) context);
+            injectDependencies((Activity) context);
         }
     }
 
@@ -150,11 +150,11 @@ public class NavigationFragment extends Fragment {
         super.onAttach(activity);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            initDependencies(activity);
+            injectDependencies(activity);
         }
     }
 
-    private void initDependencies(Activity activity) {
+    private void injectDependencies(Activity activity) {
         Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
         graph.inject(this);
     }
