@@ -120,11 +120,11 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        smsSentSubscription = smsSender.smsSentListener().subscribe(
-                __ -> onSMsSent());
+        update();
+        smsSentSubscription = smsSender.smsSentListener().subscribe(__ -> update());
     }
 
-    private void onSMsSent() {
+    private void update() {
         adapter.notifyDataSetChanged();
         if (scrollToBottom) {
             historyRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
