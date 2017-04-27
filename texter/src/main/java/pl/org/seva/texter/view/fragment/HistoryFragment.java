@@ -98,12 +98,12 @@ public class HistoryFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         HistoryFragmentBinding binding =
                 DataBindingUtil.inflate(inflater, R.layout.history_fragment, container, false);
-        historyRecyclerView = binding.listView;
+        historyRecyclerView = binding.recyclerView;
         historyRecyclerView.setHasFixedSize(true);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new HistoryAdapter(getActivity(), smsCache.getList());
         historyRecyclerView.setAdapter(adapter);
-        historyRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
+        historyRecyclerView.addItemDecoration(new HistoryAdapter.DividerItemDecoration(getActivity()));
         historyRecyclerView.clearOnScrollListeners();
         historyRecyclerView.addOnScrollListener(new OnScrollListener());
         scrollToBottom = true;
@@ -138,38 +138,6 @@ public class HistoryFragment extends Fragment {
                 scrollToBottom = recyclerView.computeVerticalScrollOffset() ==
                         recyclerView.computeVerticalScrollRange() -
                                 recyclerView.computeVerticalScrollExtent();
-            }
-        }
-    }
-
-    private static class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
-        private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
-
-        private final Drawable mDivider;
-
-        DividerItemDecoration(Context context) {
-            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
-            mDivider = styledAttributes.getDrawable(0);
-            styledAttributes.recycle();
-        }
-
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
-
-            int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = parent.getChildAt(i);
-
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-                int top = child.getBottom() + params.bottomMargin;
-                int bottom = top + mDivider.getIntrinsicHeight();
-
-                mDivider.setBounds(left, top, right, bottom);
-                mDivider.draw(c);
             }
         }
     }
