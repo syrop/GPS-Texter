@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ColorPrimary">#FF5722</color>
-    <color name="ColorPrimaryDark">#E64A19</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorAccent">#00bfa5</color>
     <color name="tabsScrollColor">@android:color/white</color>
 </resources>

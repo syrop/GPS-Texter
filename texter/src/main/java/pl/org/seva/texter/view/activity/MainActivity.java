@@ -131,10 +131,10 @@ public class MainActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             int color;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                color = getResources().getColor(R.color.ColorPrimaryDark, getTheme());
+                color = getResources().getColor(R.color.colorPrimaryDark, getTheme());
             }
             else {
-                color = getResources().getColor(R.color.ColorPrimaryDark);
+                color = getResources().getColor(R.color.colorPrimaryDark);
             }
             window.setStatusBarColor(color);
         }
