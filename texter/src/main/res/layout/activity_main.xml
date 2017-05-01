@@ -8,7 +8,7 @@
         tools:context=".view.activity.MainActivity">
         <include
             android:id="@+id/tool_bar"
-            layout="@layout/tool_bar" />
+            layout="@layout/toolbar" />
 
         <!-- Setting tools:targetApi to lollipop prevents the warning that android:elevation -->
         <!-- parameter is not available prior to API 21. -->

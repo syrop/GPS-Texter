@@ -37,7 +37,7 @@ public class NumberPreference extends DialogPreference {
     public NumberPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setDialogLayoutResource(R.layout.number_dialog);
+        setDialogLayoutResource(R.layout.dialog_number);
         setDialogIcon(null);
     }
 

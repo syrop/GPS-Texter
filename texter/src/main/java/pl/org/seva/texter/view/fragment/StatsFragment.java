@@ -41,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.StatsFragmentBinding;
+import pl.org.seva.texter.databinding.FragmentStatsBinding;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
@@ -96,8 +96,8 @@ public class StatsFragment extends Fragment implements
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
-        StatsFragmentBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.stats_fragment, container, false);
+        FragmentStatsBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_stats, container, false);
         distanceTextView = binding.distanceValue;
         intervalTextView = binding.updateIntervalValue;
         stationaryTextView = binding.stationary;

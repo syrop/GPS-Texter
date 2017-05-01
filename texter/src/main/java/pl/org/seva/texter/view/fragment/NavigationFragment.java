@@ -48,7 +48,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.NavigationFragmentBinding;
+import pl.org.seva.texter.databinding.FragmentNavigationBinding;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 
@@ -76,8 +76,8 @@ public class NavigationFragment extends Fragment {
             LayoutInflater inflater,
             ViewGroup container,
             final Bundle savedInstanceState) {
-        NavigationFragmentBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.navigation_fragment, container, false);
+        FragmentNavigationBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_navigation, container, false);
         distanceTextView = binding.distance;
         show(locationSource.getDistance());
 

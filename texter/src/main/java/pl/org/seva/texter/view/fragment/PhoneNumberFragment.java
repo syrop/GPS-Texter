@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.databinding.NumberFragmentBinding;
+import pl.org.seva.texter.databinding.FragmentNumberBinding;
 
 public class PhoneNumberFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
@@ -108,8 +108,8 @@ public class PhoneNumberFragment extends Fragment implements
             (LayoutInflater inflater,
              @Nullable ViewGroup container,
              @Nullable Bundle savedInstanceState) {
-        NumberFragmentBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.number_fragment, container, false);
+        FragmentNumberBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_number, container, false);
         number = binding.number;
 
         contactsEnabled = ContextCompat.checkSelfPermission(
@@ -125,7 +125,7 @@ public class PhoneNumberFragment extends Fragment implements
             contacts.setOnItemClickListener(this);
             adapter = new SimpleCursorAdapter(
                     getActivity(),
-                    R.layout.contacts_list_item,
+                    R.layout.item_contact,
                     null,
                     FROM_COLUMNS,
                     TO_IDS,

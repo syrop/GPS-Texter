@@ -19,10 +19,7 @@ package pl.org.seva.texter.view.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -42,7 +39,7 @@ import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.view.adapter.HistoryAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.HistoryFragmentBinding;
+import pl.org.seva.texter.databinding.FragmentHistoryBinding;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
 public class HistoryFragment extends Fragment {
@@ -96,8 +93,8 @@ public class HistoryFragment extends Fragment {
             LayoutInflater inflater,
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        HistoryFragmentBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.history_fragment, container, false);
+        FragmentHistoryBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false);
         historyRecyclerView = binding.recyclerView;
         historyRecyclerView.setHasFixedSize(true);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));

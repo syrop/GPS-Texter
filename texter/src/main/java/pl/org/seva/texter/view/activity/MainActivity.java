@@ -62,8 +62,8 @@ import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
-import pl.org.seva.texter.databinding.HelpDialogLayoutBinding;
-import pl.org.seva.texter.databinding.StartupDialogLayoutBinding;
+import pl.org.seva.texter.databinding.DialogHelpBinding;
+import pl.org.seva.texter.databinding.DialogStartupBinding;
 import pl.org.seva.texter.view.fragment.HistoryFragment;
 import pl.org.seva.texter.view.fragment.StatsFragment;
 import pl.org.seva.texter.view.fragment.NavigationFragment;
@@ -244,9 +244,9 @@ public class MainActivity extends AppCompatActivity {
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        StartupDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+        DialogStartupBinding dialogBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(this),
-                R.layout.startup_dialog_layout,
+                R.layout.dialog_startup,
                 (ViewGroup) binding.getRoot(),
                 false);
         dialog.setContentView(dialogBinding.getRoot());
@@ -287,9 +287,9 @@ public class MainActivity extends AppCompatActivity {
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        HelpDialogLayoutBinding dialogBinding = DataBindingUtil.inflate(
+        DialogHelpBinding dialogBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(this),
-                R.layout.help_dialog_layout,
+                R.layout.dialog_help,
                 (ViewGroup) binding.getRoot(),
                 false);
         dialog.setContentView(dialogBinding.getRoot());

@@ -32,7 +32,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.databinding.HistoryAdapterBinding;
+import pl.org.seva.texter.databinding.AdapterHistoryBinding;
 import pl.org.seva.texter.model.Sms;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
@@ -47,9 +47,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        HistoryAdapterBinding binding = DataBindingUtil.inflate(
+        AdapterHistoryBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.history_adapter,
+                R.layout.adapter_history,
                 parent,
                 false);
         return new ViewHolder(binding);
@@ -120,7 +120,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         private final TextView time;
         private final TextView speed;
 
-        ViewHolder(HistoryAdapterBinding binding) {
+        ViewHolder(AdapterHistoryBinding binding) {
             super(binding.getRoot());
             distance = binding.distance;
             time = binding.time;
