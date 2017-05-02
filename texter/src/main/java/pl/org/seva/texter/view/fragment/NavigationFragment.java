@@ -208,8 +208,12 @@ public class NavigationFragment extends Fragment {
 
     private void onLocationPermissionGranted() {
         if (map != null) {
-            //noinspection MissingPermission
-            map.setMyLocationEnabled(true);
+            try {
+                map.setMyLocationEnabled(true);
+            }
+            catch (SecurityException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
