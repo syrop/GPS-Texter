@@ -206,14 +206,10 @@ public class NavigationFragment extends Fragment {
         updateHomeLocation(locationSource.getHomeLatLng());
     }
 
+    @SuppressLint("MissingPermission")
     private void onLocationPermissionGranted() {
         if (map != null) {
-            try {
-                map.setMyLocationEnabled(true);
-            }
-            catch (SecurityException ex) {
-                ex.printStackTrace();
-            }
+            map.setMyLocationEnabled(true);
         }
     }
 }

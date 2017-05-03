@@ -18,6 +18,7 @@
 package pl.org.seva.texter.view.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -53,9 +54,7 @@ import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.Constants;
 
-public class HomeLocationActivity extends AppCompatActivity implements
-        GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraIdleListener {
+public class HomeLocationActivity extends AppCompatActivity {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
@@ -64,15 +63,13 @@ public class HomeLocationActivity extends AppCompatActivity implements
     @Inject
     PermissionsUtils permissionsUtils;
 
-    private static final String STATE = "STATE";
+    private static final String SAVED_STATE = "saved_state";
     private static final String ZOOM_PROPERTY_NAME = "map_preference_gui_zoom";
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
 
     private Disposable locationChangedSubscription = Disposables.empty();
 
-    /** Latitude. */
     private double lat;
-    /** Longitude. */
     private double lon;
     private boolean toastShown;
     private float zoom;
@@ -80,7 +77,6 @@ public class HomeLocationActivity extends AppCompatActivity implements
 
     private GoogleMap map;
     private Button useCurrentButton;
-    /** True indicates restoring from a saved state. */
     private boolean animateCamera = true;
     private int mapContainerId;
     private MapFragment mapFragment;
@@ -90,7 +86,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             HomeLocationActivity.SavedState myState =
-                    (HomeLocationActivity.SavedState) savedInstanceState.get(STATE);
+                    (HomeLocationActivity.SavedState) savedInstanceState.get(SAVED_STATE);
             lat = myState.lat;
             lon = myState.lon;
             toastShown = myState.toastShown;
@@ -150,34 +146,36 @@ public class HomeLocationActivity extends AppCompatActivity implements
             mapFragment = new MapFragment();
             fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit();
         }
-        mapFragment.getMapAsync(googleMap -> {
-            map = googleMap;
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                map.setMyLocationEnabled(true);
-            }
-            else {
-                setLocationPermissionListeners();
-            }
-            zoom = PreferenceManager.getDefaultSharedPreferences(this).
-                    getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
+        mapFragment.getMapAsync(this::onMapReady);
+    }
 
-            updateMarker();
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(lat, lon)).zoom(zoom).build();
-            if (animateCamera) {
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            else {
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            animateCamera = false;
+    private void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+        }
+        else {
+            setLocationPermissionListeners();
+        }
+        zoom = PreferenceManager.getDefaultSharedPreferences(this).
+                getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
 
-            map.setOnMapLongClickListener(this);
-            map.setOnCameraIdleListener(this);
-        });
+        updateMarker();
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(lat, lon)).zoom(zoom).build();
+        if (animateCamera) {
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        animateCamera = false;
+
+        map.setOnMapLongClickListener(this::onMapLongClick);
+        map.setOnCameraIdleListener(this::onCameraIdle);
     }
 
     @Override
@@ -263,16 +261,15 @@ public class HomeLocationActivity extends AppCompatActivity implements
         useCurrentButton.setEnabled(true);
     }
 
+    @SuppressLint("MissingPermission")
     private void onLocationPermissionGranted() {
         if (map != null) {
-            //noinspection MissingPermission
             map.setMyLocationEnabled(true);
             useCurrentButton.setEnabled(false);
         }
     }
 
-    @Override
-    public void onMapLongClick(LatLng latLng) {
+    private void onMapLongClick(LatLng latLng) {
         lat = latLng.latitude;
         lon = latLng.longitude;
         updateMarker();
@@ -281,8 +278,7 @@ public class HomeLocationActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onCameraIdle() {
+    private void onCameraIdle() {
         zoom = map.getCameraPosition().zoom;
     }
 
