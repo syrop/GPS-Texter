@@ -49,8 +49,7 @@ import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.model.Sms;
 
-public class StatsFragment extends Fragment implements
-        View.OnClickListener {
+public class StatsFragment extends Fragment {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
@@ -103,7 +102,7 @@ public class StatsFragment extends Fragment implements
         stationaryTextView = binding.stationary;
         speedTextView = binding.speedValue;
         sendNowButton = binding.sendNowButton;
-        sendNowButton.setOnClickListener(this);
+        sendNowButton.setOnClickListener(this::onClick);
         sendNowButton.setEnabled(
                 smsSender.isTextingEnabled() &&
                 distance != 0.0 &&
@@ -260,8 +259,7 @@ public class StatsFragment extends Fragment implements
         return homeString;
     }
 
-    @Override
-    public void onClick(View v) {
+    private void onClick(View v) {
         if (v == sendNowButton) {
             sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();

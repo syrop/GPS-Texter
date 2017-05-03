@@ -158,7 +158,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
-        final View.OnClickListener tabClickListener = new TabClickListener();
+        final View.OnClickListener tabClickListener = this::onTabClicked;
 
         for (int i = 0; i < adapter.getCount(); i++) {
             TextView tabTitleView = null;
@@ -253,14 +253,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
         }
     }
 
-    private class TabClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            for (int i = 0; i < mTabStrip.getChildCount(); i++) {
-                if (v == mTabStrip.getChildAt(i)) {
-                    mViewPager.setCurrentItem(i);
-                    return;
-                }
+    private void onTabClicked(View v) {
+        for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+            if (v == mTabStrip.getChildAt(i)) {
+                mViewPager.setCurrentItem(i);
+                return;
             }
         }
     }

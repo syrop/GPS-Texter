@@ -49,8 +49,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class SettingsActivity extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
@@ -139,14 +138,14 @@ public class SettingsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
+                .registerOnSharedPreferenceChangeListener(this::onSharedPreferenceChanged);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
+                .unregisterOnSharedPreferenceChangeListener(this::onSharedPreferenceChanged);
     }
 
     /**
@@ -183,8 +182,7 @@ public class SettingsActivity extends AppCompatActivity
         return result;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    private void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case SMS_ENABLED:  // off by default
                 if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {

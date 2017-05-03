@@ -46,8 +46,7 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.databinding.FragmentNumberBinding;
 
 public class PhoneNumberFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
-        AdapterView.OnItemClickListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CONTACTS_QUERY_ID = 0;
     private static final int DETAILS_QUERY_ID = 1;
@@ -122,7 +121,7 @@ public class PhoneNumberFragment extends Fragment implements
             contacts.setVisibility(View.GONE);
         }
         else {
-            contacts.setOnItemClickListener(this);
+            contacts.setOnItemClickListener(this::onItemClick);
             adapter = new SimpleCursorAdapter(
                     getActivity(),
                     R.layout.item_contact,
@@ -230,8 +229,7 @@ public class PhoneNumberFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (toast != null) {
             toast.cancel();
         }
