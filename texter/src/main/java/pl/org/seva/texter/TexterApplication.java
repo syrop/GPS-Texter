@@ -18,6 +18,7 @@
 package pl.org.seva.texter;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
@@ -53,6 +54,10 @@ public class TexterApplication extends MultiDexApplication {
         graph.inject(this);
         addGpsProviderListeners();
         addActivityRecognitionListeners();
+    }
+
+    public boolean hardwareCanSendSms() {
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
     private void addGpsProviderListeners() {

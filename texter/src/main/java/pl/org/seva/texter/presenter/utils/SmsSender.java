@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -129,8 +130,7 @@ public class SmsSender {
                 }
                 location.setDirection(direction);  // calculated specifically for calculateZone border
 
-                if ((direction == 1 ? zone.getMin() : zone.getMax()) <=
-                        getMaxSentDistance()) {
+                if ((direction == 1 ? zone.getMin() : zone.getMax()) <= getMaxSentDistance()) {
                     send(location);
                 }
                 this.zone = zone;
@@ -189,7 +189,7 @@ public class SmsSender {
         }
         this.lastSentLocation = model;
 
-        if (getPhoneNumber().equals("0")) {
+        if (!isCorrectPhoneNumberSet()) {
             return;
         }
         checkInit();
@@ -218,6 +218,10 @@ public class SmsSender {
         String smsStr = smsBuilder.toString();
         send(smsStr, intentDistanceStr, model);
         lastSentDistance = distance;
+    }
+
+    protected boolean isCorrectPhoneNumberSet() {
+        return !getPhoneNumber().equals("0");
     }
 
     public double getLastSentDistance() {
@@ -279,6 +283,10 @@ public class SmsSender {
 
     public boolean isTextingEnabled() {
         return preferences.getBoolean(SettingsActivity.SMS_ENABLED, false);
+    }
+
+    public boolean needsPermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     private class SmsSentReceiver extends BroadcastReceiver {

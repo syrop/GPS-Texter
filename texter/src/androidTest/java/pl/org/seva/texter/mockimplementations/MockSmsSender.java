@@ -38,6 +38,21 @@ public class MockSmsSender extends SmsSender {
         this.zoneCalculator = zoneCalculator;
     }
 
+    @Override
+    public boolean isTextingEnabled() {
+        return true;
+    }
+
+    @Override
+    protected boolean isCorrectPhoneNumberSet() {
+        return true;
+    }
+
+    @Override
+    public boolean needsPermission() {
+        return false;
+    }
+
     protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)
             throws SecurityException {
         try {

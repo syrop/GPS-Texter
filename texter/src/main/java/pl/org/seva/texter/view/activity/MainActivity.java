@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         else  {
             initGps();
         }
-        if (smsSender.isTextingEnabled() && ContextCompat.checkSelfPermission(
+        if (smsSender.needsPermission() && smsSender.isTextingEnabled() && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {

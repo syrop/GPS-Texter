@@ -27,4 +27,9 @@ public class MockTexterApplication extends TexterApplication {
     protected Graph createGraph() {
         return DaggerMockGraph.create();
     }
+
+    @Override
+    public boolean hardwareCanSendSms() {
+        return true;
+    }
 }
