@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 'android-O'
+    buildToolsVersion '26.0.0-rc2'
 
     dataBinding {
-        enabled = true;
+        enabled = true
     }
 
 // For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
@@ -54,11 +54,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile "com.android.support:appcompat-v7:25.3.1"
-    compile 'com.google.android.gms:play-services-maps:10.2.1'
-    compile 'com.google.android.gms:play-services-location:10.2.1'
+    compile 'com.android.support:support-v13:26.0.0-beta1'
+    compile 'com.android.support:recyclerview-v7:26.0.0-beta1'
+    compile 'com.android.support:appcompat-v7:26.0.0-beta1'
+    compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.google.android.gms:play-services-location:10.2.6'
     compile 'io.reactivex.rxjava2:rxjava:2.0.9'
     compile 'com.google.dagger:dagger:2.9'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
