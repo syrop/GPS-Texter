@@ -22,7 +22,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,10 +32,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -61,9 +58,6 @@ import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.ActivityMainBinding;
-import pl.org.seva.texter.databinding.DialogHelpBinding;
-import pl.org.seva.texter.databinding.DialogStartupBinding;
 import pl.org.seva.texter.view.fragment.HistoryFragment;
 import pl.org.seva.texter.view.fragment.StatsFragment;
 import pl.org.seva.texter.view.fragment.NavigationFragment;
@@ -108,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean showSettingsWhenPermissionGranted;
     private boolean shuttingDown;
     private Dialog dialog;
-    private ActivityMainBinding binding;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -138,14 +131,14 @@ public class MainActivity extends AppCompatActivity {
             }
             window.setStatusBarColor(color);
         }
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
 
-        Toolbar toolbar = binding.toolBar.toolBar;
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(StatsFragment.newInstance());
@@ -156,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
                 new TitledPagerAdapter(getFragmentManager(), titles).
                         setItems(fragments);
 
-        ViewPager pager = binding.pager;
+        ViewPager pager = findViewById(R.id.pager);
         if (pager != null) {
             pager.setAdapter(adapter);
         }
 
-        SlidingTabLayout tabs = binding.tabs;
+        SlidingTabLayout tabs = findViewById(R.id.tabs);
 
         if (tabs != null) {
             final int tabColor;
@@ -244,13 +237,10 @@ public class MainActivity extends AppCompatActivity {
         }
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        DialogStartupBinding dialogBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(this),
-                R.layout.dialog_startup,
-                (ViewGroup) binding.getRoot(),
-                false);
-        dialog.setContentView(dialogBinding.getRoot());
-        WebView web = dialogBinding.web;
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_startup);
+
+        WebView web = dialog.findViewById(R.id.web);
 
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
@@ -266,12 +256,12 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        dialogBinding.dismiss.setOnClickListener(v -> {
+        dialog.findViewById(R.id.dismiss).setOnClickListener(v -> {
             processPermissions();
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();  // asynchronously
         });
-        dialogBinding.settings.setOnClickListener(v -> {
+        dialog.findViewById(R.id.settings).setOnClickListener(v -> {
             dialog.dismiss();
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply();
             showSettingsWhenPermissionGranted = true;  // Only relevant if permission is not granted.
@@ -287,13 +277,8 @@ public class MainActivity extends AppCompatActivity {
     private void showHelpDialog() {
         dialog = new Dialog(this);
         dialog.setCancelable(false);
-        DialogHelpBinding dialogBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(this),
-                R.layout.dialog_help,
-                (ViewGroup) binding.getRoot(),
-                false);
-        dialog.setContentView(dialogBinding.getRoot());
-        WebView web = dialogBinding.web;
+        dialog.setContentView(R.layout.dialog_help);
+        WebView web = dialog.findViewById(R.id.web);
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
         String language = Locale.getDefault().getLanguage();
@@ -309,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.ok).setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 

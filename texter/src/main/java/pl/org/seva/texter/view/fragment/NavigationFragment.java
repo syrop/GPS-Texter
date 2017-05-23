@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -48,7 +47,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.FragmentNavigationBinding;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 
@@ -76,18 +74,18 @@ public class NavigationFragment extends Fragment {
             LayoutInflater inflater,
             ViewGroup container,
             final Bundle savedInstanceState) {
-        FragmentNavigationBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_navigation, container, false);
-        distanceTextView = binding.distance;
+        View view = inflater.inflate(R.layout.fragment_navigation, container, false);
+
+        distanceTextView = view.findViewById(R.id.distance);
         show(locationSource.getDistance());
 
         if (savedInstanceState != null) {
             animateCamera = false;
         }
         MapsInitializer.initialize(getActivity().getApplicationContext());
-        mapContainerId = binding.mapContainer.getId();
+        mapContainerId = view.findViewById(R.id.map_container).getId();
 
-        return binding.getRoot();
+        return view;
     }
 
     @Override

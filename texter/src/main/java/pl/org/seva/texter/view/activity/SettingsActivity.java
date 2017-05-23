@@ -24,13 +24,11 @@ import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.view.fragment.SettingsFragment;
 
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -86,12 +84,11 @@ public class SettingsActivity extends AppCompatActivity {
         Graph graph = ((TexterApplication) getApplication()).getGraph();
         graph.inject(this);
 
-        ActivitySettingsBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.activity_settings);
+        setContentView(R.layout.activity_settings);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Attaching the layout to the toolbar object
-        Toolbar toolbar = binding.toolBar.toolBar;
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
 		setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -111,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
         TitledPagerAdapter adapter =
                 new TitledPagerAdapter(getFragmentManager(), null).
                         setItems(fragments);
-        ViewPager pager = binding.pager;
+        ViewPager pager = findViewById(R.id.pager);
         if (pager != null) {
             pager.setAdapter(adapter);
         }

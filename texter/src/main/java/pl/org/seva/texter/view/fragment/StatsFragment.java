@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -41,7 +40,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.FragmentStatsBinding;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
@@ -95,13 +93,13 @@ public class StatsFragment extends Fragment {
 
         homeString = getString(R.string.home);
         hourString = getActivity().getString(R.string.hour);
-        FragmentStatsBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_stats, container, false);
-        distanceTextView = binding.distanceValue;
-        intervalTextView = binding.updateIntervalValue;
-        stationaryTextView = binding.stationary;
-        speedTextView = binding.speedValue;
-        sendNowButton = binding.sendNowButton;
+        View view = inflater.inflate(R.layout.fragment_stats, container, false);
+
+        distanceTextView = view.findViewById(R.id.distance_value);
+        intervalTextView = view.findViewById(R.id.update_interval_value);
+        stationaryTextView = view.findViewById(R.id.stationary);
+        speedTextView = view.findViewById(R.id.speed_value);
+        sendNowButton = view.findViewById(R.id.send_now_button);
         sendNowButton.setOnClickListener(this::onClick);
         sendNowButton.setEnabled(
                 smsSender.isTextingEnabled() &&
@@ -131,7 +129,7 @@ public class StatsFragment extends Fragment {
                     .subscribe(__ -> onLocationPermissionGranted());
         }
 
-        return binding.getRoot();
+        return view;
     }
 
     private void deviceIsStationary() {

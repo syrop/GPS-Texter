@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
-    <RelativeLayout
-        android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dialog_horizontal_margin"
+    android:paddingRight="@dimen/dialog_horizontal_margin"
+    android:paddingTop="@dimen/dialog_vertical_margin"
+    android:paddingBottom="@dimen/dialog_vertical_margin">
+    <EditText
+        android:id="@+id/number"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dialog_horizontal_margin"
-        android:paddingRight="@dimen/dialog_horizontal_margin"
-        android:paddingTop="@dimen/dialog_vertical_margin"
-        android:paddingBottom="@dimen/dialog_vertical_margin">
-        <EditText
-            android:id="@+id/number"
-            android:inputType="number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:ignore="LabelFor" />
-        <ListView
-            android:id="@+id/contacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/number"/>
-    </RelativeLayout>
-</layout>
+        tools:ignore="LabelFor" />
+    <ListView
+        android:id="@+id/contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/number"/>
+</RelativeLayout>
