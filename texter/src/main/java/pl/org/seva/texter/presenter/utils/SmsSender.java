@@ -73,7 +73,7 @@ public class SmsSender {
     private final PublishSubject<Object> smsSentSubject;
 
     private double lastSentDistance;
-	
+
 	private boolean initialized;
 
     private SmsLocation lastSentLocation;
@@ -186,7 +186,7 @@ public class SmsSender {
         // When the SMS has been sent.
         registerReceiver(new SmsSentReceiver(), new IntentFilter(SENT + id));
 	}
-	
+
 	public void send(SmsLocation model) {
         if (!isTextingEnabled()) {
             return;
@@ -269,7 +269,7 @@ public class SmsSender {
             PendingIntent deliveredIntent) throws SecurityException {
         smsManager.sendTextMessage(getPhoneNumber(), null, text, sentIntent, deliveredIntent);
     }
-	
+
 	private void checkInit() {
 		if (!initialized) {
 			throw new IllegalStateException("SMS not initialized");
@@ -301,11 +301,11 @@ public class SmsSender {
         @Override
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra(TEXT_KEY);
-            SmsLocation location = new SmsLocation().
-                    setDistance(intent.getDoubleExtra(DISTANCE_KEY, 0.0)).
-                    setTime(intent.getIntExtra(MINUTES_KEY, 0)).
-                    setDirection(intent.getIntExtra(DIRECTION_KEY, 0)).
-                    setSpeed(intent.getDoubleExtra(SPEED_KEY, 0.0));
+            SmsLocation location = new SmsLocation();
+            location.setDistance(intent.getDoubleExtra(DISTANCE_KEY, 0.0));
+            location.setTime(intent.getIntExtra(MINUTES_KEY, 0));
+            location.setDirection(intent.getIntExtra(DIRECTION_KEY, 0));
+            location.setSpeed(intent.getDoubleExtra(SPEED_KEY, 0.0));
             switch (getResultCode())
             {
                 case Activity.RESULT_OK:

@@ -20,13 +20,13 @@ package pl.org.seva.texter.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class SmsLocation// required in order to implement Parcelable
+class SmsLocation
     : Parcelable {
-    private var distance: Double = 0.toDouble()  // in kilometers
+    var distance: Double = 0.toDouble()  // in kilometers
     var minutes: Int = 0
         private set // in minutes since midnight
-    private var direction: Int = 0
-    private var speed: Double = 0.toDouble()
+    var direction: Int = 0
+    var speed: Double = 0.toDouble()
 
     override fun equals(other: Any?): Boolean {
         // ignore direction
@@ -45,24 +45,6 @@ class SmsLocation// required in order to implement Parcelable
         return result
     }
 
-    fun setDistance(distance: Double): SmsLocation {
-        this.distance = distance
-        return this
-    }
-
-    fun getDistance(): Double {
-        return distance
-    }
-
-    fun setSpeed(speed: Double): SmsLocation {
-        this.speed = speed
-        return this
-    }
-
-    fun getSpeed(): Double {
-        return speed
-    }
-
     val sign: String
         get() {
             if (direction == 0) {
@@ -77,15 +59,6 @@ class SmsLocation// required in order to implement Parcelable
     fun setTime(minutes: Int): SmsLocation {
         this.minutes = minutes
         return this
-    }
-
-    fun setDirection(direction: Int): SmsLocation {
-        this.direction = direction
-        return this
-    }
-
-    fun getDirection(): Int {
-        return direction
     }
 
     override fun describeContents(): Int {
