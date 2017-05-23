@@ -23,26 +23,26 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import pl.org.seva.texter.model.Sms;
+import pl.org.seva.texter.model.SmsLocation;
 
 @Singleton
 public class SmsCache {
 
     private boolean mock = true;
 
-    private final List<Sms> list;
+    private final List<SmsLocation> list;
 
     @Inject
     SmsCache() {
         list = new ArrayList<>();
-        list.add(new Sms());
+        list.add(new SmsLocation());
     }
 
-    public List<Sms> getList() {
+    public List<SmsLocation> getList() {
         return list;
     }
 
-    public void add(Sms model) {
+    public void add(SmsLocation model) {
         if (mock) {
             list.clear();
             mock = false;

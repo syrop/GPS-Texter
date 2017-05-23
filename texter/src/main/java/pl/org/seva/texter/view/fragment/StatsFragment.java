@@ -45,7 +45,7 @@ import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.Timer;
-import pl.org.seva.texter.model.Sms;
+import pl.org.seva.texter.model.SmsLocation;
 
 public class StatsFragment extends Fragment {
 
@@ -100,7 +100,7 @@ public class StatsFragment extends Fragment {
         stationaryTextView = view.findViewById(R.id.stationary);
         speedTextView = view.findViewById(R.id.speed_value);
         sendNowButton = view.findViewById(R.id.send_now_button);
-        sendNowButton.setOnClickListener(this::onClick);
+        sendNowButton.setOnClickListener(__ -> onSendNowClicked());
         sendNowButton.setEnabled(
                 smsSender.isTextingEnabled() &&
                 distance != 0.0 &&
@@ -258,20 +258,19 @@ public class StatsFragment extends Fragment {
     }
 
     @SuppressLint("WrongConstant")
-    private void onClick(View v) {
-        if (v == sendNowButton) {
-            sendNowButton.setEnabled(false);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(timer.getResetTime());
-            @SuppressLint("WrongConstant") int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
-            minutes += calendar.get(Calendar.MINUTE);
-            Sms location = new Sms();
-            location.setDistance(distance);
-            location.setDirection(0);
-            location.setTime(minutes);
-            location.setSpeed(speed);
-            smsSender.send(location);
-        }
+    private void onSendNowClicked() {
+        sendNowButton.setEnabled(false);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timer.getResetTime());
+        @SuppressLint("WrongConstant") int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
+        minutes += calendar.get(Calendar.MINUTE);
+        SmsLocation location = new SmsLocation();
+        location.setDistance(distance);
+        location.setDirection(0);
+        location.setTime(minutes);
+        location.setSpeed(speed);
+        System.out.println("wiktor sending the location");
+        smsSender.send(location);
     }
 
     private void onSendingSms() {

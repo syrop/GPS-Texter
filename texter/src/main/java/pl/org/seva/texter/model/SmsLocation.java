@@ -20,23 +20,23 @@ package pl.org.seva.texter.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Sms implements Parcelable {
+public class SmsLocation implements Parcelable {
     private double distance;  // in kilometers
     private  int minutes; // in minutes since midnight
     private int direction;
     private double speed;
 
-    public Sms() {
+    public SmsLocation() {
         // required in order to implement Parcelable
     }
 
     @Override
     public boolean equals(Object o) {
         // ignore direction
-        if (!(o instanceof Sms)) {
+        if (!(o instanceof SmsLocation)) {
             return false;
         }
-        Sms model = (Sms) o;
+        SmsLocation model = (SmsLocation) o;
         return model.distance == distance && model.minutes == minutes && model.speed == speed;
     }
 
@@ -49,14 +49,14 @@ public class Sms implements Parcelable {
         return result;
     }
 
-    private Sms(Parcel in) {
+    private SmsLocation(Parcel in) {
         distance = in.readDouble();
         minutes = in.readInt();
         direction = in.readInt();
         speed = in.readDouble();
     }
 
-    public Sms setDistance(double distance) {
+    public SmsLocation setDistance(double distance) {
         this.distance = distance;
         return this;
     }
@@ -65,7 +65,7 @@ public class Sms implements Parcelable {
         return distance;
     }
 
-    public Sms setSpeed(double speed) {
+    public SmsLocation setSpeed(double speed) {
         this.speed = speed;
         return this;
     }
@@ -86,7 +86,7 @@ public class Sms implements Parcelable {
         }
     }
 
-    public Sms setTime(int minutes) {
+    public SmsLocation setTime(int minutes) {
         this.minutes = minutes;
         return this;
     }
@@ -95,7 +95,7 @@ public class Sms implements Parcelable {
         return minutes;
     }
 
-    public Sms setDirection(int direction) {
+    public SmsLocation setDirection(int direction) {
         this.direction = direction;
         return this;
     }
@@ -115,13 +115,13 @@ public class Sms implements Parcelable {
         out.writeDouble(speed);
     }
 
-    public static final Parcelable.Creator<Sms> CREATOR = new Parcelable.Creator<Sms>() {
-        public Sms createFromParcel(Parcel in) {
-            return new Sms(in);
+    public static final Parcelable.Creator<SmsLocation> CREATOR = new Parcelable.Creator<SmsLocation>() {
+        public SmsLocation createFromParcel(Parcel in) {
+            return new SmsLocation(in);
         }
 
-        public Sms[] newArray(int size) {
-            return new Sms[size];
+        public SmsLocation[] newArray(int size) {
+            return new SmsLocation[size];
         }
     };
 }

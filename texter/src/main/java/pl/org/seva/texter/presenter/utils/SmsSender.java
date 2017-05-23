@@ -42,7 +42,7 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.model.DistanceZone;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.view.activity.SettingsActivity;
-import pl.org.seva.texter.model.Sms;
+import pl.org.seva.texter.model.SmsLocation;
 
 @Singleton
 public class SmsSender {
@@ -76,7 +76,7 @@ public class SmsSender {
 	
 	private boolean initialized;
 
-    private Sms lastSentLocation;
+    private SmsLocation lastSentLocation;
     private DistanceZone zone;
 
 
@@ -103,39 +103,45 @@ public class SmsSender {
         double speed = locationSource.getSpeed();
 
         long time = System.currentTimeMillis();
-        int direction = 0; // alternatively (int) Math.signum(this.distance - distance);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
         int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
         minutes += calendar.get(Calendar.MINUTE);
 
-        Sms location = new Sms();
-        location.setDistance(distance);
-        location.setDirection(direction);
-        location.setTime(minutes);
-        location.setSpeed(speed);
+        SmsLocation smsLocation = new SmsLocation();
+        smsLocation.setDistance(distance);
+        smsLocation.setTime(minutes);
+        smsLocation.setSpeed(speed);
 
         synchronized (this) {
             DistanceZone zone = zoneCalculator.calculateZone(distance);
             if (this.zone == null) {
                 this.zone = zone;
             }
-            else if (zone.getMin() != this.zone.getMin() &&
-                    zone.getCounter() >= Constants.SMS_TRIGGER &&
-                    zone.getDelay() >= Constants.TIME_IN_ZONE) {
-                if (this.zone.getMin() > zone.getMin()) {
-                    direction = -1;
-                }
-                else {
-                    direction = 1;
-                }
-                location.setDirection(direction);  // calculated specifically for calculateZone border
+            else if (canSendZone(zone)) {
+                int direction = calculateDirection(zone);
+                smsLocation.setDirection(direction);
 
                 if ((direction == 1 ? zone.getMin() : zone.getMax()) <= getMaxSentDistance()) {
-                    send(location);
+                    send(smsLocation);
                 }
                 this.zone = zone;
             }
+        }
+    }
+
+    private boolean canSendZone(DistanceZone zone) {
+        return zone.getMin() != this.zone.getMin() &&
+                zone.getCounter() >= Constants.SMS_TRIGGER &&
+                zone.getDelay() >= Constants.TIME_IN_ZONE;
+    }
+
+    private int calculateDirection(DistanceZone zone) {
+        if (this.zone.getMin() > zone.getMin()) {
+            return -1;
+        }
+        else {
+            return 1;
         }
     }
 
@@ -181,7 +187,7 @@ public class SmsSender {
         registerReceiver(new SmsSentReceiver(), new IntentFilter(SENT + id));
 	}
 	
-	public void send(Sms model) {
+	public void send(SmsLocation model) {
         if (!isTextingEnabled()) {
             return;
         }
@@ -230,7 +236,7 @@ public class SmsSender {
         return lastSentDistance;
     }
 
-    private void send(String text, String intentText, Sms location) {
+    private void send(String text, String intentText, SmsLocation location) {
         String id = UUID.randomUUID().toString();
 		Intent sentIntent = new Intent(SENT + id);
 		sentIntent.putExtra(TEXT_KEY, intentText);
@@ -296,7 +302,7 @@ public class SmsSender {
         @Override
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra(TEXT_KEY);
-            Sms location = new Sms().
+            SmsLocation location = new SmsLocation().
                     setDistance(intent.getDoubleExtra(DISTANCE_KEY, 0.0)).
                     setTime(intent.getIntExtra(MINUTES_KEY, 0)).
                     setDirection(intent.getIntExtra(DIRECTION_KEY, 0)).

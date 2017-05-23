@@ -31,14 +31,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.model.Sms;
+import pl.org.seva.texter.model.SmsLocation;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private final Context context;
-    private final List<Sms> values;
+    private final List<SmsLocation> values;
 
-    public HistoryAdapter(Context context, List<Sms> values) {
+    public HistoryAdapter(Context context, List<SmsLocation> values) {
         this.context = context;
         this.values = values;
     }
@@ -53,7 +53,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Sms location = values.get(position);
+        SmsLocation location = values.get(position);
 
         @SuppressLint("DefaultLocale")
         String distanceStr =
