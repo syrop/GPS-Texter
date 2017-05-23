@@ -41,8 +41,8 @@ public class MockLocationSource extends LocationSource {
     public MockLocationSource(Timer timer) {
         this.setTimer(timer);
         String defaultHomeLocation = Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
-        setHomeLat(HomeLocationPreference.parseLatitude(defaultHomeLocation));
-        setHomeLng(HomeLocationPreference.parseLongitude(defaultHomeLocation));
+        setHomeLat(HomeLocationPreference.Companion.parseLatitude(defaultHomeLocation));
+        setHomeLng(HomeLocationPreference.Companion.parseLongitude(defaultHomeLocation));
 
         Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .doOnNext(__ -> {

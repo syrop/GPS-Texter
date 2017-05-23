@@ -90,7 +90,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         return number!!.text.toString()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor>? {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
         if (!contactsEnabled) {
             return null
         }
@@ -173,7 +173,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         loaderManager.restartLoader(DETAILS_QUERY_ID, null, this)
     }
 
-    fun setNumber(number: String) {
+    fun setNumber(number: String?) {
         this.number!!.setText(number)
     }
 
