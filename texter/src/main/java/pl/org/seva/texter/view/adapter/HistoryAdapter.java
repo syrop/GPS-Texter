@@ -20,7 +20,6 @@ package pl.org.seva.texter.view.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.databinding.AdapterHistoryBinding;
 import pl.org.seva.texter.model.Sms;
 import pl.org.seva.texter.presenter.utils.StringUtils;
 
@@ -47,12 +45,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        AdapterHistoryBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()),
-                R.layout.adapter_history,
-                parent,
-                false);
-        return new ViewHolder(binding);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.adapter_history, parent, false);
+
+        return new ViewHolder(view);
     }
 
     @Override
@@ -120,11 +116,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         private final TextView time;
         private final TextView speed;
 
-        ViewHolder(AdapterHistoryBinding binding) {
-            super(binding.getRoot());
-            distance = binding.distance;
-            time = binding.time;
-            speed = binding.speed;
+        ViewHolder(View view) {
+            super(view);
+            distance = view.findViewById(R.id.distance);
+            time = view.findViewById(R.id.time);
+            speed = view.findViewById(R.id.speed);
         }
     }
 }

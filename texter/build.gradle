@@ -4,10 +4,6 @@ android {
     compileSdkVersion 'android-O'
     buildToolsVersion '26.0.0-rc2'
 
-    dataBinding {
-        enabled = true
-    }
-
 // For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
     dexOptions {
         dexInProcess true

@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android">
-    <RelativeLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/map_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/current_location_button"
-            android:orientation="vertical"/>
+    <LinearLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/current_location_button"
+        android:orientation="vertical"/>
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/current_location_button"
-            android:text="@string/use_current_location"
-            style="?android:attr/buttonBarButtonStyle"
-            android:onClick="onUseCurrentLocationButtonClicked"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
-</layout>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_location_button"
+        android:text="@string/use_current_location"
+        style="?android:attr/buttonBarButtonStyle"
+        android:onClick="onUseCurrentLocationButtonClicked"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

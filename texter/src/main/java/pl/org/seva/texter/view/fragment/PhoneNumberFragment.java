@@ -20,7 +20,6 @@ package pl.org.seva.texter.view.fragment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.databinding.FragmentNumberBinding;
 
 public class PhoneNumberFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -107,16 +105,16 @@ public class PhoneNumberFragment extends Fragment implements
             (LayoutInflater inflater,
              @Nullable ViewGroup container,
              @Nullable Bundle savedInstanceState) {
-        FragmentNumberBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.fragment_number, container, false);
-        number = binding.number;
+        View view = inflater.inflate(R.layout.fragment_number, container, false);
+
+        number = view.findViewById(R.id.number);
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 getActivity(),
                 Manifest.permission.READ_CONTACTS) ==
                 PackageManager.PERMISSION_GRANTED;
 
-        ListView contacts = binding.contacts;
+        ListView contacts = view.findViewById(R.id.contacts);
         if (!contactsEnabled) {
             contacts.setVisibility(View.GONE);
         }
@@ -132,7 +130,7 @@ public class PhoneNumberFragment extends Fragment implements
             contacts.setAdapter(adapter);
         }
 
-        return binding.getRoot();
+        return view;
     }
 
     @Override

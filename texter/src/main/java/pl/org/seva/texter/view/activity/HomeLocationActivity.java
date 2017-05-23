@@ -20,7 +20,6 @@ package pl.org.seva.texter.view.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -49,7 +48,6 @@ import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.presenter.dagger.Graph;
-import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.Constants;
@@ -101,11 +99,11 @@ public class HomeLocationActivity extends AppCompatActivity {
         lat = parseLatitude(value);
         lon = parseLongitude(value);
 
-        ActivityHomeLocationBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.activity_home_location);
-        mapContainerId = binding.mapContainer.getId();
+        setContentView(R.layout.activity_home_location);
+
+        mapContainerId = findViewById(R.id.map_container).getId();
         MapsInitializer.initialize(this);
-        useCurrentButton = binding.currentLocationButton;
+        useCurrentButton = findViewById(R.id.current_location_button);
 
         boolean locationPermitted = ContextCompat.checkSelfPermission(
                 this,
