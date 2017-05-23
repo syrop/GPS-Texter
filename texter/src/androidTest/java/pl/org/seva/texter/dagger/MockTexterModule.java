@@ -17,13 +17,11 @@
 
 package pl.org.seva.texter.dagger;
 
-import org.mockito.Mockito;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.subjects.PublishSubject;
+import pl.org.seva.texter.mockimplementations.MockActivityRecognitionSource;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
@@ -51,13 +49,6 @@ class MockTexterModule {
     @Provides
     @Singleton
     ActivityRecognitionSource provideActivityRecognitionManager() {
-        ActivityRecognitionSource result = Mockito.mock(ActivityRecognitionSource.class);
-        mockReturnValues(result);
-        return result;
-    }
-
-    private void mockReturnValues(ActivityRecognitionSource activityRecognitionSource) {
-        Mockito.when(activityRecognitionSource.stationaryListener()).thenReturn(PublishSubject.empty());
-        Mockito.when(activityRecognitionSource.movingListener()).thenReturn(PublishSubject.empty());
+        return new MockActivityRecognitionSource();
     }
 }

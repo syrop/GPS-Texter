@@ -39,7 +39,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 @Singleton
-class ActivityRecognitionSource @Inject
+open class ActivityRecognitionSource @Inject
 internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false
@@ -87,11 +87,11 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
 
     }
 
-    fun stationaryListener(): Observable<Any> {
+    open fun stationaryListener(): Observable<Any> {
         return stationarySubject.hide()
     }
 
-    fun movingListener(): Observable<Any> {
+    open fun movingListener(): Observable<Any> {
         return movingSubject.hide()
     }
 

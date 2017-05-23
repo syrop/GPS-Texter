@@ -19,6 +19,7 @@ package pl.org.seva.texter.mockimplementations;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.support.annotation.NonNull;
 
 import javax.inject.Singleton;
 
@@ -53,7 +54,10 @@ public class MockSmsSender extends SmsSender {
         return false;
     }
 
-    protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)
+    protected void sendTextMessage(
+            @NonNull String text,
+            @NonNull PendingIntent sentIntent,
+            @NonNull PendingIntent deliveredIntent)
             throws SecurityException {
         try {
             messagesSent++;
