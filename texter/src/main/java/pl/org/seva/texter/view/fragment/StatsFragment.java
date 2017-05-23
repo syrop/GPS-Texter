@@ -257,12 +257,13 @@ public class StatsFragment extends Fragment {
         return homeString;
     }
 
+    @SuppressLint("WrongConstant")
     private void onClick(View v) {
         if (v == sendNowButton) {
             sendNowButton.setEnabled(false);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(timer.getResetTime());
-            int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
+            @SuppressLint("WrongConstant") int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60;
             minutes += calendar.get(Calendar.MINUTE);
             Sms location = new Sms();
             location.setDistance(distance);

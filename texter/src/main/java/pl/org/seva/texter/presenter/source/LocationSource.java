@@ -18,6 +18,7 @@
 package pl.org.seva.texter.presenter.source;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -304,6 +305,7 @@ public class LocationSource implements
         return DistanceCalculator.speedInKph(loc1, loc2, time);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         connected = true;

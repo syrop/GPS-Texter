@@ -97,6 +97,7 @@ public class SmsSender {
 		initialized = true;
 	}
 
+    @SuppressLint("WrongConstant")
     public void onDistanceChanged() {
         double distance = locationSource.getDistance();
         double speed = locationSource.getSpeed();
@@ -203,11 +204,12 @@ public class SmsSender {
         }
         if (isTimeIncluded()) {
             Calendar now = Calendar.getInstance();
-            String minuteStr = Integer.toString(now.get(Calendar.MINUTE));
+            @SuppressLint("WrongConstant") String minuteStr = Integer.toString(now.get(Calendar.MINUTE));
             if (minuteStr.length() == 1) {
                 minuteStr = "0" + minuteStr;
             }
-            String timeStr = Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr;
+            @SuppressLint("WrongConstant") String timeStr =
+                    Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr;
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
