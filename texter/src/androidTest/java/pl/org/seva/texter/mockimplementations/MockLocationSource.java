@@ -39,10 +39,10 @@ public class MockLocationSource extends LocationSource {
     private int ticks = -1;
 
     public MockLocationSource(Timer timer) {
-        this.timer = timer;
+        this.setTimer(timer);
         String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
-        homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation);
-        homeLon = HomeLocationPreference.parseLongitude(defaultHomeLocation);
+        setHomeLat(HomeLocationPreference.parseLatitude(defaultHomeLocation));
+        setHomeLng(HomeLocationPreference.parseLongitude(defaultHomeLocation));
 
         Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .doOnNext(__ -> {
