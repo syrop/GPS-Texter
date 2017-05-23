@@ -15,24 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils;
+package pl.org.seva.texter.presenter.utils
 
-public class Constants {
+import java.util.ArrayList
 
-    /** Geo URI for Warsaw. */
-    public static final String DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667";  // Warsaw
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    /** Send an sms each time this value is passed. */
-    public static final int KM_INTERVAL = 2;  // two kilometers
+import pl.org.seva.texter.model.SmsLocation
 
-    /** If the number of measurements in the present calculateZone has reached the trigger, send SMS. */
-    public static final int SMS_TRIGGER = 2;
-    /** Time spend in calculateZone before an SMS is sent. */
-    public static final int TIME_IN_ZONE = 11 * 1000;
+@Singleton
+class SmsHistory @Inject
+internal constructor() {
 
-    public static final long LOCATION_UPDATE_FREQUENCY = 1000;  // [ms]
+    private var mockFirstHistoryItem = true
 
-    private Constants() {
-        //
+    val list: MutableList<SmsLocation>
+
+    init {
+        list = ArrayList<SmsLocation>()
+        list.add(SmsLocation())
+    }
+
+    fun add(model: SmsLocation) {
+        if (mockFirstHistoryItem) {
+            list.clear()
+            mockFirstHistoryItem = false
+        }
+        list.add(model)
     }
 }

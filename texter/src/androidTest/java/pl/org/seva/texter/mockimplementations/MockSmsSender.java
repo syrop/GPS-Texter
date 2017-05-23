@@ -24,7 +24,7 @@ import javax.inject.Singleton;
 
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
-import pl.org.seva.texter.presenter.utils.SmsCache;
+import pl.org.seva.texter.presenter.utils.SmsHistory;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Singleton
@@ -32,10 +32,10 @@ public class MockSmsSender extends SmsSender {
 
     private int messagesSent;
 
-    public MockSmsSender(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        this.locationSource = locationSource;
-        this.smsCache = smsCache;
-        this.zoneCalculator = zoneCalculator;
+    public MockSmsSender(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
+        this.setLocationSource(locationSource);
+        this.setSmsHistory(smsHistory);
+        this.setZoneCalculator(zoneCalculator);
     }
 
     @Override

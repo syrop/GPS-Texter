@@ -15,26 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils;
+package pl.org.seva.texter.presenter.utils
 
-import android.annotation.SuppressLint;
+import android.annotation.SuppressLint
 
-public class StringUtils {
+object StringUtils {
 
-    private StringUtils() {
-        //
-    }
-
-    public static String getSpeedString(double speed, String speedUnit) {
+    fun getSpeedString(speed: Double, speedUnit: String): String {
         @SuppressLint("DefaultLocale")
-        String result = String.format("%.1f", speed) + " " + speedUnit;
+        var result = String.format("%.1f", speed) + " " + speedUnit
         if (result.contains(".0")) {
-            result = result.replace(".0", "");
+            result = result.replace(".0", "")
+        } else if (result.contains(",0")) {
+            result = result.replace(",0", "")
         }
-        else if (result.contains(",0")) {
-            result = result.replace(",0", "");
-        }
-        return result;
+        return result
     }
-
 }

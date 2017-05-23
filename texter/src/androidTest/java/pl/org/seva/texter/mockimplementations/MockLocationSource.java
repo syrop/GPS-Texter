@@ -40,7 +40,7 @@ public class MockLocationSource extends LocationSource {
 
     public MockLocationSource(Timer timer) {
         this.setTimer(timer);
-        String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
+        String defaultHomeLocation = Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
         setHomeLat(HomeLocationPreference.parseLatitude(defaultHomeLocation));
         setHomeLng(HomeLocationPreference.parseLongitude(defaultHomeLocation));
 

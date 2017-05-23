@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.utils.SmsCache
+import pl.org.seva.texter.presenter.utils.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.utils.SmsSender
@@ -40,7 +40,7 @@ import pl.org.seva.texter.presenter.utils.SmsSender
 class HistoryFragment : Fragment() {
 
     @Inject
-    lateinit var smsCache: SmsCache
+    lateinit var smsHistory: SmsHistory
     @Inject
     lateinit var smsSender: SmsSender
 
@@ -84,7 +84,7 @@ class HistoryFragment : Fragment() {
         historyRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         historyRecyclerView.setHasFixedSize(true)
         historyRecyclerView.layoutManager = LinearLayoutManager(fragmentContext)
-        adapter = HistoryAdapter(activity, smsCache.list)
+        adapter = HistoryAdapter(activity, smsHistory.list)
         historyRecyclerView.adapter = adapter
         historyRecyclerView.addItemDecoration(HistoryAdapter.DividerItemDecoration(activity))
         historyRecyclerView.clearOnScrollListeners()

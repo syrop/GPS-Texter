@@ -69,7 +69,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         builder.append(minutes);
         holder.time.setText(builder.toString());
         holder.speed.setText(
-            StringUtils.getSpeedString(location.getSpeed(),
+            StringUtils.INSTANCE.getSpeedString(location.getSpeed(),
             context.getString(R.string.speed_unit)));
     }
 

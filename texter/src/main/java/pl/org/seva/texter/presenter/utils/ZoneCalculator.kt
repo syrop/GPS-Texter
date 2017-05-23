@@ -15,50 +15,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils;
+package pl.org.seva.texter.presenter.utils
 
-import android.util.SparseArray;
+import android.util.SparseArray
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.Inject
+import javax.inject.Singleton
 
-import pl.org.seva.texter.model.DistanceZone;
+import pl.org.seva.texter.model.DistanceZone
 
 @Singleton
-public class ZoneCalculator {
+class ZoneCalculator @Inject
+internal constructor() {
 
-    private final SparseArray<DistanceZone> zones = new SparseArray<>();
+    private val zones = SparseArray<DistanceZone>()
 
-    @Inject
-    ZoneCalculator() {
+    // Needs to be called from a synchronized block.
+    fun clearCache() {
+        zones.clear()
     }
 
     // Needs to be called from a synchronized block.
-    public void clearCache() {
-        zones.clear();
-    }
-
-    // Needs to be called from a synchronized block.
-    public DistanceZone calculateZone(double distance) {
-        int check = 0;
-        int min = 0;
-        int max;
+    fun calculateZone(distance: Double): DistanceZone {
+        var check = 0
+        var min = 0
+        val max: Int
         while (check < distance) {  // Calculate min and max.
-            min = check;
-            check += Constants.KM_INTERVAL;
+            min = check
+            check += Constants.KM_INTERVAL
         }
-        max = check;
-        DistanceZone zone = zones.get(min);
+        max = check
+        var zone: DistanceZone? = zones.get(min)
         if (zone == null) {
-            clearCache();
-            zone = new DistanceZone(min, max);
-            zone.increaseCounter();
-            zones.put(min, zone);
-        }
-        else {
-            zone.increaseCounter();
+            clearCache()
+            zone = DistanceZone(min, max)
+            zone.increaseCounter()
+            zones.put(min, zone)
+        } else {
+            zone.increaseCounter()
         }
 
-        return zone;
+        return zone
     }
 }

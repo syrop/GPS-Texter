@@ -39,7 +39,7 @@ public class HomeLocationPreference extends Preference {
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return Constants.DEFAULT_HOME_LOCATION;
+        return Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class HomeLocationPreference extends Preference {
             lon = parseLongitude(value);
         }
         else {
-            value = Constants.DEFAULT_HOME_LOCATION;
+            value = Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
             persistString(value);
         }
         lat = parseLatitude(value);

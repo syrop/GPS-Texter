@@ -28,7 +28,7 @@ import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
-import pl.org.seva.texter.presenter.utils.SmsCache;
+import pl.org.seva.texter.presenter.utils.SmsHistory;
 import pl.org.seva.texter.mockimplementations.MockLocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
@@ -44,8 +44,8 @@ class MockTexterModule {
 
     @Provides
     @Singleton
-    SmsSender provideSmsManager(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        return new MockSmsSender(locationSource, smsCache, zoneCalculator);
+    SmsSender provideSmsManager(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
+        return new MockSmsSender(locationSource, smsHistory, zoneCalculator);
     }
 
     @Provides
