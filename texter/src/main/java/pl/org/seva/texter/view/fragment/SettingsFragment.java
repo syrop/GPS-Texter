@@ -40,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.preferences);
 
         if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            getPreferenceScreen().removePreference(findPreference(SettingsActivity.CATEGORY_SMS));
+            getPreferenceScreen().removePreference(findPreference(SettingsActivity.Companion.getCATEGORY_SMS()));
         }
     }
 

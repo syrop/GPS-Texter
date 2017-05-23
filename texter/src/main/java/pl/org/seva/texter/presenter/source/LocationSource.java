@@ -138,7 +138,7 @@ public class LocationSource implements
     public void onHomeLocationChanged() {
         updateDistance();
         String homeLocation = preferences.
-                getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION);
+                getString(SettingsActivity.Companion.getHOME_LOCATION(), Constants.DEFAULT_HOME_LOCATION);
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {

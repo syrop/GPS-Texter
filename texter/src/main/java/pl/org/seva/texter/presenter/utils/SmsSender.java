@@ -159,12 +159,12 @@ public class SmsSender {
     }
 
 	private String getPhoneNumber() {
-		String numberStr = preferences.getString(SettingsActivity.SMS_NUMBER, "");
+		String numberStr = preferences.getString(SettingsActivity.Companion.getSMS_NUMBER(), "");
 		return numberStr.length() > 0 ? numberStr : "0";
 	}
 
     private int getMaxSentDistance() {
-        String numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "");
+        String numberStr = preferences.getString(SettingsActivity.Companion.getMAXIMUM_DISTANCE(), "");
         return numberStr.length() > 0 ? Integer.valueOf(numberStr) : 0;
     }
 
@@ -277,19 +277,19 @@ public class SmsSender {
 	}
 
     private boolean isSpeedIncluded() {
-        return preferences.getBoolean(SettingsActivity.INCLUDE_SPEED, false);
+        return preferences.getBoolean(SettingsActivity.Companion.getINCLUDE_SPEED(), false);
     }
 
     private boolean isLocationIncluded() {
-        return preferences.getBoolean(SettingsActivity.INCLUDE_LOCATION, false);
+        return preferences.getBoolean(SettingsActivity.Companion.getINCLUDE_LOCATION(), false);
     }
 
     private boolean isTimeIncluded() {
-        return preferences.getBoolean(SettingsActivity.INCLUDE_TIME, false);
+        return preferences.getBoolean(SettingsActivity.Companion.getINCLUDE_TIME(), false);
     }
 
     public boolean isTextingEnabled() {
-        return preferences.getBoolean(SettingsActivity.SMS_ENABLED, false);
+        return preferences.getBoolean(SettingsActivity.Companion.getSMS_ENABLED(), false);
     }
 
     public boolean needsPermission() {
