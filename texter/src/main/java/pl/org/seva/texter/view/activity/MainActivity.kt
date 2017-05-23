@@ -106,10 +106,9 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
 
-        val titles = arrayOfNulls<CharSequence>(NUMBER_OF_TABS)
-        titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name)
-        titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name)
-        titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name)
+        val titles = arrayOf<CharSequence>(getString(R.string.stats_tab_name),
+                getString(R.string.map_tab_name),
+                getString(R.string.history_tab_name))
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -352,13 +351,7 @@ class MainActivity : AppCompatActivity() {
 
         private val PREF_STARTUP_SHOWN = "pref_startup_shown"
 
-        private val STATS_TAB_POSITION = 0
-        private val MAP_TAB_POSITION = 1
-        private val HISTORY_TAB_POSITION = 2
-
         private val GOOGLE_REQUEST_CODE = 0
-
-        private val NUMBER_OF_TABS = 3
 
         /** Number of milliseconds that will be taken for a double click.  */
         private val DOUBLE_CLICK_MILLIS: Long = 5000
