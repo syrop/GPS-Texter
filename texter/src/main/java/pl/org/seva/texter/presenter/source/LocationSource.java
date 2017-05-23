@@ -336,7 +336,8 @@ public class LocationSource implements
                         googleApiClient,
                         builder.build());
         pendingResult.setResultCallback(locationSettingsResult -> {
-            connected = locationSettingsResult.getLocationSettingsStates().isLocationUsable();
+            connected = locationSettingsResult.getStatus().isSuccess() &&
+                    locationSettingsResult.getLocationSettingsStates().isLocationUsable();
             if (connected) {
                 providerEnabledSubject.onNext(0);
             }

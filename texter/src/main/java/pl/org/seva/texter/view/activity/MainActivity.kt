@@ -161,11 +161,11 @@ class MainActivity : AppCompatActivity() {
      * @return true if all permissions had been granted before calling the method
      */
     private fun processPermissions(): Boolean {
-        val permissions = ArrayList<String>()
+        val permissionsToRequest = ArrayList<String>()
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
             permissionsUtils
                     .permissionGrantedListener()
                     .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
@@ -173,16 +173,23 @@ class MainActivity : AppCompatActivity() {
         } else {
             initGps()
         }
-        if (smsSender.needsPermission() && smsSender.isTextingEnabled && ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.SEND_SMS)
+        if (smsSender.needsPermission() && smsSender.isTextingEnabled &&
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.SEND_SMS)
         }
-        if (permissions.isEmpty()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                smsSender.needsPermission() && smsSender.isTextingEnabled &&
+                ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.READ_PHONE_STATE)
+        }
+        if (permissionsToRequest.isEmpty()) {
             return true
         }
-        val arr = arrayOfNulls<String>(permissions.size)
-        permissions.toTypedArray()
+        val arr = permissionsToRequest.toTypedArray()
         ActivityCompat.requestPermissions(
                 this,
                 arr,

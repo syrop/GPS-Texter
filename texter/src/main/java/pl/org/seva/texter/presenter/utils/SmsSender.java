@@ -195,7 +195,6 @@ public class SmsSender {
             return;
         }
         this.lastSentLocation = model;
-
         if (!isCorrectPhoneNumberSet()) {
             return;
         }
@@ -258,8 +257,8 @@ public class SmsSender {
             try {
                 sendTextMessage(text, sentPI, deliveredPI);
             }
-            catch (SecurityException ignore) {
-                // Ignore, as may indicate the app has no permission to send SMS.
+            catch (SecurityException ex) {
+                ex.printStackTrace();
             }
         }
 	}
