@@ -54,28 +54,33 @@ internal constructor() {
         return permissionDeniedSubject.hide()
     }
 
-    private fun onPermissionGranted(permission: String) {
-        permissionGrantedSubject.onNext(permission)
-        permissionGrantedSubject.onComplete()
-    }
-
-    private fun onPermissionDenied(permission: String) {
-        permissionDeniedSubject.onNext(permission)
-        permissionDeniedSubject.onComplete()
-    }
-
-    fun onRequestPermissionsResult(
-            permissions: Array<String>,
-            grantResults: IntArray) {
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            for (permission in permissions) {
-                onPermissionGranted(permission)
-            }
-        } else {
+    fun onRequestPermissionsResult(permissions: Array<String>, grantResults: IntArray) {
+        if (grantResults.isEmpty()) {
             for (permission in permissions) {
                 onPermissionDenied(permission)
             }
         }
+        else for (i in 0..permissions.size - 1) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                onPermissionGranted(permissions[i])
+            } else {
+                onPermissionDenied(permissions[i])
+            }
+        }
+        closePermissionListeners()
+    }
+
+    private fun onPermissionGranted(permission: String) {
+        permissionGrantedSubject.onNext(permission)
+    }
+
+    private fun onPermissionDenied(permission: String) {
+        permissionDeniedSubject.onNext(permission)
+    }
+
+    private fun closePermissionListeners() {
+        permissionGrantedSubject.onComplete()
+        permissionDeniedSubject.onComplete()
     }
 
     companion object {
