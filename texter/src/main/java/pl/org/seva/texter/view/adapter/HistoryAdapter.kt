@@ -31,7 +31,8 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.model.SmsLocation
 import pl.org.seva.texter.presenter.utils.StringUtils
 
-class HistoryAdapter(private val context: Context, private val values: List<SmsLocation>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter(private val context: Context, private val values: List<SmsLocation>) :
+        RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
