@@ -231,7 +231,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         connected = true
 
         if (location == null) {
-
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
         }
 
@@ -242,10 +241,16 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
                 .setInterval(updateFrequency)
                 .setSmallestDisplacement(MIN_DISTANCE)
 
-
-        LocationServices.FusedLocationApi
-                .requestLocationUpdates(googleApiClient, locationRequest, this)
+        requestLocationUpdates()
         callProviderListener()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestLocationUpdates() {
+        if (googleApiClient == null || locationRequest == null) {
+            return
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
     fun callProviderListener() {
@@ -254,8 +259,9 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         val pendingResult = LocationServices.SettingsApi.checkLocationSettings(
                 googleApiClient,
                 builder.build())
-        pendingResult.setResultCallback { locationSettingsResult ->
-            connected = locationSettingsResult.status.isSuccess && locationSettingsResult.locationSettingsStates.isLocationUsable
+        pendingResult.setResultCallback {
+            locationSettingsResult -> connected = locationSettingsResult.status.isSuccess &&
+                    locationSettingsResult.locationSettingsStates.isLocationUsable
             if (connected) {
                 providerEnabledSubject.onNext(0)
             } else {
@@ -282,7 +288,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         }
         Log.d(TAG, "Resume updates.")
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
+        requestLocationUpdates()
 
         paused = false
     }
