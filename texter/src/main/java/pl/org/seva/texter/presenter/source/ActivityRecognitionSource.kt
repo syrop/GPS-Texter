@@ -107,8 +107,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
         result.addAll(
                 stationarySubject
                     .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
-                    .subscribe { _ -> activityRecognitionListener.onDeviceStationary() },
-                movingSubject.subscribe { _ -> activityRecognitionListener.onDeviceMoving() })
+                    .subscribe { activityRecognitionListener.onDeviceStationary() },
+                movingSubject.subscribe { activityRecognitionListener.onDeviceMoving() })
         return result
     }
 

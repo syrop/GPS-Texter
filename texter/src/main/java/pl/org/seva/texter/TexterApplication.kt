@@ -27,11 +27,12 @@ import javax.inject.Inject
 
 import pl.org.seva.texter.presenter.dagger.Graph
 import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
+import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.service.TexterService
 
-open class TexterApplication : MultiDexApplication(), ActivityRecognitionListener {
+open class TexterApplication : MultiDexApplication(), ActivityRecognitionListener, ProviderListener {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -58,12 +59,7 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
     }
 
     private fun addGpsProviderListeners() {
-        locationSource
-                .providerEnabledListener()
-                .subscribe { _ -> onProviderEnabled() }
-        locationSource
-                .providerDisabledListener()
-                .subscribe { _ -> onProviderDisabled() }
+        locationSource.addProviderListener(this)
     }
 
     private fun addActivityRecognitionListeners() {
@@ -86,7 +82,7 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
         }
     }
 
-    private fun onProviderEnabled() {
+    override fun onProviderEnabled() {
         Log.d(TAG, "Provider is enabled")
         isProviderEnabled = true
         if (!isDeviceStationary) {
@@ -94,7 +90,7 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
         }
     }
 
-    private fun onProviderDisabled() {
+    override fun onProviderDisabled() {
         Log.d(TAG, "Provider is disabled")
         isProviderEnabled = false
         stopService()

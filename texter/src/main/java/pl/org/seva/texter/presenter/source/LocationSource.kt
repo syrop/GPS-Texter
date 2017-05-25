@@ -46,6 +46,7 @@ import javax.inject.Singleton
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.view.preference.HomeLocationPreference
@@ -149,6 +150,11 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         requestLocationUpdates(activity)
     }
 
+    fun addProviderListener(providerListener: ProviderListener) {
+        providerEnabledSubject.subscribe { providerListener.onProviderEnabled() }
+        providerDisabledSubject.subscribe { providerListener.onProviderDisabled() }
+    }
+
     fun distanceChangedListener(): Observable<Any> {
         return distanceSubject.hide()
     }
@@ -159,14 +165,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     fun locationChangedListener(): Observable<Any> {
         return locationChangedSubject.hide()
-    }
-
-    open fun providerEnabledListener(): Observable<Any> {
-        return providerEnabledSubject.hide()
-    }
-
-    open fun providerDisabledListener(): Observable<Any> {
-        return providerDisabledSubject.hide()
     }
 
     val homeLatLng: LatLng
