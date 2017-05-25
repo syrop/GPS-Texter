@@ -29,14 +29,16 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 import java.lang.ref.WeakReference
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
 
 @Singleton
 open class ActivityRecognitionSource @Inject
@@ -100,16 +102,18 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
 
     }
 
-    open fun stationaryListener(): Observable<Any> {
-        return stationarySubject.hide()
+    fun addActivityRecognitionListener(activityRecognitionListener: ActivityRecognitionListener) : Disposable {
+        val result = CompositeDisposable()
+        result.addAll(
+                stationarySubject
+                    .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
+                    .subscribe { _ -> activityRecognitionListener.onDeviceStationary() },
+                movingSubject.subscribe { _ -> activityRecognitionListener.onDeviceMoving() })
+        return result
     }
 
-    open fun movingListener(): Observable<Any> {
-        return movingSubject.hide()
-    }
-
-    private fun onDeviceStationary() {
-        stationarySubject.onNext(0)
+    private fun onDeviceStationary(confidence: Int) {
+        stationarySubject.onNext(confidence)
     }
 
     private fun onDeviceMoving() {
@@ -121,9 +125,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result.mostProbableActivity.type == DetectedActivity.STILL &&
-                        result.getActivityConfidence(DetectedActivity.STILL) >= STATIONARY_CONFIDENCE_THRESHOLD) {
-                    onDeviceStationary()
+                if (result.mostProbableActivity.type == DetectedActivity.STILL) {
+                    onDeviceStationary(result.getActivityConfidence(DetectedActivity.STILL))
                 } else {
                     onDeviceMoving()
                 }
@@ -135,9 +138,9 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private val ACTIVITY_RECOGNITION_INTERVAL: Long = 1000  // [ms]
-        private val STATIONARY_CONFIDENCE_THRESHOLD = 60
+        private val STATIONARY_CONFIDENCE_THRESHOLD = 55
 
-        private val stationarySubject = PublishSubject.create<Any>()
+        private val stationarySubject = PublishSubject.create<Int>()
         private val movingSubject = PublishSubject.create<Any>()
     }
 }

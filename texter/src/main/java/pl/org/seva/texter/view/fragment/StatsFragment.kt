@@ -45,8 +45,9 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils
 import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.model.SmsLocation
+import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
 
-class StatsFragment : Fragment() {
+class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -99,12 +100,7 @@ class StatsFragment : Fragment() {
                 locationSource.distanceChangedListener().subscribe {
                     _ -> activity.runOnUiThread { this.onDistanceChanged() } },
                 locationSource.homeChangedListener().subscribe { _ -> onHomeChanged() },
-                activityRecognitionSource
-                        .stationaryListener()
-                        .subscribe { _ -> onDeviceStationary() },
-                activityRecognitionSource
-                        .movingListener()
-                        .subscribe { _ -> onDeviceMoving() })
+                activityRecognitionSource.addActivityRecognitionListener(this))
 
         if (ContextCompat.checkSelfPermission(
                 activity,
@@ -118,11 +114,11 @@ class StatsFragment : Fragment() {
         return view
     }
 
-    private fun onDeviceStationary() {
+    override fun onDeviceStationary() {
         stationary = true
     }
 
-    private fun onDeviceMoving() {
+    override fun onDeviceMoving() {
         stationary = false
     }
 
