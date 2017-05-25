@@ -49,13 +49,12 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private var mDistributeEvenly: Boolean = false
 
-    private lateinit var mViewPager: ViewPager
+    private lateinit var viewPager: ViewPager
     private val mContentDescriptions = SparseArray<String>()
 
     private val mTabStrip: SlidingTabStrip
 
     init {
-
         // Disable the Scroll Bar
         isHorizontalScrollBarEnabled = false
         // Make sure that the Tab Strips fills this View
@@ -82,10 +81,11 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     fun setViewPager(viewPager: ViewPager) {
         mTabStrip.removeAllViews()
 
-        mViewPager = viewPager
+        this.viewPager = viewPager
         viewPager.clearOnPageChangeListeners()
         viewPager.addOnPageChangeListener(InternalViewPagerListener())
         populateTabStrip()
+        scrollToTab(viewPager.currentItem, 0)
     }
 
     /**
@@ -123,7 +123,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun populateTabStrip() {
-        val adapter = mViewPager.adapter
+        val adapter = viewPager.adapter
         val tabClickListener = View.OnClickListener { this.onTabClicked(it) }
 
         for (i in 0..adapter.count - 1) {
@@ -149,16 +149,10 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             }
 
             mTabStrip.addView(tabView)
-            if (i == mViewPager.currentItem) {
+            if (i == viewPager.currentItem) {
                 tabView.isSelected = true
             }
         }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        scrollToTab(mViewPager.currentItem, 0)
     }
 
     private fun scrollToTab(tabIndex: Int, positionOffset: Int) {
@@ -217,7 +211,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun onTabClicked(v: View) {
         for (i in 0..mTabStrip.childCount - 1) {
             if (v === mTabStrip.getChildAt(i)) {
-                mViewPager.currentItem = i
+                viewPager.currentItem = i
                 return
             }
         }

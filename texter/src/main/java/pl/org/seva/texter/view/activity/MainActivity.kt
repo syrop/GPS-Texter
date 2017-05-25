@@ -68,8 +68,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var permissionsUtils: PermissionsUtils
     @Inject
     lateinit var timer: Timer
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
+
     /** Used when counting a double click.  */
     private var clickTime: Long = 0
     /** Obtained from intent, may be null.  */
@@ -87,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
         val graph = (application as TexterApplication).graph
         graph.inject(this)
-        activityRecognitionSource.init(this)
 
         // Set up colors depending on SDK version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

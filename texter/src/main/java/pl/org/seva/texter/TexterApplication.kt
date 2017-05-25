@@ -47,6 +47,7 @@ open class TexterApplication : MultiDexApplication() {
         super.onCreate()
         graph = createGraph()
         graph.inject(this)
+        activityRecognitionSource.init(this)
         addGpsProviderListeners()
         addActivityRecognitionListeners()
     }

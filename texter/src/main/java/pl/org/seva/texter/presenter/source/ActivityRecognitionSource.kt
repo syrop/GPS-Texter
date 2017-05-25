@@ -45,6 +45,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     private var initialized: Boolean = false
     private var googleApiClient: GoogleApiClient? = null
     private var weakContext: WeakReference<Context>? = null
+    private var activityRecognitionReceiver : BroadcastReceiver? = null
 
     fun init(context: Context) {
         if (initialized) {
@@ -65,7 +66,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
 
     override fun onConnected(bundle: Bundle?) {
         val context = weakContext!!.get() ?: return
-        context.registerReceiver(ActivityRecognitionReceiver(), IntentFilter(ACTIVITY_RECOGNITION_INTENT))
+        registerReceiver()
         val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -80,7 +81,19 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     }
 
     override fun onConnectionSuspended(i: Int) {
+        unregisterReceiver()
+    }
 
+    private fun registerReceiver() {
+        val context = weakContext!!.get() ?: return
+        activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
+        context.registerReceiver(activityRecognitionReceiver, IntentFilter(ACTIVITY_RECOGNITION_INTENT))
+    }
+
+    private fun unregisterReceiver() {
+        val context = weakContext!!.get() ?: return
+        activityRecognitionReceiver?: return
+        context.unregisterReceiver(activityRecognitionReceiver)
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -108,7 +121,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result.mostProbableActivity.type == DetectedActivity.STILL) {
+                if (result.mostProbableActivity.type == DetectedActivity.STILL &&
+                        result.getActivityConfidence(DetectedActivity.STILL) >= STATIONARY_CONFIDENCE_THRESHOLD) {
                     onDeviceStationary()
                 } else {
                     onDeviceMoving()
@@ -120,8 +134,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     companion object {
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
-
         private val ACTIVITY_RECOGNITION_INTERVAL: Long = 1000  // [ms]
+        private val STATIONARY_CONFIDENCE_THRESHOLD = 50
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
