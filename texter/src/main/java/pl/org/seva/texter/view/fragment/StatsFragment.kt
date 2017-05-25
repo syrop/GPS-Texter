@@ -101,10 +101,10 @@ class StatsFragment : Fragment() {
                 locationSource.homeChangedListener().subscribe { _ -> onHomeChanged() },
                 activityRecognitionSource
                         .stationaryListener()
-                        .subscribe { _ -> deviceIsStationary() },
+                        .subscribe { _ -> onDeviceStationary() },
                 activityRecognitionSource
                         .movingListener()
-                        .subscribe { _ -> deviceIsMoving() })
+                        .subscribe { _ -> onDeviceMoving() })
 
         if (ContextCompat.checkSelfPermission(
                 activity,
@@ -118,11 +118,11 @@ class StatsFragment : Fragment() {
         return view
     }
 
-    private fun deviceIsStationary() {
+    private fun onDeviceStationary() {
         stationary = true
     }
 
-    private fun deviceIsMoving() {
+    private fun onDeviceMoving() {
         stationary = false
     }
 

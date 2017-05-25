@@ -235,7 +235,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         }
 
         val updateFrequency = updateFrequency
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+        removeLocationUpdates()
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(updateFrequency)
@@ -251,6 +251,10 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
+    }
+
+    private fun removeLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
     }
 
     fun callProviderListener() {
@@ -275,7 +279,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
             return
         }
         Log.d(TAG, "Pause updates.")
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+        removeLocationUpdates()
 
         paused = true
     }
