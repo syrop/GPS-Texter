@@ -90,7 +90,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun setReadContactsPermissionListeners() {
         permissionsUtils
                 .permissionDeniedListener()
-                .filter { permission -> permission == Manifest.permission.READ_CONTACTS }
+                .filter { it == Manifest.permission.READ_CONTACTS }
                 .subscribe { onShowContactsPermissionDenied() }
     }
 

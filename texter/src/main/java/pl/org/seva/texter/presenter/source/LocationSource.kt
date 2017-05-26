@@ -262,8 +262,8 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
                 googleApiClient,
                 builder.build())
         pendingResult.setResultCallback {
-            locationSettingsResult -> connected = locationSettingsResult.status.isSuccess &&
-                    locationSettingsResult.locationSettingsStates.isLocationUsable
+            connected = it.status.isSuccess &&
+                    it.locationSettingsStates.isLocationUsable
             if (connected) {
                 providerEnabledSubject.onNext(0)
             } else {

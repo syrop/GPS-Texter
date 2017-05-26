@@ -114,7 +114,7 @@ class HomeLocationActivity : AppCompatActivity() {
     private fun setLocationPermissionListeners() {
         permissionsUtils
                 .permissionGrantedListener()
-                .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
+                .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
                 .subscribe { onLocationPermissionGranted() }
     }
 

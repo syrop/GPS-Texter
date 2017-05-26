@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
             permissionsUtils
                     .permissionGrantedListener()
-                    .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         } else {
             initGps()
