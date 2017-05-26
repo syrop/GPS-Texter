@@ -102,7 +102,7 @@ class HistoryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         update()
-        smsSentSubscription = smsSender.smsSentListener().subscribe { _ -> update() }
+        smsSentSubscription = smsSender.smsSentListener().subscribe { update() }
     }
 
     private fun update() {

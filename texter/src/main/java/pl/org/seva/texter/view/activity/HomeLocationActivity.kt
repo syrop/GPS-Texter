@@ -102,7 +102,8 @@ class HomeLocationActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT).show()
             toastShown = true
         }
-        locationChangedSubscription = locationSource.locationChangedListener().subscribe { _ -> onLocationChanged() }
+        locationChangedSubscription = locationSource.locationChangedListener().subscribe {
+            onLocationChanged() }
 
         if (!locationPermitted) {
             useCurrentButton!!.isEnabled = false
@@ -114,7 +115,7 @@ class HomeLocationActivity : AppCompatActivity() {
         permissionsUtils
                 .permissionGrantedListener()
                 .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
-                .subscribe { _ -> onLocationPermissionGranted() }
+                .subscribe { onLocationPermissionGranted() }
     }
 
     override fun onResume() {

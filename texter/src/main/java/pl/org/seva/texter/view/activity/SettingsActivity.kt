@@ -91,7 +91,7 @@ class SettingsActivity : AppCompatActivity() {
         permissionsUtils
                 .permissionDeniedListener()
                 .filter { permission -> permission == Manifest.permission.READ_CONTACTS }
-                .subscribe { _ -> onShowContactsPermissionDenied() }
+                .subscribe { onShowContactsPermissionDenied() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -182,8 +182,7 @@ class SettingsActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage(R.string.perm_contacts_rationale)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                permissionsUtils
-                        .onRationaleShown(Manifest.permission.READ_CONTACTS)
+                permissionsUtils.onRationaleShown(Manifest.permission.READ_CONTACTS)
                 processPermissions()
             }
             builder.create().show()

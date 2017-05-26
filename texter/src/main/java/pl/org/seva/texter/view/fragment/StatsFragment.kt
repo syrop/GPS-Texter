@@ -87,19 +87,19 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         stationaryTextView = view.findViewById<TextView>(R.id.stationary)
         speedTextView = view.findViewById<TextView>(R.id.speed_value)
         sendNowButton = view.findViewById<Button>(R.id.send_now_button)
-        sendNowButton.setOnClickListener { _ -> onSendNowClicked() }
+        sendNowButton.setOnClickListener { onSendNowClicked() }
         sendNowButton.isEnabled = smsSender.isTextingEnabled &&
                 distance != 0.0 &&
                 distance != smsSender.lastSentDistance
 
         showStats()
         composite.addAll(
-                timer.timerListener().subscribe { _ -> onTimer() },
+                timer.timerListener().subscribe { onTimer() },
                 smsSender.smsSendingListener().subscribe {
-                    _ -> activity.runOnUiThread { this.onSendingSms() } },
+                    activity.runOnUiThread { this.onSendingSms() } },
                 locationSource.distanceChangedListener().subscribe {
-                    _ -> activity.runOnUiThread { this.onDistanceChanged() } },
-                locationSource.homeChangedListener().subscribe { _ -> onHomeChanged() },
+                    activity.runOnUiThread { this.onDistanceChanged() } },
+                locationSource.homeChangedListener().subscribe { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
 
         if (ContextCompat.checkSelfPermission(
@@ -107,8 +107,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsUtils
                     .permissionGrantedListener()
-                    .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { _ -> onLocationPermissionGranted() }
+                    .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { onLocationPermissionGranted() }
         }
 
         return view

@@ -45,7 +45,7 @@ internal constructor() {
         timerSubscription.dispose()
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .observeOn(Schedulers.io())
-                .doOnNext { _ -> timerSubject.onNext(0) }
+                .doOnNext { timerSubject.onNext(0) }
                 .repeat()
                 .subscribe()
     }

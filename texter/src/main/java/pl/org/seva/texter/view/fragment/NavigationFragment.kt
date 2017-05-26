@@ -83,9 +83,9 @@ class NavigationFragment : Fragment() {
 
         composite.addAll(
                 locationSource.distanceChangedListener()
-                        .subscribe { _ -> activity.runOnUiThread { this.onDistanceChanged() } },
+                        .subscribe { activity.runOnUiThread { this.onDistanceChanged() } },
                 locationSource.homeChangedListener()
-                        .subscribe { _ -> onHomeChanged() })
+                        .subscribe { onHomeChanged() })
 
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG) as MapFragment?
@@ -106,7 +106,7 @@ class NavigationFragment : Fragment() {
         } else {
             permissionsUtils.permissionGrantedListener()
                     .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { _ -> onLocationPermissionGranted() }
+                    .subscribe { onLocationPermissionGranted() }
         }
         val homeLatLng = locationSource.homeLatLng
         updateHomeLocation(homeLatLng)

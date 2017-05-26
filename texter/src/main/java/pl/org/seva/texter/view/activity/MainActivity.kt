@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 tabColor = resources.getColor(R.color.tabsScrollColor)
             }
             tabs.setDistributeEvenly()
-            tabs.setCustomTabColorizer { _ -> tabColor }
+            tabs.setCustomTabColorizer { tabColor }
             tabs.setViewPager(pager)
         } else if (savedInstanceState == null && action != null && action == Intent.ACTION_MAIN) {
             timer.reset()
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             permissionsUtils
                     .permissionGrantedListener()
                     .filter { permission -> permission == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { _ -> onLocationPermissionGranted() }
+                    .subscribe { onLocationPermissionGranted() }
         } else {
             initGps()
         }
@@ -225,12 +225,12 @@ class MainActivity : AppCompatActivity() {
             ex.printStackTrace()
         }
 
-        dialog.findViewById<View>(R.id.dismiss).setOnClickListener({ _ ->
+        dialog.findViewById<View>(R.id.dismiss).setOnClickListener {
             processPermissions()
             dialog.dismiss()
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply()  // asynchronously
-        })
-        dialog.findViewById<View>(R.id.settings).setOnClickListener({ _ ->
+        }
+        dialog.findViewById<View>(R.id.settings).setOnClickListener {
             dialog.dismiss()
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply()
             showSettingsWhenPermissionGranted = true  // Only relevant if permission is not granted.
@@ -238,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                 // Called if permission has already been granted, e.g. when API < 23.
                 startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
             }
-        })
+        }
         dialog.show()
         return true
     }
@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity() {
             ex.printStackTrace()
         }
 
-        dialog!!.findViewById<View>(R.id.ok).setOnClickListener({ _ -> dialog!!.dismiss() })
+        dialog!!.findViewById<View>(R.id.ok).setOnClickListener { dialog!!.dismiss() }
         dialog!!.show()
     }
 
