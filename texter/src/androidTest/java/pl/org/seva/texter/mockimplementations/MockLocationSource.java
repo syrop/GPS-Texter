@@ -18,6 +18,7 @@
 package pl.org.seva.texter.mockimplementations;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,7 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
+import pl.org.seva.texter.presenter.listener.ProviderListener;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.view.preference.HomeLocationPreference;
@@ -59,12 +61,6 @@ public class MockLocationSource extends LocationSource {
     }
 
     @Override
-    public Observable<Object> providerEnabledListener() {
-        return Observable.just(0);
-    }
-
-    @Override
-    public Observable<Object> providerDisabledListener() {
-        return Observable.empty();
+    public void addProviderListener(@NonNull ProviderListener providerListener) {
     }
 }

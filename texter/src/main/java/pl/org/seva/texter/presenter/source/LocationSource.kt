@@ -150,7 +150,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         requestLocationUpdates(activity)
     }
 
-    fun addProviderListener(providerListener: ProviderListener) {
+    open fun addProviderListener(providerListener: ProviderListener) {
         providerEnabledSubject.subscribe { providerListener.onProviderEnabled() }
         providerDisabledSubject.subscribe { providerListener.onProviderDisabled() }
     }
