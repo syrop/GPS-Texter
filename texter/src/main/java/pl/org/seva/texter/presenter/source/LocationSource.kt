@@ -112,12 +112,12 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         val homeLocation = preferences!!.getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
         homeLat = HomeLocationPreference.parseLatitude(homeLocation)
         homeLng = HomeLocationPreference.parseLongitude(homeLocation)
-        if (location != null) {
+        location?.let {
             distance = DistanceCalculator.distanceInKm(
                     homeLat,
                     homeLng,
-                    location!!.latitude,
-                    location!!.longitude)
+                    it.latitude,
+                    it.longitude)
         }
         homeChangedSubject.onNext(0)
     }
@@ -172,10 +172,10 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     val latLng: LatLng?
         get() {
-            if (location == null) {
-                return null
+            return if (location == null) {
+                null
             }
-            return LatLng(location!!.latitude, location!!.longitude)
+            else LatLng(location!!.latitude, location!!.longitude)
         }
 
     val isLocationAvailable: Boolean

@@ -69,7 +69,7 @@ class NavigationFragment : Fragment() {
         distanceTextView = view.findViewById<TextView>(R.id.distance)
         show(locationSource.distance)
 
-        if (savedInstanceState != null) {
+        savedInstanceState?.let {
             animateCamera = false
         }
         MapsInitializer.initialize(activity.applicationContext)
@@ -148,9 +148,9 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (mapFragment != null) {
+        mapFragment?.let {
             // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
-            fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
+            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }
         super.onSaveInstanceState(outState)
@@ -188,9 +188,7 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        if (map != null) {
-            map!!.isMyLocationEnabled = true
-        }
+        map?.isMyLocationEnabled = true
     }
 
     companion object {

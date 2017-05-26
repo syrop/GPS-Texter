@@ -52,13 +52,13 @@ class NumberPreference(context: Context, attrs: AttributeSet) : DialogPreference
         val superState = super.onSaveInstanceState()
         val myState = SavedState(superState)
 
-        if (numberFragment != null) {
-            number = numberFragment!!.toString()
+        numberFragment?.let {
+            number = it.toString()
             myState.number = number
             // If called after onSaveInstanceState, throws:
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             (context as android.support.v4.app.FragmentActivity)
-                    .supportFragmentManager.beginTransaction().remove(numberFragment).commit()
+                    .supportFragmentManager.beginTransaction().remove(it).commit()
             numberFragment = null
         }
 
@@ -89,15 +89,15 @@ class NumberPreference(context: Context, attrs: AttributeSet) : DialogPreference
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
-        if (numberFragment != null) {
+        numberFragment?.let {
             if (positiveResult) {
-                number = numberFragment!!.toString()
+                number = it.toString()
                 persistString(number)
             } else {
                 number = getPersistedString("")
             }
             (context as android.support.v4.app.FragmentActivity)
-                    .supportFragmentManager.beginTransaction().remove(numberFragment).commit()
+                    .supportFragmentManager.beginTransaction().remove(it).commit()
         }
         super.onDialogClosed(positiveResult)
     }

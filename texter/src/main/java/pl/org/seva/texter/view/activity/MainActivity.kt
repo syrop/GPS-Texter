@@ -118,8 +118,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = TitledPagerAdapter(fragmentManager, titles).setItems(fragments)
 
         val pager = findViewById<ViewPager>(R.id.pager)
-        if (pager != null) {
-            pager.adapter = adapter
+        pager?.let {
+            it.adapter = adapter
         }
 
         val tabs = findViewById<SlidingTabLayout>(R.id.tabs)
@@ -288,9 +288,7 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onDestroy() {
         // Also called when the screen is rotated.
-        if (dialog != null) {
-            dialog!!.dismiss()
-        }
+        dialog?.dismiss()
         if (action != null && action == Intent.ACTION_MAIN) {
             // Condition is false when activity has been launched from a notification.
             if (shuttingDown) {

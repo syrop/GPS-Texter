@@ -162,9 +162,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private fun onItemClick(parent: AdapterView<*>, position: Int) {
-        if (toast != null) {
-            toast!!.cancel()
-        }
+        toast?.cancel()
         val cursor = (parent.adapter as SimpleCursorAdapter).cursor
         cursor.moveToPosition(position)
         contactKey = cursor.getString(CONTACT_KEY_INDEX)

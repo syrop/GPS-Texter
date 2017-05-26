@@ -226,9 +226,9 @@ constructor() {
         smsSendingSubject.onNext(0)
 
         val context = weakContext!!.get()
-        if (context != null) {
-            val sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, 0)
-            val deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredIntent, 0)
+        context?.let {
+            val sentPI = PendingIntent.getBroadcast(it, 0, sentIntent, 0)
+            val deliveredPI = PendingIntent.getBroadcast(it, 0, deliveredIntent, 0)
             registerBroadcastReceiver(id)
             try {
                 sendTextMessage(text, sentPI, deliveredPI)
@@ -282,8 +282,8 @@ constructor() {
                 Activity.RESULT_OK -> {
                     val sentBuilder = StringBuilder(context.getString(R.string.sent))
                     var length = Toast.LENGTH_SHORT
-                    if (text != null) {
-                        sentBuilder.append(": ").append(text)
+                    text?.let {
+                        sentBuilder.append(": ").append(it)
                         length = Toast.LENGTH_SHORT
                     }
                     Toast.makeText(context, sentBuilder.toString(), length).show()

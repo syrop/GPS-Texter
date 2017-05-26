@@ -139,13 +139,11 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 lp.width = 0
                 lp.weight = 1f
             }
-            if (tabTitleView != null) {
-                tabTitleView.text = adapter.getPageTitle(i)
-            }
+            tabTitleView?.text = adapter.getPageTitle(i)
             tabView.setOnClickListener(tabClickListener)
             val desc = mContentDescriptions.get(i, null)
-            if (desc != null) {
-                tabView.contentDescription = desc
+            desc?.let {
+                tabView.contentDescription = it
             }
 
             mTabStrip.addView(tabView)
@@ -162,16 +160,14 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
 
         val selectedChild = mTabStrip.getChildAt(tabIndex)
-        if (selectedChild != null) {
-            var targetScrollX = selectedChild.left + positionOffset
+        var targetScrollX = selectedChild.left + positionOffset
 
-            if (tabIndex > 0 || positionOffset > 0) {
-                // If we're not at the first child and are mid-scroll, make sure we obey the offset
-                targetScrollX -= mTitleOffset
-            }
-
-            scrollTo(targetScrollX, 0)
+        if (tabIndex > 0 || positionOffset > 0) {
+            // If we're not at the first child and are mid-scroll, make sure we obey the offset
+            targetScrollX -= mTitleOffset
         }
+
+        scrollTo(targetScrollX, 0)
     }
 
     private inner class InternalViewPagerListener : ViewPager.OnPageChangeListener {

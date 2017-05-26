@@ -66,9 +66,9 @@ class SettingsActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
-        if (supportActionBar != null) {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
@@ -82,9 +82,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val adapter = TitledPagerAdapter(fragmentManager, null).setItems(fragments)
         val pager = findViewById<ViewPager>(R.id.pager)
-        if (pager != null) {
-            pager.adapter = adapter
-        }
+        pager?.adapter = adapter
     }
 
     private fun setReadContactsPermissionListeners() {

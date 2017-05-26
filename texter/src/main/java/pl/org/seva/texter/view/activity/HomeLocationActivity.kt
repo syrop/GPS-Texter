@@ -68,8 +68,8 @@ class HomeLocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            val myState = savedInstanceState.get(SAVED_STATE) as HomeLocationActivity.SavedState
+        savedInstanceState?.let {
+            val myState = it.get(SAVED_STATE) as HomeLocationActivity.SavedState
             lat = myState.lat
             lon = myState.lon
             toastShown = myState.toastShown
@@ -162,10 +162,10 @@ class HomeLocationActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(this).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
         locationSource.onHomeLocationChanged()
 
-        if (mapFragment != null) {
+        mapFragment?.let {
             // Without enclosing in the if, throws:
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            fragmentManager.beginTransaction().remove(mapFragment).commit()
+            fragmentManager.beginTransaction().remove(it).commit()
         }
         super.onBackPressed()
     }
@@ -177,8 +177,8 @@ class HomeLocationActivity : AppCompatActivity() {
         myState.toastShown = toastShown
         myState.zoom = zoom
 
-        if (mapFragment != null) {
-            fragmentManager.beginTransaction().remove(mapFragment).commit()
+        mapFragment?.let {
+            fragmentManager.beginTransaction().remove(it).commit()
             mapFragment = null
         }
         super.onSaveInstanceState(outState)
@@ -214,8 +214,8 @@ class HomeLocationActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        if (map != null) {
-            map!!.isMyLocationEnabled = true
+        map?.let {
+            it.isMyLocationEnabled = true
             useCurrentButton!!.isEnabled = false
         }
     }
@@ -236,9 +236,9 @@ class HomeLocationActivity : AppCompatActivity() {
     fun onUseCurrentLocationButtonClicked() {
         useCurrentButton!!.isEnabled = false
         val loc = locationSource.latLng
-        if (loc != null) {
-            lat = loc.latitude
-            lon = loc.longitude
+        loc?.let {
+            lat = it.latitude
+            lon = it.longitude
             updateMarker()
             val cameraPosition = CameraPosition.Builder()
                     .target(LatLng(lat, lon)).zoom(zoom).build()
