@@ -107,7 +107,6 @@ internal class SlidingTabStrip(context: Context) : LinearLayout(context, null) {
         private val DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 0
         private val DEFAULT_BOTTOM_BORDER_COLOR_ALPHA: Byte = 0x26
         private val SELECTED_INDICATOR_THICKNESS_DIPS = 3
-        private val DEFAULT_SELECTED_INDICATOR_COLOR = 0xFF33B5E5.toInt()
 
         /**
          * Set the alpha value of the `color` to be the given `alpha` value.

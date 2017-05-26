@@ -46,7 +46,6 @@ import java.util.Locale
 import javax.inject.Inject
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.utils.PermissionsUtils
 import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter

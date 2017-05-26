@@ -79,7 +79,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         speed = locationSource.speed
 
         homeString = getString(R.string.home)
-        hourString = getActivity().getString(R.string.hour)
+        hourString = activity.getString(R.string.hour)
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
 
         distanceTextView = view.findViewById<TextView>(R.id.distance_value)

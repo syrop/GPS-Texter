@@ -23,7 +23,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject

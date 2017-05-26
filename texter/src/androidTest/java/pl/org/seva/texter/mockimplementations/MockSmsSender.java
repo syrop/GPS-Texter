@@ -39,21 +39,25 @@ public class MockSmsSender extends SmsSender {
         this.setZoneCalculator(zoneCalculator);
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     public boolean isTextingEnabled() {
         return true;
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     protected boolean isCorrectPhoneNumberSet() {
         return true;
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     public boolean needsPermission() {
         return false;
     }
 
+    @SuppressWarnings("unused")
     protected void sendTextMessage(
             @NonNull String text,
             @NonNull PendingIntent sentIntent,

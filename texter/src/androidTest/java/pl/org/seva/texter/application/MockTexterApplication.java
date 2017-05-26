@@ -17,17 +17,22 @@
 
 package pl.org.seva.texter.application;
 
+import android.support.annotation.NonNull;
+
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.dagger.DaggerMockGraph;
 import pl.org.seva.texter.presenter.dagger.Graph;
 
 public class MockTexterApplication extends TexterApplication {
 
+    @NonNull
+    @SuppressWarnings("unused")
     @Override
     protected Graph createGraph() {
         return DaggerMockGraph.create();
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     public boolean hardwareCanSendSms() {
         return true;

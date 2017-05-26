@@ -21,7 +21,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.org.seva.texter.mockimplementations.MockActivityRecognitionSource;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
@@ -44,11 +43,5 @@ class MockTexterModule {
     @Singleton
     SmsSender provideSmsManager(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
         return new MockSmsSender(locationSource, smsHistory, zoneCalculator);
-    }
-
-    @Provides
-    @Singleton
-    ActivityRecognitionSource provideActivityRecognitionManager() {
-        return new MockActivityRecognitionSource();
     }
 }
