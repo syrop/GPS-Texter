@@ -94,7 +94,8 @@ class HomeLocationActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val locationAvailable = locationPermitted && locationSource.isLocationAvailable
-        useCurrentButton!!.isEnabled = locationAvailable
+        useCurrentButton?.isEnabled = locationAvailable
+        useCurrentButton?.setOnClickListener { onUseCurrentLocationButtonClicked() }
         if (!toastShown) {
             Toast.makeText(
                     this,

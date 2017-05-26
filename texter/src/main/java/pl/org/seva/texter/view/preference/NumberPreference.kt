@@ -32,7 +32,7 @@ import pl.org.seva.texter.view.fragment.PhoneNumberFragment
 class NumberPreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
 
     private var numberFragment: PhoneNumberFragment? = null
-    private lateinit var number: String
+    private var number: String? = null
 
     init {
         dialogLayoutResource = R.layout.dialog_number
@@ -104,7 +104,7 @@ class NumberPreference(context: Context, attrs: AttributeSet) : DialogPreference
 
     private class SavedState internal constructor(superState: Parcelable) :
             Preference.BaseSavedState(superState) {
-        lateinit var number: String
+        var number: String? = null
 
         override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
