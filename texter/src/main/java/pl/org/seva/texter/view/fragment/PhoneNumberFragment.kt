@@ -140,8 +140,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                             Toast.LENGTH_SHORT)
                     toast!!.show()
                 } else {
-                    val items = arrayOfNulls<String>(numbers.size)
-                    numbers.toTypedArray()
+                    val items = numbers.toTypedArray()
                     AlertDialog.Builder(activity).setItems(items) { dialog, which ->
                         dialog.dismiss()
                         number!!.setText(numbers[which])

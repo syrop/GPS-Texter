@@ -138,8 +138,7 @@ class SettingsActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.SEND_SMS)
         }
         if (!permissions.isEmpty()) {
-            val arr = arrayOfNulls<String>(permissions.size)
-            permissions.toTypedArray()
+            val arr = permissions.toTypedArray()
             ActivityCompat.requestPermissions(
                     this,
                     arr,
