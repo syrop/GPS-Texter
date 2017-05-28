@@ -26,3 +26,5 @@
 -dontwarn com.google.android.gms.**
 -keep public class com.google.firebase.* { public *; }
 -dontwarn com.google.firebase.**
+ #android.support.v7.widget.FitWindowsLinearLayout
+-keep public class android.support.v7.widget.* { public *; }
