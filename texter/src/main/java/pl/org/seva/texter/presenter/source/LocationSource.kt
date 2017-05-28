@@ -186,7 +186,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         get() = location != null
 
     override fun onLocationChanged(location: Location) {
-        if (location.accuracy >= ACCURACY_THRESHOLD) {
+        if (this.location == null && location.accuracy >= ACCURACY_THRESHOLD) {
             return
         }
         if (!isBetterLocation(location, this.location)) {
