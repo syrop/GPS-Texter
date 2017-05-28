@@ -63,7 +63,7 @@ class SettingsActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
         // Attaching the layout to the toolbar object
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
@@ -81,8 +81,8 @@ class SettingsActivity : AppCompatActivity() {
         fragments.add(SettingsFragment.newInstance())
 
         val adapter = TitledPagerAdapter(fragmentManager, null).setItems(fragments)
-        val pager = findViewById<ViewPager>(R.id.pager)
-        pager?.adapter = adapter
+        val pager = findViewById(R.id.pager) as ViewPager
+        pager.adapter = adapter
     }
 
     private fun setReadContactsPermissionListeners() {

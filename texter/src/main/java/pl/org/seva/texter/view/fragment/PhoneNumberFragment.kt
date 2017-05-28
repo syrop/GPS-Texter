@@ -57,13 +57,13 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_number, container, false)
 
-        number = view.findViewById<EditText>(R.id.number)
+        number = view.findViewById(R.id.number) as EditText
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
-        val contacts = view.findViewById<ListView>(R.id.contacts)
+        val contacts = view.findViewById(R.id.contacts) as ListView
         if (!contactsEnabled) {
             contacts.visibility = View.GONE
         } else {

@@ -86,9 +86,9 @@ class HomeLocationActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_home_location)
 
-        mapContainerId = findViewById<View>(R.id.map_container).id
+        mapContainerId = findViewById(R.id.map_container).id
         MapsInitializer.initialize(this)
-        useCurrentButton = findViewById<Button>(R.id.current_location_button)
+        useCurrentButton = findViewById(R.id.current_location_button) as Button
 
         val locationPermitted = ContextCompat.checkSelfPermission(
                 this,

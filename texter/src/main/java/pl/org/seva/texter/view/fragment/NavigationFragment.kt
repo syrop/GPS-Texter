@@ -66,14 +66,14 @@ class NavigationFragment : Fragment() {
             savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_navigation, container, false)
 
-        distanceTextView = view.findViewById<TextView>(R.id.distance)
+        distanceTextView = view.findViewById(R.id.distance) as TextView
         show(locationSource.distance)
 
         savedInstanceState?.let {
             animateCamera = false
         }
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById<View>(R.id.map_container).id
+        mapContainerId = view.findViewById(R.id.map_container).id
 
         return view
     }

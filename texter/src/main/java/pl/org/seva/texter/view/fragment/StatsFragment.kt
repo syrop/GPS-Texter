@@ -82,11 +82,11 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         hourString = activity.getString(R.string.hour)
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
 
-        distanceTextView = view.findViewById<TextView>(R.id.distance_value)
-        intervalTextView = view.findViewById<TextView>(R.id.update_interval_value)
-        stationaryTextView = view.findViewById<TextView>(R.id.stationary)
-        speedTextView = view.findViewById<TextView>(R.id.speed_value)
-        sendNowButton = view.findViewById<Button>(R.id.send_now_button)
+        distanceTextView = view.findViewById(R.id.distance_value) as TextView
+        intervalTextView = view.findViewById(R.id.update_interval_value) as TextView
+        stationaryTextView = view.findViewById(R.id.stationary) as TextView
+        speedTextView = view.findViewById(R.id.speed_value) as TextView
+        sendNowButton = view.findViewById(R.id.send_now_button) as Button
         sendNowButton.setOnClickListener { onSendNowClicked() }
         sendNowButton.isEnabled = smsSender.isTextingEnabled &&
                 distance != 0.0 &&

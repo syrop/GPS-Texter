@@ -81,7 +81,7 @@ class HistoryFragment : Fragment() {
             savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
-        historyRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        historyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         historyRecyclerView.setHasFixedSize(true)
         historyRecyclerView.layoutManager = LinearLayoutManager(fragmentContext)
         adapter = HistoryAdapter(activity, smsHistory.list)

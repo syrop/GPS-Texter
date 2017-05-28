@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.map_tab_name),
                 getString(R.string.history_tab_name))
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         val fragments = ArrayList<Fragment>()
         fragments.add(StatsFragment.newInstance())
@@ -116,27 +116,21 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = TitledPagerAdapter(fragmentManager, titles).setItems(fragments)
 
-        val pager = findViewById<ViewPager>(R.id.pager)
-        pager?.let {
-            it.adapter = adapter
-        }
+        val pager = findViewById(R.id.pager) as ViewPager
+        pager.adapter = adapter
 
-        val tabs = findViewById<SlidingTabLayout>(R.id.tabs)
+        val tabs = findViewById(R.id.tabs) as SlidingTabLayout
 
-        if (tabs != null) {
-            val tabColor: Int
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                tabColor = resources.getColor(R.color.tabsScrollColor, theme)
-            } else {
-                @Suppress("DEPRECATION")
-                tabColor = resources.getColor(R.color.tabsScrollColor)
-            }
-            tabs.setDistributeEvenly()
-            tabs.setCustomTabColorizer { tabColor }
-            tabs.setViewPager(pager)
-        } else if (savedInstanceState == null && action != null && action == Intent.ACTION_MAIN) {
-            timer.reset()
+        val tabColor: Int
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tabColor = resources.getColor(R.color.tabsScrollColor, theme)
+        } else {
+            @Suppress("DEPRECATION")
+            tabColor = resources.getColor(R.color.tabsScrollColor)
         }
+        tabs.setDistributeEvenly()
+        tabs.setCustomTabColorizer { tabColor }
+        tabs.setViewPager(pager)
 
         smsSender.init(this, getString(R.string.speed_unit))
 
@@ -175,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(Manifest.permission.SEND_SMS)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+        if (Build.VERSION.SDK_INT >= 26 &&
                 smsSender.needsPermission() && smsSender.isTextingEnabled &&
                 ContextCompat.checkSelfPermission(
                         this,
@@ -209,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_startup)
 
-        val web = dialog.findViewById<WebView>(R.id.web)
+        val web = dialog.findViewById(R.id.web) as WebView
 
         val language = Locale.getDefault().language
         web.settings.defaultTextEncodingName = "utf-8"
@@ -224,12 +218,12 @@ class MainActivity : AppCompatActivity() {
             ex.printStackTrace()
         }
 
-        dialog.findViewById<View>(R.id.dismiss).setOnClickListener {
+        dialog.findViewById(R.id.dismiss).setOnClickListener {
             processPermissions()
             dialog.dismiss()
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply()  // asynchronously
         }
-        dialog.findViewById<View>(R.id.settings).setOnClickListener {
+        dialog.findViewById(R.id.settings).setOnClickListener {
             dialog.dismiss()
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply()
             showSettingsWhenPermissionGranted = true  // Only relevant if permission is not granted.
@@ -246,7 +240,7 @@ class MainActivity : AppCompatActivity() {
         dialog = Dialog(this)
         dialog!!.setCancelable(false)
         dialog!!.setContentView(R.layout.dialog_help)
-        val web = dialog!!.findViewById<WebView>(R.id.web)
+        val web = dialog!!.findViewById(R.id.web) as WebView
         web.settings.defaultTextEncodingName = "utf-8"
 
         val language = Locale.getDefault().language
@@ -261,7 +255,7 @@ class MainActivity : AppCompatActivity() {
             ex.printStackTrace()
         }
 
-        dialog!!.findViewById<View>(R.id.ok).setOnClickListener { dialog!!.dismiss() }
+        dialog!!.findViewById(R.id.ok).setOnClickListener { dialog!!.dismiss() }
         dialog!!.show()
     }
 

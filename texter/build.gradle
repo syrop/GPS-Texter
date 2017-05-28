@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 'android-O'
+    compileSdkVersion 25
     buildToolsVersion '26.0.0-rc2'
 
 // For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
-        targetSdkVersion 'O'
+        targetSdkVersion 25
         multiDexEnabled false
         resConfigs "en", "pl"
         testInstrumentationRunner "pl.org.seva.texter.MockTestRunner"
@@ -55,9 +55,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:26.0.0-beta1'
-    compile 'com.android.support:recyclerview-v7:26.0.0-beta1'
-    compile "com.android.support:appcompat-v7:26.0.0-beta1"
+    compile 'com.android.support:support-v13:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.android.gms:play-services-maps:10.2.6'
     compile 'com.google.android.gms:play-services-location:10.2.6'
     compile 'io.reactivex.rxjava2:rxjava:2.0.9'
