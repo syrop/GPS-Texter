@@ -17,18 +17,15 @@
 
 package pl.org.seva.texter.dagger;
 
-import org.mockito.Mockito;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
-import pl.org.seva.texter.presenter.utils.SmsCache;
+import pl.org.seva.texter.presenter.utils.SmsHistory;
 import pl.org.seva.texter.mockimplementations.MockLocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
@@ -44,20 +41,7 @@ class MockTexterModule {
 
     @Provides
     @Singleton
-    SmsSender provideSmsManager(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        return new MockSmsSender(locationSource, smsCache, zoneCalculator);
-    }
-
-    @Provides
-    @Singleton
-    ActivityRecognitionSource provideActivityRecognitionManager() {
-        ActivityRecognitionSource result = Mockito.mock(ActivityRecognitionSource.class);
-        mockReturnValues(result);
-        return result;
-    }
-
-    private void mockReturnValues(ActivityRecognitionSource activityRecognitionSource) {
-        Mockito.when(activityRecognitionSource.stationaryListener()).thenReturn(PublishSubject.empty());
-        Mockito.when(activityRecognitionSource.movingListener()).thenReturn(PublishSubject.empty());
+    SmsSender provideSmsManager(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
+        return new MockSmsSender(locationSource, smsHistory, zoneCalculator);
     }
 }

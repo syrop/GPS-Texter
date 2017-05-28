@@ -17,12 +17,8 @@
 
 package pl.org.seva.texter;
 
-import pl.org.seva.texter.presenter.utils.DistanceCalculator;
-
 public class TestConstants {
 
-    public static final double DISTANCE_TOLERANCE = 0.01; // [km]
     public static final double LATITUDE_STEP = 0.001;
-    static final double DISTANCE_STEP = DistanceCalculator.distanceInKm(0, 0, LATITUDE_STEP, 0);
     static final int EXPECTED_MESSAGES_SENT = 2;
 }

@@ -15,26 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.model
 
-import android.support.annotation.NonNull;
+import android.os.Parcel
+import android.os.Parcelable
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+class DistanceZone(val min: Int, val max: Int) : Parcelable {
+    var counter: Int = 0
+        private set
+    private val time: Long = System.currentTimeMillis()
 
-public class MockTexterApplication extends TexterApplication {
-
-    @NonNull
-    @SuppressWarnings("unused")
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
+    fun increaseCounter() {
+        counter++
     }
 
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    @Override
-    public boolean hardwareCanSendSms() {
-        return true;
+    val delay: Long
+        get() = System.currentTimeMillis() - time
+
+    override fun toString(): String {
+        return "[$min km - $max km]"
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(out: Parcel, flags: Int) {
+        out.writeInt(min)
+        out.writeInt(max)
+        out.writeInt(counter)
+        out.writeLong(time)
     }
 }

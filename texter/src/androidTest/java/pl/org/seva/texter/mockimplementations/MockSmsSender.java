@@ -19,12 +19,13 @@ package pl.org.seva.texter.mockimplementations;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.support.annotation.NonNull;
 
 import javax.inject.Singleton;
 
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
-import pl.org.seva.texter.presenter.utils.SmsCache;
+import pl.org.seva.texter.presenter.utils.SmsHistory;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Singleton
@@ -32,28 +33,35 @@ public class MockSmsSender extends SmsSender {
 
     private int messagesSent;
 
-    public MockSmsSender(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        this.locationSource = locationSource;
-        this.smsCache = smsCache;
-        this.zoneCalculator = zoneCalculator;
+    public MockSmsSender(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
+        this.setLocationSource(locationSource);
+        this.setSmsHistory(smsHistory);
+        this.setZoneCalculator(zoneCalculator);
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     public boolean isTextingEnabled() {
         return true;
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     protected boolean isCorrectPhoneNumberSet() {
         return true;
     }
 
+    @SuppressWarnings({"SameReturnValue", "unused"})
     @Override
     public boolean needsPermission() {
         return false;
     }
 
-    protected void sendTextMessage(String text, PendingIntent sentIntent, PendingIntent deliveredIntent)
+    @SuppressWarnings("unused")
+    protected void sendTextMessage(
+            @NonNull String text,
+            @NonNull PendingIntent sentIntent,
+            @NonNull PendingIntent deliveredIntent)
             throws SecurityException {
         try {
             messagesSent++;

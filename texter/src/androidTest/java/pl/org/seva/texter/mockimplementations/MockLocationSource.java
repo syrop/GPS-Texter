@@ -18,6 +18,7 @@
 package pl.org.seva.texter.mockimplementations;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,7 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import pl.org.seva.texter.TestConstants;
+import pl.org.seva.texter.presenter.listener.ProviderListener;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.view.preference.HomeLocationPreference;
@@ -39,10 +41,10 @@ public class MockLocationSource extends LocationSource {
     private int ticks = -1;
 
     public MockLocationSource(Timer timer) {
-        this.timer = timer;
-        String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
-        homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation);
-        homeLon = HomeLocationPreference.parseLongitude(defaultHomeLocation);
+        this.setTimer(timer);
+        String defaultHomeLocation = Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
+        setHomeLat(HomeLocationPreference.Companion.parseLatitude(defaultHomeLocation));
+        setHomeLng(HomeLocationPreference.Companion.parseLongitude(defaultHomeLocation));
 
         Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
                 .doOnNext(__ -> {
@@ -58,13 +60,8 @@ public class MockLocationSource extends LocationSource {
                 .subscribe();
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Override
-    public Observable<Object> providerEnabledListener() {
-        return Observable.just(0);
-    }
-
-    @Override
-    public Observable<Object> providerDisabledListener() {
-        return Observable.empty();
+    public void addProviderListener(@SuppressWarnings("unused") @NonNull ProviderListener providerListener) {
     }
 }

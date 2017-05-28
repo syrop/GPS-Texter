@@ -1,31 +1,26 @@
-<layout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
-    <LinearLayout
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.activity.MainActivity">
+    <include
+        layout="@layout/toolbar" />
+
+    <!-- Setting tools:targetApi to lollipop prevents the warning that android:elevation -->
+    <!-- parameter is not available prior to API 21. -->
+    <pl.org.seva.texter.view.layout.SlidingTabLayout
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".view.activity.MainActivity">
-        <include
-            android:id="@+id/tool_bar"
-            layout="@layout/toolbar" />
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:background="@color/colorPrimary"
+        tools:targetApi="lollipop" />
 
-        <!-- Setting tools:targetApi to lollipop prevents the warning that android:elevation -->
-        <!-- parameter is not available prior to API 21. -->
-        <pl.org.seva.texter.view.layout.SlidingTabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:background="@color/colorPrimary"
-            tools:targetApi="lollipop" />
-
-        <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        />
-
-    </LinearLayout>
-</layout>
+    <android.support.v4.view.ViewPager
+    android:id="@+id/pager"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
+    android:layout_weight="1" />
+</LinearLayout>

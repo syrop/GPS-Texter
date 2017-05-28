@@ -15,26 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.utils
 
-import android.support.annotation.NonNull;
+object Constants {
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+    /** Geo URI for Warsaw.  */
+    val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"  // Warsaw
 
-public class MockTexterApplication extends TexterApplication {
+    /** Send an sms each time this value is passed.  */
+    val KM_INTERVAL = 2  // two kilometers
 
-    @NonNull
-    @SuppressWarnings("unused")
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
-    }
+    /** If the number of measurements in the present calculateZone has reached the trigger, send SMS.  */
+    val SMS_TRIGGER = 2
+    /** Time spend in calculateZone before an SMS is sent.  */
+    val TIME_IN_ZONE = 11 * 1000
 
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    @Override
-    public boolean hardwareCanSendSms() {
-        return true;
-    }
+    val LOCATION_UPDATE_FREQUENCY: Long = 1000  // [ms]
 }

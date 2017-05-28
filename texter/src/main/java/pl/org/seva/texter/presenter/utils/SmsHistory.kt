@@ -15,26 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.utils
 
-import android.support.annotation.NonNull;
+import java.util.ArrayList
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import javax.inject.Inject
+import javax.inject.Singleton
 
-public class MockTexterApplication extends TexterApplication {
+import pl.org.seva.texter.model.SmsLocation
 
-    @NonNull
-    @SuppressWarnings("unused")
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
+@Singleton
+class SmsHistory @Inject
+internal constructor() {
+
+    private var mockFirstHistoryItem = true
+
+    val list: MutableList<SmsLocation>
+
+    init {
+        list = ArrayList<SmsLocation>()
+        list.add(SmsLocation())
     }
 
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    @Override
-    public boolean hardwareCanSendSms() {
-        return true;
+    fun add(model: SmsLocation) {
+        if (mockFirstHistoryItem) {
+            list.clear()
+            mockFirstHistoryItem = false
+        }
+        list.add(model)
     }
 }

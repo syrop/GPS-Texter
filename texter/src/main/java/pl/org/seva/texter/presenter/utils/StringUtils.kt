@@ -15,26 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.application;
+package pl.org.seva.texter.presenter.utils
 
-import android.support.annotation.NonNull;
+import android.annotation.SuppressLint
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+object StringUtils {
 
-public class MockTexterApplication extends TexterApplication {
-
-    @NonNull
-    @SuppressWarnings("unused")
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
-    }
-
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    @Override
-    public boolean hardwareCanSendSms() {
-        return true;
+    fun getSpeedString(speed: Double, speedUnit: String): String {
+        @SuppressLint("DefaultLocale")
+        var result = String.format("%.1f", speed) + " " + speedUnit
+        if (result.contains(".0")) {
+            result = result.replace(".0", "")
+        } else if (result.contains(",0")) {
+            result = result.replace(",0", "")
+        }
+        return result
     }
 }
