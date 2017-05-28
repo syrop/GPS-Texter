@@ -162,6 +162,7 @@ class HomeLocationActivity : AppCompatActivity() {
         myState.lon = lon
         myState.toastShown = toastShown
         myState.zoom = zoom
+        outState.putParcelable(SAVED_STATE, myState)
 
         mapFragment?.let {
             fragmentManager.beginTransaction().remove(it).commit()
