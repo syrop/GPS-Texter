@@ -1,17 +1,7 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorControlHighlight">@android:color/white</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="android:colorControlActivated">@color/colorPrimary</item>
-        <item name="android:colorControlHighlight">@android:color/white</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
-
-    <style name="FixForPreferenceThemeOverlay" parent="AppTheme">
-        <item name="android:colorControlHighlight">@android:color/secondary_text_dark</item>
-    </style>
-
-
 </resources>

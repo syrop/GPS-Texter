@@ -35,11 +35,9 @@
         </activity>
         <activity
             android:name=".view.activity.SettingsActivity"
-            android:theme="@style/FixForPreferenceThemeOverlay"
             android:label="@string/app_name_settings"
             android:screenOrientation="portrait" />
         <activity android:name=".view.activity.HomeLocationActivity"
-            android:theme="@style/FixForPreferenceThemeOverlay"
             android:label="@string/app_name_settings"
             android:screenOrientation="portrait" />
 

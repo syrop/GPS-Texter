@@ -85,21 +85,6 @@ class MainActivity : AppCompatActivity() {
         val graph = (application as TexterApplication).graph
         graph.inject(this)
 
-        // Set up colors depending on SDK version.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            val color: Int
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                color = resources.getColor(R.color.colorPrimaryDark, theme)
-            } else {
-                @Suppress("DEPRECATION")
-                color = resources.getColor(R.color.colorPrimaryDark)
-            }
-            window.statusBarColor = color
-        }
         setContentView(R.layout.activity_main)
 
         val titles = arrayOf<CharSequence>(getString(R.string.stats_tab_name),
