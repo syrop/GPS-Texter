@@ -233,7 +233,8 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         connected = true
 
         if (location == null) {
-            onLocationChanged(LocationServices.FusedLocationApi.getLastLocation(googleApiClient))
+            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.let {
+                onLocationChanged(it) }
         }
 
         val updateFrequency = updateFrequency
