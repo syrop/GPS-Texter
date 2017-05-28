@@ -181,7 +181,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         private val FROM_COLUMNS = arrayOf(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
 
-        private val CONTACTS_PROJECTION = arrayOf(// SELECT
+        private val CONTACTS_PROJECTION = arrayOf( // SELECT
                 ContactsContract.Contacts._ID, ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY, ContactsContract.Contacts.HAS_PHONE_NUMBER)
 
         private val CONTACTS_SELECTION = // FROM
@@ -190,7 +190,7 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         private val CONTACTS_SORT = // ORDER_BY
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
 
-        private val DETAILS_PROJECTION = arrayOf(// SELECT
+        private val DETAILS_PROJECTION = arrayOf( // SELECT
                 ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.LABEL)
 
         private val DETAILS_SORT = // ORDER_BY

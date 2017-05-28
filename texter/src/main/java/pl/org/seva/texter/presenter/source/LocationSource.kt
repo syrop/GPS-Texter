@@ -109,6 +109,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     fun onHomeLocationChanged() {
         updateDistance()
+
         val homeLocation = preferences!!.getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
         homeLat = HomeLocationPreference.parseLatitude(homeLocation)
         homeLng = HomeLocationPreference.parseLongitude(homeLocation)
@@ -128,26 +129,29 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
      * Actions taken depend on whether the app possesses the permission. If not, has to be
      * called again.
 
-     * @param activity the calling activity
+     * @param context application context
      */
-    fun init(activity: Activity) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+    fun init(context: Context) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    fun initGps(context: Context) {
         if (googleApiClient == null) {
-            googleApiClient = GoogleApiClient.Builder(activity)
+            googleApiClient = GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build()
         }
 
-        activity.applicationContext.registerReceiver(object : BroadcastReceiver() {
+        context.applicationContext.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 locationSettingsChanged()
             }
         }, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
 
         onHomeLocationChanged()
-        requestLocationUpdates(activity)
+        requestLocationUpdates(context)
     }
 
     open fun addProviderListener(providerListener: ProviderListener) {
@@ -229,7 +233,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         connected = true
 
         if (location == null) {
-            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
+            onLocationChanged(LocationServices.FusedLocationApi.getLastLocation(googleApiClient))
         }
 
         val updateFrequency = updateFrequency

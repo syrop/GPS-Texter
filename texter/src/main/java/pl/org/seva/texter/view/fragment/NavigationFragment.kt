@@ -105,7 +105,8 @@ class NavigationFragment : Fragment() {
             map!!.isMyLocationEnabled = true
         } else {
             permissionsUtils.permissionGrantedListener()
-                    .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }
         val homeLatLng = locationSource.homeLatLng

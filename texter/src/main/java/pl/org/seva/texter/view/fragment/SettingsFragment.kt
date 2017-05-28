@@ -17,7 +17,6 @@
 
 package pl.org.seva.texter.view.fragment
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.Preference
@@ -25,10 +24,12 @@ import android.preference.PreferenceFragment
 import android.preference.PreferenceScreen
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.view.activity.HomeLocationActivity
 import pl.org.seva.texter.view.activity.SettingsActivity
 
 class SettingsFragment : PreferenceFragment() {
+
+    var homeLocationClickedListener : (() -> Unit)? = null
+    var smsEnabledClickedListener: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +41,9 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen, preference: Preference): Boolean {
-        if (preference.key == activity.getString(R.string.home_location_key)) {
-            val intent = Intent(activity, HomeLocationActivity::class.java)
-            startActivity(intent)
+        when (preference.key) {
+            activity.getString(R.string.home_location_key) -> homeLocationClickedListener?.invoke()
+            activity.getString(R.string.sms_enabled_key) -> smsEnabledClickedListener?.invoke()
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference)
     }

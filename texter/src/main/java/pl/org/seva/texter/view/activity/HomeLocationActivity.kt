@@ -18,7 +18,6 @@
 package pl.org.seva.texter.view.activity
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Parcel
@@ -26,7 +25,6 @@ import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.gms.maps.*
@@ -42,15 +40,12 @@ import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.PermissionsUtils
 import pl.org.seva.texter.presenter.utils.Constants
 
 class HomeLocationActivity : AppCompatActivity() {
 
     @Inject
     lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var permissionsUtils: PermissionsUtils
 
     private var locationChangedSubscription = Disposables.empty()
 
@@ -108,15 +103,7 @@ class HomeLocationActivity : AppCompatActivity() {
 
         if (!locationPermitted) {
             useCurrentButton!!.isEnabled = false
-            setLocationPermissionListeners()
         }
-    }
-
-    private fun setLocationPermissionListeners() {
-        permissionsUtils
-                .permissionGrantedListener()
-                .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
-                .subscribe { onLocationPermissionGranted() }
     }
 
     override fun onResume() {
@@ -136,8 +123,6 @@ class HomeLocationActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map!!.isMyLocationEnabled = true
-        } else {
-            setLocationPermissionListeners()
         }
         zoom = PreferenceManager.getDefaultSharedPreferences(this).getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE)
 
@@ -213,13 +198,6 @@ class HomeLocationActivity : AppCompatActivity() {
         useCurrentButton!!.isEnabled = true
     }
 
-    @SuppressLint("MissingPermission")
-    private fun onLocationPermissionGranted() {
-        map?.let {
-            it.isMyLocationEnabled = true
-            useCurrentButton!!.isEnabled = false
-        }
-    }
 
     private fun onMapLongClick(latLng: LatLng) {
         lat = latLng.latitude

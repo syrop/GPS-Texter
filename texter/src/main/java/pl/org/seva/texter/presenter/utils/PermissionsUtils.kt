@@ -31,12 +31,12 @@ import io.reactivex.subjects.PublishSubject
 class PermissionsUtils @Inject
 internal constructor() {
 
-    private val permissionGrantedSubject = PublishSubject.create<String>()
-    private val permissionDeniedSubject = PublishSubject.create<String>()
+    private val permissionGrantedSubject = PublishSubject.create<Pair<Int, String>>()
+    private val permissionDeniedSubject = PublishSubject.create<Pair<Int, String>>()
 
     private val rationalesShown = ArrayList<String>()
 
-    fun permissionGrantedListener(): Observable<String> {
+    fun permissionGrantedListener(): Observable<Pair<Int, String>> {
         return permissionGrantedSubject.hide()
     }
 
@@ -50,42 +50,36 @@ internal constructor() {
         }
     }
 
-    fun permissionDeniedListener(): Observable<String> {
+    fun permissionDeniedListener(): Observable<Pair<Int, String>> {
         return permissionDeniedSubject.hide()
     }
 
-    fun onRequestPermissionsResult(permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
         if (grantResults.isEmpty()) {
             for (permission in permissions) {
-                onPermissionDenied(permission)
+                onPermissionDenied(requestCode, permission)
             }
         }
         else for (i in 0..permissions.size - 1) {
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                onPermissionGranted(permissions[i])
+                onPermissionGranted(requestCode, permissions[i])
             } else {
-                onPermissionDenied(permissions[i])
+                onPermissionDenied(requestCode, permissions[i])
             }
         }
-        closePermissionListeners()
     }
 
-    private fun onPermissionGranted(permission: String) {
-        permissionGrantedSubject.onNext(permission)
+    private fun onPermissionGranted(requestCode: Int, permission: String) {
+        permissionGrantedSubject.onNext(Pair(requestCode, permission))
     }
 
-    private fun onPermissionDenied(permission: String) {
-        permissionDeniedSubject.onNext(permission)
-    }
-
-    private fun closePermissionListeners() {
-        permissionGrantedSubject.onComplete()
-        permissionDeniedSubject.onComplete()
+    private fun onPermissionDenied(requestCode: Int, permission: String) {
+        permissionDeniedSubject.onNext(Pair(requestCode, permission))
     }
 
     companion object {
 
-        val PERMISSION_ACCESS_FINE_LOCATION_REQUEST = 0
-        val PERMISSION_READ_CONTACTS_REQUEST = 1
+        val LOCATION_PERMISSION_REQUEST_ID = 0
+        val SMS_AND_CONTACTS_PERMISSION_REQUEST_ID = 1
     }
 }

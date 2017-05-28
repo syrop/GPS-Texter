@@ -26,12 +26,13 @@ import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.SettingsFragment
 
 import android.Manifest
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.app.Fragment
+import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
@@ -39,6 +40,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.WindowManager
+import io.reactivex.disposables.CompositeDisposable
 
 import java.util.ArrayList
 
@@ -52,6 +54,11 @@ class SettingsActivity : AppCompatActivity() {
     lateinit var locationSource: LocationSource
     @Inject
     lateinit var smsSender: SmsSender
+
+    val preferenceListener : (a : SharedPreferences, b : String) -> Unit =
+            { _, key -> this.onSharedPreferenceChanged(key) }
+
+    var permissionsCompositeSubscription = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,24 +79,52 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
-            if (!processPermissions()) {
-                setReadContactsPermissionListeners()
-            }
+            processSmsPermissions()
         }
 
         val fragments = ArrayList<Fragment>()
-        fragments.add(SettingsFragment.newInstance())
+        val settingsFragment = SettingsFragment.newInstance()
+        settingsFragment.smsEnabledClickedListener = { onSmsEnabledChanged() }
+        settingsFragment.homeLocationClickedListener = { onHomeLocationClicked() }
+        fragments.add(settingsFragment)
 
         val adapter = TitledPagerAdapter(fragmentManager, null).setItems(fragments)
         val pager = findViewById(R.id.pager) as ViewPager
         pager.adapter = adapter
     }
 
-    private fun setReadContactsPermissionListeners() {
-        permissionsUtils
+    override fun onResume() {
+        super.onResume()
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(preferenceListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(preferenceListener)
+    }
+
+    private fun addReadContactsPermissionListeners() {
+        permissionsCompositeSubscription.add(permissionsUtils
                 .permissionDeniedListener()
-                .filter { it == Manifest.permission.READ_CONTACTS }
-                .subscribe { onShowContactsPermissionDenied() }
+                .filter { it.first == PermissionsUtils.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
+                .filter { it.second == Manifest.permission.READ_CONTACTS }
+                .subscribe { onReadContactsPermissionDenied() })
+    }
+
+    private fun addLocationPermissionListeners() {
+        permissionsCompositeSubscription.addAll(
+                permissionsUtils
+                    .permissionDeniedListener()
+                    .filter {it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { startHomeLocationActivity() },
+                permissionsUtils
+                        .permissionGrantedListener()
+                        .filter {it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                        .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                        .subscribe { onLocationPermissionGranted() })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -102,76 +137,98 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
-        super.onResume()
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener {
-                    sharedPreferences, key -> this.onSharedPreferenceChanged(sharedPreferences, key) }
+    fun onHomeLocationClicked() {
+        if (processLocationPermissions()) {
+            startHomeLocationActivity()
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener {
-                    sharedPreferences, key -> this.onSharedPreferenceChanged(sharedPreferences, key) }
+    fun startHomeLocationActivity() {
+        val intent = Intent(this, HomeLocationActivity::class.java)
+        startActivity(intent)
     }
 
-    /**
-     * All actions that require permissions must be placed here. The methods performs them or
-     * asks for permissions if they haven't been granted already.
+    override fun onDestroy() {
+        permissionsCompositeSubscription.dispose()
+        super.onDestroy()
+    }
 
-     * @return false if particularly READ_CONTACTS was't granted previously
-     */
-    private fun processPermissions(): Boolean {
+    private fun processSmsPermissions() {
         val permissions = ArrayList<String>()
-        var result = true
+        var readContactsGranted = true
 
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.READ_CONTACTS)
-            result = false
+            readContactsGranted = false
         }
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.SEND_SMS)
         }
+        if (!readContactsGranted) {
+            addReadContactsPermissionListeners()
+        }
         if (!permissions.isEmpty()) {
             val arr = permissions.toTypedArray()
             ActivityCompat.requestPermissions(
                     this,
                     arr,
-                    PermissionsUtils.PERMISSION_READ_CONTACTS_REQUEST)
+                    PermissionsUtils.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID)
         }
-        return result
     }
 
-    private fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) {
-            SMS_ENABLED  // off by default
-            -> if (sharedPreferences.getBoolean(SMS_ENABLED, false)) {
-                if (!processPermissions()) {
-                    setReadContactsPermissionListeners()
-                }
-            }
-            HOME_LOCATION -> {
-                locationSource.onHomeLocationChanged()
-                smsSender.resetZones()
-            }
+    private fun processLocationPermissions(): Boolean {
+        val permissions = ArrayList<String>()
+        var locationPermissionGranted = true
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            locationPermissionGranted = false
+        }
+        if (!locationPermissionGranted) {
+            addLocationPermissionListeners()
+        }
+        if (!permissions.isEmpty()) {
+            val arr = permissions.toTypedArray()
+            ActivityCompat.requestPermissions(
+                    this,
+                    arr,
+                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
+        }
+        return locationPermissionGranted
+    }
+
+    fun onSmsEnabledChanged() {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
+            processSmsPermissions()
         }
     }
+
+    fun onHomeLocationChanged() {
+        locationSource.onHomeLocationChanged()
+        smsSender.resetZones()
+    }
+
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) {
-        if (requestCode == PermissionsUtils.PERMISSION_READ_CONTACTS_REQUEST) {
-            permissionsUtils.onRequestPermissionsResult(permissions, grantResults)
+        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun onSharedPreferenceChanged(key: String) {
+        when (key) {
+            SettingsActivity.HOME_LOCATION -> onHomeLocationChanged()
         }
     }
 
-    private fun onShowContactsPermissionDenied() {
+    private fun onReadContactsPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.READ_CONTACTS) && permissionsUtils
@@ -180,10 +237,15 @@ class SettingsActivity : AppCompatActivity() {
             builder.setMessage(R.string.perm_contacts_rationale)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                 permissionsUtils.onRationaleShown(Manifest.permission.READ_CONTACTS)
-                processPermissions()
+                processSmsPermissions()
             }
             builder.create().show()
         }
+    }
+
+    private fun onLocationPermissionGranted() {
+        locationSource.initGps(applicationContext)
+        startHomeLocationActivity()
     }
 
     companion object {

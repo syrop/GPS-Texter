@@ -107,7 +107,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsUtils
                     .permissionGrantedListener()
-                    .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }
 

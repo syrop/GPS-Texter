@@ -49,7 +49,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     private var weakContext: WeakReference<Context>? = null
     private var activityRecognitionReceiver : BroadcastReceiver? = null
 
-    fun init(context: Context) {
+    fun initWithContext(context: Context) {
         if (initialized) {
             return
         }

@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
     private var clickTime: Long = 0
     /** Obtained from intent, may be null.  */
     private var action: String? = null
-    private var showSettingsWhenPermissionGranted: Boolean = false
     private var shuttingDown: Boolean = false
     private var dialog: Dialog? = null
 
@@ -158,7 +157,8 @@ class MainActivity : AppCompatActivity() {
             permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
             permissionsUtils
                     .permissionGrantedListener()
-                    .filter { it == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         } else {
             initGps()
@@ -183,13 +183,13 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(
                 this,
                 arr,
-                PermissionsUtils.PERMISSION_ACCESS_FINE_LOCATION_REQUEST)
+                PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
 
         return false
     }
 
     private fun initGps() {
-        locationSource.init(this)
+        locationSource.initGps(applicationContext)
         locationSource.callProviderListener()
     }
 
@@ -226,11 +226,7 @@ class MainActivity : AppCompatActivity() {
         dialog.findViewById(R.id.settings).setOnClickListener {
             dialog.dismiss()
             prefs.edit().putBoolean(PREF_STARTUP_SHOWN, true).apply()
-            showSettingsWhenPermissionGranted = true  // Only relevant if permission is not granted.
-            if (processPermissions()) {
-                // Called if permission has already been granted, e.g. when API < 23.
-                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-            }
+            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
         }
         dialog.show()
         return true
@@ -274,9 +270,7 @@ class MainActivity : AppCompatActivity() {
             permissions: Array<String>,
             grantResults: IntArray) {
         // If request is cancelled, the result arrays are empty.
-        if (requestCode == PermissionsUtils.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
-            permissionsUtils.onRequestPermissionsResult(permissions, grantResults)
-        }
+        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     public override fun onDestroy() {
@@ -331,9 +325,6 @@ class MainActivity : AppCompatActivity() {
     private fun onLocationPermissionGranted() {
         initGps()
         locationSource.callProviderListener()
-        if (showSettingsWhenPermissionGranted) {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
     }
 
     companion object {
