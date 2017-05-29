@@ -19,12 +19,13 @@ package pl.org.seva.texter;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import pl.org.seva.texter.view.preference.HomeLocationPreference;
 
-public class ExampleTest {
+public class HomePreferenceTest {
 
     @Test
     public void testString() {
-        assertEquals(3, "123".length());
+        String str = HomeLocationPreference.Companion.toString(0.10407, -77.32785);
+        System.out.println(str);
     }
 }

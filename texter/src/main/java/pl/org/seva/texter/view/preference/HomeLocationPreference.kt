@@ -27,9 +27,9 @@ import pl.org.seva.texter.presenter.utils.Constants
 class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
     /** Latitude.  */
-    private var lat: Double = 0.toDouble()
+    private var lat: Double = 0.0
     /** * Longitude.  */
-    private var lon: Double = 0.toDouble()
+    private var lon: Double = 0.0
 
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
         return Constants.DEFAULT_HOME_LOCATION
@@ -57,12 +57,8 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
 
         private val HOME_LOCATION = "HOME_LOCATION"
 
-        private fun toString(lat: Double, lon: Double): String {
-            return "geo:" +
-                    lat.toInt() + "." +
-                    java.lang.Double.toString(lat - lat.toInt()).substring(2, 8) + "," +
-                    lon.toInt() + "." +
-                    java.lang.Double.toString(lon - lon.toInt()).substring(2, 8)
+        fun toString(lat: Double, lon: Double): String {
+            return String.format("geo:%.6f,%.6f", lat, lon)
         }
 
         fun parseLatitude(uri: String): Double {
