@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter.presenter.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
@@ -25,8 +26,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
 import android.widget.Toast
 
 import java.lang.ref.WeakReference
@@ -57,7 +60,7 @@ constructor() {
 
     private lateinit var preferences: SharedPreferences
     private lateinit var speedUnit: String
-    private var weakContext: WeakReference<Context>? = null
+    private lateinit var weakContext: WeakReference<Context>
 
     private val smsManager: android.telephony.SmsManager = android.telephony.SmsManager.getDefault()
 
@@ -82,7 +85,26 @@ constructor() {
         initialized = true
     }
 
-    @SuppressLint("WrongConstant")
+    fun permissionsToRequest() : List<String> {
+        val result = ArrayList<String>()
+        weakContext.get()?.let {
+            if (needsPermission() &&
+                    ContextCompat.checkSelfPermission(
+                            it,
+                            Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                result.add(Manifest.permission.SEND_SMS)
+            }
+            if (needsPermission() &&
+                    ContextCompat.checkSelfPermission(
+                            it,
+                            Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                result.add(Manifest.permission.READ_PHONE_STATE)
+            }
+        }
+
+        return result
+    }
+
     fun onDistanceChanged() {
         val distance = locationSource.distance
         val speed = locationSource.speed
@@ -154,13 +176,11 @@ constructor() {
         }
 
     private fun registerReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
-        val context = weakContext!!.get()
-        context?.registerReceiver(receiver, filter)
+        weakContext.get()?.registerReceiver(receiver, filter)
     }
 
     private fun unregisterReceiver(receiver: BroadcastReceiver) {
-        val context = weakContext!!.get()
-        context?.unregisterReceiver(receiver)
+        weakContext.get()?.unregisterReceiver(receiver)
     }
 
     private fun registerBroadcastReceiver(id: String) {
@@ -225,8 +245,7 @@ constructor() {
 
         smsSendingSubject.onNext(0)
 
-        val context = weakContext!!.get()
-        context?.let {
+        weakContext.get()?.let {
             val sentPI = PendingIntent.getBroadcast(it, 0, sentIntent, 0)
             val deliveredPI = PendingIntent.getBroadcast(it, 0, deliveredIntent, 0)
             registerBroadcastReceiver(id)
@@ -265,7 +284,7 @@ constructor() {
     open val isTextingEnabled: Boolean
         get() = preferences.getBoolean(SettingsActivity.SMS_ENABLED, false)
 
-    open fun needsPermission(): Boolean {
+    protected open fun needsPermission(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }
 

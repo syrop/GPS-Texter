@@ -155,22 +155,14 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun processSmsPermissions() {
         val permissions = ArrayList<String>()
-        var readContactsGranted = true
 
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.READ_CONTACTS)
-            readContactsGranted = false
-        }
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.SEND_SMS)
-        }
-        if (!readContactsGranted) {
             addReadContactsPermissionListeners()
         }
+        permissions.addAll(smsSender.permissionsToRequest())
         if (!permissions.isEmpty()) {
             val arr = permissions.toTypedArray()
             ActivityCompat.requestPermissions(

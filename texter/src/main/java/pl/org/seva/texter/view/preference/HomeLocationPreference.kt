@@ -51,9 +51,10 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
     companion object {
 
         private val HOME_LOCATION = "HOME_LOCATION"
+        private val GEO_URI_FORMAT = "geo:%.6f,%.6f"
 
         fun toString(lat: Double, lon: Double): String {
-            return String.format(Locale.US, "geo:%.6f,%.6f", lat, lon)
+            return String.format(Locale.US, GEO_URI_FORMAT, lat, lon)
         }
 
         fun parseLatitude(geoUri: String): Double {

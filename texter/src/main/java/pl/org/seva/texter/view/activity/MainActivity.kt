@@ -148,18 +148,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             initGps()
         }
-        if (smsSender.needsPermission() && smsSender.isTextingEnabled &&
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(Manifest.permission.SEND_SMS)
-        }
-        if (Build.VERSION.SDK_INT >= 26 &&
-                smsSender.needsPermission() && smsSender.isTextingEnabled &&
-                ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(Manifest.permission.READ_PHONE_STATE)
+        if (smsSender.isTextingEnabled) {
+            permissionsToRequest.addAll(smsSender.permissionsToRequest())
         }
         if (permissionsToRequest.isEmpty()) {
             return true
