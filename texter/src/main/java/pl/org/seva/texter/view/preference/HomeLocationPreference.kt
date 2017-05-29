@@ -23,6 +23,7 @@ import android.preference.Preference
 import android.util.AttributeSet
 
 import pl.org.seva.texter.presenter.utils.Constants
+import java.util.*
 
 class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
@@ -58,7 +59,7 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
         private val HOME_LOCATION = "HOME_LOCATION"
 
         fun toString(lat: Double, lon: Double): String {
-            return String.format("geo:%.6f,%.6f", lat, lon)
+            return String.format(Locale.US, "geo:%.6f,%.6f", lat, lon)
         }
 
         fun parseLatitude(uri: String): Double {
