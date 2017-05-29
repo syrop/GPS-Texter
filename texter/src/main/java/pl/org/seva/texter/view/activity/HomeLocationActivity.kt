@@ -41,6 +41,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.view.preference.HomeLocationPreference
 
 class HomeLocationActivity : AppCompatActivity() {
 
@@ -76,8 +77,8 @@ class HomeLocationActivity : AppCompatActivity() {
         graph.inject(this)
 
         val value = persistedString
-        lat = parseLatitude(value)
-        lon = parseLongitude(value)
+        lat = HomeLocationPreference.parseLatitude(value)
+        lon = HomeLocationPreference.parseLongitude(value)
 
         setContentView(R.layout.activity_home_location)
 
@@ -144,7 +145,7 @@ class HomeLocationActivity : AppCompatActivity() {
         locationChangedSubscription.dispose()
         toastShown = false
 
-        persistString(toString())
+        persistString(latLngToString())
         PreferenceManager.getDefaultSharedPreferences(this).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
         locationSource.onHomeLocationChanged()
 
@@ -171,8 +172,8 @@ class HomeLocationActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun toString(): String {
-        return toString(lat, lon)
+    fun latLngToString(): String {
+        return HomeLocationPreference.toString(lat, lon)
     }
 
     private fun persistString(`val`: String) {
@@ -226,7 +227,6 @@ class HomeLocationActivity : AppCompatActivity() {
         }
     }
 
-
     private class SavedState internal constructor() : Parcelable {
         var lat: Double = 0.0
         var lon: Double = 0.0
@@ -246,27 +246,8 @@ class HomeLocationActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private val SAVED_STATE = "saved_state"
         private val ZOOM_PROPERTY_NAME = "map_preference_gui_zoom"
         private val ZOOM_DEFAULT_VALUE = 7.5f
-
-        private fun toString(lat: Double, lon: Double): String {
-            return "geo:" +
-                    lat.toInt() + "." +
-                    java.lang.Double.toString(lat - lat.toInt()).substring(2, 8) + "," +
-                    lon.toInt() + "." +
-                    java.lang.Double.toString(lon - lon.toInt()).substring(2, 8)
-        }
-
-        private fun parseLatitude(uri: String): Double {
-            val str = uri.substring(uri.indexOf(":") + 1, uri.indexOf(","))
-            return java.lang.Double.valueOf(str)!!
-        }
-
-        private fun parseLongitude(uri: String): Double {
-            val str = uri.substring(uri.indexOf(",") + 1)
-            return java.lang.Double.valueOf(str)!!
-        }
     }
 }

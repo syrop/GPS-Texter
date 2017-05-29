@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.preference.Preference
 import android.util.AttributeSet
-import android.util.Log
 
 import pl.org.seva.texter.presenter.utils.Constants
 import java.util.*
@@ -49,30 +48,20 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
         lon = parseLongitude(value)
     }
 
-    override fun toString(): String {
-        return toString(lat, lon)
-    }
-
     companion object {
-
-        private val TAG = HomeLocationPreference::class.java.simpleName
 
         private val HOME_LOCATION = "HOME_LOCATION"
 
         fun toString(lat: Double, lon: Double): String {
-            val result = String.format(Locale.US, "geo:%.6f,%.6f", lat, lon)
-            Log.d(TAG, result)
-            return result
+            return String.format(Locale.US, "geo:%.6f,%.6f", lat, lon)
         }
 
         fun parseLatitude(geoUri: String): Double {
-            Log.d(TAG, "Parse latitude: $geoUri")
             val str = geoUri.substring(geoUri.indexOf(":") + 1, geoUri.indexOf(","))
             return java.lang.Double.valueOf(str)!!
         }
 
         fun parseLongitude(geoUri: String): Double {
-            Log.d(TAG, "Parse longitude: $geoUri")
             val str = geoUri.substring(geoUri.indexOf(",") + 1)
             return java.lang.Double.valueOf(str)!!
         }
