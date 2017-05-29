@@ -46,7 +46,7 @@ class TexterService : Service() {
         return null
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         (application as TexterApplication).graph.inject(this)
         val mainActivityIntent = Intent(this, MainActivity::class.java)
