@@ -126,7 +126,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         val adapter = viewPager.adapter
         val tabClickListener = View.OnClickListener { this.onTabClicked(it) }
 
-        for (i in 0..adapter.count - 1) {
+        for (i in 0 until adapter.count) {
             var tabTitleView: TextView? = null
 
             val tabView = createDefaultTabView(context)
@@ -198,14 +198,14 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 mTabStrip.onViewPagerPageChanged(position, 0f)
                 scrollToTab(position, 0)
             }
-            for (i in 0..mTabStrip.childCount - 1) {
+            for (i in 0 until mTabStrip.childCount) {
                 mTabStrip.getChildAt(i).isSelected = position == i
             }
         }
     }
 
     private fun onTabClicked(v: View) {
-        for (i in 0..mTabStrip.childCount - 1) {
+        for (i in 0 until mTabStrip.childCount) {
             if (v === mTabStrip.getChildAt(i)) {
                 viewPager.currentItem = i
                 return

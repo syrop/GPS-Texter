@@ -60,7 +60,7 @@ internal constructor() {
                 onPermissionDenied(requestCode, permission)
             }
         }
-        else for (i in 0..permissions.size - 1) {
+        else for (i in 0 until permissions.size) {
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 onPermissionGranted(requestCode, permissions[i])
             } else {

@@ -56,7 +56,8 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
         }
         builder.append(minutes)
         holder.time.text = builder.toString()
-        holder.speed.text = StringUtils.getSpeedString(location.speed,
+        holder.speed.text = StringUtils.getSpeedString(
+                location.speed,
                 context.getString(R.string.speed_unit))
     }
 
@@ -79,7 +80,7 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
             val right = parent.width - parent.paddingRight
 
             val childCount = parent.childCount
-            for (i in 0..childCount - 1) {
+            for (i in 0 until childCount) {
                 val child = parent.getChildAt(i)
 
                 val params = child.layoutParams as RecyclerView.LayoutParams
