@@ -74,15 +74,15 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     /** Location last received from the update.  */
     private var location: Location? = null
     /** Last calculated distance.  */
-    var distance: Double = 0.toDouble()
+    var distance: Double = 0.0
     /** Last calculated speed.  */
-    var speed: Double = 0.toDouble()
+    var speed: Double = 0.0
 
     private var connected: Boolean = false
     private var paused: Boolean = false
 
-    protected var homeLat: Double = 0.toDouble()
-    protected var homeLng: Double = 0.toDouble()
+    protected var homeLat: Double = 0.0
+    protected var homeLng: Double = 0.0
     private var time: Long = 0
 
     val locationUrl: String

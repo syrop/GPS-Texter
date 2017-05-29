@@ -68,8 +68,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     private val composite = CompositeDisposable()
 
-    private var distance: Double = 0.toDouble()
-    private var speed: Double = 0.toDouble()
+    private var distance: Double = 0.0
+    private var speed: Double = 0.0
     private var stationary: Boolean = false
 
     private lateinit var fragmentActivity: Activity

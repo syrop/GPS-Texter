@@ -22,11 +22,11 @@ import android.os.Parcelable
 
 class SmsLocation
     : Parcelable {
-    var distance: Double = 0.toDouble()  // in kilometers
+    var distance: Double = 0.0  // in kilometers
     var minutes: Int = 0
         private set // in minutes since midnight
     var direction: Int = 0
-    var speed: Double = 0.toDouble()
+    var speed: Double = 0.0
 
     override fun equals(other: Any?): Boolean {
         // ignore direction

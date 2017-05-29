@@ -49,10 +49,10 @@ class HomeLocationActivity : AppCompatActivity() {
 
     private var locationChangedSubscription = Disposables.empty()
 
-    private var lat: Double = 0.toDouble()
-    private var lon: Double = 0.toDouble()
+    private var lat: Double = 0.0
+    private var lon: Double = 0.0
     private var toastShown: Boolean = false
-    private var zoom: Float = 0.toFloat()
+    private var zoom: Float = 0.0f
     private var isCurrentLocationAvailable: Boolean = false
 
     private var map: GoogleMap? = null
