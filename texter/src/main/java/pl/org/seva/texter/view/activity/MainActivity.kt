@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
                     assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html"),
                     "UTF-8")
                     .replace("[APP_VERSION]", versionName)
-            web.loadData(content, "text/html", "UTF-8")
+            web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
         } catch (ex: IOException) {
             ex.printStackTrace()
         }
@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity() {
                     assets.open(if (language == "pl") "help_pl.html" else "help_en.html"),
                     "UTF-8")
                     .replace("[APP_VERSION]", versionName)
-            web.loadData(content, "text/html", "UTF-8")
+            web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
         } catch (ex: IOException) {
             ex.printStackTrace()
         }
