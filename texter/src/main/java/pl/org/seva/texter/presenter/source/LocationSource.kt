@@ -19,7 +19,6 @@ package pl.org.seva.texter.presenter.source
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -131,27 +130,28 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
      * @param context application context
      */
-    fun init(context: Context) {
+    fun initPreferences(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    fun initGps(context: Context) {
-        if (googleApiClient == null) {
-            googleApiClient = GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build()
+    fun initGpsOnLocationGranted(applicationContext: Context) {
+        if (googleApiClient != null) {
+            return
         }
+        googleApiClient = GoogleApiClient.Builder(applicationContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build()
 
-        context.applicationContext.registerReceiver(object : BroadcastReceiver() {
+        applicationContext.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 locationSettingsChanged()
             }
         }, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
 
         onHomeLocationChanged()
-        requestLocationUpdates(context)
+        requestLocationUpdates(applicationContext)
     }
 
     open fun addProviderListener(providerListener: ProviderListener) {

@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initGps() {
-        locationSource.initGps(applicationContext)
+        locationSource.initGpsOnLocationGranted(applicationContext)
         locationSource.callProviderListener()
     }
 

@@ -236,7 +236,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun onLocationPermissionGranted() {
-        locationSource.initGps(applicationContext)
+        locationSource.initGpsOnLocationGranted(applicationContext)
         startHomeLocationActivity()
     }
 
