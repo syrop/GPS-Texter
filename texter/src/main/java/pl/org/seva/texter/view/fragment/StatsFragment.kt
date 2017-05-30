@@ -19,11 +19,8 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Fragment
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -72,14 +69,14 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var speed: Double = 0.0
     private var stationary: Boolean = false
 
-    private lateinit var fragmentActivity: Activity
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity.application as TexterApplication).graph.inject(this)
         distance = locationSource.distance
         speed = locationSource.speed
 
         homeString = getString(R.string.home)
         hourString = activity.getString(R.string.hour)
+        speedUnitStr = getString(R.string.speed_unit)
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
 
         distanceTextView = view.findViewById(R.id.distance_value) as TextView
@@ -121,30 +118,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     override fun onDeviceMoving() {
         stationary = false
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is Activity) {
-            fragmentActivity = context
-            initDependencies()
-        }
-    }
-
-    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
-    override // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
-    fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            fragmentActivity = activity
-            initDependencies()
-        }
-    }
-
-    private fun initDependencies() {
-        val graph = (activity!!.application as TexterApplication).graph
-        graph.inject(this)
     }
 
     private fun showStats() {
@@ -191,7 +164,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private val speedStr: String
         get() {
             @SuppressLint("DefaultLocale")
-            var result = String.format("%.1f", if (stationary) 0.0 else speed) + " " + activity!!.getString(R.string.speed_unit)
+            var result = String.format("%.1f", if (stationary) 0.0 else speed) + " " + speedUnitStr
             if (result.contains(".0")) {
                 result = result.replace(".0", "")
             } else if (result.contains(",0")) {
@@ -222,10 +195,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun onTimer() {
-        if (activity == null) {
-            return
-        }
-        activity!!.runOnUiThread { this.showStats() }
+        activity?.runOnUiThread { this.showStats() }
     }
 
     @SuppressLint("WrongConstant")
@@ -259,7 +229,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     companion object {
 
         var homeString: String? = null
-        private var hourString: String? = null
+        private lateinit var hourString: String
+        private lateinit var speedUnitStr: String
 
         fun newInstance(): StatsFragment {
             return StatsFragment()
