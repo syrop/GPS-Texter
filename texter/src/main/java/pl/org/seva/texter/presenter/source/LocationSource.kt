@@ -312,34 +312,25 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
         private fun isBetterLocation(location: Location, currentBestLocation: Location?): Boolean {
             if (currentBestLocation == null) {
-                // A new location is always better than no location
                 return true
             }
 
-            // Check whether the new location fix is newer or older
             val timeDelta = location.time - currentBestLocation.time
             val isSignificantlyNewer = timeDelta > SIGNIFICANT_TIME_LAPSE
             val isSignificantlyOlder = timeDelta < -SIGNIFICANT_TIME_LAPSE
             val isNewer = timeDelta > 0
 
-            // If it's been more than two minutes since the current location, use the new location
-            // because the user has likely moved
             if (isSignificantlyNewer) {
                 return true
-                // If the new location is more than two minutes older, it must be worse
             } else if (isSignificantlyOlder) {
                 return false
             }
 
-            // Check whether the new location fix is more or less accurate
             val accuracyDelta = (location.accuracy - currentBestLocation.accuracy).toInt()
             val isMoreAccurate = accuracyDelta < 0
             val isSignificantlyLessAccurate = accuracyDelta > 200
 
-            // Determine location quality using a combination of timeliness and accuracy
-            if (isMoreAccurate) {
-                return true
-            } else if (isNewer && !isSignificantlyLessAccurate) {
+            if (isMoreAccurate || isNewer && !isSignificantlyLessAccurate) {
                 return true
             }
             return false
