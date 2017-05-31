@@ -82,10 +82,9 @@ class NavigationFragment : Fragment() {
         super.onResume()
 
         composite.addAll(
-                locationSource.distanceChangedListener()
-                        .subscribe { activity.runOnUiThread { this.onDistanceChanged() } },
-                locationSource.homeChangedListener()
-                        .subscribe { onHomeChanged() })
+                locationSource.addDistanceChangedListener {
+                    activity.runOnUiThread { onDistanceChanged() } },
+                locationSource.addDistanceChangedListener { onHomeChanged() })
 
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG) as MapFragment?

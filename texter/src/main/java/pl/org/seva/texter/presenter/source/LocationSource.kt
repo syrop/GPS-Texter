@@ -44,6 +44,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.utils.Timer
@@ -159,16 +160,16 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         providerDisabledSubject.subscribe { providerListener.onProviderDisabled() }
     }
 
-    fun distanceChangedListener(): Observable<Any> {
-        return distanceSubject.hide()
+    fun addDistanceChangedListener(listener : () -> Unit): Disposable {
+        return distanceSubject.subscribe { listener.invoke() }
     }
 
-    fun homeChangedListener(): Observable<Any> {
-        return homeChangedSubject.hide()
+    fun addHomeChangedListener(listener: () -> Unit): Disposable {
+        return homeChangedSubject.subscribe { listener.invoke() }
     }
 
-    fun locationChangedListener(): Observable<Any> {
-        return locationChangedSubject.hide()
+    fun addLocationChangedListener(listener: () -> Unit): Disposable {
+        return locationChangedSubject.subscribe { listener.invoke() }
     }
 
     val homeLatLng: LatLng

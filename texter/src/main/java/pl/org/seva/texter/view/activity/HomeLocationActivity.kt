@@ -99,8 +99,7 @@ class HomeLocationActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT).show()
             toastShown = true
         }
-        locationChangedSubscription = locationSource.locationChangedListener().subscribe {
-            onLocationChanged() }
+        locationChangedSubscription = locationSource.addLocationChangedListener { onLocationChanged() }
 
         if (!locationPermitted) {
             useCurrentButton!!.isEnabled = false

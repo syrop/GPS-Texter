@@ -93,10 +93,10 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         composite.addAll(
                 timer.timerListener().subscribe { onTimer() },
                 smsSender.smsSendingListener().subscribe {
-                    activity.runOnUiThread { this.onSendingSms() } },
-                locationSource.distanceChangedListener().subscribe {
-                    activity.runOnUiThread { this.onDistanceChanged() } },
-                locationSource.homeChangedListener().subscribe { onHomeChanged() },
+                    activity.runOnUiThread { onSendingSms() } },
+                locationSource.addDistanceChangedListener {
+                    activity.runOnUiThread { onDistanceChanged() } },
+                locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
 
         if (ContextCompat.checkSelfPermission(

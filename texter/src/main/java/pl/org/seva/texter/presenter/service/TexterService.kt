@@ -88,10 +88,10 @@ class TexterService : Service() {
     }
 
     private fun createDistanceSubscription() {
-        distanceSubscription = locationSource
-                .distanceChangedListener()
-                .filter { hardwareCanSendSms() }
-                .subscribe { smsSender.onDistanceChanged() }
+        if (hardwareCanSendSms()) {
+            return
+        }
+        distanceSubscription = locationSource.addDistanceChangedListener { smsSender.onDistanceChanged() }
     }
 
     private fun removeDistanceSubscription() {
