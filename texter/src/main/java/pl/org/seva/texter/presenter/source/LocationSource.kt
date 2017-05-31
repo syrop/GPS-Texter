@@ -43,7 +43,6 @@ import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.presenter.listener.ProviderListener
@@ -60,7 +59,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     @Inject
     lateinit var timer: Timer
 
-    private var preferences: SharedPreferences? = null
+    private lateinit var preferences: SharedPreferences
 
     private var googleApiClient: GoogleApiClient? = null
     private var locationRequest: LocationRequest? = null
@@ -71,11 +70,8 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     private val providerDisabledSubject = PublishSubject.create<Any>()
     private val locationChangedSubject = PublishSubject.create<Any>()
 
-    /** Location last received from the update.  */
     private var location: Location? = null
-    /** Last calculated distance.  */
     var distance: Double = 0.0
-    /** Last calculated speed.  */
     var speed: Double = 0.0
 
     private var connected: Boolean = false
@@ -87,15 +83,13 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     val locationUrl: String
         get() {
-            if (location == null) {
-                return ""
+            return if (location == null) {
+                ""
+            } else {
+                "http://maps.google.com/?q=" + location!!.latitude + "," + location!!.longitude
             }
-            return "http://maps.google.com/?q=" + location!!.latitude + "," + location!!.longitude
         }
 
-    /**
-     * @return minimum time between two subsequent updates from one provider (in millis)
-     */
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY
 
@@ -110,7 +104,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     fun onHomeLocationChanged() {
         updateDistance()
 
-        val homeLocation = preferences!!.getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
+        val homeLocation = preferences.getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
         homeLat = HomeLocationPreference.parseLatitude(homeLocation)
         homeLng = HomeLocationPreference.parseLongitude(homeLocation)
         location?.let {
@@ -123,14 +117,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         homeChangedSubject.onNext(0)
     }
 
-    /**
-     * Initializes the GPS.
-
-     * Actions taken depend on whether the app possesses the permission. If not, has to be
-     * called again.
-
-     * @param context application context
-     */
     fun initPreferences(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
     }
