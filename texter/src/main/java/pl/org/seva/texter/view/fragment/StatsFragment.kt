@@ -90,15 +90,24 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                 distance != smsSender.lastSentDistance
 
         showStats()
+        createSubscriptions()
+        processLocationPermissions()
+
+        return view
+    }
+
+    private fun createSubscriptions() {
         composite.addAll(
-                timer.timerListener().subscribe { onTimer() },
+                timer.timerListener().subscribe { onSecondsTimer() },
                 smsSender.smsSendingListener().subscribe {
                     activity.runOnUiThread { onSendingSms() } },
                 locationSource.addDistanceChangedListener {
                     activity.runOnUiThread { onDistanceChanged() } },
                 locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
+    }
 
+    private fun processLocationPermissions() {
         if (ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -108,8 +117,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }
-
-        return view
     }
 
     override fun onDeviceStationary() {
@@ -121,47 +128,28 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun showStats() {
-        @SuppressLint("DefaultLocale") var distanceStr = String.format("%.3f km", distance)
+        distanceTextView.text = if (distance == 0.0) {
+            "0 km"
+        } else {
+            formattedDistanceStr
+        }
 
-        if (distance == 0.0) {
-            distanceStr = "0 km"
-        }
-        distanceTextView.text = distanceStr
-        var seconds = (System.currentTimeMillis() - timer.resetTime).toInt() / 1000
-        var minutes = seconds / 60
-        seconds %= 60
-        val hours = minutes / 60
-        minutes %= 60
-        val timeStrBuilder = StringBuilder()
-        if (hours > 0) {
-            timeStrBuilder.append(hours).append(" ").append(hourString)
-            if (minutes > 0 || seconds > 0) {
-                timeStrBuilder.append(" ")
-            }
-        }
-        if (minutes > 0) {
-            timeStrBuilder.append(minutes).append(" m")
-            if (seconds > 0) {
-                timeStrBuilder.append(" ")
-            }
-        }
-        if (seconds > 0) {
-            timeStrBuilder.append(seconds).append(" s")
-        } else if (minutes == 0 && hours == 0) {
-            timeStrBuilder.setLength(0)
-            timeStrBuilder.append("0 s")
-        }
         stationaryTextView.visibility = if (stationary) View.VISIBLE else View.GONE
-        intervalTextView.text = timeStrBuilder.toString()
+        intervalTextView.text = formattedTimeStr
         if (speed == 0.0 || distance == 0.0) {
             speedTextView.visibility = View.INVISIBLE
         } else {
             speedTextView.visibility = View.VISIBLE
-            speedTextView.text = speedStr
+            speedTextView.text = formattedSpeedStr
         }
     }
 
-    private val speedStr: String
+    private val formattedDistanceStr : String
+        get() {
+            return String.format("%.3f km", distance)
+        }
+
+    private val formattedSpeedStr: String
         get() {
             @SuppressLint("DefaultLocale")
             var result = String.format("%.1f", if (stationary) 0.0 else speed) + " " + speedUnitStr
@@ -171,6 +159,35 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                 result = result.replace(",0", "")
             }
             return result
+        }
+
+    private val formattedTimeStr: String
+        get() {
+            var seconds = (System.currentTimeMillis() - timer.resetTime).toInt() / 1000
+            var minutes = seconds / 60
+            seconds %= 60
+            val hours = minutes / 60
+            minutes %= 60
+            val timeStrBuilder = StringBuilder()
+            if (hours > 0) {
+                timeStrBuilder.append(hours).append(" ").append(hourString)
+                if (minutes > 0 || seconds > 0) {
+                    timeStrBuilder.append(" ")
+                }
+            }
+            if (minutes > 0) {
+                timeStrBuilder.append(minutes).append(" m")
+                if (seconds > 0) {
+                    timeStrBuilder.append(" ")
+                }
+            }
+            if (seconds > 0) {
+                timeStrBuilder.append(seconds).append(" s")
+            } else if (minutes == 0 && hours == 0) {
+                timeStrBuilder.setLength(0)
+                timeStrBuilder.append("0 s")
+            }
+            return timeStrBuilder.toString()
         }
 
     override fun onDestroy() {
@@ -194,7 +211,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         showStats()
     }
 
-    private fun onTimer() {
+    private fun onSecondsTimer() {
         activity?.runOnUiThread { this.showStats() }
     }
 
