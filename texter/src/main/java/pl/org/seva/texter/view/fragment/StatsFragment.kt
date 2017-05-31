@@ -17,12 +17,9 @@
 
 package pl.org.seva.texter.view.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Fragment
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,7 +88,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
         showStats()
         createSubscriptions()
-        processLocationPermissions()
 
         return view
     }
@@ -105,18 +101,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                     activity.runOnUiThread { onDistanceChanged() } },
                 locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
-    }
-
-    private fun processLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsUtils
-                    .permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
-                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { onLocationPermissionGranted() }
-        }
     }
 
     override fun onDeviceStationary() {
@@ -196,12 +180,12 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun onDistanceChanged() {
-        val resetValues = System.currentTimeMillis() - timer.resetTime > 3 * 3600 * 1000
         if (distance != smsSender.lastSentDistance) {
             sendNowButton.isEnabled = smsSender.isTextingEnabled
         }
 
-        if (resetValues) {  // reset the values if three hours have passed
+        val threeHoursPassed = System.currentTimeMillis() - timer.resetTime > 3 * 3600 * 1000
+        if (threeHoursPassed) {
             this.speed = 0.0
             this.distance = 0.0
         } else {
@@ -220,8 +204,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         sendNowButton.isEnabled = false
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timer.resetTime
-        @SuppressLint("WrongConstant") var minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60
-        minutes += calendar.get(Calendar.MINUTE)
+        val minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
         val location = SmsLocation()
         location.distance = distance
         location.direction = 0
@@ -237,10 +220,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private fun onHomeChanged() {
         distance = locationSource.distance
         showStats()
-    }
-
-    private fun onLocationPermissionGranted() {
-        sendNowButton.isEnabled = smsSender.isTextingEnabled
     }
 
     companion object {
