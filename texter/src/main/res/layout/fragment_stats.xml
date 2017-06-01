@@ -4,77 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
-        android:id="@+id/scroll"
+
+    <LinearLayout
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/send_now_button" >
+        android:orientation="vertical"
+        android:layout_above="@+id/send_now_button">
 
-        <LinearLayout
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/distance_label"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:textSize="20sp"
+            android:text="@string/distance" />
 
-            <TextView
-                android:id="@+id/distance_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/distance" />
+        <TextView
+            android:id="@+id/distance_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText"
+            android:textSize="45sp"
+            android:text="0 km"/>
 
-            <TextView
-                android:id="@+id/distance_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="HardcodedText"
-                android:textSize="45sp"
-                android:text="0 km"/>
+        <TextView
+            android:id="@+id/speed_label"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/speed" />
 
-            <TextView
-                android:id="@+id/speed_label"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/speed" />
+        <TextView
+            android:id="@+id/speed_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText"
+            android:textSize="24sp"
+            android:text=""/>
 
-            <TextView
-                android:id="@+id/speed_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="HardcodedText"
-                android:textSize="24sp"
-                android:text=""/>
+        <TextView
+            android:id="@+id/update_interval_label"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/time_since_update" />
 
-            <TextView
-                android:id="@+id/update_interval_label"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/time_since_update" />
+        <TextView
+            android:id="@+id/update_interval_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText"
+            android:textSize="24sp"
+            android:text=""/>
 
-            <TextView
-                android:id="@+id/update_interval_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="HardcodedText"
-                android:textSize="24sp"
-                android:text=""/>
+        <TextView
+            android:id="@+id/stationary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            android:text="@string/stationary"/>
+        <LinearLayout
+            android:id="@+id/map_container_stats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
 
-            <TextView
-                android:id="@+id/stationary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:visibility="gone"
-                android:text="@string/stationary"/>
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
     <Button
         android:id="@+id/send_now_button"
         android:layout_width="match_parent"

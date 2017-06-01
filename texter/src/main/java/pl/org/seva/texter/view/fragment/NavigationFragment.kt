@@ -19,10 +19,7 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -59,6 +56,7 @@ class NavigationFragment : Fragment() {
     private var mapFragment: MapFragment? = null
 
     private val composite = CompositeDisposable()
+    private var locationPermissionGranted = false
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -74,29 +72,36 @@ class NavigationFragment : Fragment() {
             animateCamera = false
         }
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById(R.id.map_container).id
+        mapContainerId = view.findViewById(R.id.map_container_navigation).id
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
+        addLocationSubscriptions()
+        prepareMaps()
+    }
 
+    private fun prepareMaps() {
+        val fm = fragmentManager
+        mapFragment = fm.findFragmentByTag(MAP_TAG_NAVIGATION) as MapFragment?
+        if (mapFragment == null) {
+            mapFragment = MapFragment()
+            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
+        }
+
+        mapFragment!!.getMapAsync{ onGoogleMapReady(it) }
+    }
+
+    private fun addLocationSubscriptions() {
         composite.addAll(
                 locationSource.addDistanceChangedListener {
                     activity.runOnUiThread { onDistanceChanged() } },
                 locationSource.addDistanceChangedListener { onHomeChanged() })
-
-        val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_TAG) as MapFragment?
-        if (mapFragment == null) {
-            mapFragment = MapFragment()
-            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG).commit()
-        }
-
-        mapFragment!!.getMapAsync{ this.onGoogleMapReady(it) }
     }
 
+    @SuppressLint("MissingPermission")
     private fun onGoogleMapReady(googleMap: GoogleMap) {
         map = googleMap
         processLocationPermission()
@@ -109,6 +114,9 @@ class NavigationFragment : Fragment() {
         } else {
             map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
+        if (locationPermissionGranted) {
+            map!!.isMyLocationEnabled = true
+        }
         animateCamera = false
     }
 
@@ -116,7 +124,8 @@ class NavigationFragment : Fragment() {
         if (ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map!!.isMyLocationEnabled = true
+            locationPermissionGranted = true
+            map?.isMyLocationEnabled = true
         } else {
             permissionsUtils.permissionGrantedListener()
                     .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
@@ -171,12 +180,13 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
+        locationPermissionGranted = true
         map?.isMyLocationEnabled = true
     }
 
     companion object {
 
-        private val MAP_TAG = "map"
+        private val MAP_TAG_NAVIGATION = "map_navigation"
 
         fun newInstance(): NavigationFragment {
             return NavigationFragment()

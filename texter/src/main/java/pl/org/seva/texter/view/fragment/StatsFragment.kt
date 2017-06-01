@@ -17,14 +17,25 @@
 
 package pl.org.seva.texter.view.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Fragment
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 import java.util.Calendar
 
@@ -66,6 +77,11 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var speed: Double = 0.0
     private var stationary: Boolean = false
 
+    private var mapContainerId: Int = 0
+    private var mapFragment: MapFragment? = null
+    private var map: GoogleMap? = null
+    private var locationPermissionGranted = true
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -91,8 +107,74 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
         showStats()
         createSubscriptions()
+        MapsInitializer.initialize(activity.applicationContext)
+        mapContainerId = view.findViewById(R.id.map_container_stats).id
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        prepareMaps()
+    }
+
+    private fun prepareMaps() {
+        val fm = fragmentManager
+        mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as MapFragment?
+        if (mapFragment == null) {
+            mapFragment = MapFragment()
+            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
+        }
+
+        mapFragment!!.getMapAsync{ onGoogleMapReady(it) }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun onGoogleMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        processLocationPermission()
+        val homeLatLng = locationSource.homeLatLng
+        updateHomeLocation(homeLatLng)
+        val cameraPosition = CameraPosition.Builder()
+                .target(homeLatLng).zoom(12f).build()
+        map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        if (locationPermissionGranted) {
+            map!!.isMyLocationEnabled = true
+        }
+    }
+
+    private fun updateHomeLocation(homeLocation: LatLng?) {
+        if (map == null || homeLocation == null) {
+            return
+        }
+        val marker = MarkerOptions().position(homeLocation).title(StatsFragment.homeString)
+
+        // Changing marker icon
+        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+
+        // adding marker
+        map!!.clear()
+        map!!.addMarker(marker)
+    }
+
+    private fun processLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true
+            map?.isMyLocationEnabled = true
+        } else {
+            permissionsUtils.permissionGrantedListener()
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { onLocationPermissionGranted() }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun onLocationPermissionGranted() {
+        locationPermissionGranted = true
+        map?.isMyLocationEnabled = true
     }
 
     private fun createSubscriptions() {
@@ -104,6 +186,15 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                     activity.runOnUiThread { onDistanceChanged() } },
                 locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        mapFragment?.let {
+            // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
+            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            mapFragment = null
+        }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDeviceStationary() {
@@ -121,7 +212,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
             formattedDistanceStr
         }
 
-        stationaryTextView.visibility = if (stationary) View.VISIBLE else View.GONE
+        stationaryTextView.visibility = if (stationary) View.VISIBLE else View.INVISIBLE
         intervalTextView.text = formattedTimeStr
         if (speed == 0.0 || distance == 0.0) {
             speedTextView.visibility = View.INVISIBLE
@@ -226,6 +317,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     companion object {
+
+        private val MAP_TAG_STATS = "map_stats"
 
         var homeString: String? = null
         private lateinit var hourString: String
