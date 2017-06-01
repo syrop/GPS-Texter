@@ -147,15 +147,15 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     fun addDistanceChangedListener(listener : () -> Unit): Disposable {
-        return distanceSubject.subscribe { listener.invoke() }
+        return distanceSubject.subscribe { listener() }
     }
 
     fun addHomeChangedListener(listener: () -> Unit): Disposable {
-        return homeChangedSubject.subscribe { listener.invoke() }
+        return homeChangedSubject.subscribe { listener() }
     }
 
     fun addLocationChangedListener(listener: () -> Unit): Disposable {
-        return locationChangedSubject.subscribe { listener.invoke() }
+        return locationChangedSubject.subscribe { listener() }
     }
 
     val homeLatLng: LatLng
