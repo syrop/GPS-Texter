@@ -22,7 +22,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.SmsHistory;

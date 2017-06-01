@@ -55,6 +55,8 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
         addActivityRecognitionListeners()
     }
 
+
+
     open fun hardwareCanSendSms(): Boolean {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }

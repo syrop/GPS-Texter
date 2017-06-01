@@ -251,11 +251,9 @@ class MainActivity : AppCompatActivity() {
     public override fun onDestroy() {
         // Also called when the screen is rotated.
         dialog?.dismiss()
-        if (action != null && action == Intent.ACTION_MAIN) {
-            // Condition is false when activity has been launched from a notification.
-            if (shuttingDown) {
-                stopService()
-            }
+        if (action == Intent.ACTION_MAIN && shuttingDown) {
+            // action != Intent.ACTION_MAIN when activity has been launched from a notification.
+            stopService()
         }
         super.onDestroy()
     }
