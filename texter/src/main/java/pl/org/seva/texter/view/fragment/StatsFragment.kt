@@ -66,7 +66,10 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var speed: Double = 0.0
     private var stationary: Boolean = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
         (activity.application as TexterApplication).graph.inject(this)
         distance = locationSource.distance
         speed = locationSource.speed

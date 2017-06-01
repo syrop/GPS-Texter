@@ -65,9 +65,10 @@ class NavigationFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_navigation, container, false)
+        (activity.application as TexterApplication).graph.inject(this)
 
         distanceTextView = view.findViewById(R.id.distance) as TextView
-        show(locationSource.distance)
+        showDistance(locationSource.distance)
 
         savedInstanceState?.let {
             animateCamera = false
@@ -98,16 +99,7 @@ class NavigationFragment : Fragment() {
 
     private fun onGoogleMapReady(googleMap: GoogleMap) {
         map = googleMap
-        if (ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map!!.isMyLocationEnabled = true
-        } else {
-            permissionsUtils.permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
-                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { onLocationPermissionGranted() }
-        }
+        processLocationPermission()
         val homeLatLng = locationSource.homeLatLng
         updateHomeLocation(homeLatLng)
         val cameraPosition = CameraPosition.Builder()
@@ -120,26 +112,17 @@ class NavigationFragment : Fragment() {
         animateCamera = false
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is Activity) {
-            injectDependencies(context)
+    private fun processLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map!!.isMyLocationEnabled = true
+        } else {
+            permissionsUtils.permissionGrantedListener()
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { onLocationPermissionGranted() }
         }
-    }
-
-    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
-    override // http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
-    fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            injectDependencies(activity)
-        }
-    }
-
-    private fun injectDependencies(activity: Activity) {
-        val graph = (activity.application as TexterApplication).graph
-        graph.inject(this)
     }
 
     override fun onDestroy() {
@@ -156,11 +139,11 @@ class NavigationFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun updateHomeLocation(home: LatLng?) {
-        if (map == null || home == null) {
+    private fun updateHomeLocation(homeLocation: LatLng?) {
+        if (map == null || homeLocation == null) {
             return
         }
-        val marker = MarkerOptions().position(home).title(StatsFragment.homeString)
+        val marker = MarkerOptions().position(homeLocation).title(StatsFragment.homeString)
 
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
@@ -170,7 +153,7 @@ class NavigationFragment : Fragment() {
         map!!.addMarker(marker)
     }
 
-    private fun show(distance: Double) {
+    private fun showDistance(distance: Double) {
         @SuppressLint("DefaultLocale") var distanceStr = String.format("%.3f km", distance)
         if (distance == 0.0) {
             distanceStr = "0 km"
@@ -179,7 +162,7 @@ class NavigationFragment : Fragment() {
     }
 
     private fun onDistanceChanged() {
-        show(locationSource.distance)
+        showDistance(locationSource.distance)
     }
 
     private fun onHomeChanged() {
