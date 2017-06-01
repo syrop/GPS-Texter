@@ -80,7 +80,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var mapContainerId: Int = 0
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
-    private var locationPermissionGranted = true
+    private var locationPermissionGranted = false
 
     override fun onCreateView(
             inflater: LayoutInflater,
