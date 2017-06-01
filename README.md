@@ -1,5 +1,5 @@
-# GPS-Texter
-(Android) Sends a text message each time your distance from home changes by 2 km.
+# GPS-Texter (Android)
+Sends a text message each time your distance from home changes by 2 km.
 
 The program calculates distance from your home. Each time your distance is reduced by, or grows by 2 km, it sends a text message.
 
@@ -14,5 +14,7 @@ In the settings menu click "Enable SMS", enter phone number, select which detail
 ![Home](images/home.png)
 
 Once your home location is set, the program continues to send an sms when your distance from home changes significantly (by 2 km).
+
+![Stats](images/stats.png)
 
 Please note that your carrier may charge you for each text message you send. It is advised to use this program if you have free text messages in your price plan.
