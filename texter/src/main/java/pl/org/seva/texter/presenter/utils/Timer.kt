@@ -23,6 +23,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -43,7 +45,6 @@ internal constructor() {
     private fun createTimerSubscription() {
         timerSubscription.dispose()
         timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
-                .observeOn(Schedulers.io())
                 .doOnNext { timerSubject.onNext(0) }
                 .repeat()
                 .subscribe()
@@ -54,7 +55,7 @@ internal constructor() {
         createTimerSubscription()
     }
 
-    fun timerListener(): Observable<Any> {
-        return timerSubject.hide()
+    fun addTimerListenerUi(listener: () -> Unit): Disposable {
+        return timerSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
     }
 }

@@ -39,6 +39,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.LatLng
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -148,6 +149,10 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     fun addDistanceChangedListener(listener : () -> Unit): Disposable {
         return distanceSubject.subscribe { listener() }
+    }
+
+    fun addDistanceChangedListenerUi(listener : () -> Unit): Disposable {
+        return distanceSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
     }
 
     fun addHomeChangedListener(listener: () -> Unit): Disposable {

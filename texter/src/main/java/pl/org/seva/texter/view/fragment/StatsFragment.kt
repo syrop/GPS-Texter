@@ -115,10 +115,10 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     override fun onResume() {
         super.onResume()
-        prepareMaps()
+        prepareMapFragment()
     }
 
-    private fun prepareMaps() {
+    private fun prepareMapFragment() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as MapFragment?
         if (mapFragment == null) {
@@ -179,22 +179,29 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     private fun createSubscriptions() {
         composite.addAll(
-                timer.timerListener().subscribe { onSecondsTimer() },
-                smsSender.smsSendingListener().subscribe {
-                    activity.runOnUiThread { onSendingSms() } },
-                locationSource.addDistanceChangedListener {
-                    activity.runOnUiThread { onDistanceChanged() } },
+                timer.addTimerListenerUi { showStats() },
+                smsSender.addSmsSendingListenerUi{ onSendingSms() },
+                locationSource.addDistanceChangedListenerUi { onDistanceChanged() },
                 locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(this))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        mapFragment?.let {
-            // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
-            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-            mapFragment = null
-        }
+        deleteMapFragment()
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroyView() {
+        deleteMapFragment()
+        super.onDestroyView()
+    }
+
+    private fun deleteMapFragment() {
+        if (mapFragment == null) {
+            return
+        }
+        fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
+        mapFragment = null
     }
 
     override fun onDeviceStationary() {
@@ -206,6 +213,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun showStats() {
+        println("wiktor stats thread: " + Thread.currentThread())
+        Thread.dumpStack()
         distanceTextView.text = if (distance == 0.0) {
             "0 km"
         } else {
@@ -287,10 +296,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
             this.speed = locationSource.speed
         }
         showStats()
-    }
-
-    private fun onSecondsTimer() {
-        activity?.runOnUiThread { this.showStats() }
     }
 
     @SuppressLint("WrongConstant")

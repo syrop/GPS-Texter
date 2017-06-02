@@ -109,10 +109,10 @@ class HomeLocationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag("map") as MapFragment?
+        mapFragment = fm.findFragmentByTag(MAP_TAG_HOME_LOCATION) as MapFragment?
         if (mapFragment == null) {
             mapFragment = MapFragment()
-            fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit()
+            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_HOME_LOCATION).commit()
         }
         mapFragment!!.getMapAsync({ this.onMapReady(it) })
     }
@@ -245,6 +245,8 @@ class HomeLocationActivity : AppCompatActivity() {
     }
 
     companion object {
+        private val MAP_TAG_HOME_LOCATION = "MAP_HOME_LOCATIOT"
+
         private val SAVED_STATE = "saved_state"
         private val ZOOM_PROPERTY_NAME = "map_preference_gui_zoom"
         private val ZOOM_DEFAULT_VALUE = 7.5f

@@ -40,6 +40,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.R
 import pl.org.seva.texter.model.DistanceZone
@@ -155,8 +157,8 @@ constructor() {
         zone = null
     }
 
-    fun smsSendingListener(): Observable<Any> {
-        return smsSendingSubject.hide()
+    fun addSmsSendingListenerUi(listener: () -> Unit): Disposable {
+        return smsSendingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
     }
 
     fun smsSentListener(): Observable<Any> {

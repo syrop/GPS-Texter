@@ -96,9 +96,8 @@ class NavigationFragment : Fragment() {
 
     private fun addLocationSubscriptions() {
         composite.addAll(
-                locationSource.addDistanceChangedListener {
-                    activity.runOnUiThread { onDistanceChanged() } },
-                locationSource.addDistanceChangedListener { onHomeChanged() })
+                locationSource.addDistanceChangedListenerUi { onDistanceChanged() },
+                locationSource.addHomeChangedListener { onHomeChanged() })
     }
 
     @SuppressLint("MissingPermission")
