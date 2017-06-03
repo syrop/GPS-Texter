@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.dagger;
+package pl.org.seva.texter.mock;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.org.seva.texter.mockimplementations.MockSmsSender;
+import pl.org.seva.texter.mock.MockSmsSender;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.SmsHistory;
-import pl.org.seva.texter.mockimplementations.MockLocationSource;
+import pl.org.seva.texter.mock.MockLocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 

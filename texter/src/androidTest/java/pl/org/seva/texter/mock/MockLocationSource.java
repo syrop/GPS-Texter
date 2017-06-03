@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mockimplementations;
+package pl.org.seva.texter.mock;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -40,13 +40,13 @@ public class MockLocationSource extends LocationSource {
 
     private int ticks = -1;
 
-    public MockLocationSource(Timer timer) {
+    MockLocationSource(Timer timer) {
         this.setTimer(timer);
         String defaultHomeLocation = Constants.INSTANCE.getDEFAULT_HOME_LOCATION();
         setHomeLat(HomeLocationPreference.Companion.parseLatitude(defaultHomeLocation));
         setHomeLng(HomeLocationPreference.Companion.parseLongitude(defaultHomeLocation));
 
-        Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
+        Observable.timer(1, TimeUnit.SECONDS, Schedulers.io())
                 .doOnNext(__ -> {
                     Location location = new Location(MOCK_PROVIDER_NAME);
                     location.setAccuracy(1.0f);

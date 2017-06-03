@@ -27,9 +27,9 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import pl.org.seva.texter.mockimplementations.MockSmsSender;
+import pl.org.seva.texter.mock.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
-import pl.org.seva.texter.dagger.MockGraph;
+import pl.org.seva.texter.mock.MockGraph;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
 import static android.support.test.espresso.Espresso.onView;

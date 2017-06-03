@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mockimplementations;
+package pl.org.seva.texter.mock;
 
 import android.app.Activity;
 import android.app.PendingIntent;

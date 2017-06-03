@@ -21,7 +21,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.test.runner.AndroidJUnitRunner;
 
-import pl.org.seva.texter.application.MockTexterApplication;
+import pl.org.seva.texter.mock.MockTexterApplication;
 
 public class MockTestRunner extends AndroidJUnitRunner {
     @Override
