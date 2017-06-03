@@ -64,4 +64,9 @@ public class MockLocationSource extends LocationSource {
     @Override
     public void addProviderListener(@SuppressWarnings("unused") @NonNull ProviderListener providerListener) {
     }
+
+    @SuppressWarnings("EmptyMethod")
+    @Override
+    protected void requestLocationUpdates() {
+    }
 }

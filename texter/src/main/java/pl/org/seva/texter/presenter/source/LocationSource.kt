@@ -241,7 +241,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestLocationUpdates() {
+    open protected fun requestLocationUpdates() {
         if (googleApiClient == null || locationRequest == null) {
             return
         }

@@ -99,7 +99,7 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
         stopService()
     }
 
-    private fun startService() {
+    protected fun startService() {
         if (isServiceRunning) {
             return
         }
@@ -107,7 +107,7 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
         isServiceRunning = true
     }
 
-    fun stopService() {
+    open fun stopService() {
         if (!isServiceRunning) {
             return
         }

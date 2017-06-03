@@ -24,6 +24,12 @@ import pl.org.seva.texter.presenter.dagger.Graph;
 
 public class MockTexterApplication extends TexterApplication {
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startService();
+    }
+
     @NonNull
     @SuppressWarnings("unused")
     @Override
@@ -35,5 +41,10 @@ public class MockTexterApplication extends TexterApplication {
     @Override
     public boolean hardwareCanSendSms() {
         return true;
+    }
+
+    @SuppressWarnings("EmptyMethod")
+    @Override
+    public void stopService() {
     }
 }

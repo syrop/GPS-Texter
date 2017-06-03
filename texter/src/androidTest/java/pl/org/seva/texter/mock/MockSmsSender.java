@@ -33,7 +33,7 @@ public class MockSmsSender extends SmsSender {
 
     private int messagesSent;
 
-    public MockSmsSender(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
+    MockSmsSender(LocationSource locationSource, SmsHistory smsHistory, ZoneCalculator zoneCalculator) {
         this.setLocationSource(locationSource);
         this.setSmsHistory(smsHistory);
         this.setZoneCalculator(zoneCalculator);

@@ -54,8 +54,6 @@ class TexterService : Service() {
         createDistanceSubscription()
         locationSource.resumeUpdates(this)
 
-
-
         return Service.START_STICKY
     }
 
