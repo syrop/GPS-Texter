@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter;
+package pl.org.seva.texter
 
-import org.junit.Test;
+import org.junit.Test
 
-import pl.org.seva.texter.view.preference.HomeLocationPreference;
+import pl.org.seva.texter.view.preference.HomeLocationPreference
 
-public class HomePreferenceTest {
+class HomePreferenceTest {
 
     @Test
-    public void testString() {
-        String str = HomeLocationPreference.Companion.toString(0.10407, -77.32785);
-        System.out.println(str);
+    fun testString() {
+        val str = HomeLocationPreference.toString(0.10407, -77.32785)
+        println(str)
     }
 }
