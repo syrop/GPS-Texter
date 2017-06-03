@@ -30,8 +30,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.preferences)
     }
 
-    var homeLocationClickedListener : (() -> Unit)? = null
+    var homeLocationClickedListener: (() -> Unit)? = null
     var smsEnabledClickedListener: (() -> Unit)? = null
+    var numberClickedListener: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +44,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
-            activity.getString(R.string.home_location_key) -> homeLocationClickedListener?.invoke()
-            activity.getString(R.string.sms_enabled_key) -> smsEnabledClickedListener?.invoke()
+            SettingsActivity.HOME_LOCATION -> homeLocationClickedListener?.invoke()
+            SettingsActivity.SMS_ENABLED -> smsEnabledClickedListener?.invoke()
+            SettingsActivity.SMS_NUMBER -> numberClickedListener?.invoke()
         }
         return super.onPreferenceTreeClick(preference)
     }

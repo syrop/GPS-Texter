@@ -10,6 +10,7 @@
             android:title="@string/enable_sms"
             android:defaultValue="false" />
 
+        <!--suppress AndroidElementNotAllowed -->
         <pl.org.seva.texter.view.preference.NumberPreference
             android:dependency="pref_enable_sms"
             android:key="pref_phone_number"
@@ -45,11 +46,11 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/location_settings">
-        <!--suppress AndroidDomInspection -->
+        <!--suppress AndroidDomInspection, AndroidElementNotAllowed -->
         <pl.org.seva.texter.view.preference.HomeLocationPreference
             android:title="@string/home_location"
             android:summary="@string/home_location_summary"
-            android:key="@string/home_location_key"
+            android:key="pref_home_location"
             android:defaultValue=""/>
 
     </PreferenceCategory>

@@ -18,11 +18,14 @@
 package pl.org.seva.texter.view.fragment
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.support.v4.app.Fragment
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.CursorLoader
@@ -31,7 +34,6 @@ import android.support.v4.widget.SimpleCursorAdapter
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.ListView
@@ -41,7 +43,7 @@ import java.util.ArrayList
 
 import pl.org.seva.texter.R
 
-class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
+class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private var toast: Toast? = null
 
@@ -52,18 +54,18 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     private var adapter: SimpleCursorAdapter? = null
     private var number: EditText? = null
 
-    override fun onCreateView(inflater: LayoutInflater?,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_number, container, false)
+    @SuppressLint("InflateParams")
+    private fun view(inflater: LayoutInflater) : View {
 
-        number = view.findViewById(R.id.number) as EditText
+        val v = inflater.inflate(R.layout.fragment_number, null)
+
+        number = v.findViewById(R.id.number) as EditText
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
-        val contacts = view.findViewById(R.id.contacts) as ListView
+        val contacts = v.findViewById(R.id.contacts) as ListView
         if (!contactsEnabled) {
             contacts.visibility = View.GONE
         } else {
@@ -78,8 +80,28 @@ class PhoneNumberFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             contacts.adapter = adapter
         }
 
-        return view
+        return v
     }
+
+    @SuppressLint("InflateParams")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val builder = AlertDialog.Builder(activity)
+        // Get the layout inflater
+        val inflater = activity.layoutInflater
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(view(inflater))
+                // Add action buttons
+                .setPositiveButton(android.R.string.ok) { dialog, _ -> onOkPressed(dialog) }
+                .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        return builder.create()
+    }
+
+    private fun onOkPressed(d: DialogInterface) {
+        d.dismiss()
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

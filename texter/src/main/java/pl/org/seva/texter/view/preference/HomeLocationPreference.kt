@@ -19,7 +19,7 @@ package pl.org.seva.texter.view.preference
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.preference.Preference
+import android.support.v7.preference.Preference
 import android.util.AttributeSet
 
 import pl.org.seva.texter.presenter.utils.Constants
@@ -27,30 +27,17 @@ import java.util.*
 
 class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
-    private var lat: Double = 0.0
-    private var lon: Double = 0.0
-
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
         return Constants.DEFAULT_HOME_LOCATION
     }
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        val value: String
-        if (restorePersistedValue) {
-            value = getPersistedString(HOME_LOCATION)
-            lat = parseLatitude(value)
-            lon = parseLongitude(value)
-        } else {
-            value = Constants.DEFAULT_HOME_LOCATION
-            persistString(value)
+        if (!restorePersistedValue) {
+            persistString(Constants.DEFAULT_HOME_LOCATION)
         }
-        lat = parseLatitude(value)
-        lon = parseLongitude(value)
     }
 
     companion object {
-
-        private val HOME_LOCATION = "HOME_LOCATION"
         private val GEO_URI_FORMAT = "geo:%.6f,%.6f"
 
         fun toString(lat: Double, lon: Double): String {

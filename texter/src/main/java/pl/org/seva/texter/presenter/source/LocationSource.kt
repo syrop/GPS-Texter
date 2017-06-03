@@ -92,7 +92,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         }
 
     private val updateFrequency: Long
-        get() = Constants.LOCATION_UPDATE_FREQUENCY
+        get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
 
     private fun requestLocationUpdates(context: Context) {
         if (ContextCompat.checkSelfPermission(

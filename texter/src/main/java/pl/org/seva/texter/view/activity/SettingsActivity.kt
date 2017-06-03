@@ -41,6 +41,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.WindowManager
 import io.reactivex.disposables.CompositeDisposable
+import pl.org.seva.texter.view.fragment.PhoneNumberFragment
 
 import java.util.ArrayList
 
@@ -86,6 +87,7 @@ class SettingsActivity : AppCompatActivity() {
         val settingsFragment = SettingsFragment.newInstance()
         settingsFragment.smsEnabledClickedListener = { onSmsEnabledChanged() }
         settingsFragment.homeLocationClickedListener = { onHomeLocationClicked() }
+        settingsFragment.numberClickedListener = { onNumberClicked() }
         fragments.add(settingsFragment)
 
         val adapter = TitledPagerAdapter(supportFragmentManager, null).setItems(fragments)
@@ -143,6 +145,20 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    fun onSmsEnabledChanged() {
+        if (isSmsEnabled()) {
+            processSmsPermissions()
+        }
+    }
+
+    fun onNumberClicked() {
+        PhoneNumberFragment().show(supportFragmentManager, PHONE_NUMBER_FRAGMENT_TAG)
+    }
+
+    private fun isSmsEnabled(): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)
+    }
+
     fun startHomeLocationActivity() {
         val intent = Intent(this, HomeLocationActivity::class.java)
         startActivity(intent)
@@ -195,12 +211,6 @@ class SettingsActivity : AppCompatActivity() {
         return locationPermissionGranted
     }
 
-    fun onSmsEnabledChanged() {
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
-            processSmsPermissions()
-        }
-    }
-
     fun onHomeLocationChanged() {
         locationSource.onHomeLocationChanged()
         smsSender.resetZones()
@@ -241,6 +251,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        val PHONE_NUMBER_FRAGMENT_TAG = "number"
 
         /** If device is not enabled to send SMS, this entire category will be hidden.  */
         val CATEGORY_SMS = "category_sms"
