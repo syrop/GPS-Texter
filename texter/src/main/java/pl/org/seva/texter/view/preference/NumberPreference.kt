@@ -21,8 +21,8 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.os.Parcel
 import android.os.Parcelable
-import android.preference.DialogPreference
 import android.preference.Preference
+import android.support.v7.preference.DialogPreference
 import android.util.AttributeSet
 import android.view.View
 
