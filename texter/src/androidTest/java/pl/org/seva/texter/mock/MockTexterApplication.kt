@@ -15,36 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mock;
+package pl.org.seva.texter.mock
 
-import android.support.annotation.NonNull;
+import pl.org.seva.texter.TexterApplication
+import pl.org.seva.texter.presenter.dagger.Graph
 
-import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
+class MockTexterApplication : TexterApplication() {
 
-public class MockTexterApplication extends TexterApplication {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        startService();
+    override fun onCreate() {
+        super.onCreate()
+        startService()
     }
 
-    @NonNull
-    @SuppressWarnings("unused")
-    @Override
-    protected Graph createGraph() {
-        return DaggerMockGraph.create();
+    override fun createGraph(): Graph {
+        return DaggerMockGraph.create()
     }
 
-    @SuppressWarnings({"SameReturnValue", "unused"})
-    @Override
-    public boolean hardwareCanSendSms() {
-        return true;
+    override fun hardwareCanSendSms(): Boolean {
+        return true
     }
 
-    @SuppressWarnings("EmptyMethod")
-    @Override
-    public void stopService() {
-    }
+    override fun stopService() {}
 }

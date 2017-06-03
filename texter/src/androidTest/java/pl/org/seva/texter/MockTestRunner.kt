@@ -15,10 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter;
+package pl.org.seva.texter
 
-public class TestConstants {
+import android.app.Application
+import android.content.Context
+import android.support.test.runner.AndroidJUnitRunner
 
-    public static final double LATITUDE_STEP = 0.001;
-    static final int EXPECTED_MESSAGES_SENT = 2;
+import pl.org.seva.texter.mock.MockTexterApplication
+
+class MockTestRunner : AndroidJUnitRunner() {
+    @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
+    override fun newApplication(
+            cl: ClassLoader, className: String, context: Context): Application {
+        return super.newApplication(cl, MockTexterApplication::class.java.name, context)
+    }
 }
