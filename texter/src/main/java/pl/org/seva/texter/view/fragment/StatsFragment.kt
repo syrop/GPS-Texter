@@ -213,8 +213,6 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun showStats() {
-        println("wiktor stats thread: " + Thread.currentThread())
-        Thread.dumpStack()
         distanceTextView.text = if (distance == 0.0) {
             "0 km"
         } else {

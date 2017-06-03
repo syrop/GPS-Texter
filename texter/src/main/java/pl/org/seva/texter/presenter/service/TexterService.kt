@@ -49,16 +49,25 @@ class TexterService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         (application as TexterApplication).graph.inject(this)
+
+        startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
+        createDistanceSubscription()
+        locationSource.resumeUpdates(this)
+
+
+
+        return Service.START_STICKY
+    }
+
+    private fun createOngoingNotification(): Notification {
         val mainActivityIntent = Intent(this, MainActivity::class.java)
 
-        // Use System.currentTimeMillis() to have a unique ID for the pending intent.
         val pIntent = PendingIntent.getActivity(
                 this,
                 System.currentTimeMillis().toInt(),
                 mainActivityIntent,
                 0)
-        @Suppress("DEPRECATION")
-        val n = Notification.Builder(this)
+        return Notification.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_text))
                 .setSmallIcon(
@@ -69,12 +78,6 @@ class TexterService : Service() {
                 .setContentIntent(pIntent)
                 .setAutoCancel(false)
                 .build()
-        createDistanceSubscription()
-        locationSource.resumeUpdates(this)
-
-        startForeground(ONGOING_NOTIFICATION_ID, n)
-
-        return Service.START_STICKY
     }
 
     override fun onDestroy() {
@@ -88,7 +91,7 @@ class TexterService : Service() {
     }
 
     private fun createDistanceSubscription() {
-        if (hardwareCanSendSms()) {
+        if (!hardwareCanSendSms()) {
             return
         }
         distanceSubscription = locationSource.addDistanceChangedListener { smsSender.onDistanceChanged() }
