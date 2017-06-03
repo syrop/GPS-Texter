@@ -21,6 +21,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -28,7 +29,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -79,6 +83,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var map: GoogleMap? = null
     private var locationPermissionGranted = false
 
+    private var zoom = 0.0f
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -86,6 +92,8 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         (activity.application as TexterApplication).graph.inject(this)
         distance = locationSource.distance
         speed = locationSource.speed
+        zoom = PreferenceManager.getDefaultSharedPreferences(activity)
+                .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
 
         homeString = getString(R.string.home)
         hourString = activity.getString(R.string.hour)
@@ -133,11 +141,17 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         val homeLatLng = locationSource.homeLatLng
         updateHomeLocation(homeLatLng)
         val cameraPosition = CameraPosition.Builder()
-                .target(homeLatLng).zoom(12f).build()
+                .target(homeLatLng).zoom(zoom).build()
         map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         if (locationPermissionGranted) {
             map!!.isMyLocationEnabled = true
         }
+        map!!.setOnCameraIdleListener { onCameraIdle() }
+    }
+
+    private fun onCameraIdle() {
+        zoom = map!!.cameraPosition.zoom
+        PreferenceManager.getDefaultSharedPreferences(activity).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
     }
 
     private fun updateHomeLocation(homeLocation: LatLng?) {
@@ -319,6 +333,9 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     companion object {
 
         private val MAP_TAG_STATS = "map_stats"
+
+        private val ZOOM_PROPERTY_NAME = "stats_map_zoom"
+        private val DEFAULT_ZOOM = 7.5f
 
         var homeString: String? = null
         private lateinit var hourString: String
