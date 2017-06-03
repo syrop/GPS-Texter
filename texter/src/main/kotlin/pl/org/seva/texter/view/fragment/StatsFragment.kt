@@ -19,16 +19,19 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Fragment
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -75,7 +78,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private var stationary: Boolean = false
 
     private var mapContainerId: Int = 0
-    private var mapFragment: SupportMapFragment? = null
+    private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
     private var locationPermissionGranted = false
 
@@ -117,9 +120,9 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
 
     private fun prepareMapFragment() {
         val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as SupportMapFragment?
+        mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as MapFragment?
         if (mapFragment == null) {
-            mapFragment = SupportMapFragment()
+            mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
         }
 

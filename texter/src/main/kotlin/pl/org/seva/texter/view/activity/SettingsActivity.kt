@@ -30,9 +30,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
+import android.app.Fragment
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
@@ -88,7 +88,7 @@ class SettingsActivity : AppCompatActivity() {
         settingsFragment.homeLocationClickedListener = { onHomeLocationClicked() }
         fragments.add(settingsFragment)
 
-        val adapter = TitledPagerAdapter(supportFragmentManager, null).setItems(fragments)
+        val adapter = TitledPagerAdapter(fragmentManager, null).setItems(fragments)
         val pager = findViewById(R.id.pager) as ViewPager
         pager.adapter = adapter
     }

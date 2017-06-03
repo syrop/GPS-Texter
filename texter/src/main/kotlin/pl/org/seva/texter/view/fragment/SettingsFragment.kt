@@ -19,34 +19,33 @@ package pl.org.seva.texter.view.fragment
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
+import android.preference.Preference
+import android.preference.PreferenceFragment
+import android.preference.PreferenceScreen
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.view.activity.SettingsActivity
 
-class SettingsFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.preferences)
-    }
+class SettingsFragment : PreferenceFragment() {
 
     var homeLocationClickedListener : (() -> Unit)? = null
     var smsEnabledClickedListener: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        addPreferencesFromResource(R.xml.preferences)
 
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
             preferenceScreen.removePreference(findPreference(SettingsActivity.CATEGORY_SMS))
         }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+    override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen, preference: Preference): Boolean {
         when (preference.key) {
             activity.getString(R.string.home_location_key) -> homeLocationClickedListener?.invoke()
             activity.getString(R.string.sms_enabled_key) -> smsEnabledClickedListener?.invoke()
         }
-        return super.onPreferenceTreeClick(preference)
+        return super.onPreferenceTreeClick(preferenceScreen, preference)
     }
 
     companion object {

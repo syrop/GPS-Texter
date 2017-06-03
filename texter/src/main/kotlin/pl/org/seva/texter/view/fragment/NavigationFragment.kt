@@ -21,7 +21,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +53,7 @@ class NavigationFragment : Fragment() {
     private var map: GoogleMap? = null
     private var animateCamera = true
     private var mapContainerId: Int = 0
-    private var mapFragment: SupportMapFragment? = null
+    private var mapFragment: MapFragment? = null
 
     private val composite = CompositeDisposable()
     private var locationPermissionGranted = false
@@ -85,9 +85,9 @@ class NavigationFragment : Fragment() {
 
     private fun prepareMaps() {
         val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_TAG_NAVIGATION) as SupportMapFragment?
+        mapFragment = fm.findFragmentByTag(MAP_TAG_NAVIGATION) as MapFragment?
         if (mapFragment == null) {
-            mapFragment = SupportMapFragment()
+            mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
         }
 

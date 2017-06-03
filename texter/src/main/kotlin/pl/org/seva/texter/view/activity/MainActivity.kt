@@ -25,7 +25,7 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
+import android.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         fragments.add(NavigationFragment.newInstance())
         fragments.add(HistoryFragment.newInstance())
 
-        val adapter = TitledPagerAdapter(supportFragmentManager, titles).setItems(fragments)
+        val adapter = TitledPagerAdapter(fragmentManager, titles).setItems(fragments)
 
         val pager = findViewById(R.id.pager) as ViewPager
         pager.adapter = adapter
