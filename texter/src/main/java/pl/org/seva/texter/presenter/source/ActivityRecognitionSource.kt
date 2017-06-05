@@ -54,7 +54,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
             return
         }
         weakContext = WeakReference(context)
-        if (googleApiClient == null) {
+        googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addApi(ActivityRecognition.API)
                     .addConnectionCallbacks(this)

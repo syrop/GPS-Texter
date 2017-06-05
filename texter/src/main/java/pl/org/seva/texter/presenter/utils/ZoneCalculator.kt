@@ -46,13 +46,11 @@ internal constructor() {
         }
         max = check
         var zone: DistanceZone? = zones.get(min)
-        if (zone == null) {
+        if (zone?.increaseCounter() == null) {
             clearCache()
             zone = DistanceZone(min, max)
             zone.increaseCounter()
             zones.put(min, zone)
-        } else {
-            zone.increaseCounter()
         }
 
         return zone

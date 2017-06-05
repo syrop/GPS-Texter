@@ -124,17 +124,17 @@ constructor() {
 
         synchronized(this) {
             val zone = zoneCalculator.calculateZone(distance)
-            if (this.zone == null) {
-                this.zone = zone
-            } else if (canSendZone(zone)) {
-                val direction = calculateDirection(zone)
-                smsLocation.direction = direction
+            this.zone?.let {
+                if (canSendZone(zone)) {
+                    val direction = calculateDirection(zone)
+                    smsLocation.direction = direction
 
-                if ((if (direction == 1) zone.min else zone.max) <= maxSentDistance) {
-                    send(smsLocation)
+                    if ((if (direction == 1) zone.min else zone.max) <= maxSentDistance) {
+                        send(smsLocation)
+                    }
+                    this.zone = zone
                 }
-                this.zone = zone
-            }
+            } ?:let { this.zone = zone }
         }
     }
 

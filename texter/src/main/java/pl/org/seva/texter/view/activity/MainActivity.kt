@@ -78,9 +78,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         action = intent.action
-        if (action == null) {
-            finish()
-        }
+        action?: finish()
 
         val graph = (application as TexterApplication).graph
         graph.inject(this)

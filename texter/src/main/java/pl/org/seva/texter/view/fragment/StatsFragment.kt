@@ -123,7 +123,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     private fun prepareMapFragment() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as SupportMapFragment?
-        if (mapFragment == null) {
+        mapFragment?:let {
             mapFragment = SupportMapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
         }
@@ -205,11 +205,10 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
     }
 
     private fun deleteMapFragment() {
-        if (mapFragment == null) {
-            return
+        mapFragment?.let {
+            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            mapFragment = null
         }
-        fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
-        mapFragment = null
     }
 
     override fun onDeviceStationary() {

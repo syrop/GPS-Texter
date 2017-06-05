@@ -84,11 +84,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     val locationUrl: String
         get() {
-            return if (location == null) {
-                ""
-            } else {
-                "http://maps.google.com/?q=" + location!!.latitude + "," + location!!.longitude
-            }
+            return location?.let { "http://maps.google.com/?q=" + it.latitude + "," + it.longitude } ?: ""
         }
 
     private val updateFrequency: Long
@@ -168,10 +164,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     val latLng: LatLng?
         get() {
-            return if (location == null) {
-                null
-            }
-            else LatLng(location!!.latitude, location!!.longitude)
+            return location?.let { LatLng(it.latitude, it.longitude) }
         }
 
     val isLocationAvailable: Boolean
@@ -195,10 +188,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     private fun updateDistance() {
-        if (location == null) {
-            return
-        }
-        distance = calculateCurrentDistance()
+        location?.let { distance = calculateCurrentDistance() }
     }
 
     private fun calculateCurrentDistance(): Double {
@@ -224,7 +214,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     override fun onConnected(bundle: Bundle?) {
         connected = true
 
-        if (location == null) {
+        location?: let {
             LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.let {
                 onLocationChanged(it) }
         }
@@ -293,11 +283,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     private fun locationSettingsChanged() {
-        if (locationRequest == null) {
-            return
-        }
-
-        callProviderListener()
+        location?.let { callProviderListener() }
     }
 
     override fun onConnectionSuspended(i: Int) {}
@@ -316,9 +302,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         private val SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2
 
         private fun isBetterLocation(location: Location, currentBestLocation: Location?): Boolean {
-            if (currentBestLocation == null) {
-                return true
-            }
+            currentBestLocation ?: return true
 
             val timeDelta = location.time - currentBestLocation.time
             val isSignificantlyNewer = timeDelta > SIGNIFICANT_TIME_LAPSE

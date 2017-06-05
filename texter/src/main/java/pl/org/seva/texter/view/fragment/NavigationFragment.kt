@@ -86,7 +86,7 @@ class NavigationFragment : Fragment() {
     private fun prepareMaps() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG_NAVIGATION) as SupportMapFragment?
-        if (mapFragment == null) {
+        mapFragment?: let {
             mapFragment = SupportMapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
         }

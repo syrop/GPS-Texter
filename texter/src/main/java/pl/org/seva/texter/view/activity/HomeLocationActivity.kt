@@ -110,7 +110,7 @@ class HomeLocationActivity : AppCompatActivity() {
         super.onResume()
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_TAG_HOME_LOCATION) as MapFragment?
-        if (mapFragment == null) {
+        mapFragment?:let {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_HOME_LOCATION).commit()
         }
