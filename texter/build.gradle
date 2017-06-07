@@ -21,6 +21,7 @@ android {
         resConfigs "en", "pl"
         testInstrumentationRunner "pl.org.seva.texter.MockTestRunner"
         manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
+        vectorDrawables.useSupportLibrary true
     }
 
     kapt {
