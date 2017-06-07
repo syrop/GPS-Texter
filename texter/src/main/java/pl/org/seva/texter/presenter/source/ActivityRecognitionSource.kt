@@ -138,7 +138,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private val ACTIVITY_RECOGNITION_INTERVAL = 1000L  // [ms]
-        private val STATIONARY_CONFIDENCE_THRESHOLD = 60
+        private val STATIONARY_CONFIDENCE_THRESHOLD = 65
 
         private val stationarySubject = PublishSubject.create<Int>()
         private val movingSubject = PublishSubject.create<Any>()
