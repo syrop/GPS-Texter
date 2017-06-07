@@ -78,7 +78,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
                 PendingIntent.FLAG_UPDATE_CURRENT)
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
                 googleApiClient,
-                ACTIVITY_RECOGNITION_INTERVAL,
+                ACTIVITY_RECOGNITION_INTERVAL_MS,
                 pendingIntent)
     }
 
@@ -137,7 +137,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     companion object {
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
-        private val ACTIVITY_RECOGNITION_INTERVAL = 1000L  // [ms]
+        private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         private val STATIONARY_CONFIDENCE_THRESHOLD = 65
 
         private val stationarySubject = PublishSubject.create<Int>()
