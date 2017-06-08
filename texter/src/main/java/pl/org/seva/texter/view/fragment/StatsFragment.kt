@@ -97,11 +97,11 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         speedUnitStr = getString(R.string.speed_unit)
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
 
-        distanceTextView = view.findViewById(R.id.distance_value) as TextView
-        intervalTextView = view.findViewById(R.id.update_interval_value) as TextView
-        stationaryTextView = view.findViewById(R.id.stationary) as TextView
-        speedTextView = view.findViewById(R.id.speed_value) as TextView
-        sendNowButton = view.findViewById(R.id.send_now_button) as Button
+        distanceTextView = view.findViewById<TextView>(R.id.distance_value)
+        intervalTextView = view.findViewById<TextView>(R.id.update_interval_value)
+        stationaryTextView = view.findViewById<TextView>(R.id.stationary)
+        speedTextView = view.findViewById<TextView>(R.id.speed_value)
+        sendNowButton = view.findViewById<Button>(R.id.send_now_button)
         sendNowButton.setOnClickListener { onSendNowClicked() }
         sendNowButton.isEnabled = smsSender.isTextingEnabled &&
                 distance != 0.0 &&
@@ -110,7 +110,7 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         showStats()
         createSubscriptions()
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById(R.id.map_container_stats).id
+        mapContainerId = view.findViewById<View>(R.id.map_container_stats).id
 
         return view
     }
@@ -199,9 +199,9 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onDestroyView() {
+    override fun onStop() {
         deleteMapFragment()
-        super.onDestroyView()
+        super.onStop()
     }
 
     private fun deleteMapFragment() {

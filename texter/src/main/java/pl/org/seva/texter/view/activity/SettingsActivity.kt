@@ -71,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
         // Attaching the layout to the toolbar object
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
@@ -91,7 +91,7 @@ class SettingsActivity : AppCompatActivity() {
         fragments.add(settingsFragment)
 
         val adapter = TitledPagerAdapter(supportFragmentManager, null).setItems(fragments)
-        val pager = findViewById(R.id.pager) as ViewPager
+        val pager = findViewById<ViewPager>(R.id.pager)
         pager.adapter = adapter
     }
 
@@ -260,7 +260,7 @@ class SettingsActivity : AppCompatActivity() {
         /** Unless true, SMS will be disabled and SMS-related options grayed out.  */
         val SMS_ENABLED = "pref_enable_sms"
         /** All text messages will be sent to this number.  */
-        val SMS_NUMBER = "pref_phone_number"
+        val PHONE_NUMBER = "pref_phone_number"
         /** Beyond this distance from home, no messages will be sent.  */
         val MAXIMUM_DISTANCE = "pref_max_distance"
         /** Location to measure distance from.  */

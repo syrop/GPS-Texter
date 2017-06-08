@@ -101,8 +101,8 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val distance: TextView = view.findViewById(R.id.distance) as TextView
-        val time: TextView = view.findViewById(R.id.time) as TextView
-        val speed: TextView = view.findViewById(R.id.speed) as TextView
+        val distance: TextView = view.findViewById<TextView>(R.id.distance)
+        val time: TextView = view.findViewById<TextView>(R.id.time)
+        val speed: TextView = view.findViewById<TextView>(R.id.speed)
     }
 }

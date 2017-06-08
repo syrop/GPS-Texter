@@ -24,6 +24,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.ContactsContract
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
@@ -42,6 +43,8 @@ import android.widget.Toast
 import java.util.ArrayList
 
 import pl.org.seva.texter.R
+import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.view.activity.SettingsActivity
 
 class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -52,20 +55,20 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
     private var contactName: String? = null
 
     private var adapter: SimpleCursorAdapter? = null
-    private var number: EditText? = null
+    private lateinit var number: EditText
 
     @SuppressLint("InflateParams")
-    private fun view(inflater: LayoutInflater) : View {
+    private fun phoneNumberDialogView(inflater: LayoutInflater) : View {
 
         val v = inflater.inflate(R.layout.fragment_number, null)
 
-        number = v.findViewById(R.id.number) as EditText
+        number = v.findViewById<EditText>(R.id.number)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
-        val contacts = v.findViewById(R.id.contacts) as ListView
+        val contacts = v.findViewById<ListView>(R.id.contacts)
         if (!contactsEnabled) {
             contacts.visibility = View.GONE
         } else {
@@ -83,6 +86,10 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         return v
     }
 
+    private val persistedString: String
+        get() = PreferenceManager.getDefaultSharedPreferences(activity)
+                .getString(SettingsActivity.PHONE_NUMBER, Constants.DEFAULT_PHONE_NUMBER)
+
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
@@ -91,15 +98,22 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(view(inflater))
+        builder.setView(phoneNumberDialogView(inflater))
                 // Add action buttons
-                .setPositiveButton(android.R.string.ok) { dialog, _ -> onOkPressed(dialog) }
+                .setPositiveButton(android.R.string.ok) { dialog, _ -> onOkPressedInDialog(dialog) }
                 .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+        setNumber(persistedString)
         return builder.create()
     }
 
-    private fun onOkPressed(d: DialogInterface) {
+    private fun onOkPressedInDialog(d: DialogInterface) {
+        persistString(number.text.toString())
         d.dismiss()
+    }
+
+    private fun persistString(`val`: String) {
+        PreferenceManager.getDefaultSharedPreferences(activity).edit()
+                .putString(SettingsActivity.PHONE_NUMBER, `val`).apply()
     }
 
 
@@ -109,7 +123,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
     }
 
     override fun toString(): String {
-        return number!!.text.toString()
+        return number.text.toString()
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
@@ -154,7 +168,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                 }
                 data.close()
                 if (numbers.size == 1) {
-                    this.number!!.setText(numbers[0])
+                    this.number.setText(numbers[0])
                 } else if (numbers.isEmpty()) {
                     toast = Toast.makeText(
                             context,
@@ -165,10 +179,10 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                     val items = numbers.toTypedArray()
                     AlertDialog.Builder(activity).setItems(items) { dialog, which ->
                         dialog.dismiss()
-                        number!!.setText(numbers[which])
+                        number.setText(numbers[which])
                     }.setTitle(contactName).setCancelable(true).setNegativeButton(
-                            android.R.string.cancel
-                    ) { dialog, _ -> dialog.dismiss() }.show()
+                            android.R.string.cancel)
+                            { dialog, _ -> dialog.dismiss() }.show()
                 }
             }
         }
@@ -193,7 +207,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
     }
 
     fun setNumber(number: String?) {
-        this.number!!.setText(number)
+        this.number.setText(number)
     }
 
     companion object {

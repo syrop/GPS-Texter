@@ -46,7 +46,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         when (preference.key) {
             SettingsActivity.HOME_LOCATION -> homeLocationClickedListener?.invoke()
             SettingsActivity.SMS_ENABLED -> smsEnabledClickedListener?.invoke()
-            SettingsActivity.SMS_NUMBER -> numberClickedListener?.invoke()
+            SettingsActivity.PHONE_NUMBER -> numberClickedListener?.invoke()
         }
         return super.onPreferenceTreeClick(preference)
     }

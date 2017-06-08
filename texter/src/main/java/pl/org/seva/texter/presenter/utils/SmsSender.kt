@@ -167,7 +167,7 @@ constructor() {
 
     private val phoneNumber: String
         get() {
-            val numberStr = preferences.getString(SettingsActivity.SMS_NUMBER, "")
+            val numberStr = preferences.getString(SettingsActivity.PHONE_NUMBER, "")
             return if (numberStr!!.isNotEmpty()) numberStr else "0"
         }
 

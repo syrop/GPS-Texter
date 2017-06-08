@@ -65,14 +65,14 @@ class NavigationFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_navigation, container, false)
         (activity.application as TexterApplication).graph.inject(this)
 
-        distanceTextView = view.findViewById(R.id.distance) as TextView
+        distanceTextView = view.findViewById<TextView>(R.id.distance)
         showDistance(locationSource.distance)
 
         savedInstanceState?.let {
             animateCamera = false
         }
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById(R.id.map_container_navigation).id
+        mapContainerId = view.findViewById<View>(R.id.map_container_navigation).id
 
         return view
     }
@@ -140,7 +140,6 @@ class NavigationFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         mapFragment?.let {
-            // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
             fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }

@@ -25,6 +25,7 @@ import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.gms.maps.*
@@ -82,9 +83,9 @@ class HomeLocationActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_home_location)
 
-        mapContainerId = findViewById(R.id.map_container).id
+        mapContainerId = findViewById<View>(R.id.map_container).id
         MapsInitializer.initialize(this)
-        useCurrentButton = findViewById(R.id.current_location_button) as Button
+        useCurrentButton = findViewById<Button>(R.id.current_location_button)
 
         val locationPermitted = ContextCompat.checkSelfPermission(
                 this,
@@ -144,13 +145,11 @@ class HomeLocationActivity : AppCompatActivity() {
         locationChangedSubscription.dispose()
         toastShown = false
 
-        persistString(latLngToString())
+        persistHomeLocation(latLngToString())
         PreferenceManager.getDefaultSharedPreferences(this).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
         locationSource.onHomeLocationChanged()
 
         mapFragment?.let {
-            // Without enclosing in the if, throws:
-            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             fragmentManager.beginTransaction().remove(it).commit()
         }
         super.onBackPressed()
@@ -175,13 +174,14 @@ class HomeLocationActivity : AppCompatActivity() {
         return HomeLocationPreference.toString(lat, lon)
     }
 
-    private fun persistString(`val`: String) {
+    private fun persistHomeLocation(`val`: String) {
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putString(SettingsActivity.HOME_LOCATION, `val`).apply()
     }
 
     private val persistedString: String
-        get() = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
+        get() = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
 
     private fun updateMarker() {
         map!!.clear()

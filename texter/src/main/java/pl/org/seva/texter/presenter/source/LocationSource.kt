@@ -243,8 +243,9 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     fun callProviderListener() {
+        locationRequest?: return
         val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest)
+                .addLocationRequest(locationRequest!!)
         val pendingResult = LocationServices.SettingsApi.checkLocationSettings(
                 googleApiClient,
                 builder.build())
