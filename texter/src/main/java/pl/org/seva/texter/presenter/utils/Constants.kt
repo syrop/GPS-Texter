@@ -30,6 +30,7 @@ object Constants {
 
     /** If the number of measurements in the present calculateZone has reached the trigger, send SMS.  */
     val SMS_TRIGGER = 2
+
     /** Time spend in calculateZone before an SMS is sent.  */
     val TIME_IN_ZONE = 11 * 1000
 

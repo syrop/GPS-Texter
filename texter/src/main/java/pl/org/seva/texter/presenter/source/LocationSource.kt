@@ -104,7 +104,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         homeLat = HomeLocationPreference.parseLatitude(homeLocation)
         homeLng = HomeLocationPreference.parseLongitude(homeLocation)
         location?.let {
-            distance = DistanceCalculator.distanceInKm(
+            distance = DistanceCalculator.distanceKm(
                     homeLat,
                     homeLng,
                     it.latitude,
@@ -193,7 +193,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     private fun calculateCurrentDistance(): Double {
-        return DistanceCalculator.distanceInKm(
+        return DistanceCalculator.distanceKm(
                 location!!.latitude,
                 location!!.longitude,
                 homeLat,
@@ -208,7 +208,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         if (time.toDouble() == 0.0) {
             return 0.0
         }
-        return DistanceCalculator.speedInKph(loc1, loc2, time)
+        return DistanceCalculator.speedKph(loc1, loc2, time)
     }
 
     @SuppressLint("MissingPermission")
