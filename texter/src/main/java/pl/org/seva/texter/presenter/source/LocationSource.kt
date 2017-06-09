@@ -46,7 +46,6 @@ import javax.inject.Singleton
 
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.view.preference.HomeLocationPreference
@@ -138,9 +137,11 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         requestLocationUpdates(applicationContext)
     }
 
-    open fun addProviderListener(providerListener: ProviderListener) {
-        providerEnabledSubject.subscribe { providerListener.onProviderEnabled() }
-        providerDisabledSubject.subscribe { providerListener.onProviderDisabled() }
+    open fun addProviderListener(
+            providerEnabledListener: () -> Unit,
+            providerDisabledListener: () -> Unit) {
+        providerEnabledSubject.subscribe { providerEnabledListener() }
+        providerDisabledSubject.subscribe { providerDisabledListener() }
     }
 
     fun addDistanceChangedListener(listener : () -> Unit): Disposable {

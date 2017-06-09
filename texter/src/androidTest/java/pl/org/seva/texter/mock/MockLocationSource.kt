@@ -26,7 +26,6 @@ import javax.inject.Singleton
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
-import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.view.preference.HomeLocationPreference
@@ -57,7 +56,9 @@ class MockLocationSource internal constructor(timer: Timer) : LocationSource() {
                 .subscribe()
     }
 
-    override fun addProviderListener(providerListener: ProviderListener) {}
+    override fun addProviderListener(
+            providerEnabledListener: () -> Unit,
+            providerDisabledListener: () -> Unit) {}
 
     override fun requestLocationUpdates() {}
 

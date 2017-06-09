@@ -26,12 +26,11 @@ import pl.org.seva.texter.presenter.dagger.DaggerGraph
 import javax.inject.Inject
 
 import pl.org.seva.texter.presenter.dagger.Graph
-import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.service.TexterService
 
-open class TexterApplication : MultiDexApplication(), ProviderListener {
+open class TexterApplication : MultiDexApplication() {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -54,14 +53,14 @@ open class TexterApplication : MultiDexApplication(), ProviderListener {
         addActivityRecognitionListeners()
     }
 
-
-
     open fun hardwareCanSendSms(): Boolean {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
     private fun addGpsProviderListeners() {
-        locationSource.addProviderListener(this)
+        locationSource.addProviderListener(
+                providerEnabledListener = { onProviderEnabled() },
+                providerDisabledListener = { onProviderDisabled() })
     }
 
     private fun addActivityRecognitionListeners() {
@@ -86,7 +85,7 @@ open class TexterApplication : MultiDexApplication(), ProviderListener {
         }
     }
 
-    override fun onProviderEnabled() {
+    private fun onProviderEnabled() {
         Log.d(TAG, "Provider is enabled")
         isProviderEnabled = true
         if (!isDeviceStationary) {
@@ -94,7 +93,7 @@ open class TexterApplication : MultiDexApplication(), ProviderListener {
         }
     }
 
-    override fun onProviderDisabled() {
+    private fun onProviderDisabled() {
         Log.d(TAG, "Provider is disabled")
         isProviderEnabled = false
         stopService()
@@ -117,7 +116,6 @@ open class TexterApplication : MultiDexApplication(), ProviderListener {
     }
 
     companion object {
-
         private val TAG = TexterApplication::class.java.simpleName
     }
 }
