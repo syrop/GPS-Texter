@@ -26,13 +26,12 @@ import pl.org.seva.texter.presenter.dagger.DaggerGraph
 import javax.inject.Inject
 
 import pl.org.seva.texter.presenter.dagger.Graph
-import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
 import pl.org.seva.texter.presenter.listener.ProviderListener
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.service.TexterService
 
-open class TexterApplication : MultiDexApplication(), ActivityRecognitionListener, ProviderListener {
+open class TexterApplication : MultiDexApplication(), ProviderListener {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -66,19 +65,21 @@ open class TexterApplication : MultiDexApplication(), ActivityRecognitionListene
     }
 
     private fun addActivityRecognitionListeners() {
-        activityRecognitionSource.addActivityRecognitionListener(this)
+        activityRecognitionSource.addActivityRecognitionListener(
+                stationaryListener = { onDeviceStationary() },
+                movingListener = { onDeviceMoving() })
     }
 
     protected open fun createGraph(): Graph {
         return DaggerGraph.create()
     }
 
-    override fun onDeviceStationary() {
+    private fun onDeviceStationary() {
         isDeviceStationary = true
         stopService()
     }
 
-    override fun onDeviceMoving() {
+    private fun onDeviceMoving() {
         isDeviceStationary = false
         if (isProviderEnabled) {
             startService()

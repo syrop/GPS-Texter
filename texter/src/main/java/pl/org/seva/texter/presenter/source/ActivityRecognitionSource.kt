@@ -38,7 +38,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
 
 @Singleton
 open class ActivityRecognitionSource @Inject
@@ -99,16 +98,17 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-
     }
 
-    fun addActivityRecognitionListener(activityRecognitionListener: ActivityRecognitionListener) : Disposable {
+    fun addActivityRecognitionListener(
+            stationaryListener: () -> Unit,
+            movingListener: () -> Unit) : Disposable {
         val result = CompositeDisposable()
         result.addAll(
                 stationarySubject
                     .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
-                    .subscribe { activityRecognitionListener.onDeviceStationary() },
-                movingSubject.subscribe { activityRecognitionListener.onDeviceMoving() })
+                    .subscribe { stationaryListener() },
+                movingSubject.subscribe { movingListener() })
         return result
     }
 

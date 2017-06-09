@@ -48,9 +48,8 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils
 import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.model.SmsLocation
-import pl.org.seva.texter.presenter.listener.ActivityRecognitionListener
 
-class StatsFragment : Fragment(), ActivityRecognitionListener {
+class StatsFragment : Fragment() {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -191,7 +190,9 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
                 smsSender.addSmsSendingListenerUi{ onSendingSms() },
                 locationSource.addDistanceChangedListenerUi { onDistanceChanged() },
                 locationSource.addHomeChangedListener { onHomeChanged() },
-                activityRecognitionSource.addActivityRecognitionListener(this))
+                activityRecognitionSource.addActivityRecognitionListener(
+                        stationaryListener = { onDeviceStationary() },
+                        movingListener = { onDeviceMoving() }))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -211,11 +212,11 @@ class StatsFragment : Fragment(), ActivityRecognitionListener {
         }
     }
 
-    override fun onDeviceStationary() {
+    private fun onDeviceStationary() {
         stationary = true
     }
 
-    override fun onDeviceMoving() {
+    private fun onDeviceMoving() {
         stationary = false
     }
 
