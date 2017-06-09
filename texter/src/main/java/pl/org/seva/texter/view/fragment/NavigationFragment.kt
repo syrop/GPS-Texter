@@ -56,7 +56,6 @@ class NavigationFragment : Fragment() {
     private var mapFragment: SupportMapFragment? = null
 
     private val composite = CompositeDisposable()
-    private var locationPermissionGranted = false
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -91,7 +90,7 @@ class NavigationFragment : Fragment() {
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
         }
 
-        mapFragment!!.getMapAsync{ onGoogleMapReady(it) }
+        mapFragment!!.getMapAsync{ onMapReady(it) }
     }
 
     private fun addLocationSubscriptions() {
@@ -101,7 +100,7 @@ class NavigationFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun onGoogleMapReady(googleMap: GoogleMap) {
+    private fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         processLocationPermission()
         val homeLatLng = locationSource.homeLatLng
@@ -113,9 +112,6 @@ class NavigationFragment : Fragment() {
         } else {
             map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
-        if (locationPermissionGranted) {
-            map!!.isMyLocationEnabled = true
-        }
         animateCamera = false
     }
 
@@ -123,7 +119,7 @@ class NavigationFragment : Fragment() {
         if (ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true
+            onLocationPermissionGranted()
             map?.isMyLocationEnabled = true
         } else {
             permissionsUtils.permissionGrantedListener()
@@ -178,7 +174,6 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        locationPermissionGranted = true
         map?.isMyLocationEnabled = true
     }
 
