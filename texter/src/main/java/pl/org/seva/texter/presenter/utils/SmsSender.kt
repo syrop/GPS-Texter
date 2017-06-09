@@ -96,7 +96,7 @@ constructor() {
                             Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 result.add(Manifest.permission.SEND_SMS)
             }
-            if (needsPermission() &&
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && needsPermission() &&
                     ContextCompat.checkSelfPermission(
                             it,
                             Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
