@@ -60,20 +60,19 @@ class TexterService : Service() {
     private fun createOngoingNotification(): Notification {
         val mainActivityIntent = Intent(this, MainActivity::class.java)
 
-        val pIntent = PendingIntent.getActivity(
+        val pi = PendingIntent.getActivity(
                 this,
                 System.currentTimeMillis().toInt(),
                 mainActivityIntent,
                 0)
         return Notification.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_text))
                 .setSmallIcon(
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                             R.drawable.notification
                         else
                             R.mipmap.ic_launcher)
-                .setContentIntent(pIntent)
+                .setContentIntent(pi)
                 .setAutoCancel(false)
                 .build()
     }

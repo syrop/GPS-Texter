@@ -19,14 +19,10 @@ package pl.org.seva.texter.presenter.source
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
@@ -37,7 +33,6 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -66,8 +61,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     private val distanceSubject = PublishSubject.create<Any>()
     private val homeChangedSubject = PublishSubject.create<Any>()
-    private val providerEnabledSubject = PublishSubject.create<Any>()
-    private val providerDisabledSubject = PublishSubject.create<Any>()
     private val locationChangedSubject = PublishSubject.create<Any>()
 
     private var location: Location? = null
@@ -127,21 +120,8 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
                 .addApi(LocationServices.API)
                 .build()
 
-        applicationContext.registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                locationSettingsChanged()
-            }
-        }, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
-
         onHomeLocationChanged()
         requestLocationUpdates(applicationContext)
-    }
-
-    open fun addProviderListener(
-            providerEnabledListener: () -> Unit,
-            providerDisabledListener: () -> Unit) {
-        providerEnabledSubject.subscribe { providerEnabledListener() }
-        providerDisabledSubject.subscribe { providerDisabledListener() }
     }
 
     fun addDistanceChangedListener(listener : () -> Unit): Disposable {
@@ -228,7 +208,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
                 .setSmallestDisplacement(MIN_DISTANCE)
 
         requestLocationUpdates()
-        callProviderListener()
     }
 
     @SuppressLint("MissingPermission")
@@ -241,24 +220,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
 
     private fun removeLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
-    }
-
-    fun callProviderListener() {
-        locationRequest?: return
-        val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest!!)
-        val pendingResult = LocationServices.SettingsApi.checkLocationSettings(
-                googleApiClient,
-                builder.build())
-        pendingResult.setResultCallback {
-            connected = it.status.isSuccess &&
-                    it.locationSettingsStates.isLocationUsable
-            if (connected) {
-                providerEnabledSubject.onNext(0)
-            } else {
-                providerDisabledSubject.onNext(0)
-            }
-        }
     }
 
     fun pauseUpdates() {
@@ -282,10 +243,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         requestLocationUpdates()
 
         paused = false
-    }
-
-    private fun locationSettingsChanged() {
-        location?.let { callProviderListener() }
     }
 
     override fun onConnectionSuspended(i: Int) {}

@@ -20,7 +20,6 @@ package pl.org.seva.texter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.multidex.MultiDexApplication
-import android.util.Log
 import pl.org.seva.texter.presenter.dagger.DaggerGraph
 
 import javax.inject.Inject
@@ -49,18 +48,11 @@ open class TexterApplication : MultiDexApplication() {
         graph.inject(this)
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
-        addGpsProviderListeners()
         addActivityRecognitionListeners()
     }
 
     open fun hardwareCanSendSms(): Boolean {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-    }
-
-    private fun addGpsProviderListeners() {
-        locationSource.addProviderListener(
-                providerEnabledListener = { onProviderEnabled() },
-                providerDisabledListener = { onProviderDisabled() })
     }
 
     private fun addActivityRecognitionListeners() {
@@ -85,20 +77,6 @@ open class TexterApplication : MultiDexApplication() {
         }
     }
 
-    private fun onProviderEnabled() {
-        Log.d(TAG, "Provider is enabled")
-        isProviderEnabled = true
-        if (!isDeviceStationary) {
-            startService()
-        }
-    }
-
-    private fun onProviderDisabled() {
-        Log.d(TAG, "Provider is disabled")
-        isProviderEnabled = false
-        stopService()
-    }
-
     protected fun startService() {
         if (isServiceRunning) {
             return
@@ -113,9 +91,5 @@ open class TexterApplication : MultiDexApplication() {
         }
         stopService(Intent(baseContext, TexterService::class.java))
         isServiceRunning = false
-    }
-
-    companion object {
-        private val TAG = TexterApplication::class.java.simpleName
     }
 }

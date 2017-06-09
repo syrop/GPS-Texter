@@ -163,7 +163,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initGps() {
         locationSource.initGpsOnLocationGranted(applicationContext)
-        locationSource.callProviderListener()
     }
 
     private fun showStartupDialog(): Boolean {
@@ -295,7 +294,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun onLocationPermissionGranted() {
         initGps()
-        locationSource.callProviderListener()
     }
 
     companion object {
