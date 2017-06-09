@@ -36,11 +36,9 @@ open class TexterApplication : MultiDexApplication() {
     @Inject
     lateinit var activityRecognitionSource: ActivityRecognitionSource
 
-    private var isServiceRunning: Boolean = false
-    private var isDeviceStationary: Boolean = false
-    private var isProviderEnabled: Boolean = false
-
     lateinit var graph: Graph
+
+    private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
@@ -49,6 +47,7 @@ open class TexterApplication : MultiDexApplication() {
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
         addActivityRecognitionListeners()
+        startService()
     }
 
     open fun hardwareCanSendSms(): Boolean {
@@ -66,15 +65,11 @@ open class TexterApplication : MultiDexApplication() {
     }
 
     private fun onDeviceStationary() {
-        isDeviceStationary = true
-        stopService()
+        locationSource.requestLocationUpdates()
     }
 
     private fun onDeviceMoving() {
-        isDeviceStationary = false
-        if (isProviderEnabled) {
-            startService()
-        }
+        locationSource.removeLocationUpdates()
     }
 
     protected fun startService() {

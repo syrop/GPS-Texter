@@ -56,11 +56,8 @@ class MockLocationSource internal constructor(timer: Timer) : LocationSource() {
                 .subscribe()
     }
 
-    override fun addProviderListener(
-            providerEnabledListener: () -> Unit,
-            providerDisabledListener: () -> Unit) {}
-
     override fun requestLocationUpdates() {}
+    override fun removeLocationUpdates() {}
 
     companion object {
 

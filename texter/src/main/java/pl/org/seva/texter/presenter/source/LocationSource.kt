@@ -196,8 +196,7 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         connected = true
 
         location?: let {
-            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.let {
-                onLocationChanged(it) }
+            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.let { onLocationChanged(it) }
         }
 
         val updateFrequency = updateFrequency
@@ -211,14 +210,14 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     }
 
     @SuppressLint("MissingPermission")
-    open protected fun requestLocationUpdates() {
+    open fun requestLocationUpdates() {
         if (googleApiClient == null || locationRequest == null) {
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
-    private fun removeLocationUpdates() {
+    open fun removeLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
     }
 
