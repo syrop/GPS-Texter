@@ -55,6 +55,8 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
+    aaptOptions.cruncherEnabled = false
 }
 
 dependencies {
