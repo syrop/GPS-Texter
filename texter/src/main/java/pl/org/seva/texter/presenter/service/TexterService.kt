@@ -65,6 +65,7 @@ class TexterService : Service() {
                 System.currentTimeMillis().toInt(),
                 mainActivityIntent,
                 0)
+        @Suppress("DEPRECATION")
         return Notification.Builder(this)
                 .setContentTitle(getString(R.string.app_name))
                 .setSmallIcon(
