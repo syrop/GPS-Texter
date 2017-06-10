@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Service -->
+    <string name="channel_name">Ongoing</string>
+    <string name="channel_description">Services running in the foreground</string>
+
     <!-- Fragment names and labels -->
     <string name="home">Home</string>
     <string name="app_name">GPS Texter</string>
