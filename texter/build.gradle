@@ -5,11 +5,6 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.0'
 
-// For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
-    dexOptions {
-        preDexLibraries true
-    }
-
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 17
