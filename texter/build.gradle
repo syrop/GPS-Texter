@@ -7,9 +7,6 @@ android {
 
 // For dex options see https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.DexOptions.html
     dexOptions {
-        dexInProcess true
-//        maxProcessCount 4  // defaults to 4
-        javaMaxHeapSize "2g"
         preDexLibraries true
     }
 
