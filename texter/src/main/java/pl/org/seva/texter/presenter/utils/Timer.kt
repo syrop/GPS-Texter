@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter.presenter.utils
 
+import android.arch.lifecycle.Lifecycle
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -24,23 +25,19 @@ import javax.inject.Singleton
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.presenter.source.LiveSource
 
 @Singleton
 class Timer @Inject
-internal constructor() {
+internal constructor() : LiveSource() {
 
     var resetTime = System.currentTimeMillis()
-        private set
     private var timerSubscription = Disposables.empty()
     private val timerSubject = PublishSubject.create<Any>()
-
-    init {
-        createTimerSubscription()
-    }
+    private var start = { reset() }
 
     private fun createTimerSubscription() {
         timerSubscription.dispose()
@@ -51,11 +48,16 @@ internal constructor() {
     }
 
     fun reset() {
+        start = {}
         resetTime = System.currentTimeMillis()
         createTimerSubscription()
     }
 
-    fun addTimerListenerUi(listener: () -> Unit): Disposable {
-        return timerSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
+    fun addTimerListenerUi(lifecycle : Lifecycle, listener: () -> Unit) {
+        lifecycle.observe(timerSubject
+                .doOnSubscribe { start() }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { listener() } )
     }
 }

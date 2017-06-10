@@ -41,7 +41,8 @@ import io.reactivex.subjects.PublishSubject
 
 @Singleton
 open class ActivityRecognitionSource @Inject
-internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false
     private var googleApiClient: GoogleApiClient? = null

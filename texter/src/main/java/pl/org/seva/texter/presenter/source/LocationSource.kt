@@ -19,15 +19,15 @@ package pl.org.seva.texter.presenter.source
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -39,7 +39,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.view.activity.SettingsActivity
@@ -49,7 +48,8 @@ import pl.org.seva.texter.presenter.utils.Constants
 
 @Singleton
 open class LocationSource @Inject
-constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener {
 
     @Inject
     lateinit var timer: Timer
@@ -68,7 +68,6 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
     var speed: Double = 0.0
 
     private var connected: Boolean = false
-    private var paused: Boolean = false
 
     protected var homeLat: Double = 0.0
     protected var homeLng: Double = 0.0
@@ -124,20 +123,25 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         requestLocationUpdates(applicationContext)
     }
 
-    fun addDistanceChangedListener(listener : () -> Unit): Disposable {
-        return distanceSubject.subscribe { listener() }
+    fun startObserving(service: LifecycleService, listener : () -> Unit) {
+        service.lifecycle.observe(distanceSubject
+                .doOnSubscribe { requestLocationUpdates() }
+                .doOnDispose { removeLocationUpdates() }
+                .subscribe { listener() })
     }
 
-    fun addDistanceChangedListenerUi(listener : () -> Unit): Disposable {
-        return distanceSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
+    fun addDistanceChangedListenerUi(lifecycle: Lifecycle, listener : () -> Unit) {
+        lifecycle.observe(distanceSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { listener() })
     }
 
-    fun addHomeChangedListener(listener: () -> Unit): Disposable {
-        return homeChangedSubject.subscribe { listener() }
+    fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
+        lifecycle.observe(homeChangedSubject.subscribe { listener() })
     }
 
-    fun addLocationChangedListener(listener: () -> Unit): Disposable {
-        return locationChangedSubject.subscribe { listener() }
+    fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
+        lifecycle.observe(locationChangedSubject.subscribe { listener() })
     }
 
     val homeLatLng: LatLng
@@ -221,37 +225,11 @@ constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectio
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
     }
 
-    fun pauseUpdates() {
-        if (paused || googleApiClient == null) {
-            return
-        }
-        Log.d(TAG, "Pause updates.")
-        removeLocationUpdates()
-
-        paused = true
-    }
-
-    fun resumeUpdates(context: Context) {
-        if (!paused || ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        Log.d(TAG, "Resume updates.")
-
-        requestLocationUpdates()
-
-        paused = false
-    }
-
     override fun onConnectionSuspended(i: Int) {}
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     companion object {
-
-        private val TAG = LocationSource::class.java.simpleName
-
         private val ACCURACY_THRESHOLD = 100.0  // [m]
 
         /** Minimal distance (in meters) that will be counted between two subsequent updates.  */

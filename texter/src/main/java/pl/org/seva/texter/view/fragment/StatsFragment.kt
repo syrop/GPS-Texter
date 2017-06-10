@@ -19,10 +19,10 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.arch.lifecycle.LifecycleFragment
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +49,7 @@ import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.model.SmsLocation
 
-class StatsFragment : Fragment() {
+class StatsFragment : LifecycleFragment() {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -185,11 +185,11 @@ class StatsFragment : Fragment() {
     }
 
     private fun createSubscriptions() {
+        locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
+        locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
+        timer.addTimerListenerUi(lifecycle) { showStats() }
         composite.addAll(
-                timer.addTimerListenerUi { showStats() },
                 smsSender.addSmsSendingListenerUi{ onSendingSms() },
-                locationSource.addDistanceChangedListenerUi { onDistanceChanged() },
-                locationSource.addHomeChangedListener { onHomeChanged() },
                 activityRecognitionSource.addActivityRecognitionListener(
                         stationaryListener = { onDeviceStationary() },
                         movingListener = { onDeviceMoving() }))

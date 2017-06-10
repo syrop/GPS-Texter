@@ -19,6 +19,7 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.arch.lifecycle.LifecycleFragment
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -42,7 +43,7 @@ import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.PermissionsUtils
 
-class NavigationFragment : Fragment() {
+class NavigationFragment : LifecycleFragment() {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -54,8 +55,6 @@ class NavigationFragment : Fragment() {
     private var animateCamera = true
     private var mapContainerId: Int = 0
     private var mapFragment: SupportMapFragment? = null
-
-    private val composite = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -94,9 +93,8 @@ class NavigationFragment : Fragment() {
     }
 
     private fun addLocationSubscriptions() {
-        composite.addAll(
-                locationSource.addDistanceChangedListenerUi { onDistanceChanged() },
-                locationSource.addHomeChangedListener { onHomeChanged() })
+            locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
+            locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
     }
 
     @SuppressLint("MissingPermission")
@@ -127,11 +125,6 @@ class NavigationFragment : Fragment() {
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        composite.clear()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

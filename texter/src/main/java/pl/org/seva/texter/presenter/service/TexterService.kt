@@ -26,7 +26,6 @@ import android.os.IBinder
 
 import javax.inject.Inject
 
-import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.SmsSender
@@ -34,18 +33,18 @@ import pl.org.seva.texter.view.activity.MainActivity
 import pl.org.seva.texter.TexterApplication
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import android.graphics.Color
 
 
-class TexterService : Service() {
+class TexterService : LifecycleService() {
 
     @Inject
     lateinit var locationSource: LocationSource
     @Inject
     lateinit var smsSender: SmsSender
 
-    private var distanceSubscription = Disposables.empty()
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
     override fun onBind(arg0: Intent): IBinder? {
@@ -58,7 +57,6 @@ class TexterService : Service() {
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         createDistanceSubscription()
-        locationSource.resumeUpdates(this)
 
         return Service.START_STICKY
     }
@@ -111,12 +109,6 @@ class TexterService : Service() {
         }
     }
 
-    override fun onDestroy() {
-        removeDistanceSubscription()
-        locationSource.pauseUpdates()
-        super.onDestroy()
-    }
-
     private fun hardwareCanSendSms(): Boolean {
         return (application as TexterApplication).hardwareCanSendSms()
     }
@@ -125,15 +117,10 @@ class TexterService : Service() {
         if (!hardwareCanSendSms()) {
             return
         }
-        distanceSubscription = locationSource.addDistanceChangedListener { smsSender.onDistanceChanged() }
-    }
-
-    private fun removeDistanceSubscription() {
-        distanceSubscription.dispose()
+        locationSource.startObserving(this) { smsSender.onDistanceChanged() }
     }
 
     companion object {
-
         private val ONGOING_NOTIFICATION_ID = 1
     }
 }

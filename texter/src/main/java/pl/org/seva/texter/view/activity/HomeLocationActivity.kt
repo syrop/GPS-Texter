@@ -18,13 +18,13 @@
 package pl.org.seva.texter.view.activity
 
 import android.Manifest
+import android.arch.lifecycle.LifecycleActivity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -44,7 +44,7 @@ import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.Constants
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 
-class HomeLocationActivity : AppCompatActivity() {
+class HomeLocationActivity : LifecycleActivity() {
 
     @Inject
     lateinit var locationSource: LocationSource
@@ -100,7 +100,7 @@ class HomeLocationActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT).show()
             toastShown = true
         }
-        locationChangedSubscription = locationSource.addLocationChangedListener { onLocationChanged() }
+        locationSource.addLocationChangedListener(lifecycle) { onLocationChanged() }
 
         if (!locationPermitted) {
             useCurrentButton!!.isEnabled = false
