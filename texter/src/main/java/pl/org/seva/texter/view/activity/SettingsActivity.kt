@@ -189,26 +189,18 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun processLocationPermissions(): Boolean {
-        val permissions = ArrayList<String>()
-        var locationPermissionGranted = true
-
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            locationPermissionGranted = false
-        }
-        if (!locationPermissionGranted) {
             addLocationPermissionListeners()
-        }
-        if (!permissions.isEmpty()) {
-            val arr = permissions.toTypedArray()
             ActivityCompat.requestPermissions(
                     this,
-                    arr,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
+            return false
         }
-        return locationPermissionGranted
+
+        return true
     }
 
     fun onHomeLocationChanged() {
