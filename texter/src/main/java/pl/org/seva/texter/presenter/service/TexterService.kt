@@ -73,11 +73,11 @@ class TexterService : LifecycleService() {
     }
 
     private fun onDeviceStationary() {
-        locationSource.requestLocationUpdates()
+        locationSource.removeRequest()
     }
 
     private fun onDeviceMoving() {
-        locationSource.removeLocationUpdates()
+        locationSource.request()
     }
 
     private fun createOngoingNotification(): Notification {

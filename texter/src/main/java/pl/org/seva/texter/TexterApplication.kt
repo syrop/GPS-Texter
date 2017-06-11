@@ -46,7 +46,6 @@ open class TexterApplication : MultiDexApplication() {
         graph.inject(this)
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
-        startService()
     }
 
     open fun hardwareCanSendSms(): Boolean {
@@ -59,7 +58,7 @@ open class TexterApplication : MultiDexApplication() {
         return DaggerGraph.create()
     }
 
-    protected fun startService() {
+    fun startService() {
         if (isServiceRunning) {
             return
         }

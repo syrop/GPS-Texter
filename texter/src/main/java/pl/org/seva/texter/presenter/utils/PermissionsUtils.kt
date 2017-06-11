@@ -36,10 +36,6 @@ internal constructor() {
 
     private val rationalesShown = ArrayList<String>()
 
-    fun permissionGrantedListener(): Observable<Pair<Int, String>> {
-        return permissionGrantedSubject.hide()
-    }
-
     fun isRationaleNeeded(permission: String): Boolean {
         return !rationalesShown.contains(permission)
     }
@@ -48,6 +44,10 @@ internal constructor() {
         if (isRationaleNeeded(permission)) {
             rationalesShown.add(permission)
         }
+    }
+
+    fun permissionGrantedListener(): Observable<Pair<Int, String>> {
+        return permissionGrantedSubject.hide()
     }
 
     fun permissionDeniedListener(): Observable<Pair<Int, String>> {

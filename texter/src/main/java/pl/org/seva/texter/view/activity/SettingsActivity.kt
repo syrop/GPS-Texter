@@ -199,6 +199,7 @@ class SettingsActivity : AppCompatActivity() {
                     PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
             return false
         }
+        onLocationPermissionGranted()
 
         return true
     }

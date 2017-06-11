@@ -81,7 +81,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
 
-    private fun requestLocationUpdates(context: Context) {
+    private fun connect(context: Context) {
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -120,13 +120,13 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
                 .build()
 
         onHomeLocationChanged()
-        requestLocationUpdates(applicationContext)
+        connect(applicationContext)
     }
 
     fun startObserving(service: LifecycleService, listener : () -> Unit) {
         service.lifecycle.observe(distanceSubject
-                .doOnSubscribe { requestLocationUpdates() }
-                .doOnDispose { removeLocationUpdates() }
+                .doOnSubscribe { request() }
+                .doOnDispose { removeRequest() }
                 .subscribe { listener() })
     }
 
@@ -204,24 +204,24 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
         }
 
         val updateFrequency = updateFrequency
-        removeLocationUpdates()
+        removeRequest()
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(updateFrequency)
                 .setSmallestDisplacement(MIN_DISTANCE)
 
-        requestLocationUpdates()
+        request()
     }
 
     @SuppressLint("MissingPermission")
-    open fun requestLocationUpdates() {
+    open fun request() {
         if (googleApiClient == null || locationRequest == null) {
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
-    open fun removeLocationUpdates() {
+    open fun removeRequest() {
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
     }
 

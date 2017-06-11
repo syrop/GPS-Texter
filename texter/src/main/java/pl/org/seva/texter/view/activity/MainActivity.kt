@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity() {
         if (!showStartupDialog()) {
             processPermissions()
         }
+        (application as TexterApplication).startService()
     }
 
     /**

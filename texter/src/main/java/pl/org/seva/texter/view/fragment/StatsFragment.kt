@@ -167,6 +167,7 @@ class StatsFragment : LifecycleFragment() {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true
             map?.isMyLocationEnabled = true
+            onLocationPermissionGranted()
         } else {
             permissionsUtils.permissionGrantedListener()
                     .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
