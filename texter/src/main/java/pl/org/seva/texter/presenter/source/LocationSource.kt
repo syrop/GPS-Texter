@@ -76,7 +76,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
 
     val locationUrl: String
         get() {
-            return location?.let { "http://maps.google.com/?q=" + it.latitude + "," + it.longitude } ?: ""
+            return location?.let { GOOGLE_PREFIX + it.latitude + "," + it.longitude } ?: ""
         }
 
     private val updateFrequency: Long
@@ -158,7 +158,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
         get() = location != null
 
     override fun onLocationChanged(location: Location) {
-        if (this.location == null && location.accuracy >= ACCURACY_THRESHOLD) {
+        if (this.location == null && location.accuracy >= ACCURACY_THRESHOLD_M) {
             return
         }
         if (!isBetterLocation(location, this.location)) {
@@ -232,7 +232,8 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     companion object {
-        private val ACCURACY_THRESHOLD = 100.0  // [m]
+        private val GOOGLE_PREFIX = "http://maps.google.com/?q="
+        private val ACCURACY_THRESHOLD_M = 100.0
 
         /** Minimal distance (in meters) that will be counted between two subsequent updates.  */
         private val MIN_DISTANCE = 5.0f
