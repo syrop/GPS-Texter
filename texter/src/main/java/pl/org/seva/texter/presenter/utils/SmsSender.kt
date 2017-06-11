@@ -124,20 +124,18 @@ constructor() : LiveSource() {
         smsLocation.setTime(minutes)
         smsLocation.speed = speed
 
-        synchronized(this) {
-            val zone = zoneCalculator.calculateZone(distance)
-            this.zone?.let {
-                if (canSendZone(zone)) {
-                    val direction = calculateDirection(zone)
-                    smsLocation.direction = direction
+        val zone = zoneCalculator.calculateZone(distance)
+        this.zone?.let {
+            if (canSendZone(zone)) {
+                val direction = calculateDirection(zone)
+                smsLocation.direction = direction
 
-                    if ((if (direction == 1) zone.min else zone.max) <= maxSentDistance) {
-                        send(smsLocation)
-                    }
-                    this.zone = zone
+                if ((if (direction == 1) zone.min else zone.max) <= maxSentDistance) {
+                    send(smsLocation)
                 }
-            } ?:let { this.zone = zone }
-        }
+                this.zone = zone
+            }
+        } ?:let { this.zone = zone }
     }
 
     private fun canSendZone(zone: DistanceZone): Boolean {

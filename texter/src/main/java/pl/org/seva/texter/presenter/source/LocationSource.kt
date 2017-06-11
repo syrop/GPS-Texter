@@ -35,6 +35,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -125,6 +126,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
 
     fun startObserving(service: LifecycleService, listener : () -> Unit) {
         service.lifecycle.observe(distanceSubject
+                .subscribeOn(Schedulers.computation())
                 .doOnSubscribe { request() }
                 .doOnDispose { removeRequest() }
                 .subscribe { listener() })
