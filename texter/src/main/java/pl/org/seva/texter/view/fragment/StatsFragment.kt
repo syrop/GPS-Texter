@@ -39,7 +39,6 @@ import java.util.Calendar
 
 import javax.inject.Inject
 
-import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
@@ -67,8 +66,6 @@ class StatsFragment : LifecycleFragment() {
     private lateinit var stationaryTextView: TextView
     private lateinit var speedTextView: TextView
     private lateinit var sendNowButton: Button
-
-    private val composite = CompositeDisposable()
 
     private var distance: Double = 0.0
     private var speed: Double = 0.0
@@ -188,11 +185,11 @@ class StatsFragment : LifecycleFragment() {
         locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
         locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
         timer.addTimerListenerUi(lifecycle) { showStats() }
-        composite.addAll(
-                smsSender.addSmsSendingListenerUi{ onSendingSms() },
-                activityRecognitionSource.addActivityRecognitionListener(
-                        stationaryListener = { onDeviceStationary() },
-                        movingListener = { onDeviceMoving() }))
+        smsSender.addSmsSendingListenerUi(lifecycle) { onSendingSms() }
+        activityRecognitionSource.addActivityRecognitionListener(
+                lifecycle,
+                stationaryListener = { onDeviceStationary() },
+                movingListener = { onDeviceMoving() })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -282,11 +279,6 @@ class StatsFragment : LifecycleFragment() {
             }
             return timeStrBuilder.toString()
         }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        composite.clear()
-    }
 
     private fun onDistanceChanged() {
         if (distance != smsSender.lastSentDistance) {

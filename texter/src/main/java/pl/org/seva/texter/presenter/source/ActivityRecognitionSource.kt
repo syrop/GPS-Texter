@@ -18,6 +18,7 @@
 package pl.org.seva.texter.presenter.source
 
 import android.app.PendingIntent
+import android.arch.lifecycle.Lifecycle
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -102,15 +103,17 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
     }
 
     fun addActivityRecognitionListener(
+            lifecycle: Lifecycle,
             stationaryListener: () -> Unit,
-            movingListener: () -> Unit) : Disposable {
-        val result = CompositeDisposable()
-        result.addAll(
+            movingListener: () -> Unit) {
+        val disposable = CompositeDisposable()
+        disposable.addAll(
                 stationarySubject
                     .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
                     .subscribe { stationaryListener() },
                 movingSubject.subscribe { movingListener() })
-        return result
+        lifecycle.observe(disposable)
+
     }
 
     private fun onDeviceStationary(confidence: Int) {

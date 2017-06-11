@@ -46,7 +46,6 @@ open class TexterApplication : MultiDexApplication() {
         graph.inject(this)
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
-        addActivityRecognitionListeners()
         startService()
     }
 
@@ -54,22 +53,10 @@ open class TexterApplication : MultiDexApplication() {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
-    private fun addActivityRecognitionListeners() {
-        activityRecognitionSource.addActivityRecognitionListener(
-                stationaryListener = { onDeviceStationary() },
-                movingListener = { onDeviceMoving() })
-    }
+
 
     protected open fun createGraph(): Graph {
         return DaggerGraph.create()
-    }
-
-    private fun onDeviceStationary() {
-        locationSource.requestLocationUpdates()
-    }
-
-    private fun onDeviceMoving() {
-        locationSource.removeLocationUpdates()
     }
 
     protected fun startService() {

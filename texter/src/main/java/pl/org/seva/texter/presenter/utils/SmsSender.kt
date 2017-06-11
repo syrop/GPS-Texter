@@ -21,6 +21,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
+import android.arch.lifecycle.Lifecycle
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -48,10 +49,11 @@ import pl.org.seva.texter.model.DistanceZone
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.model.SmsLocation
+import pl.org.seva.texter.presenter.source.LiveSource
 
 @Singleton
 open class SmsSender @Inject
-constructor() {
+constructor() : LiveSource() {
 
     @Inject
     lateinit var smsHistory: SmsHistory
@@ -157,8 +159,8 @@ constructor() {
         zone = null
     }
 
-    fun addSmsSendingListenerUi(listener: () -> Unit): Disposable {
-        return smsSendingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() }
+    fun addSmsSendingListenerUi(lifecycle: Lifecycle, listener: () -> Unit) {
+        lifecycle.observe(smsSendingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() })
     }
 
     fun smsSentListener(): Observable<Any> {

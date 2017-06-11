@@ -36,6 +36,7 @@ import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import android.graphics.Color
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 
 
 class TexterService : LifecycleService() {
@@ -44,6 +45,8 @@ class TexterService : LifecycleService() {
     lateinit var locationSource: LocationSource
     @Inject
     lateinit var smsSender: SmsSender
+    @Inject
+    lateinit var activityRecognitionSource: ActivityRecognitionSource
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
@@ -57,8 +60,24 @@ class TexterService : LifecycleService() {
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         createDistanceSubscription()
+        addActivityRecognitionListeners()
 
         return Service.START_STICKY
+    }
+
+    private fun addActivityRecognitionListeners() {
+        activityRecognitionSource.addActivityRecognitionListener(
+                lifecycle,
+                stationaryListener = { onDeviceStationary() },
+                movingListener = { onDeviceMoving() })
+    }
+
+    private fun onDeviceStationary() {
+        locationSource.requestLocationUpdates()
+    }
+
+    private fun onDeviceMoving() {
+        locationSource.removeLocationUpdates()
     }
 
     private fun createOngoingNotification(): Notification {

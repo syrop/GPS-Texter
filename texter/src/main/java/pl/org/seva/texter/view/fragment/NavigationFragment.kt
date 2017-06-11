@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.LifecycleFragment
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +36,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import javax.inject.Inject
 
-import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.source.LocationSource
