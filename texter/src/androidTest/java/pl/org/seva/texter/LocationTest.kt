@@ -57,7 +57,7 @@ class LocationTest {
     }
 
     @Test
-    fun test() {
+    fun testLocation() {
         onView(isRoot()).perform(DelayAction.delay(100))
         for (i in 0 until DURATION_IN_SECONDS) {
             onView(isRoot()).perform(DelayAction.delay(1000))
