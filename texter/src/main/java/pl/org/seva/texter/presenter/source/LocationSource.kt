@@ -53,7 +53,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
         com.google.android.gms.location.LocationListener {
 
     @Inject
-    lateinit var timer: Timer
+    protected lateinit var timer: Timer
 
     private lateinit var preferences: SharedPreferences
 
@@ -63,6 +63,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     private val distanceSubject = PublishSubject.create<Any>()
     private val homeChangedSubject = PublishSubject.create<Any>()
     private val locationChangedSubject = PublishSubject.create<Any>()
+    var paused = false
 
     private var location: Location? = null
     var distance: Double = 0.0
@@ -217,14 +218,15 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
 
     @SuppressLint("MissingPermission")
     open fun request() {
-        if (googleApiClient == null || locationRequest == null) {
+        if (paused || googleApiClient == null || locationRequest == null) {
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
     open fun removeRequest() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+        googleApiClient?.let {
+            LocationServices.FusedLocationApi.removeLocationUpdates(it, this) }
     }
 
     override fun onConnectionSuspended(i: Int) {}

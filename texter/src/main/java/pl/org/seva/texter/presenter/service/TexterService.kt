@@ -73,10 +73,12 @@ class TexterService : LifecycleService() {
     }
 
     private fun onDeviceStationary() {
+        locationSource.paused = true
         locationSource.removeRequest()
     }
 
     private fun onDeviceMoving() {
+        locationSource.paused = false
         locationSource.request()
     }
 
