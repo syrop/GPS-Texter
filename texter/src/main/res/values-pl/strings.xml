@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Service -->
+    <string name="channel_name">Trwające</string>
+    <string name="channel_description">Serwisy działające na pierwszym planie.</string>
+
+    <!-- Fragment names and labels -->
     <string name="home">Dom</string>
     <string name="app_name">GPS Texter</string>
     <string name="distance">Odległość od domu:</string>
