@@ -118,11 +118,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun addLocationPermissionListeners() {
         permissionsCompositeSubscription.addAll(
                 permissionsUtils
-                    .permissionDeniedListener()
-                    .filter {it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
-                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { startHomeLocationActivity() },
-                permissionsUtils
                         .permissionGrantedListener()
                         .filter {it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
                         .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
@@ -140,9 +135,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     fun onHomeLocationClicked() {
-        if (processLocationPermissions()) {
-            startHomeLocationActivity()
-        }
+        processLocationPermissions()
     }
 
     fun onSmsEnabledChanged() {
@@ -188,7 +181,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun processLocationPermissions(): Boolean {
+    private fun processLocationPermissions() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -197,11 +190,9 @@ class SettingsActivity : AppCompatActivity() {
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
-            return false
+            return
         }
         onLocationPermissionGranted()
-
-        return true
     }
 
     fun onHomeLocationChanged() {

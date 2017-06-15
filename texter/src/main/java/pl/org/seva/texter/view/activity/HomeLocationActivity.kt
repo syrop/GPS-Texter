@@ -125,7 +125,8 @@ class HomeLocationActivity : LifecycleActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map!!.isMyLocationEnabled = true
         }
-        zoom = PreferenceManager.getDefaultSharedPreferences(this).getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE)
+        zoom = PreferenceManager.getDefaultSharedPreferences(this)
+                .getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE)
 
         updateMarker()
         val cameraPosition = CameraPosition.Builder()
