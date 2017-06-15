@@ -48,6 +48,7 @@ class TexterService : LifecycleService() {
     lateinit var activityRecognitionSource: ActivityRecognitionSource
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
+    private var activityRecognitionListenersAdded = false
 
     override fun onBind(arg0: Intent): IBinder? {
         return null
@@ -59,16 +60,19 @@ class TexterService : LifecycleService() {
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         startObservingDistance()
-        addActivityRecognitionListeners()
 
         return Service.START_STICKY
     }
 
     private fun addActivityRecognitionListeners() {
+        if (activityRecognitionListenersAdded) {
+            return
+        }
         activityRecognitionSource.addActivityRecognitionListener(
                 lifecycle,
                 stationaryListener = { onDeviceStationary() },
                 movingListener = { onDeviceMoving() })
+        activityRecognitionListenersAdded = true
     }
 
     private fun onDeviceStationary() {
@@ -109,7 +113,7 @@ class TexterService : LifecycleService() {
         else {
             val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             // The id of the channel.
-            val id = "my_channel_01"
+            val id = NOTIFICATION_CHANNEL_ID
             // The user-visible name of the channel.
             val name = getString(R.string.channel_name)
             // The user-visible description of the channel.
@@ -131,10 +135,13 @@ class TexterService : LifecycleService() {
         if (!hardwareCanSendSms()) {
             return
         }
-        locationSource.startObserving(this) { smsSender.onDistanceChanged() }
+        locationSource.addDistanceListener(this) {
+            addActivityRecognitionListeners()
+            smsSender.onDistanceChanged() }
     }
 
     companion object {
+        private val NOTIFICATION_CHANNEL_ID = "my_channel_01"
         private val ONGOING_NOTIFICATION_ID = 1
     }
 }

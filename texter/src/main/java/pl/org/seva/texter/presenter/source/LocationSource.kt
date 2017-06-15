@@ -121,7 +121,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
         connectGoogleApiClient()
     }
 
-    fun startObserving(service: LifecycleService, listener : () -> Unit) {
+    fun addDistanceListener(service: LifecycleService, listener : () -> Unit) {
         service.lifecycle.observe(distanceSubject
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe { request() }
