@@ -35,7 +35,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
-import android.graphics.Color
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 
 
