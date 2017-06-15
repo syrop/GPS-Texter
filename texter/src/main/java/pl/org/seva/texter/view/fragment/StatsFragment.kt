@@ -82,7 +82,7 @@ class StatsFragment : LifecycleFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        (activity.application as TexterApplication).graph.inject(this)
+        (activity.application as TexterApplication).component.inject(this)
         distance = locationSource.distance
         speed = locationSource.speed
         zoom = PreferenceManager.getDefaultSharedPreferences(activity)

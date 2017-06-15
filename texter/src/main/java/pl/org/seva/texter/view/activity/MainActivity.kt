@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         action = intent.action
         action?: finish()
 
-        val graph = (application as TexterApplication).graph
+        val graph = (application as TexterApplication).component
         graph.inject(this)
 
         setContentView(R.layout.activity_main)

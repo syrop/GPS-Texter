@@ -56,7 +56,7 @@ class TexterService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        (application as TexterApplication).graph.inject(this)
+        (application as TexterApplication).component.inject(this)
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         createDistanceSubscription()

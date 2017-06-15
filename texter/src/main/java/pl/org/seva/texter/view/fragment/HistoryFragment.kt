@@ -71,7 +71,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun initDependencies(activity: Activity) {
-        val graph = (activity.application as TexterApplication).graph
+        val graph = (activity.application as TexterApplication).component
         graph.inject(this)
     }
 

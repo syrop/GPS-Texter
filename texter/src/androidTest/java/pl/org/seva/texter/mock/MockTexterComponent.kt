@@ -21,11 +21,10 @@ import javax.inject.Singleton
 
 import dagger.Component
 import pl.org.seva.texter.LocationTest
-import pl.org.seva.texter.mock.MockTexterModule
-import pl.org.seva.texter.presenter.dagger.Graph
+import pl.org.seva.texter.presenter.dagger.TexterComponent
 
 @Singleton
 @Component(modules = arrayOf(MockTexterModule::class))
-interface MockGraph : Graph {
+interface MockTexterComponent : TexterComponent {
     fun inject(locationTest: LocationTest)
 }

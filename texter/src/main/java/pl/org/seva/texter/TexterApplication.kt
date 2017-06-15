@@ -20,11 +20,11 @@ package pl.org.seva.texter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.multidex.MultiDexApplication
-import pl.org.seva.texter.presenter.dagger.DaggerGraph
+import pl.org.seva.texter.presenter.dagger.DaggerTexterComponent
 
 import javax.inject.Inject
 
-import pl.org.seva.texter.presenter.dagger.Graph
+import pl.org.seva.texter.presenter.dagger.TexterComponent
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.service.TexterService
@@ -36,14 +36,14 @@ open class TexterApplication : MultiDexApplication() {
     @Inject
     lateinit var activityRecognitionSource: ActivityRecognitionSource
 
-    lateinit var graph: Graph
+    lateinit var component: TexterComponent
 
     private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
-        graph = createGraph()
-        graph.inject(this)
+        component = createComponent()
+        component.inject(this)
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
     }
@@ -54,8 +54,8 @@ open class TexterApplication : MultiDexApplication() {
 
 
 
-    protected open fun createGraph(): Graph {
-        return DaggerGraph.create()
+    protected open fun createComponent(): TexterComponent {
+        return DaggerTexterComponent.create()
     }
 
     fun startService() {

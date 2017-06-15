@@ -31,7 +31,7 @@ import pl.org.seva.texter.presenter.service.TexterService
 
 @Singleton
 @Component(modules = arrayOf(pl.org.seva.texter.presenter.dagger.TexterModule::class))
-interface Graph {
+interface TexterComponent {
     fun inject(texterService: TexterService)
     fun inject(navigationFragment: NavigationFragment)
     fun inject(mainActivity: MainActivity)

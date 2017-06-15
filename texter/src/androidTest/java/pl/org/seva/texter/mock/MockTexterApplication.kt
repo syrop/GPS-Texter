@@ -18,7 +18,7 @@
 package pl.org.seva.texter.mock
 
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.dagger.Graph
+import pl.org.seva.texter.presenter.dagger.TexterComponent
 
 class MockTexterApplication : TexterApplication() {
 
@@ -27,8 +27,8 @@ class MockTexterApplication : TexterApplication() {
         startService()
     }
 
-    override fun createGraph(): Graph {
-        return DaggerMockGraph.create()
+    override fun createComponent(): TexterComponent {
+        return DaggerMockTexterComponent.create()
     }
 
     override fun hardwareCanSendSms(): Boolean {

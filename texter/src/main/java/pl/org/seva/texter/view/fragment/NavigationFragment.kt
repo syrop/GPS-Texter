@@ -59,7 +59,7 @@ class NavigationFragment : LifecycleFragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_navigation, container, false)
-        (activity.application as TexterApplication).graph.inject(this)
+        (activity.application as TexterApplication).component.inject(this)
 
         distanceTextView = view.findViewById<TextView>(R.id.distance)
         showDistance(locationSource.distance)

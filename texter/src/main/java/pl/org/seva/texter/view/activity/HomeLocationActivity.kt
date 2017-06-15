@@ -74,7 +74,7 @@ class HomeLocationActivity : LifecycleActivity() {
             animateCamera = false
         }
 
-        val graph = (application as TexterApplication).graph
+        val graph = (application as TexterApplication).component
         graph.inject(this)
 
         val value = persistedString

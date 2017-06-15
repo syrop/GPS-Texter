@@ -64,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val graph = (application as TexterApplication).graph
+        val graph = (application as TexterApplication).component
         graph.inject(this)
 
         setContentView(R.layout.activity_settings)
