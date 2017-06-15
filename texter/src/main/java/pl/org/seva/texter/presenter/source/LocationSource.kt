@@ -83,12 +83,8 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
 
-    private fun connectGoogleApiClient(context: Context) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleApiClient!!.connect()
-        }
+    private fun connectGoogleApiClient() {
+        googleApiClient!!.connect()
     }
 
     fun onHomeLocationChanged() {
@@ -122,7 +118,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
                 .build()
 
         onHomeLocationChanged()
-        connectGoogleApiClient(applicationContext)
+        connectGoogleApiClient()
     }
 
     fun startObserving(service: LifecycleService, listener : () -> Unit) {
