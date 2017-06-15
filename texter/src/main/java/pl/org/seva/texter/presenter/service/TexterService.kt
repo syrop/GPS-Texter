@@ -119,12 +119,6 @@ class TexterService : LifecycleService() {
             val mChannel = NotificationChannel(id, name, importance)
             // Configure the notification channel.
             mChannel.description = description
-            mChannel.enableLights(true)
-            // Sets the notification light color for notifications posted to this
-            // channel, if the device supports this feature.
-            mChannel.lightColor = Color.RED
-            mChannel.enableVibration(true)
-            mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
             mNotificationManager.createNotificationChannel(mChannel)
             Notification.Builder(this, id)
         }
