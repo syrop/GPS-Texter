@@ -31,7 +31,6 @@ import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 import java.lang.ref.WeakReference
 
@@ -109,15 +108,14 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
         val disposable = CompositeDisposable()
         disposable.addAll(
                 stationarySubject
-                    .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
                     .subscribe { stationaryListener() },
                 movingSubject.subscribe { movingListener() })
         lifecycle.observe(disposable)
 
     }
 
-    private fun onDeviceStationary(confidence: Int) {
-        stationarySubject.onNext(confidence)
+    private fun onDeviceStationary() {
+        stationarySubject.onNext(0)
     }
 
     private fun onDeviceMoving() {
@@ -129,8 +127,9 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result.mostProbableActivity.type == DetectedActivity.STILL) {
-                    onDeviceStationary(result.getActivityConfidence(DetectedActivity.STILL))
+                if (result.mostProbableActivity.type == DetectedActivity.STILL &&
+                        result.getActivityConfidence(DetectedActivity.STILL) >= STATIONARY_CONFIDENCE_THRESHOLD) {
+                    onDeviceStationary()
                 } else {
                     onDeviceMoving()
                 }
@@ -144,7 +143,7 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
         private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         private val STATIONARY_CONFIDENCE_THRESHOLD = 65
 
-        private val stationarySubject = PublishSubject.create<Int>()
+        private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
     }
 }
