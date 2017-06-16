@@ -59,7 +59,8 @@ class TexterService : LifecycleService() {
         (application as TexterApplication).component.inject(this)
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
-        startObservingDistance()
+        addDistanceListeners()
+        locationSource.request()
 
         return Service.START_STICKY
     }
@@ -131,7 +132,7 @@ class TexterService : LifecycleService() {
         return (application as TexterApplication).hardwareCanSendSms()
     }
 
-    private fun startObservingDistance() {
+    private fun addDistanceListeners() {
         if (!hardwareCanSendSms()) {
             return
         }
