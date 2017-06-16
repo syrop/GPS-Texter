@@ -107,11 +107,9 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
             movingListener: () -> Unit) {
         val disposable = CompositeDisposable()
         disposable.addAll(
-                stationarySubject
-                    .subscribe { stationaryListener() },
+                stationarySubject.subscribe { stationaryListener() },
                 movingSubject.subscribe { movingListener() })
         lifecycle.observe(disposable)
-
     }
 
     private fun onDeviceStationary() {
