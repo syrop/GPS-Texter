@@ -30,7 +30,10 @@ open class LiveSource protected constructor() {
 
     @Suppress("unused")
     private class RxLifecycleObserver(val disposable: Disposable) : LifecycleObserver {
-        @OnLifecycleEvent(Lifecycle.Event.ON_STOP, Lifecycle.Event.ON_DESTROY)
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        private fun onStop() = dispose()
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        private fun onDestroy() = dispose()
         private fun dispose() = disposable.dispose()
     }
 }
