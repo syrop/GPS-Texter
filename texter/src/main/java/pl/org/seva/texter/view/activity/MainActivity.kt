@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
             val content = IOUtils.toString(
                     assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html"),
                     "UTF-8")
-                    .replace("[APP_VERSION]", versionName)
+                    .replace(APP_VERSION_PLACEHOLDER, versionName)
             web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
             val content = IOUtils.toString(
                     assets.open(if (language == "pl") "help_pl.html" else "help_en.html"),
                     "UTF-8")
-                    .replace("[APP_VERSION]", versionName)
+                    .replace(APP_VERSION_PLACEHOLDER, versionName)
             web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -298,6 +298,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        private val APP_VERSION_PLACEHOLDER = "[app_version]"
 
         private val PREF_STARTUP_SHOWN = "pref_startup_shown"
 
