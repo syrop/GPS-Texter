@@ -42,7 +42,6 @@ import javax.inject.Singleton
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.R
 import pl.org.seva.texter.model.DistanceZone
@@ -286,9 +285,7 @@ constructor() : LiveSource() {
     open val isTextingEnabled: Boolean
         get() = preferences.getBoolean(SettingsActivity.SMS_ENABLED, false)
 
-    protected open fun needsPermission(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-    }
+    protected open fun needsPermission() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
     private inner class SmsSentReceiver : BroadcastReceiver() {
 

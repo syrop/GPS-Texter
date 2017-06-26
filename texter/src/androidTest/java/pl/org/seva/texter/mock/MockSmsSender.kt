@@ -45,9 +45,7 @@ class MockSmsSender internal constructor(locationSource: LocationSource, smsHist
     override val isCorrectPhoneNumberSet: Boolean
         get() = true
 
-    public override fun needsPermission(): Boolean {
-        return false
-    }
+    public override fun needsPermission() = false
 
     @Throws(SecurityException::class)
     override fun sendTextMessage(
