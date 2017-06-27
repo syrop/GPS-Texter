@@ -30,17 +30,15 @@ internal constructor() {
 
     private val zones = SparseArray<DistanceZone>()
 
-    // Needs to be called from a synchronized block.
     fun clearCache() {
         zones.clear()
     }
 
-    // Needs to be called from a synchronized block.
     fun calculateZone(distance: Double): DistanceZone {
         var check = 0
         var min = 0
         val max: Int
-        while (check < distance) {  // Calculate min and max.
+        while (check < distance) {
             min = check
             check += Constants.KM_INTERVAL
         }
