@@ -124,7 +124,7 @@ class StatsFragment : LifecycleFragment() {
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
         }
 
-        mapFragment!!.getMapAsync{ onGoogleMapReady(it) }
+        mapFragment!!.getMapAsync { onGoogleMapReady(it) }
     }
 
     @SuppressLint("MissingPermission")
@@ -191,6 +191,7 @@ class StatsFragment : LifecycleFragment() {
                 lifecycle,
                 stationaryListener = { onDeviceStationary() },
                 movingListener = { onDeviceMoving() })
+        println("wiktor observers: " + lifecycle.observerCount)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -334,5 +335,9 @@ class StatsFragment : LifecycleFragment() {
         fun newInstance(): StatsFragment {
             return StatsFragment()
         }
+    }
+
+    init {
+        println("wiktor new fragment")
     }
 }
