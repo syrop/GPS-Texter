@@ -78,11 +78,16 @@ class StatsFragment : LifecycleFragment() {
 
     private var zoom = 0.0f
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity.application as TexterApplication).component.inject(this)
+        createSubscriptions()
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        (activity.application as TexterApplication).component.inject(this)
         distance = locationSource.distance
         speed = locationSource.speed
         zoom = PreferenceManager.getDefaultSharedPreferences(activity)
@@ -191,7 +196,6 @@ class StatsFragment : LifecycleFragment() {
                 lifecycle,
                 stationaryListener = { onDeviceStationary() },
                 movingListener = { onDeviceMoving() })
-        println("wiktor observers: " + lifecycle.observerCount)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -335,9 +339,5 @@ class StatsFragment : LifecycleFragment() {
         fun newInstance(): StatsFragment {
             return StatsFragment()
         }
-    }
-
-    init {
-        println("wiktor new fragment")
     }
 }

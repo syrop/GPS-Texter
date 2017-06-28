@@ -157,7 +157,7 @@ constructor() : LiveSource() {
     }
 
     fun addSmsSendingListenerUi(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(smsSendingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() })
+        lifecycle.observe(smsSendingSubject) { it.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() } }
     }
 
     fun smsSentListener(): Observable<Any> {

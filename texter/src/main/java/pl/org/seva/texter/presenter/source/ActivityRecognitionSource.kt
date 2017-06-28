@@ -30,7 +30,6 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
-import io.reactivex.disposables.CompositeDisposable
 
 import java.lang.ref.WeakReference
 
@@ -105,11 +104,8 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
             lifecycle: Lifecycle,
             stationaryListener: () -> Unit,
             movingListener: () -> Unit) {
-        val disposable = CompositeDisposable()
-        disposable.addAll(
-                stationarySubject.subscribe { stationaryListener() },
-                movingSubject.subscribe { movingListener() })
-        lifecycle.observe(disposable)
+        lifecycle.observe(stationarySubject) { it.subscribe { stationaryListener() }}
+        lifecycle.observe(movingSubject) { it.subscribe { movingListener() }}
     }
 
     private fun onDeviceStationary() {

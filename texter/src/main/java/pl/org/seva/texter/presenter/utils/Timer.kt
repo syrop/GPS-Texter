@@ -54,10 +54,10 @@ internal constructor() : LiveSource() {
     }
 
     fun addTimerListenerUi(lifecycle : Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(timerSubject
+        lifecycle.observe(timerSubject) { it
                 .doOnSubscribe { start() }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listener() } )
+                .subscribe { listener() } }
     }
 }
