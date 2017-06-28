@@ -21,19 +21,23 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.Subject
 
 open class LiveSource protected constructor() {
 
-    fun Lifecycle.observe(disposable: Disposable) {
-        addObserver(RxLifecycleObserver(disposable))
+    fun Lifecycle.observe(subject: Subject<Any>, subscription: (Subject<Any>) -> Disposable) {
+        addObserver(RxLifecycleObserver(subject, subscription))
     }
 
     @Suppress("unused")
-    private class RxLifecycleObserver(val disposable: Disposable) : LifecycleObserver {
+    private class RxLifecycleObserver(
+            val subject: Subject<Any>,
+            val subscription: (Subject<Any>) -> Disposable) : LifecycleObserver {
+        private lateinit var disposable: Disposable
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        private fun onStart() { disposable = subscription(subject) }
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        private fun onStop() = dispose()
-        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        private fun onDestroy() = dispose()
-        private fun dispose() = disposable.dispose()
+        private fun onStop() = disposable.dispose()
     }
 }

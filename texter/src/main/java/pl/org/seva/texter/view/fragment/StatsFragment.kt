@@ -78,6 +78,11 @@ class StatsFragment : LifecycleFragment() {
 
     private var zoom = 0.0f
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        createSubscriptions()
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -191,7 +196,6 @@ class StatsFragment : LifecycleFragment() {
                 lifecycle,
                 stationaryListener = { onDeviceStationary() },
                 movingListener = { onDeviceMoving() })
-        println("wiktor observers: " + lifecycle.observerCount)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -119,25 +119,27 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     }
 
     fun addDistanceListener(service: LifecycleService, listener : () -> Unit) {
-        service.lifecycle.observe(distanceSubject
+        service.lifecycle.observe(distanceSubject) { it
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe { request() }
                 .doOnDispose { removeRequest() }
-                .subscribe { listener() })
+                .subscribe { listener() } }
     }
 
     fun addDistanceChangedListenerUi(lifecycle: Lifecycle, listener : () -> Unit) {
-        lifecycle.observe(distanceSubject
+        lifecycle.observe(distanceSubject) { it
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listener() })
+                .subscribe { listener() } }
     }
 
     fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(homeChangedSubject.subscribe { listener() })
+        lifecycle.observe(homeChangedSubject) { it
+                .subscribe { listener() } }
     }
 
     fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(locationChangedSubject.subscribe { listener() })
+        lifecycle.observe(locationChangedSubject) { it
+                .subscribe { listener() } }
     }
 
     val homeLatLng: LatLng
