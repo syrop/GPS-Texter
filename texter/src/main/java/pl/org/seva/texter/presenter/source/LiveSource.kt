@@ -25,18 +25,18 @@ import io.reactivex.subjects.Subject
 
 open class LiveSource protected constructor() {
 
-    fun Lifecycle.observe(subject: Subject<Any>, subscription: (Subject<Any>) -> Disposable) {
-        addObserver(RxLifecycleObserver(subject, subscription))
+    fun Lifecycle.observe(subject: Subject<Any>, createSubscription: (Subject<Any>) -> Disposable) {
+        addObserver(RxLifecycleObserver(subject, createSubscription))
     }
 
     @Suppress("unused")
     private class RxLifecycleObserver(
             val subject: Subject<Any>,
-            val subscription: (Subject<Any>) -> Disposable) : LifecycleObserver {
+            val createSubscription: (Subject<Any>) -> Disposable) : LifecycleObserver {
         private lateinit var disposable: Disposable
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        private fun onStart() { disposable = subscription(subject) }
+        private fun onStart() { disposable = createSubscription(subject) }
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         private fun onStop() = disposable.dispose()
     }

@@ -109,7 +109,6 @@ class StatsFragment : LifecycleFragment() {
                 distance != smsSender.lastSentDistance
 
         showStats()
-        createSubscriptions()
         MapsInitializer.initialize(activity.applicationContext)
         mapContainerId = view.findViewById<View>(R.id.map_container_stats).id
 

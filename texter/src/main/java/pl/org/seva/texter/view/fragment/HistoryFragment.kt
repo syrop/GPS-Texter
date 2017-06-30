@@ -17,11 +17,8 @@
 
 package pl.org.seva.texter.view.fragment
 
-import android.app.Activity
-import android.content.Context
-import android.os.Build
+import android.arch.lifecycle.LifecycleFragment
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -30,14 +27,13 @@ import android.support.v7.widget.RecyclerView
 
 import javax.inject.Inject
 
-import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.utils.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.utils.SmsSender
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : LifecycleFragment() {
 
     @Inject
     lateinit var smsHistory: SmsHistory
@@ -47,32 +43,11 @@ class HistoryFragment : Fragment() {
     private var adapter: HistoryAdapter? = null
     private lateinit var historyRecyclerView: RecyclerView
     private var scrollToBottom: Boolean = false
-    private lateinit var fragmentContext: Context
 
-    private var smsSentSubscription = Disposables.empty()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        fragmentContext = context
-        if (context is Activity) {
-            initDependencies(context)
-        }
-    }
-
-    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
-    override // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
-    fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            fragmentContext = activity
-            initDependencies(activity)
-        }
-    }
-
-    private fun initDependencies(activity: Activity) {
-        val graph = (activity.application as TexterApplication).component
-        graph.inject(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity.application as TexterApplication).component.inject(this)
+        createSubscription()
     }
 
     override fun onCreateView(
@@ -83,7 +58,7 @@ class HistoryFragment : Fragment() {
 
         historyRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         historyRecyclerView.setHasFixedSize(true)
-        historyRecyclerView.layoutManager = LinearLayoutManager(fragmentContext)
+        historyRecyclerView.layoutManager = LinearLayoutManager(context)
         adapter = HistoryAdapter(activity, smsHistory.list)
         historyRecyclerView.adapter = adapter
         historyRecyclerView.addItemDecoration(HistoryAdapter.DividerItemDecoration(activity))
@@ -94,15 +69,13 @@ class HistoryFragment : Fragment() {
         return view
     }
 
-    override fun onPause() {
-        super.onPause()
-        smsSentSubscription.dispose()
+    private fun createSubscription() {
+         smsSender.addSmsSentListener(lifecycle) { update() }
     }
 
     override fun onResume() {
         super.onResume()
         update()
-        smsSentSubscription = smsSender.smsSentListener().subscribe { update() }
     }
 
     private fun update() {

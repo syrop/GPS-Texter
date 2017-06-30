@@ -48,15 +48,9 @@ open class TexterApplication : MultiDexApplication() {
         activityRecognitionSource.initWithContext(this)
     }
 
-    open fun hardwareCanSendSms(): Boolean {
-        return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-    }
+    open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
 
-
-
-    protected open fun createComponent(): TexterComponent {
-        return DaggerTexterComponent.create()
-    }
+    protected open fun createComponent(): TexterComponent = DaggerTexterComponent.create()
 
     fun startService() {
         if (isServiceRunning) {

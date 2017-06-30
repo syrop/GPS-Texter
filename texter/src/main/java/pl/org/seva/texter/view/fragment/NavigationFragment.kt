@@ -54,12 +54,17 @@ class NavigationFragment : LifecycleFragment() {
     private var mapContainerId: Int = 0
     private var mapFragment: SupportMapFragment? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity.application as TexterApplication).component.inject(this)
+        createLocationSubscriptions()
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_navigation, container, false)
-        (activity.application as TexterApplication).component.inject(this)
 
         distanceTextView = view.findViewById<TextView>(R.id.distance)
         showDistance(locationSource.distance)
@@ -75,7 +80,6 @@ class NavigationFragment : LifecycleFragment() {
 
     override fun onResume() {
         super.onResume()
-        addLocationSubscriptions()
         prepareMaps()
     }
 
@@ -90,7 +94,7 @@ class NavigationFragment : LifecycleFragment() {
         mapFragment!!.getMapAsync{ onMapReady(it) }
     }
 
-    private fun addLocationSubscriptions() {
+    private fun createLocationSubscriptions() {
             locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
             locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
     }

@@ -160,8 +160,8 @@ constructor() : LiveSource() {
         lifecycle.observe(smsSendingSubject) { it.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() } }
     }
 
-    fun smsSentListener(): Observable<Any> {
-        return smsSentSubject.hide()
+    fun addSmsSentListener(lifecycle: Lifecycle, listener: () -> Unit) {
+        lifecycle.observe(smsSentSubject) { it.subscribe { listener() } }
     }
 
     private val phoneNumber: String
