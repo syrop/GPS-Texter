@@ -6,17 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:id="@+id/distance_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:text="@string/distance"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="16dp"
-        tools:layout_conversion_absoluteWidth="187dp"
-        tools:layout_conversion_absoluteHeight="24dp"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,10 +24,6 @@
         tools:ignore="HardcodedText"
         android:textSize="45sp"
         android:text="0 km"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="40dp"
-        tools:layout_conversion_absoluteWidth="99dp"
-        tools:layout_conversion_absoluteHeight="53dp"
         app:layout_constraintTop_toBottomOf="@+id/distance_label"
         app:layout_constraintStart_toStartOf="@+id/distance_label"
         android:layout_marginStart="0dp"/>
@@ -43,10 +34,6 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:text="@string/speed"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="101dp"
-        tools:layout_conversion_absoluteWidth="61dp"
-        tools:layout_conversion_absoluteHeight="24dp"
         app:layout_constraintTop_toBottomOf="@+id/distance_value"
         app:layout_constraintStart_toStartOf="@+id/distance_value"
         android:layout_marginStart="0dp"/>
@@ -58,10 +45,6 @@
         android:text=""
         android:textSize="24sp"
         tools:ignore="HardcodedText"
-        tools:layout_conversion_absoluteHeight="29dp"
-        tools:layout_conversion_absoluteWidth="1dp"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="125dp"
         tools:text="0 km/h"
         app:layout_constraintTop_toBottomOf="@+id/speed_label"
         app:layout_constraintStart_toStartOf="@+id/speed_label"/>
@@ -72,10 +55,6 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:text="@string/time_since_update"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="162dp"
-        tools:layout_conversion_absoluteWidth="169dp"
-        tools:layout_conversion_absoluteHeight="24dp"
         app:layout_constraintTop_toBottomOf="@+id/speed_value"
         app:layout_constraintStart_toStartOf="@+id/speed_value"
         android:layout_marginStart="0dp"/>
@@ -87,10 +66,6 @@
         android:text=""
         android:textSize="24sp"
         tools:ignore="HardcodedText"
-        tools:layout_conversion_absoluteHeight="29dp"
-        tools:layout_conversion_absoluteWidth="1dp"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="186dp"
         tools:text="0 s"
         app:layout_constraintTop_toBottomOf="@+id/update_interval_label"
         app:layout_constraintStart_toStartOf="@+id/update_interval_label"
@@ -104,10 +79,6 @@
         android:visibility="invisible"
         tools:visibility="visible"
         android:text="@string/stationary"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="214dp"
-        tools:layout_conversion_absoluteWidth="228dp"
-        tools:layout_conversion_absoluteHeight="24dp"
         app:layout_constraintTop_toBottomOf="@+id/update_interval_value"
         app:layout_constraintStart_toStartOf="@+id/update_interval_value"
         android:layout_marginStart="0dp"/>
@@ -119,14 +90,8 @@
         android:orientation="vertical"
         app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintTop_toBottomOf="@+id/stationary"
-        tools:layout_conversion_absoluteHeight="281dp"
-        tools:layout_conversion_absoluteWidth="352dp"
-        tools:layout_conversion_absoluteX="16dp"
-        tools:layout_conversion_absoluteY="238dp"
-        tools:layout_editor_absoluteX="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"/>
-
 
     <Button
         android:id="@+id/send_now_button"
@@ -134,10 +99,6 @@
         android:layout_height="wrap_content"
         android:text="@string/send_now"
         style="?android:attr/buttonBarButtonStyle"
-        tools:layout_conversion_absoluteX="0dp"
-        tools:layout_conversion_absoluteY="519dp"
-        tools:layout_conversion_absoluteWidth="384dp"
-        tools:layout_conversion_absoluteHeight="48dp"
         android:layout_marginBottom="8dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
