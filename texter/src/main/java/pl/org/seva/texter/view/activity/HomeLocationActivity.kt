@@ -21,8 +21,6 @@ import android.Manifest
 import android.arch.lifecycle.LifecycleActivity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -65,14 +63,6 @@ class HomeLocationActivity : LifecycleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.let {
-            val myState = it.get(SAVED_STATE) as HomeLocationActivity.SavedState
-            lat = myState.lat
-            lon = myState.lon
-            toastShown = myState.toastShown
-            zoom = myState.zoom
-            animateCamera = false
-        }
 
         val graph = (application as TexterApplication).component
         graph.inject(this)
@@ -157,13 +147,6 @@ class HomeLocationActivity : LifecycleActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val myState = HomeLocationActivity.SavedState()
-        myState.lat = lat
-        myState.lon = lon
-        myState.toastShown = toastShown
-        myState.zoom = zoom
-        outState.putParcelable(SAVED_STATE, myState)
-
         mapFragment?.let {
             fragmentManager.beginTransaction().remove(it).commit()
             mapFragment = null
@@ -227,28 +210,8 @@ class HomeLocationActivity : LifecycleActivity() {
         }
     }
 
-    private class SavedState internal constructor() : Parcelable {
-        var lat: Double = 0.0
-        var lon: Double = 0.0
-        var toastShown: Boolean = false
-        var zoom: Float = 0.0f
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            dest.writeDouble(lat)
-            dest.writeDouble(lon)
-            dest.writeInt(if (toastShown) 1 else 0)
-            dest.writeFloat(zoom)
-        }
-    }
-
     companion object {
-        private val MAP_TAG_HOME_LOCATION = "MAP_HOME_LOCATIOT"
-
-        private val SAVED_STATE = "saved_state"
+        private val MAP_TAG_HOME_LOCATION = "map_home_location"
         private val ZOOM_PROPERTY_NAME = "map_preference_gui_zoom"
         private val ZOOM_DEFAULT_VALUE = 7.5f
     }

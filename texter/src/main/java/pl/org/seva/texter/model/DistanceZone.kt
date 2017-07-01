@@ -17,10 +17,7 @@
 
 package pl.org.seva.texter.model
 
-import android.os.Parcel
-import android.os.Parcelable
-
-class DistanceZone(val min: Int, val max: Int) : Parcelable {
+class DistanceZone(val min: Int, val max: Int) {
     var counter: Int = 0
         private set
     private val time: Long = System.currentTimeMillis()
@@ -34,16 +31,5 @@ class DistanceZone(val min: Int, val max: Int) : Parcelable {
 
     override fun toString(): String {
         return "[$min km - $max km]"
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(out: Parcel, flags: Int) {
-        out.writeInt(min)
-        out.writeInt(max)
-        out.writeInt(counter)
-        out.writeLong(time)
     }
 }
