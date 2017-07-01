@@ -50,10 +50,6 @@ class TexterService : LifecycleService() {
     private val notificationBuilder by lazy { createNotificationBuilder() }
     private var activityRecognitionListenersAdded = false
 
-    override fun onBind(arg0: Intent): IBinder? {
-        return null
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         (application as TexterApplication).component.inject(this)
