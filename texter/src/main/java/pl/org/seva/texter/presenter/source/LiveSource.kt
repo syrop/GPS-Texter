@@ -29,7 +29,6 @@ open class LiveSource protected constructor() {
         addObserver(RxLifecycleObserver(subject, createSubscription))
     }
 
-    @Suppress("unused")
     private class RxLifecycleObserver(
             val subject: Subject<Any>,
             val createSubscription: (Subject<Any>) -> Disposable) : LifecycleObserver {
