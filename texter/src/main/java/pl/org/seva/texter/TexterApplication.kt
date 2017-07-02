@@ -20,7 +20,6 @@ package pl.org.seva.texter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.multidex.MultiDexApplication
-import pl.org.seva.texter.presenter.dagger.DaggerTexterComponent
 
 import javax.inject.Inject
 
