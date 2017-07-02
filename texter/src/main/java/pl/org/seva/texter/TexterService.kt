@@ -53,6 +53,7 @@ class TexterService : LifecycleService() {
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addDistanceListeners()
+        addActivityRecognitionListeners()
         locationSource.request()
 
         return Service.START_STICKY
@@ -129,9 +130,7 @@ class TexterService : LifecycleService() {
         if (!hardwareCanSendSms()) {
             return
         }
-        locationSource.addDistanceListener(this) {
-            addActivityRecognitionListeners()
-            smsSender.onDistanceChanged() }
+        locationSource.addDistanceListener(this) { smsSender.onDistanceChanged() }
     }
 
     companion object {
