@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.dagger
+package pl.org.seva.texter
 
 import dagger.Module
 

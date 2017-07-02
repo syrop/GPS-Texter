@@ -15,22 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.service
+package pl.org.seva.texter
 
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
 
 import javax.inject.Inject
 
-import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.view.activity.MainActivity
-import pl.org.seva.texter.TexterApplication
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService

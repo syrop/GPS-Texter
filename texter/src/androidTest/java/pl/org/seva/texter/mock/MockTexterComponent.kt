@@ -21,7 +21,7 @@ import javax.inject.Singleton
 
 import dagger.Component
 import pl.org.seva.texter.LocationTest
-import pl.org.seva.texter.presenter.dagger.TexterComponent
+import pl.org.seva.texter.TexterComponent
 
 @Singleton
 @Component(modules = arrayOf(MockTexterModule::class))

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.dagger
+package pl.org.seva.texter
 
 import javax.inject.Singleton
 
@@ -23,14 +23,12 @@ import dagger.Component
 import pl.org.seva.texter.view.activity.HomeLocationActivity
 import pl.org.seva.texter.view.activity.MainActivity
 import pl.org.seva.texter.view.activity.SettingsActivity
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.HistoryFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
 import pl.org.seva.texter.view.fragment.StatsFragment
-import pl.org.seva.texter.presenter.service.TexterService
 
 @Singleton
-@Component(modules = arrayOf(pl.org.seva.texter.presenter.dagger.TexterModule::class))
+@Component(modules = arrayOf(TexterModule::class))
 interface TexterComponent {
     fun inject(texterService: TexterService)
     fun inject(navigationFragment: NavigationFragment)

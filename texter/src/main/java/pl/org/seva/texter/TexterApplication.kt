@@ -24,10 +24,8 @@ import pl.org.seva.texter.presenter.dagger.DaggerTexterComponent
 
 import javax.inject.Inject
 
-import pl.org.seva.texter.presenter.dagger.TexterComponent
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.service.TexterService
 
 open class TexterApplication : MultiDexApplication() {
 

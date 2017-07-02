@@ -18,7 +18,7 @@
 package pl.org.seva.texter.mock
 
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.dagger.TexterComponent
+import pl.org.seva.texter.TexterComponent
 
 class MockTexterApplication : TexterApplication() {
 
