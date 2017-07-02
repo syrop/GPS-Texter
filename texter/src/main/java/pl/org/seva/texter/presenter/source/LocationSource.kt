@@ -119,7 +119,7 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     }
 
     fun addDistanceListener(service: LifecycleService, listener : () -> Unit) {
-        service.lifecycle.observe(distanceSubject) { it
+        service.lifecycle.observe { distanceSubject
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe { request() }
                 .doOnDispose { removeRequest() }
@@ -127,18 +127,18 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     }
 
     fun addDistanceChangedListenerUi(lifecycle: Lifecycle, listener : () -> Unit) {
-        lifecycle.observe(distanceSubject) { it
+        lifecycle.observe { distanceSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { listener() } }
     }
 
     fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(homeChangedSubject) { it
+        lifecycle.observe { homeChangedSubject
                 .subscribe { listener() } }
     }
 
     fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(locationChangedSubject) { it
+        lifecycle.observe {locationChangedSubject
                 .subscribe { listener() } }
     }
 

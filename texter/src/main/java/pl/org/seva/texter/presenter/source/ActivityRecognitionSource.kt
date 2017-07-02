@@ -104,8 +104,8 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
             lifecycle: Lifecycle,
             stationaryListener: () -> Unit,
             movingListener: () -> Unit) {
-        lifecycle.observe(stationarySubject) { it.subscribe { stationaryListener() }}
-        lifecycle.observe(movingSubject) { it.subscribe { movingListener() }}
+        lifecycle.observe { stationarySubject.subscribe { stationaryListener() }}
+        lifecycle.observe { movingSubject.subscribe { movingListener() }}
     }
 
     private fun onDeviceStationary() {

@@ -40,7 +40,6 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.R
@@ -157,11 +156,13 @@ constructor() : LiveSource() {
     }
 
     fun addSmsSendingListenerUi(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(smsSendingSubject) { it.observeOn(AndroidSchedulers.mainThread()).subscribe { listener() } }
+        lifecycle.observe { smsSendingSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { listener() } }
     }
 
     fun addSmsSentListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe(smsSentSubject) { it.subscribe { listener() } }
+        lifecycle.observe { smsSentSubject.subscribe { listener() } }
     }
 
     private val phoneNumber: String
