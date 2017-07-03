@@ -26,6 +26,7 @@ import pl.org.seva.texter.presenter.source.LocationSource
 import pl.org.seva.texter.presenter.utils.SmsSender
 import pl.org.seva.texter.presenter.utils.SmsHistory
 import pl.org.seva.texter.mock.MockLocationSource
+import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
 import pl.org.seva.texter.presenter.utils.Timer
 import pl.org.seva.texter.presenter.utils.ZoneCalculator
 
@@ -42,5 +43,11 @@ internal class MockTexterModule {
     @Singleton
     fun provideSmsManager(locationSource: LocationSource, smsHistory: SmsHistory, zoneCalculator: ZoneCalculator): SmsSender {
         return MockSmsSender(locationSource, smsHistory, zoneCalculator)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityRecognitionSource() : ActivityRecognitionSource {
+        return MockActivityRecognitionSource()
     }
 }

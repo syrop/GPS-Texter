@@ -40,7 +40,7 @@ import io.reactivex.subjects.PublishSubject
 
 @Singleton
 open class ActivityRecognitionSource @Inject
-internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
+constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false
@@ -108,13 +108,9 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
         lifecycle.observe { movingSubject.subscribe { movingListener() }}
     }
 
-    private fun onDeviceStationary() {
-        stationarySubject.onNext(0)
-    }
+    open protected fun onDeviceStationary() = stationarySubject.onNext(0)
 
-    private fun onDeviceMoving() {
-        movingSubject.onNext(0)
-    }
+    open protected fun onDeviceMoving() = movingSubject.onNext(0)
 
     private inner class ActivityRecognitionReceiver : BroadcastReceiver() {
 
