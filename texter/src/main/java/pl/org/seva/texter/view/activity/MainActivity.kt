@@ -266,7 +266,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MILLIS) {
+        if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
             shuttingDown = true
             super.onBackPressed()
         } else {
@@ -306,6 +306,6 @@ class MainActivity : AppCompatActivity() {
         private val GOOGLE_REQUEST_CODE = 0
 
         /** Number of milliseconds that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MILLIS: Long = 5000
+        private val DOUBLE_CLICK_MS: Long = 5000
     }
 }
