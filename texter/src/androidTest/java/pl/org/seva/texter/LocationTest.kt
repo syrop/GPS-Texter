@@ -34,7 +34,6 @@ import pl.org.seva.texter.presenter.utils.SmsSender
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
-import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import pl.org.seva.texter.action.DelayAction
 
