@@ -139,7 +139,7 @@ constructor() : LiveSource() {
 
     private fun canSendZone(zone: DistanceZone): Boolean {
         return zone.min != this.zone!!.min &&
-                zone.counter >= Constants.SMS_TRIGGER &&
+                zone.counter >= Constants.SMS_COUNT_TRIGGER &&
                 zone.delay >= Constants.TIME_IN_ZONE
     }
 

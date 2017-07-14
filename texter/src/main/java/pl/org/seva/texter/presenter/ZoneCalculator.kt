@@ -41,7 +41,7 @@ internal constructor() {
         val max: Int
         while (check < distance) {
             min = check
-            check += Constants.KM_INTERVAL
+            check += Constants.KM_THRESHOLD
         }
         max = check
         var zone: DistanceZone? = zones.get(min)

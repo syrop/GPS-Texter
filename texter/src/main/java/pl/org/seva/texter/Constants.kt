@@ -25,14 +25,14 @@ object Constants {
     /** Number when it has not been set. */
     val DEFAULT_PHONE_NUMBER = ""
 
-    /** Send an sms each time this value is passed.  */
-    val KM_INTERVAL = 2
+    /** Send an sms each time this value is crossed.  */
+    val KM_THRESHOLD = 2
 
     /** If the number of measurements in the present calculateZone has reached the trigger, send SMS.  */
-    val SMS_TRIGGER = 2
+    val SMS_COUNT_TRIGGER = 2
 
-    /** Time spend in calculateZone before an SMS is sent.  */
+    /** Time spent in zone before an SMS is sent.  */
     val TIME_IN_ZONE = 11 * 1000
 
-    val LOCATION_UPDATE_FREQUENCY_MS: Long = 1000
+    val LOCATION_UPDATE_FREQUENCY_MS = 1000L
 }
