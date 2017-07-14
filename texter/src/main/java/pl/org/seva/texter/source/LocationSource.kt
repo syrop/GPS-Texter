@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.source
+package pl.org.seva.texter.source
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
@@ -38,11 +38,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.presenter.utils.Timer
+import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.view.preference.HomeLocationPreference
-import pl.org.seva.texter.presenter.utils.DistanceCalculator
-import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.presenter.DistanceCalculator
+import pl.org.seva.texter.Constants
 
 @Singleton
 open class LocationSource @Inject

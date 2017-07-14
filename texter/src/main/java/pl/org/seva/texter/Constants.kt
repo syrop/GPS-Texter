@@ -15,20 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils
+package pl.org.seva.texter
 
-import android.annotation.SuppressLint
+object Constants {
 
-object StringUtils {
+    /** Geo URI for Warsaw.  */
+    val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
-    fun getSpeedString(speed: Double, speedUnit: String): String {
-        @SuppressLint("DefaultLocale")
-        var result = String.format("%.1f", speed) + " " + speedUnit
-        if (result.contains(".0")) {
-            result = result.replace(".0", "")
-        } else if (result.contains(",0")) {
-            result = result.replace(",0", "")
-        }
-        return result
-    }
+    /** Number when it has not been set. */
+    val DEFAULT_PHONE_NUMBER = ""
+
+    /** Send an sms each time this value is passed.  */
+    val KM_INTERVAL = 2
+
+    /** If the number of measurements in the present calculateZone has reached the trigger, send SMS.  */
+    val SMS_TRIGGER = 2
+
+    /** Time spend in calculateZone before an SMS is sent.  */
+    val TIME_IN_ZONE = 11 * 1000
+
+    val LOCATION_UPDATE_FREQUENCY_MS: Long = 1000
 }

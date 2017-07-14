@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils
+package pl.org.seva.texter.presenter
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -42,12 +42,13 @@ import javax.inject.Singleton
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.Constants
 import pl.org.seva.texter.R
 import pl.org.seva.texter.model.DistanceZone
-import pl.org.seva.texter.presenter.source.LocationSource
+import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.model.SmsLocation
-import pl.org.seva.texter.presenter.source.LiveSource
+import pl.org.seva.texter.source.LiveSource
 
 @Singleton
 open class SmsSender @Inject

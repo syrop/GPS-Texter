@@ -15,11 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mock
+package pl.org.seva.texter.presenter
 
-import pl.org.seva.texter.source.ActivityRecognitionSource
+import java.util.ArrayList
 
-class MockActivityRecognitionSource : ActivityRecognitionSource() {
-    override fun onDeviceMoving() {}
-    override fun onDeviceStationary() {}
+import javax.inject.Inject
+import javax.inject.Singleton
+
+import pl.org.seva.texter.model.SmsLocation
+
+@Singleton
+class SmsHistory @Inject
+internal constructor() {
+
+    private var mockFirstHistoryItem = true
+
+    val list: MutableList<SmsLocation>
+
+    init {
+        list = ArrayList<SmsLocation>()
+        list.add(SmsLocation())
+    }
+
+    fun add(model: SmsLocation) {
+        if (mockFirstHistoryItem) {
+            list.clear()
+            mockFirstHistoryItem = false
+        }
+        list.add(model)
+    }
 }

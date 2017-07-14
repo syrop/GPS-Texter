@@ -38,15 +38,15 @@ import javax.inject.Inject
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.PermissionsUtils
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.PermissionsHelper
 
 class NavigationFragment : LifecycleFragment() {
 
     @Inject
     lateinit var locationSource: LocationSource
     @Inject
-    lateinit var permissionsUtils: PermissionsUtils
+    lateinit var permissionsHelper: PermissionsHelper
 
     private var distanceTextView: TextView? = null
     private var map: GoogleMap? = null
@@ -122,8 +122,8 @@ class NavigationFragment : LifecycleFragment() {
             onLocationPermissionGranted()
             map?.isMyLocationEnabled = true
         } else {
-            permissionsUtils.permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+            permissionsHelper.permissionGrantedListener()
+                    .filter { it.first == PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }

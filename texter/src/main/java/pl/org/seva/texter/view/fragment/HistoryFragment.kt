@@ -28,10 +28,10 @@ import android.support.v7.widget.RecyclerView
 import javax.inject.Inject
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.utils.SmsHistory
+import pl.org.seva.texter.presenter.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.utils.SmsSender
+import pl.org.seva.texter.presenter.SmsSender
 
 class HistoryFragment : LifecycleFragment() {
 

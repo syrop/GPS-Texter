@@ -21,7 +21,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.support.v7.preference.Preference
 import android.util.AttributeSet
-import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.Constants
 
 class NumberPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 

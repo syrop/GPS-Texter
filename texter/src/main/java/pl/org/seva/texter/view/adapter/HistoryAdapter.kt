@@ -29,7 +29,7 @@ import android.widget.TextView
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.model.SmsLocation
-import pl.org.seva.texter.presenter.utils.StringUtils
+import pl.org.seva.texter.presenter.StringUtils
 
 class HistoryAdapter(private val context: Context, private val values: List<SmsLocation>) :
         RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {

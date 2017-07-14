@@ -30,7 +30,7 @@ import javax.inject.Inject
 import pl.org.seva.texter.mock.MockSmsSender
 import pl.org.seva.texter.view.activity.MainActivity
 import pl.org.seva.texter.mock.MockTexterComponent
-import pl.org.seva.texter.presenter.utils.SmsSender
+import pl.org.seva.texter.presenter.SmsSender
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot

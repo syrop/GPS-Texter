@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils
+package pl.org.seva.texter.presenter
 
 import android.util.SparseArray
+import pl.org.seva.texter.Constants
 
 import javax.inject.Inject
 import javax.inject.Singleton

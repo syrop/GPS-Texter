@@ -43,7 +43,7 @@ import android.widget.Toast
 import java.util.ArrayList
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.Constants
 import pl.org.seva.texter.view.activity.SettingsActivity
 
 class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Cursor> {

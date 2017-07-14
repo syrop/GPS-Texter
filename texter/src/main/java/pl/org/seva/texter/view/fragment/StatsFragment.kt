@@ -41,11 +41,11 @@ import javax.inject.Inject
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.PermissionsUtils
-import pl.org.seva.texter.presenter.utils.SmsSender
-import pl.org.seva.texter.presenter.utils.Timer
+import pl.org.seva.texter.source.ActivityRecognitionSource
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.PermissionsHelper
+import pl.org.seva.texter.presenter.SmsSender
+import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.model.SmsLocation
 
 class StatsFragment : LifecycleFragment() {
@@ -59,7 +59,7 @@ class StatsFragment : LifecycleFragment() {
     @Inject
     lateinit var smsSender: SmsSender
     @Inject
-    lateinit var permissionsUtils: PermissionsUtils
+    lateinit var permissionsHelper: PermissionsHelper
 
     private lateinit var distanceTextView: TextView
     private lateinit var intervalTextView: TextView
@@ -173,8 +173,8 @@ class StatsFragment : LifecycleFragment() {
             map?.isMyLocationEnabled = true
             onLocationPermissionGranted()
         } else {
-            permissionsUtils.permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+            permissionsHelper.permissionGrantedListener()
+                    .filter { it.first == PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         }

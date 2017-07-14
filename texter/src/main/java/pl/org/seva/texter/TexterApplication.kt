@@ -23,8 +23,8 @@ import android.support.multidex.MultiDexApplication
 
 import javax.inject.Inject
 
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
-import pl.org.seva.texter.presenter.source.LocationSource
+import pl.org.seva.texter.source.ActivityRecognitionSource
+import pl.org.seva.texter.source.LocationSource
 
 open class TexterApplication : MultiDexApplication() {
 

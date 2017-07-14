@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils
+package pl.org.seva.texter.presenter
 
 import android.location.Location
 

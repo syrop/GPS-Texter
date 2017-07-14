@@ -25,14 +25,14 @@ import android.os.Build
 
 import javax.inject.Inject
 
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.SmsSender
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.activity.MainActivity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
+import pl.org.seva.texter.source.ActivityRecognitionSource
 
 
 class TexterService : LifecycleService() {

@@ -15,33 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.presenter.utils
+package pl.org.seva.texter.presenter
 
-import java.util.ArrayList
+import android.annotation.SuppressLint
 
-import javax.inject.Inject
-import javax.inject.Singleton
+object StringUtils {
 
-import pl.org.seva.texter.model.SmsLocation
-
-@Singleton
-class SmsHistory @Inject
-internal constructor() {
-
-    private var mockFirstHistoryItem = true
-
-    val list: MutableList<SmsLocation>
-
-    init {
-        list = ArrayList<SmsLocation>()
-        list.add(SmsLocation())
-    }
-
-    fun add(model: SmsLocation) {
-        if (mockFirstHistoryItem) {
-            list.clear()
-            mockFirstHistoryItem = false
+    fun getSpeedString(speed: Double, speedUnit: String): String {
+        @SuppressLint("DefaultLocale")
+        var result = String.format("%.1f", speed) + " " + speedUnit
+        if (result.contains(".0")) {
+            result = result.replace(".0", "")
+        } else if (result.contains(",0")) {
+            result = result.replace(",0", "")
         }
-        list.add(model)
+        return result
     }
 }

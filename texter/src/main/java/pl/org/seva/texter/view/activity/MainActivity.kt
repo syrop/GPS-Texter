@@ -46,16 +46,16 @@ import java.util.Locale
 import javax.inject.Inject
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.utils.PermissionsUtils
-import pl.org.seva.texter.presenter.utils.SmsSender
+import pl.org.seva.texter.presenter.PermissionsHelper
+import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.HistoryFragment
 import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
 import pl.org.seva.texter.view.layout.SlidingTabLayout
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.Timer
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.Timer
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var locationSource: LocationSource
     @Inject
-    lateinit var permissionsUtils: PermissionsUtils
+    lateinit var permissionsHelper: PermissionsHelper
     @Inject
     lateinit var timer: Timer
 
@@ -139,9 +139,9 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            permissionsUtils
+            permissionsHelper
                     .permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.first == PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
         } else {
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(
                 this,
                 arr,
-                PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
+                PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID)
 
         return false
     }
@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity() {
             permissions: Array<String>,
             grantResults: IntArray) {
         // If request is cancelled, the result arrays are empty.
-        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     public override fun onDestroy() {

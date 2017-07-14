@@ -21,14 +21,12 @@ import javax.inject.Singleton
 
 import dagger.Module
 import dagger.Provides
-import pl.org.seva.texter.mock.MockSmsSender
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.SmsSender
-import pl.org.seva.texter.presenter.utils.SmsHistory
-import pl.org.seva.texter.mock.MockLocationSource
-import pl.org.seva.texter.presenter.source.ActivityRecognitionSource
-import pl.org.seva.texter.presenter.utils.Timer
-import pl.org.seva.texter.presenter.utils.ZoneCalculator
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.SmsSender
+import pl.org.seva.texter.presenter.SmsHistory
+import pl.org.seva.texter.source.ActivityRecognitionSource
+import pl.org.seva.texter.presenter.Timer
+import pl.org.seva.texter.presenter.ZoneCalculator
 
 @Module
 internal class MockTexterModule {

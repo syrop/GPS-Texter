@@ -26,8 +26,8 @@ import javax.inject.Singleton
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.Timer
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 import pl.org.seva.texter.presenter.utils.Constants
 

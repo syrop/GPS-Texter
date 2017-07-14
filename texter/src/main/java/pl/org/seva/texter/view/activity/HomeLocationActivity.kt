@@ -38,8 +38,8 @@ import javax.inject.Inject
 import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.Constants
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 
 class HomeLocationActivity : LifecycleActivity() {

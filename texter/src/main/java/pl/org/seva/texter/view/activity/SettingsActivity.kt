@@ -18,9 +18,9 @@
 package pl.org.seva.texter.view.activity
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.PermissionsUtils
-import pl.org.seva.texter.presenter.utils.SmsSender
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.PermissionsHelper
+import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter
 import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.SettingsFragment
@@ -50,7 +50,7 @@ import javax.inject.Inject
 class SettingsActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var permissionsUtils: PermissionsUtils
+    lateinit var permissionsHelper: PermissionsHelper
     @Inject
     lateinit var locationSource: LocationSource
     @Inject
@@ -108,18 +108,18 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun addReadContactsPermissionListeners() {
-        permissionsCompositeSubscription.add(permissionsUtils
+        permissionsCompositeSubscription.add(permissionsHelper
                 .permissionDeniedListener()
-                .filter { it.first == PermissionsUtils.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
+                .filter { it.first == PermissionsHelper.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
                 .filter { it.second == Manifest.permission.READ_CONTACTS }
                 .subscribe { onReadContactsPermissionDenied() })
     }
 
     private fun addLocationPermissionListeners() {
         permissionsCompositeSubscription.addAll(
-                permissionsUtils
+                permissionsHelper
                         .permissionGrantedListener()
-                        .filter {it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                        .filter {it.first == PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID }
                         .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                         .subscribe { onLocationPermissionGranted() })
     }
@@ -177,7 +177,7 @@ class SettingsActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                     this,
                     arr,
-                    PermissionsUtils.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID)
+                    PermissionsHelper.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID)
         }
     }
 
@@ -189,7 +189,7 @@ class SettingsActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
+                    PermissionsHelper.LOCATION_PERMISSION_REQUEST_ID)
             return
         }
         onLocationPermissionGranted()
@@ -205,7 +205,7 @@ class SettingsActivity : AppCompatActivity() {
             requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) {
-        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun onSharedPreferenceChanged(key: String) {
@@ -217,12 +217,12 @@ class SettingsActivity : AppCompatActivity() {
     private fun onReadContactsPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                Manifest.permission.READ_CONTACTS) && permissionsUtils
+                Manifest.permission.READ_CONTACTS) && permissionsHelper
                 .isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage(R.string.perm_contacts_rationale)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                permissionsUtils.onRationaleShown(Manifest.permission.READ_CONTACTS)
+                permissionsHelper.onRationaleShown(Manifest.permission.READ_CONTACTS)
                 processSmsPermissions()
             }
             builder.create().show()

@@ -22,10 +22,10 @@ import android.app.PendingIntent
 
 import javax.inject.Singleton
 
-import pl.org.seva.texter.presenter.source.LocationSource
-import pl.org.seva.texter.presenter.utils.SmsSender
-import pl.org.seva.texter.presenter.utils.SmsHistory
-import pl.org.seva.texter.presenter.utils.ZoneCalculator
+import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.presenter.SmsSender
+import pl.org.seva.texter.presenter.SmsHistory
+import pl.org.seva.texter.presenter.ZoneCalculator
 
 @Singleton
 class MockSmsSender internal constructor(locationSource: LocationSource, smsHistory: SmsHistory, zoneCalculator: ZoneCalculator) : SmsSender() {
