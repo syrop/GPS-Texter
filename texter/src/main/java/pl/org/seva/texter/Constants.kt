@@ -22,13 +22,13 @@ object Constants {
     /** Geo URI for Warsaw.  */
     val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
-    /** Number when it has not been set. */
+    /** Number when it has not been otherwise set. */
     val DEFAULT_PHONE_NUMBER = ""
 
     /** Send an sms each time this value is crossed.  */
     val KM_THRESHOLD = 2
 
-    /** If the number of measurements in the present calculateZone has reached the trigger, send SMS.  */
+    /** If the number of measurements in the present zone has reached the trigger, send SMS.  */
     val SMS_COUNT_TRIGGER = 2
 
     /** Time spent in zone before an SMS is sent.  */
