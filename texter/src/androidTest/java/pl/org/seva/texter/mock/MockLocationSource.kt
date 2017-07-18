@@ -29,7 +29,7 @@ import pl.org.seva.texter.TestConstants
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.view.preference.HomeLocationPreference
-import pl.org.seva.texter.presenter.utils.Constants
+import pl.org.seva.texter.Constants
 
 @Singleton
 class MockLocationSource internal constructor(timer: Timer) : LocationSource() {
