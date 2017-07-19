@@ -1,4 +1,4 @@
-#include <limits.h>/*
+/*
  * Copyright (C) 2016 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <limits.h>
 #include <math.h>
 #include <jni.h>
 
@@ -31,12 +32,12 @@ double dist(double lat1, double lon1, double lat2, double lon2) {
     return 2.0 * atan2(sqrt(a), sqrt(1 - a)) * EARTH_RADIUS;
 }
 
-JNIEXPORT jdouble JNICALL Java_pl_org_seva_texter_presenter_utils_DistanceCalculator_distance
+JNIEXPORT jdouble JNICALL Java_pl_org_seva_texter_presenter_DistanceCalculator_distance
         (JNIEnv  __unused * env, jobject  __unused obj, jdouble lat1, jdouble lon1, jdouble lat2, jdouble lon2) {
     return dist(lat1, lon1, lat2, lon2);
 }
 
-JNIEXPORT jdouble JNICALL Java_pl_org_seva_texter_presenter_utils_DistanceCalculator_speed
+JNIEXPORT jdouble JNICALL Java_pl_org_seva_texter_presenter_DistanceCalculator_speed
         (JNIEnv  __unused * env, jobject  __unused obj, jdouble lat1, jdouble lon1, jdouble lat2, jdouble lon2, jlong time) {
     double seconds = time / 1000.0;
     double hours = seconds / 3600.0;
