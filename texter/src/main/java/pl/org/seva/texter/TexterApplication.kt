@@ -17,16 +17,16 @@
 
 package pl.org.seva.texter
 
+import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.multidex.MultiDexApplication
 
 import javax.inject.Inject
 
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-open class TexterApplication : MultiDexApplication() {
+open class TexterApplication : Application() {
 
     @Inject
     lateinit var locationSource: LocationSource
