@@ -91,7 +91,7 @@ class NavigationFragment : LifecycleFragment() {
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
         }
 
-        mapFragment!!.getMapAsync{ onMapReady(it) }
+        mapFragment!!.getMapAsync{ it.onReady() }
     }
 
     private fun createLocationSubscriptions() {
@@ -100,8 +100,8 @@ class NavigationFragment : LifecycleFragment() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+    private fun GoogleMap.onReady() {
+        map = this
         processLocationPermission()
         val homeLatLng = locationSource.homeLatLng
         updateHomeLocation(homeLatLng)

@@ -170,17 +170,14 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
         locationChangedSubject.onNext(0)
     }
 
-    private fun updateDistance() {
-        location?.let { distance = calculateCurrentDistance() }
-    }
+    private fun updateDistance() = location?.let { distance = calculateCurrentDistance() }
 
-    private fun calculateCurrentDistance(): Double {
-        return DistanceCalculator.distanceKm(
+    private fun calculateCurrentDistance() =
+        DistanceCalculator.distanceKm(
                 location!!.latitude,
                 location!!.longitude,
                 homeLat,
                 homeLng)
-    }
 
     private fun calculateSpeedOrReturnZero(loc1: Location?, loc2: Location?, time: Long): Double {
         if (loc1 == null || loc2 == null || this.time == 0L || time == 0L ||

@@ -128,12 +128,12 @@ class StatsFragment : LifecycleFragment() {
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
         }
 
-        mapFragment!!.getMapAsync { onGoogleMapReady(it) }
+        mapFragment!!.getMapAsync { it.onReady() }
     }
 
     @SuppressLint("MissingPermission")
-    private fun onGoogleMapReady(googleMap: GoogleMap) {
-        map = googleMap
+    private fun GoogleMap.onReady() {
+        map = this
         processLocationPermission()
         val homeLatLng = locationSource.homeLatLng
         updateHomeLocation(homeLatLng)

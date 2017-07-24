@@ -105,17 +105,17 @@ class HomeLocationActivity : LifecycleActivity() {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_HOME_LOCATION).commit()
         }
-        mapFragment!!.getMapAsync({ this.onMapReady(it) })
+        mapFragment!!.getMapAsync { it.onReady() }
     }
 
-    private fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+    private fun GoogleMap.onReady() {
+        map = this
         if (ContextCompat.checkSelfPermission(
-                this,
+                this@HomeLocationActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map!!.isMyLocationEnabled = true
         }
-        zoom = PreferenceManager.getDefaultSharedPreferences(this)
+        zoom = PreferenceManager.getDefaultSharedPreferences(this@HomeLocationActivity)
                 .getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE)
 
         updateMarker()
@@ -128,8 +128,8 @@ class HomeLocationActivity : LifecycleActivity() {
         }
         animateCamera = false
 
-        map!!.setOnMapLongClickListener({ this.onMapLongClick(it) })
-        map!!.setOnCameraIdleListener({ this.onCameraIdle() })
+        map!!.setOnMapLongClickListener({ onMapLongClick(it) })
+        map!!.setOnCameraIdleListener({ onCameraIdle() })
     }
 
     override fun onBackPressed() {
