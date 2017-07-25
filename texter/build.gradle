@@ -7,12 +7,12 @@ android {
     buildToolsVersion '26.0.1'
 
     defaultConfig {
-        applicationId "pl.org.seva.texter"
+        applicationId 'pl.org.seva.texter'
         minSdkVersion 17
         targetSdkVersion 26
-        resConfigs "en", "pl"
-        testInstrumentationRunner "pl.org.seva.texter.MockTestRunner"
-        manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
+        resConfigs 'en', 'pl'
+        testInstrumentationRunner 'pl.org.seva.texter.MockTestRunner'
+        manifestPlaceholders = [ googleMapsKey: 'AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8']
         vectorDrawables.useSupportLibrary true
     }
 
@@ -24,7 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [ googleMapsKey: "AIzaSyCMsxrnN2emRTKdYAf-S43_WPEgwp5a6I0"]
+            manifestPlaceholders = [ googleMapsKey: 'AIzaSyCMsxrnN2emRTKdYAf-S43_WPEgwp5a6I0']
             crunchPngs true
         }
     }
