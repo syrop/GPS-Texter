@@ -133,22 +133,18 @@ constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClie
     }
 
     fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { homeChangedSubject
-                .subscribe { listener() } }
+        lifecycle.observe { homeChangedSubject.subscribe { listener() } }
     }
 
     fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe {locationChangedSubject
-                .subscribe { listener() } }
+        lifecycle.observe { locationChangedSubject.subscribe { listener() } }
     }
 
     val homeLatLng: LatLng
         get() = LatLng(homeLat, homeLng)
 
     val latLng: LatLng?
-        get() {
-            return location?.let { LatLng(it.latitude, it.longitude) }
-        }
+        get() = location?.let { LatLng(it.latitude, it.longitude) }
 
     val isLocationAvailable: Boolean
         get() = location != null
