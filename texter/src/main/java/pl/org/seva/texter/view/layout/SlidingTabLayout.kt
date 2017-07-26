@@ -126,7 +126,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         val adapter = viewPager.adapter
         val tabClickListener = View.OnClickListener { this.onTabClicked(it) }
 
-        for (i in 0 until adapter.count) {
+        repeat (adapter.count) {
             var tabTitleView: TextView? = null
 
             val tabView = createDefaultTabView(context)
@@ -139,15 +139,15 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 lp.width = 0
                 lp.weight = 1f
             }
-            tabTitleView?.text = adapter.getPageTitle(i)
+            tabTitleView?.text = adapter.getPageTitle(it)
             tabView.setOnClickListener(tabClickListener)
-            val desc = mContentDescriptions.get(i, null)
+            val desc = mContentDescriptions.get(it, null)
             desc?.let {
                 tabView.contentDescription = it
             }
 
             mTabStrip.addView(tabView)
-            if (i == viewPager.currentItem) {
+            if (it == viewPager.currentItem) {
                 tabView.isSelected = true
             }
         }
@@ -198,16 +198,16 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 mTabStrip.onViewPagerPageChanged(position, 0f)
                 scrollToTab(position, 0)
             }
-            for (i in 0 until mTabStrip.childCount) {
-                mTabStrip.getChildAt(i).isSelected = position == i
+            repeat (mTabStrip.childCount) {
+                mTabStrip.getChildAt(it).isSelected = position == it
             }
         }
     }
 
     private fun onTabClicked(v: View) {
-        for (i in 0 until mTabStrip.childCount) {
-            if (v === mTabStrip.getChildAt(i)) {
-                viewPager.currentItem = i
+        repeat (mTabStrip.childCount) {
+            if (v === mTabStrip.getChildAt(it)) {
+                viewPager.currentItem = it
                 return
             }
         }

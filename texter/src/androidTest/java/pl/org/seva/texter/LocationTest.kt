@@ -59,7 +59,7 @@ class LocationTest {
     @Test
     fun testLocation() {
         onView(isRoot()).perform(DelayAction.delay(100))
-        for (i in 0 until DURATION_IN_SECONDS) {
+        repeat (DURATION_IN_SECONDS) {
             onView(isRoot()).perform(DelayAction.delay(1000))
         }
         assertTrue(TestConstants.EXPECTED_MESSAGES_SENT <= (smsSender as MockSmsSender).messagesSent)
