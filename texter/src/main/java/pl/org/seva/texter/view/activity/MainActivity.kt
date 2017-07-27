@@ -39,7 +39,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 
 import org.apache.commons.io.IOUtils
 
-import java.io.IOException
 import java.util.ArrayList
 import java.util.Locale
 
@@ -70,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Used when counting a double click.  */
     private var clickTime: Long = 0
+    private var exitToast: Toast? = null
     /** Obtained from intent, may be null.  */
     private var action: String? = null
     private var shuttingDown: Boolean = false
@@ -260,9 +260,12 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
             shuttingDown = true
+            exitToast?.cancel()
             super.onBackPressed()
         } else {
-            Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT).show()
+            exitToast?.cancel()
+            exitToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
+            exitToast!!.show()
             clickTime = System.currentTimeMillis()
         }
     }
