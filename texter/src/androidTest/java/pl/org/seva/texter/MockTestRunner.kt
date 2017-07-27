@@ -23,8 +23,8 @@ import android.support.test.runner.AndroidJUnitRunner
 
 import pl.org.seva.texter.mock.MockTexterApplication
 
-class MockTestRunner : AndroidJUnitRunner() {
-    @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
+@Suppress("unused")  // Declared in build.gradle
+class MockTestRunner: AndroidJUnitRunner() {
     override fun newApplication(
             cl: ClassLoader, className: String, context: Context): Application {
         return super.newApplication(cl, MockTexterApplication::class.java.name, context)

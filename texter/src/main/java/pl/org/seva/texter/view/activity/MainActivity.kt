@@ -181,15 +181,11 @@ class MainActivity : AppCompatActivity() {
         val language = Locale.getDefault().language
         web.settings.defaultTextEncodingName = "utf-8"
 
-        try {
-            val content = IOUtils.toString(
-                    assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html"),
-                    "UTF-8")
-                    .replace(APP_VERSION_PLACEHOLDER, versionName)
-            web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-        }
+        val content = IOUtils.toString(
+                assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html"),
+                "UTF-8")
+                .replace(APP_VERSION_PLACEHOLDER, versionName)
+        web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
 
         dialog.findViewById<View>(R.id.dismiss).setOnClickListener {
             processPermissions()
@@ -214,15 +210,11 @@ class MainActivity : AppCompatActivity() {
 
         val language = Locale.getDefault().language
 
-        try {
-            val content = IOUtils.toString(
-                    assets.open(if (language == "pl") "help_pl.html" else "help_en.html"),
-                    "UTF-8")
-                    .replace(APP_VERSION_PLACEHOLDER, versionName)
-            web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-        }
+        val content = IOUtils.toString(
+                assets.open(if (language == "pl") "help_pl.html" else "help_en.html"),
+                "UTF-8")
+                .replace(APP_VERSION_PLACEHOLDER, versionName)
+        web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
 
         dialog!!.findViewById<View>(R.id.ok).setOnClickListener { dialog!!.dismiss() }
         dialog!!.show()

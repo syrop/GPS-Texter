@@ -47,17 +47,11 @@ class MockSmsSender internal constructor(locationSource: LocationSource, smsHist
 
     public override fun needsPermission() = false
 
-    @Throws(SecurityException::class)
     override fun sendTextMessage(
             text: String,
             sentIntent: PendingIntent,
             deliveredIntent: PendingIntent) {
-        try {
-            messagesSent++
-            sentIntent.send(Activity.RESULT_OK)
-        } catch (ex: PendingIntent.CanceledException) {
-            ex.printStackTrace()
-        }
-
+        messagesSent++
+        sentIntent.send(Activity.RESULT_OK)
     }
 }

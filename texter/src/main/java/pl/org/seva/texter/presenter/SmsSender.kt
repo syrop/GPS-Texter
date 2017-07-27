@@ -252,16 +252,10 @@ constructor() : LiveSource() {
             val sentPI = PendingIntent.getBroadcast(it, 0, sentIntent, 0)
             val deliveredPI = PendingIntent.getBroadcast(it, 0, deliveredIntent, 0)
             registerBroadcastReceiver(id)
-            try {
-                sendTextMessage(text, sentPI, deliveredPI)
-            } catch (ex: SecurityException) {
-                ex.printStackTrace()
-            }
-
+            sendTextMessage(text, sentPI, deliveredPI)
         }
     }
 
-    @Throws(SecurityException::class)
     protected open fun sendTextMessage(
             text: String,
             sentIntent: PendingIntent,

@@ -99,7 +99,6 @@ class NavigationFragment : LifecycleFragment() {
             locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
     }
 
-    @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
         map = this
         processLocationPermission()
