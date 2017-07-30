@@ -23,8 +23,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 
-import javax.inject.Inject
-
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.activity.MainActivity
@@ -32,24 +30,22 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.source.ActivityRecognitionSource
 
 
-class TexterService : LifecycleService() {
+class TexterService: LifecycleService(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var smsSender: SmsSender
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
+    private val locationSource: LocationSource = instance()
+    private val smsSender: SmsSender = instance()
+    private val activityRecognitionSource: ActivityRecognitionSource = instance()
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
     private var activityRecognitionListenersAdded = false
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        (application as TexterApplication).component.inject(this)
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addDistanceListeners()

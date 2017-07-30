@@ -24,21 +24,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v7.widget.RecyclerView
-
-import javax.inject.Inject
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.presenter.SmsSender
 
-class HistoryFragment : LifecycleFragment() {
+class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var smsHistory: SmsHistory
-    @Inject
-    lateinit var smsSender: SmsSender
+    val smsHistory: SmsHistory = instance()
+    val smsSender: SmsSender = instance()
 
     private var adapter: HistoryAdapter? = null
     private lateinit var historyRecyclerView: RecyclerView
@@ -46,7 +43,6 @@ class HistoryFragment : LifecycleFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity.application as TexterApplication).component.inject(this)
         createSubscription()
     }
 

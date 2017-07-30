@@ -20,34 +20,42 @@ package pl.org.seva.texter
 import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
-
-import javax.inject.Inject
+import com.github.salomonbrys.kodein.*
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.conf.global
+import pl.org.seva.texter.presenter.*
 
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-open class TexterApplication : Application() {
+open class TexterApplication : Application(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
+    val texterModule = Kodein.Module {
+        bind<LocationSource>() with singleton { LocationSource() }
+        bind<SmsSender>() with singleton { SmsSender() }
+        bind<Timer>() with singleton { Timer() }
+        bind<PermissionsHelper>() with singleton { PermissionsHelper() }
+        bind<SmsHistory>() with singleton { SmsHistory() }
+        bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
+        bind<ZoneCalculator>() with singleton { ZoneCalculator() }
+    }
 
-    lateinit var component: TexterComponent
+    init {
+        Kodein.global.addImport(texterModule)
+    }
+
+    private val locationSource: LocationSource = instance()
+    private val activityRecognitionSource: ActivityRecognitionSource = instance()
 
     private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
-        component = createComponent()
-        component.inject(this)
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
     }
 
     open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-
-    protected open fun createComponent(): TexterComponent = DaggerTexterComponent.create()
 
     fun startService() {
         if (isServiceRunning) {

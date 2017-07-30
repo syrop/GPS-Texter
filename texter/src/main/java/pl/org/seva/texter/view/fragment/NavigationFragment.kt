@@ -26,29 +26,25 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_navigation.*
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
 
-class NavigationFragment : LifecycleFragment() {
+class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var permissionsHelper: PermissionsHelper
+    private val locationSource: LocationSource = instance()
+    private val permissionsHelper: PermissionsHelper = instance()
 
-    private var distanceTextView: TextView? = null
     private var map: GoogleMap? = null
     private var animateCamera = true
     private var mapContainerId: Int = 0
@@ -56,7 +52,6 @@ class NavigationFragment : LifecycleFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity.application as TexterApplication).component.inject(this)
         createLocationSubscriptions()
     }
 
@@ -64,18 +59,19 @@ class NavigationFragment : LifecycleFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_navigation, container, false)
+        return inflater.inflate(R.layout.fragment_navigation, container, false)
+    }
 
-        distanceTextView = view.findViewById<TextView>(R.id.distance)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         showDistance(locationSource.distance)
 
         savedInstanceState?.let {
             animateCamera = false
         }
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById<View>(R.id.map_container_navigation).id
-
-        return view
+        mapContainerId = map_container_navigation.id
     }
 
     override fun onResume() {
@@ -155,7 +151,7 @@ class NavigationFragment : LifecycleFragment() {
         if (distance == 0.0) {
             distanceStr = "0 km"
         }
-        distanceTextView!!.text = distanceStr
+        distance_view!!.text = distanceStr
     }
 
     private fun onDistanceChanged() {

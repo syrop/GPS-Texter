@@ -19,14 +19,9 @@ package pl.org.seva.texter.presenter
 
 import java.util.ArrayList
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import pl.org.seva.texter.model.SmsLocation
 
-@Singleton
-class SmsHistory @Inject
-internal constructor() {
+class SmsHistory {
 
     private var mockFirstHistoryItem = true
 

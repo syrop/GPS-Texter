@@ -26,6 +26,8 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -33,19 +35,15 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-import javax.inject.Inject
-
 import io.reactivex.disposables.Disposables
 import pl.org.seva.texter.R
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.Constants
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 
-class HomeLocationActivity : LifecycleActivity() {
+class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var locationSource: LocationSource
+    private val locationSource: LocationSource = instance()
 
     private var locationChangedSubscription = Disposables.empty()
 
@@ -63,9 +61,6 @@ class HomeLocationActivity : LifecycleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val graph = (application as TexterApplication).component
-        graph.inject(this)
 
         val value = persistedString
         lat = HomeLocationPreference.parseLatitude(value)

@@ -33,6 +33,8 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.webkit.WebView
 import android.widget.Toast
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -41,8 +43,6 @@ import org.apache.commons.io.IOUtils
 
 import java.util.ArrayList
 import java.util.Locale
-
-import javax.inject.Inject
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.PermissionsHelper
@@ -54,18 +54,12 @@ import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
 import pl.org.seva.texter.view.layout.SlidingTabLayout
 import pl.org.seva.texter.source.LocationSource
-import pl.org.seva.texter.presenter.Timer
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var smsSender: SmsSender
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var permissionsHelper: PermissionsHelper
-    @Inject
-    lateinit var timer: Timer
+    private val smsSender: SmsSender = instance()
+    private val locationSource: LocationSource = instance()
+    private val permissionsHelper: PermissionsHelper = instance()
 
     /** Used when counting a double click.  */
     private var clickTime: Long = 0
@@ -79,9 +73,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         action = intent.action
         action?: finish()
-
-        val graph = (application as TexterApplication).component
-        graph.inject(this)
 
         setContentView(R.layout.activity_main)
 

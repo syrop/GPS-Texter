@@ -20,14 +20,9 @@ package pl.org.seva.texter.presenter
 import android.util.SparseArray
 import pl.org.seva.texter.Constants
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import pl.org.seva.texter.model.DistanceZone
 
-@Singleton
-class ZoneCalculator @Inject
-internal constructor() {
+class ZoneCalculator {
 
     private val zones = SparseArray<DistanceZone>()
 

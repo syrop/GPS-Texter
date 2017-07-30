@@ -21,15 +21,10 @@ import android.content.pm.PackageManager
 
 import java.util.ArrayList
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-@Singleton
-class PermissionsHelper @Inject
-internal constructor() {
+class PermissionsHelper {
 
     private val permissionGrantedSubject = PublishSubject.create<Pair<Int, String>>()
     private val permissionDeniedSubject = PublishSubject.create<Pair<Int, String>>()

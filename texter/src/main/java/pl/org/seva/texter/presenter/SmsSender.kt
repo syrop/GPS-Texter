@@ -32,13 +32,12 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import java.lang.ref.WeakReference
 import java.util.Calendar
 import java.util.UUID
-
-import javax.inject.Inject
-import javax.inject.Singleton
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -50,16 +49,11 @@ import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.model.SmsLocation
 import pl.org.seva.texter.source.LiveSource
 
-@Singleton
-open class SmsSender @Inject
-constructor() : LiveSource() {
+open class SmsSender: LiveSource(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var smsHistory: SmsHistory
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var zoneCalculator: ZoneCalculator
+    private val smsHistory: SmsHistory = instance()
+    private val locationSource: LocationSource = instance()
+    private val zoneCalculator: ZoneCalculator = instance()
 
     private lateinit var preferences: SharedPreferences
     private lateinit var speedUnit: String

@@ -21,23 +21,18 @@ import android.location.Location
 
 import java.util.concurrent.TimeUnit
 
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
 import pl.org.seva.texter.source.LocationSource
-import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 import pl.org.seva.texter.Constants
 
-@Singleton
-class MockLocationSource internal constructor(timer: Timer) : LocationSource() {
+class MockLocationSource : LocationSource() {
 
     private var ticks = -1
 
     init {
-        this.timer = timer
         val defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION
         homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation)
         homeLng = HomeLocationPreference.parseLongitude(defaultHomeLocation)

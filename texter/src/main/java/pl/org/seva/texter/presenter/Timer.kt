@@ -20,9 +20,6 @@ package pl.org.seva.texter.presenter
 import android.arch.lifecycle.Lifecycle
 import java.util.concurrent.TimeUnit
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposables
@@ -30,9 +27,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.source.LiveSource
 
-@Singleton
-class Timer @Inject
-internal constructor() : LiveSource() {
+class Timer: LiveSource() {
 
     var resetTime = System.currentTimeMillis()
     private var timerSubscription = Disposables.empty()

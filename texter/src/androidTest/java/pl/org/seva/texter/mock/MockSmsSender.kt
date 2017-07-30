@@ -27,8 +27,7 @@ import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.presenter.SmsHistory
 import pl.org.seva.texter.presenter.ZoneCalculator
 
-@Singleton
-class MockSmsSender internal constructor(locationSource: LocationSource, smsHistory: SmsHistory, zoneCalculator: ZoneCalculator) : SmsSender() {
+class MockSmsSender: SmsSender() {
 
     var messagesSent: Int = 0
         private set

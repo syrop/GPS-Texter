@@ -27,20 +27,18 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_stats.*
 
 import java.util.Calendar
 
-import javax.inject.Inject
-
 import pl.org.seva.texter.R
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
@@ -48,28 +46,17 @@ import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.model.SmsLocation
 
-class StatsFragment : LifecycleFragment() {
+class StatsFragment: LifecycleFragment(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
-    @Inject
-    lateinit var timer: Timer
-    @Inject
-    lateinit var smsSender: SmsSender
-    @Inject
-    lateinit var permissionsHelper: PermissionsHelper
-
-    private lateinit var distanceTextView: TextView
-    private lateinit var intervalTextView: TextView
-    private lateinit var stationaryTextView: TextView
-    private lateinit var speedTextView: TextView
-    private lateinit var sendNowButton: Button
+    private val locationSource: LocationSource = instance()
+    private val activityRecognitionSource: ActivityRecognitionSource = instance()
+    private val timer: Timer = instance()
+    private val smsSender: SmsSender = instance()
+    private val permissionsHelper: PermissionsHelper = instance()
 
     private var distance: Double = 0.0
     private var speed: Double = 0.0
-    private var stationary: Boolean = false
+    private var isStationary: Boolean = false
 
     private var mapContainerId: Int = 0
     private var mapFragment: SupportMapFragment? = null
@@ -80,7 +67,6 @@ class StatsFragment : LifecycleFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity.application as TexterApplication).component.inject(this)
         createSubscriptions()
     }
 
@@ -96,23 +82,19 @@ class StatsFragment : LifecycleFragment() {
         homeString = getString(R.string.home)
         hourString = activity.getString(R.string.hour)
         speedUnitStr = getString(R.string.speed_unit)
-        val view = inflater.inflate(R.layout.fragment_stats, container, false)
+        return inflater.inflate(R.layout.fragment_stats, container, false)
+    }
 
-        distanceTextView = view.findViewById<TextView>(R.id.distance_value)
-        intervalTextView = view.findViewById<TextView>(R.id.update_interval_value)
-        stationaryTextView = view.findViewById<TextView>(R.id.stationary)
-        speedTextView = view.findViewById<TextView>(R.id.speed_value)
-        sendNowButton = view.findViewById<Button>(R.id.send_now_button)
-        sendNowButton.setOnClickListener { onSendNowClicked() }
-        sendNowButton.isEnabled = smsSender.isTextingEnabled &&
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        send_now_button.setOnClickListener { onSendNowClicked() }
+        send_now_button.isEnabled = smsSender.isTextingEnabled &&
                 distance != 0.0 &&
                 distance != smsSender.lastSentDistance
 
         showStats()
         MapsInitializer.initialize(activity.applicationContext)
-        mapContainerId = view.findViewById<View>(R.id.map_container_stats).id
-
-        return view
+        mapContainerId = map_container_stats.id
     }
 
     override fun onResume() {
@@ -215,27 +197,27 @@ class StatsFragment : LifecycleFragment() {
     }
 
     private fun onDeviceStationary() {
-        stationary = true
+        isStationary = true
     }
 
     private fun onDeviceMoving() {
-        stationary = false
+        isStationary = false
     }
 
     private fun showStats() {
-        distanceTextView.text = if (distance == 0.0) {
+        distance_value.text = if (distance == 0.0) {
             "0 km"
         } else {
             formattedDistanceStr
         }
 
-        stationaryTextView.visibility = if (stationary) View.VISIBLE else View.INVISIBLE
-        intervalTextView.text = formattedTimeStr
+        stationary.visibility = if (isStationary) View.VISIBLE else View.INVISIBLE
+        update_interval_value.text = formattedTimeStr
         if (speed == 0.0 || distance == 0.0) {
-            speedTextView.visibility = View.INVISIBLE
+            speed_value.visibility = View.INVISIBLE
         } else {
-            speedTextView.visibility = View.VISIBLE
-            speedTextView.text = formattedSpeedStr
+            speed_value.visibility = View.VISIBLE
+            speed_value.text = formattedSpeedStr
         }
     }
 
@@ -247,7 +229,7 @@ class StatsFragment : LifecycleFragment() {
     private val formattedSpeedStr: String
         get() {
             @SuppressLint("DefaultLocale")
-            var result = String.format("%.1f", if (stationary) 0.0 else speed) + " " + speedUnitStr
+            var result = String.format("%.1f", if (isStationary) 0.0 else speed) + " " + speedUnitStr
             if (result.contains(".0")) {
                 result = result.replace(".0", "")
             } else if (result.contains(",0")) {
@@ -287,7 +269,7 @@ class StatsFragment : LifecycleFragment() {
 
     private fun onDistanceChanged() {
         if (distance != smsSender.lastSentDistance) {
-            sendNowButton.isEnabled = smsSender.isTextingEnabled
+            send_now_button.isEnabled = smsSender.isTextingEnabled
         }
 
         val threeHoursPassed = System.currentTimeMillis() - timer.resetTime > 3 * 3600 * 1000
@@ -303,7 +285,7 @@ class StatsFragment : LifecycleFragment() {
 
     @SuppressLint("WrongConstant")
     private fun onSendNowClicked() {
-        sendNowButton.isEnabled = false
+        send_now_button.isEnabled = false
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timer.resetTime
         val minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
@@ -316,7 +298,7 @@ class StatsFragment : LifecycleFragment() {
     }
 
     private fun onSendingSms() {
-        sendNowButton.isEnabled = false
+        send_now_button.isEnabled = false
     }
 
     private fun onHomeChanged() {

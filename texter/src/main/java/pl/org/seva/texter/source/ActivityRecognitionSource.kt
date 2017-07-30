@@ -33,14 +33,9 @@ import com.google.android.gms.location.DetectedActivity
 
 import java.lang.ref.WeakReference
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.subjects.PublishSubject
 
-@Singleton
-open class ActivityRecognitionSource @Inject
-constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
+open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false

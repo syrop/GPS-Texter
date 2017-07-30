@@ -22,7 +22,6 @@ import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter
-import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.SettingsFragment
 
 import android.Manifest
@@ -40,21 +39,18 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.WindowManager
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.texter.view.fragment.PhoneNumberFragment
 
 import java.util.ArrayList
 
-import javax.inject.Inject
+class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
 
-class SettingsActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var permissionsHelper: PermissionsHelper
-    @Inject
-    lateinit var locationSource: LocationSource
-    @Inject
-    lateinit var smsSender: SmsSender
+    private val permissionsHelper: PermissionsHelper = instance()
+    private val locationSource: LocationSource = instance()
+    private val smsSender: SmsSender = instance()
 
     val preferenceListener : (a : SharedPreferences, b : String) -> Unit =
             { _, key -> this.onSharedPreferenceChanged(key) }
@@ -63,9 +59,6 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val graph = (application as TexterApplication).component
-        graph.inject(this)
 
         setContentView(R.layout.activity_settings)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)

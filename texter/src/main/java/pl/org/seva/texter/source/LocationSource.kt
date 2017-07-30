@@ -25,6 +25,8 @@ import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.preference.PreferenceManager
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -34,9 +36,6 @@ import com.google.android.gms.maps.model.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.view.activity.SettingsActivity
@@ -44,13 +43,10 @@ import pl.org.seva.texter.view.preference.HomeLocationPreference
 import pl.org.seva.texter.presenter.DistanceCalculator
 import pl.org.seva.texter.Constants
 
-@Singleton
-open class LocationSource @Inject
-constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+open class LocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener, KodeinGlobalAware {
 
-    @Inject
-    protected lateinit var timer: Timer
+    private val timer: Timer = instance()
 
     private lateinit var preferences: SharedPreferences
 
