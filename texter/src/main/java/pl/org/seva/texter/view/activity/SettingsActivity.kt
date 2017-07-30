@@ -42,6 +42,7 @@ import android.view.WindowManager
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.toolbar.*
 import pl.org.seva.texter.view.fragment.PhoneNumberFragment
 
 import java.util.ArrayList
@@ -62,9 +63,6 @@ class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
 
         setContentView(R.layout.activity_settings)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-
-        // Attaching the layout to the toolbar object
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {

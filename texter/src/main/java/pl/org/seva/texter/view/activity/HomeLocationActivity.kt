@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 import io.reactivex.disposables.Disposables
+import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.Constants
@@ -68,7 +69,7 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
 
         setContentView(R.layout.activity_home_location)
 
-        mapContainerId = findViewById<View>(R.id.map_container).id
+        mapContainerId = map_container.id
         MapsInitializer.initialize(this)
         useCurrentButton = findViewById<Button>(R.id.current_location_button)
 

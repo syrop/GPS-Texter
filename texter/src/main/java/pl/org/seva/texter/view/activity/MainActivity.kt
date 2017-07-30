@@ -38,6 +38,8 @@ import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 import org.apache.commons.io.IOUtils
 
@@ -52,7 +54,6 @@ import pl.org.seva.texter.TexterApplication
 import pl.org.seva.texter.view.fragment.HistoryFragment
 import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
-import pl.org.seva.texter.view.layout.SlidingTabLayout
 import pl.org.seva.texter.source.LocationSource
 
 class MainActivity : AppCompatActivity(), KodeinGlobalAware {
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity(), KodeinGlobalAware {
                 getString(R.string.map_tab_name),
                 getString(R.string.history_tab_name))
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val fragments = ArrayList<Fragment>()
         fragments.add(StatsFragment.newInstance())
@@ -91,8 +91,6 @@ class MainActivity : AppCompatActivity(), KodeinGlobalAware {
 
         val pager = findViewById<ViewPager>(R.id.pager)
         pager.adapter = adapter
-
-        val tabs = findViewById<SlidingTabLayout>(R.id.tabs)
 
         val tabColor: Int
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

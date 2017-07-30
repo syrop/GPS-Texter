@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.support.v7.widget.RecyclerView
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
+import kotlinx.android.synthetic.main.fragment_history.*
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.SmsHistory
@@ -50,19 +51,20 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_history, container, false)
+        return inflater.inflate(R.layout.fragment_history, container, false)
+    }
 
-        historyRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        historyRecyclerView.setHasFixedSize(true)
-        historyRecyclerView.layoutManager = LinearLayoutManager(context)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recycler_view.setHasFixedSize(true)
+        recycler_view.layoutManager = LinearLayoutManager(context)
         adapter = HistoryAdapter(activity, smsHistory.list)
-        historyRecyclerView.adapter = adapter
-        historyRecyclerView.addItemDecoration(HistoryAdapter.DividerItemDecoration(activity))
-        historyRecyclerView.clearOnScrollListeners()
-        historyRecyclerView.addOnScrollListener(OnScrollListener())
+        recycler_view.adapter = adapter
+        recycler_view.addItemDecoration(HistoryAdapter.DividerItemDecoration(activity))
+        recycler_view.clearOnScrollListeners()
+        recycler_view.addOnScrollListener(OnScrollListener())
         scrollToBottom = true
-
-        return view
     }
 
     private fun createSubscription() {
