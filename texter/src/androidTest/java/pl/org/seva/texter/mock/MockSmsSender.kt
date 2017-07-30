@@ -32,12 +32,6 @@ class MockSmsSender: SmsSender() {
     var messagesSent: Int = 0
         private set
 
-    init {
-        this.locationSource = locationSource
-        this.smsHistory = smsHistory
-        this.zoneCalculator = zoneCalculator
-    }
-
     override val isTextingEnabled: Boolean
         get() = true
 

@@ -17,21 +17,34 @@
 
 package pl.org.seva.texter.mock
 
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.conf.global
+import com.github.salomonbrys.kodein.singleton
 import pl.org.seva.texter.TexterApplication
-import pl.org.seva.texter.TexterComponent
+import pl.org.seva.texter.presenter.*
+import pl.org.seva.texter.source.ActivityRecognitionSource
+import pl.org.seva.texter.source.LocationSource
 
-class MockTexterApplication : TexterApplication() {
+class MockTexterApplication: TexterApplication() {
+
+
+    val mockTexterModule = Kodein.Module {
+        bind<LocationSource>(overrides = true) with singleton { MockLocationSource() }
+        bind<SmsSender>(overrides = true) with singleton { MockSmsSender() }
+        bind<ActivityRecognitionSource>(overrides = true) with singleton { MockActivityRecognitionSource() }
+    }
+
+    init {
+        Kodein.global.addImport(mockTexterModule, allowOverride = true)
+    }
 
     override fun onCreate() {
         super.onCreate()
         startService()
     }
 
-    override fun createComponent(): TexterComponent {
-        return DaggerMockTexterComponent.create()
-    }
-
-    override fun hardwareCanSendSms(): Boolean {
+       override fun hardwareCanSendSms(): Boolean {
         return true
     }
 

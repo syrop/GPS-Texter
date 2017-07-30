@@ -28,7 +28,7 @@ import pl.org.seva.texter.presenter.*
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-open class TexterApplication : Application(), KodeinGlobalAware {
+open class TexterApplication: Application(), KodeinGlobalAware {
 
     val texterModule = Kodein.Module {
         bind<LocationSource>() with singleton { LocationSource() }
@@ -44,13 +44,12 @@ open class TexterApplication : Application(), KodeinGlobalAware {
         Kodein.global.addImport(texterModule)
     }
 
-    private val locationSource: LocationSource = instance()
-    private val activityRecognitionSource: ActivityRecognitionSource = instance()
-
     private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
+        val locationSource: LocationSource = instance()
+        val activityRecognitionSource: ActivityRecognitionSource = instance()
         locationSource.initPreferences(this)
         activityRecognitionSource.initWithContext(this)
     }

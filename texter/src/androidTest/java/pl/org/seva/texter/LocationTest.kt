@@ -20,41 +20,33 @@ package pl.org.seva.texter
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import javax.inject.Inject
-
 import pl.org.seva.texter.mock.MockSmsSender
 import pl.org.seva.texter.view.activity.MainActivity
-import pl.org.seva.texter.mock.MockTexterComponent
 import pl.org.seva.texter.presenter.SmsSender
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import junit.framework.Assert.assertTrue
 import pl.org.seva.texter.action.DelayAction
 
 @RunWith(AndroidJUnit4::class)
-class LocationTest {
+class LocationTest: KodeinGlobalAware {
 
-    @Inject
-    lateinit var smsSender: SmsSender
+    val smsSender: SmsSender = instance()
 
     // https://stackoverflow.com/questions/29945087/kotlin-and-new-activitytestrule-the-rule-must-be-public
+    @Suppress("unused")
     @get:Rule
     val activityRule = ActivityTestRule(
             MainActivity::class.java,
             true,
             true)
-
-    @Before
-    fun setUp() {
-        val graph = (activityRule.activity.application as TexterApplication).component as MockTexterComponent
-        graph.inject(this)
-    }
 
     @Test
     fun testLocation() {
