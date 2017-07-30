@@ -29,7 +29,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.*
 import android.webkit.WebView
 import android.widget.Toast
@@ -56,7 +55,7 @@ import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
 import pl.org.seva.texter.source.LocationSource
 
-class MainActivity : AppCompatActivity(), KodeinGlobalAware {
+class MainActivity: AppCompatActivity(), KodeinGlobalAware {
 
     private val smsSender: SmsSender = instance()
     private val locationSource: LocationSource = instance()
