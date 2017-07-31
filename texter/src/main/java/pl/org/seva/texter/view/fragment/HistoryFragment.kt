@@ -35,8 +35,8 @@ import pl.org.seva.texter.presenter.SmsSender
 
 class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
 
-    val smsHistory: SmsHistory = instance()
-    val smsSender: SmsSender = instance()
+    private val smsHistory: SmsHistory = instance()
+    private val smsSender: SmsSender = instance()
 
     private lateinit var adapter: HistoryAdapter
     private var scrollToBottom: Boolean = false
