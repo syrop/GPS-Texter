@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter
 
+import android.content.Intent
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.source.ActivityRecognitionSource
@@ -24,10 +25,28 @@ import pl.org.seva.texter.source.LocationSource
 
 class Bootstrap(val application: TexterApplication): KodeinGlobalAware {
 
+    private var isServiceRunning = false
+
     fun boot() {
         val locationSource: LocationSource = instance()
         val activityRecognitionSource: ActivityRecognitionSource = instance()
         locationSource.initPreferences(application)
         activityRecognitionSource.initWithContext(application)
+    }
+
+    fun startService() {
+        if (isServiceRunning) {
+            return
+        }
+        application.startService(Intent(application.baseContext, TexterService::class.java))
+        isServiceRunning = true
+    }
+
+    fun stopService() {
+        if (!isServiceRunning) {
+            return
+        }
+        application.stopService(Intent(application.baseContext, TexterService::class.java))
+        isServiceRunning = false
     }
 }

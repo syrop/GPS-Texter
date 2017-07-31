@@ -18,7 +18,6 @@
 package pl.org.seva.texter
 
 import android.app.Application
-import android.content.Intent
 import android.content.pm.PackageManager
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
@@ -30,9 +29,10 @@ import pl.org.seva.texter.source.LocationSource
 
 open class TexterApplication: Application(), KodeinGlobalAware {
 
-    private var isServiceRunning = false
+    private val bootstrap: Bootstrap get() = instance()
 
     val texterModule = Kodein.Module {
+        bind<Bootstrap>() with singleton() { Bootstrap(this@TexterApplication) }
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }
         bind<Timer>() with singleton { Timer() }
@@ -48,24 +48,12 @@ open class TexterApplication: Application(), KodeinGlobalAware {
 
     override fun onCreate() {
         super.onCreate()
-        Bootstrap(this).boot()
+        bootstrap.boot()
     }
 
     open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
 
-    fun startService() {
-        if (isServiceRunning) {
-            return
-        }
-        startService(Intent(baseContext, TexterService::class.java))
-        isServiceRunning = true
-    }
+    fun startService() = bootstrap.startService()
 
-    open fun stopService() {
-        if (!isServiceRunning) {
-            return
-        }
-        stopService(Intent(baseContext, TexterService::class.java))
-        isServiceRunning = false
-    }
+    open fun stopService() = bootstrap.stopService()
 }
