@@ -126,7 +126,7 @@ class TexterService: LifecycleService(), KodeinGlobalAware {
         if (!hardwareCanSendSms()) {
             return
         }
-        locationSource.addDistanceListener(this) { smsSender.onDistanceChanged() }
+        locationSource.addDistanceListener(lifecycle) { smsSender.onDistanceChanged() }
     }
 
     companion object {

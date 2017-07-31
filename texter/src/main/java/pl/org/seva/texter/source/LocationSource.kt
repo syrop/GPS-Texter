@@ -114,8 +114,8 @@ open class LocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks, Go
         connectGoogleApiClient()
     }
 
-    fun addDistanceListener(service: LifecycleService, listener : () -> Unit) {
-        service.lifecycle.observe { distanceSubject
+    fun addDistanceListener(lifecycle: Lifecycle, listener : () -> Unit) {
+        lifecycle.observe { distanceSubject
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe { request() }
                 .doOnDispose { removeRequest() }
