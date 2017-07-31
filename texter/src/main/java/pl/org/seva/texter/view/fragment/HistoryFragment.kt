@@ -38,7 +38,7 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
     val smsHistory: SmsHistory = instance()
     val smsSender: SmsSender = instance()
 
-    private var adapter: HistoryAdapter? = null
+    private lateinit var adapter: HistoryAdapter
     private var scrollToBottom: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +76,9 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
     }
 
     private fun update() {
-        adapter!!.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
         if (scrollToBottom) {
-            recycler_view.scrollToPosition(adapter!!.itemCount - 1)
+            recycler_view.scrollToPosition(adapter.itemCount - 1)
         }
     }
 
