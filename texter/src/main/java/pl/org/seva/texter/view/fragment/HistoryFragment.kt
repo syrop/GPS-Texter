@@ -39,7 +39,6 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
     val smsSender: SmsSender = instance()
 
     private var adapter: HistoryAdapter? = null
-    private lateinit var historyRecyclerView: RecyclerView
     private var scrollToBottom: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,13 +78,13 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
     private fun update() {
         adapter!!.notifyDataSetChanged()
         if (scrollToBottom) {
-            historyRecyclerView.scrollToPosition(adapter!!.itemCount - 1)
+            recycler_view.scrollToPosition(adapter!!.itemCount - 1)
         }
     }
 
     private inner class OnScrollListener : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-            if (recyclerView === historyRecyclerView) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (recyclerView === recycler_view) {
                 scrollToBottom = recyclerView.computeVerticalScrollOffset() ==
                         recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent()
             }
