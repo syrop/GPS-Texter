@@ -30,6 +30,8 @@ import pl.org.seva.texter.source.LocationSource
 
 open class TexterApplication: Application(), KodeinGlobalAware {
 
+    private var isServiceRunning = false
+
     val texterModule = Kodein.Module {
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }
@@ -44,14 +46,9 @@ open class TexterApplication: Application(), KodeinGlobalAware {
         Kodein.global.addImport(texterModule)
     }
 
-    private var isServiceRunning = false
-
     override fun onCreate() {
         super.onCreate()
-        val locationSource: LocationSource = instance()
-        val activityRecognitionSource: ActivityRecognitionSource = instance()
-        locationSource.initPreferences(this)
-        activityRecognitionSource.initWithContext(this)
+        Bootstrap(this).boot()
     }
 
     open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
