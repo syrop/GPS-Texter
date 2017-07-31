@@ -32,7 +32,7 @@ open class TexterApplication: Application(), KodeinGlobalAware {
     private val bootstrap: Bootstrap get() = instance()
 
     val texterModule = Kodein.Module {
-        bind<Bootstrap>() with singleton() { Bootstrap(this@TexterApplication) }
+        bind<Bootstrap>() with singleton { Bootstrap(this@TexterApplication) }
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }
         bind<Timer>() with singleton { Timer() }
