@@ -166,7 +166,7 @@ open class SmsSender: LiveSource(), KodeinGlobalAware {
             return if (numberStr!!.isNotEmpty()) numberStr else "0"
         }
 
-    private val maxSentDistance: Int
+    open protected val maxSentDistance: Int
         get() {
             val numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "")
             return if (numberStr!!.isNotEmpty()) Integer.valueOf(numberStr) else 0

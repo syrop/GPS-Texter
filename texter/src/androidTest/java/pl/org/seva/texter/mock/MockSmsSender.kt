@@ -32,11 +32,11 @@ class MockSmsSender: SmsSender() {
     var messagesSent: Int = 0
         private set
 
-    override val isTextingEnabled: Boolean
-        get() = true
+    override val maxSentDistance = MAX_SENT_DISTANCE
 
-    override val isCorrectPhoneNumberSet: Boolean
-        get() = true
+    override val isTextingEnabled = true
+
+    override val isCorrectPhoneNumberSet = true
 
     public override fun needsPermission() = false
 
@@ -46,5 +46,9 @@ class MockSmsSender: SmsSender() {
             deliveredIntent: PendingIntent) {
         messagesSent++
         sentIntent.send(Activity.RESULT_OK)
+    }
+
+    companion object {
+        val MAX_SENT_DISTANCE = 50
     }
 }
