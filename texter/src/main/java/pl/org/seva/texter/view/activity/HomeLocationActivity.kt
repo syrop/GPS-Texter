@@ -54,7 +54,6 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
     private var isCurrentLocationAvailable: Boolean = false
 
     private var map: GoogleMap? = null
-    private var useCurrentButton: Button? = null
     private var animateCamera = true
     private var mapContainerId: Int = 0
     private var mapFragment: MapFragment? = null
@@ -70,14 +69,13 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
 
         mapContainerId = map_container.id
         MapsInitializer.initialize(this)
-        useCurrentButton = findViewById<Button>(R.id.current_location_button)
 
         val locationPermitted = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val locationAvailable = locationPermitted && locationSource.isLocationAvailable
-        useCurrentButton?.isEnabled = locationAvailable
-        useCurrentButton?.setOnClickListener { onUseCurrentLocationButtonClicked() }
+        current_location_button.isEnabled = locationAvailable
+        current_location_button.setOnClickListener { onUseCurrentLocationButtonClicked() }
         if (!toastShown) {
             Toast.makeText(
                     this,
@@ -88,7 +86,7 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
         locationSource.addLocationChangedListener(lifecycle) { onLocationChanged() }
 
         if (!locationPermitted) {
-            useCurrentButton!!.isEnabled = false
+            current_location_button.isEnabled = false
         }
     }
 
@@ -171,11 +169,11 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
     }
 
     private fun onLocationChanged() {
-        if (map == null || useCurrentButton == null) {
+        if (map == null) {
             return
         }
         isCurrentLocationAvailable = true
-        useCurrentButton!!.isEnabled = true
+        current_location_button.isEnabled = true
     }
 
 
@@ -184,7 +182,7 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
         lon = latLng.longitude
         updateMarker()
         if (isCurrentLocationAvailable) {
-            useCurrentButton!!.isEnabled = true
+            current_location_button.isEnabled = true
         }
     }
 
@@ -193,7 +191,7 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
     }
 
     fun onUseCurrentLocationButtonClicked() {
-        useCurrentButton!!.isEnabled = false
+        current_location_button.isEnabled = false
         val loc = locationSource.latLng
         loc?.let {
             lat = it.latitude
