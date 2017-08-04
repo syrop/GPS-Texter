@@ -38,7 +38,7 @@ import pl.org.seva.texter.action.DelayAction
 @RunWith(AndroidJUnit4::class)
 class LocationTest: KodeinGlobalAware {
 
-    val smsSender: SmsSender = instance()
+    private val smsSender: SmsSender = instance()
 
     // https://stackoverflow.com/questions/29945087/kotlin-and-new-activitytestrule-the-rule-must-be-public
     @Suppress("unused")
