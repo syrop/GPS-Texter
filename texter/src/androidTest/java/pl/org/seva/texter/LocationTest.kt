@@ -26,7 +26,6 @@ import org.junit.runner.RunWith
 
 import pl.org.seva.texter.mock.MockSmsSender
 import pl.org.seva.texter.view.activity.MainActivity
-import pl.org.seva.texter.presenter.SmsSender
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
@@ -37,8 +36,6 @@ import pl.org.seva.texter.action.DelayAction
 
 @RunWith(AndroidJUnit4::class)
 class LocationTest: KodeinGlobalAware {
-
-    private val smsSender: SmsSender = instance()
 
     // https://stackoverflow.com/questions/29945087/kotlin-and-new-activitytestrule-the-rule-must-be-public
     @Suppress("unused")
@@ -54,7 +51,7 @@ class LocationTest: KodeinGlobalAware {
         repeat (DURATION_IN_SECONDS) {
             onView(isRoot()).perform(DelayAction.delay(1000))
         }
-        assertTrue(TestConstants.EXPECTED_MESSAGES_SENT <= (smsSender as MockSmsSender).messagesSent)
+        assertTrue(instance<MockSmsSender>().messagesSent >= TestConstants.EXPECTED_MESSAGES_SENT)
     }
 
     companion object {
