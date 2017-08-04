@@ -36,7 +36,7 @@ class Timer: LiveSource() {
 
     private fun createTimerSubscription() {
         timerSubscription.dispose()
-        timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.computation())
+        timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.io())
                 .doOnNext { timerSubject.onNext(0) }
                 .repeat()
                 .subscribe()
@@ -51,7 +51,7 @@ class Timer: LiveSource() {
     fun addTimerListenerUi(lifecycle : Lifecycle, listener: () -> Unit) {
         lifecycle.observe { timerSubject
                 .doOnSubscribe { start() }
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { listener() } }
     }
