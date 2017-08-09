@@ -19,7 +19,7 @@ package pl.org.seva.texter.mock
 
 import pl.org.seva.texter.source.ActivityRecognitionSource
 
-class MockActivityRecognitionSource : ActivityRecognitionSource() {
+class MockActivityRecognitionSource: ActivityRecognitionSource() {
     override fun onDeviceMoving() {}
     override fun onDeviceStationary() {}
 }

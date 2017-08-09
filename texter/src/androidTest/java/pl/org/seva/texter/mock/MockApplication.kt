@@ -15,30 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.mock
 
-import android.app.Application
-import android.content.pm.PackageManager
-import com.github.salomonbrys.kodein.*
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
+import pl.org.seva.texter.TexterApplication
 
-open class TexterApplication: Application(), KodeinGlobalAware {
-
-    private val bootstrap: Bootstrap get() = instance()
+class MockApplication: TexterApplication() {
 
     init {
-        Kodein.global.addImport(module { application = this@TexterApplication })
+        Kodein.global.addImport(module {}, allowOverride = true)
     }
 
     override fun onCreate() {
         super.onCreate()
-        bootstrap.boot()
+        startService()
     }
 
-    open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+    override fun hardwareCanSendSms() = true
 
-    fun startService() = bootstrap.startService()
-
-    open fun stopService() = bootstrap.stopService()
+    override fun stopService() {}
 }

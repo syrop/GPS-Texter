@@ -21,12 +21,12 @@ import android.app.Application
 import android.content.Context
 import android.support.test.runner.AndroidJUnitRunner
 
-import pl.org.seva.texter.mock.MockTexterApplication
+import pl.org.seva.texter.mock.MockApplication
 
 @Suppress("unused")  // Declared in build.gradle
 class MockTestRunner: AndroidJUnitRunner() {
     override fun newApplication(
             cl: ClassLoader, className: String, context: Context): Application {
-        return super.newApplication(cl, MockTexterApplication::class.java.name, context)
+        return super.newApplication(cl, MockApplication::class.java.name, context)
     }
 }
