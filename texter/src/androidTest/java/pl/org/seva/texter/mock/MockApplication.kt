@@ -32,9 +32,7 @@ class MockApplication : TexterApplication() {
         startService()
     }
 
-    override fun hardwareCanSendSms(): Boolean {
-        return true
-    }
+    override fun hardwareCanSendSms() = true
 
     override fun stopService() {}
 }
