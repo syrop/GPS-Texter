@@ -21,7 +21,7 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
 import pl.org.seva.texter.TexterApplication
 
-class MockApplication : TexterApplication() {
+class MockApplication: TexterApplication() {
 
     init {
         Kodein.global.addImport(module {}, allowOverride = true)
