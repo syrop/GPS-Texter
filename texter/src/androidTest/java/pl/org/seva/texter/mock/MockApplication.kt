@@ -26,10 +26,9 @@ import pl.org.seva.texter.presenter.*
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-class MockTexterApplication: TexterApplication() {
+class MockApplication : TexterApplication() {
 
-
-    val mockTexterModule = Kodein.Module {
+    private val mockTexterModule = Kodein.Module {
         bind<LocationSource>(overrides = true) with singleton { MockLocationSource() }
         bind<SmsSender>(overrides = true) with singleton { MockSmsSender() }
         bind<ActivityRecognitionSource>(overrides = true) with singleton { MockActivityRecognitionSource() }

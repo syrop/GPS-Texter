@@ -33,6 +33,7 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import junit.framework.Assert.assertTrue
 import pl.org.seva.texter.action.DelayAction
+import pl.org.seva.texter.presenter.SmsSender
 
 @RunWith(AndroidJUnit4::class)
 class LocationTest: KodeinGlobalAware {
@@ -40,21 +41,21 @@ class LocationTest: KodeinGlobalAware {
     // https://stackoverflow.com/questions/29945087/kotlin-and-new-activitytestrule-the-rule-must-be-public
     @Suppress("unused")
     @get:Rule
-    val activityRule = ActivityTestRule(
-            MainActivity::class.java,
-            true,
-            true)
+    val activityRule = ActivityTestRule(MainActivity::class.java, true, true)
 
     @Test
     fun testLocation() {
-        onView(isRoot()).perform(DelayAction.delay(100))
-        repeat (DURATION_IN_SECONDS) {
-            onView(isRoot()).perform(DelayAction.delay(1000))
+        onView(isRoot()).perform(DelayAction.delay(TENTH_SECOND_MS))
+        repeat (DURATION_SEC) {
+            onView(isRoot()).perform(DelayAction.delay(SECOND_MS))
         }
-        assertTrue(instance<MockSmsSender>().messagesSent >= TestConstants.EXPECTED_MESSAGES_SENT)
+        val sender = instance<SmsSender>() as MockSmsSender
+        assertTrue(sender.messagesSent >= TestConstants.EXPECTED_MESSAGES_SENT)
     }
 
     companion object {
-        private val DURATION_IN_SECONDS = 50
+        private val DURATION_SEC = 50
+        private val SECOND_MS = 1000L
+        private val TENTH_SECOND_MS = 100L
     }
 }
