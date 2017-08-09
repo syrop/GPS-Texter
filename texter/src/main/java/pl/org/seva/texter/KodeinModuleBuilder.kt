@@ -18,31 +18,28 @@
 package pl.org.seva.texter
 
 import android.app.Application
-import android.content.pm.PackageManager
-import com.github.salomonbrys.kodein.*
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.conf.global
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.singleton
 import pl.org.seva.texter.presenter.*
-
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-open class TexterApplication: Application(), KodeinGlobalAware {
+fun module(f: KodeinModuleBuilder.() -> Unit) =
+        KodeinModuleBuilder().apply { f() }.build()
 
-    private val bootstrap: Bootstrap get() = instance()
+class KodeinModuleBuilder {
 
-    init {
-        Kodein.global.addImport(module { application = this@TexterApplication })
+    lateinit var application: Application
+
+    fun build() = Kodein.Module {
+        bind<Bootstrap>() with singleton { Bootstrap(application) }
+        bind<LocationSource>() with singleton { LocationSource() }
+        bind<SmsSender>() with singleton { SmsSender() }
+        bind<Timer>() with singleton { Timer() }
+        bind<PermissionsHelper>() with singleton { PermissionsHelper() }
+        bind<SmsHistory>() with singleton { SmsHistory() }
+        bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
+        bind<ZoneCalculator>() with singleton { ZoneCalculator() }
     }
-
-    override fun onCreate() {
-        super.onCreate()
-        bootstrap.boot()
-    }
-
-    open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-
-    fun startService() = bootstrap.startService()
-
-    open fun stopService() = bootstrap.stopService()
 }
