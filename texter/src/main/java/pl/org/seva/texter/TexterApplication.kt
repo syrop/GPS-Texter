@@ -22,10 +22,6 @@ import android.content.pm.PackageManager
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
-import pl.org.seva.texter.presenter.*
-
-import pl.org.seva.texter.source.ActivityRecognitionSource
-import pl.org.seva.texter.source.LocationSource
 
 open class TexterApplication: Application(), KodeinGlobalAware {
 
