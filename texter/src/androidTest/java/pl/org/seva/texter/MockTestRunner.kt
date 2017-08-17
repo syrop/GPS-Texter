@@ -26,6 +26,6 @@ import pl.org.seva.texter.mock.MockApplication
 @Suppress("unused")  // Declared in build.gradle
 class MockTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
-            cl: ClassLoader, className: String, context: Context): Application =
-            super.newApplication(cl, MockApplication::class.java.name, context)
+        cl: ClassLoader, className: String, context: Context): Application =
+        super.newApplication(cl, MockApplication::class.java.name, context)
 }
