@@ -96,31 +96,28 @@ class TexterService: LifecycleService(), KodeinGlobalAware {
                 .build()
     }
 
-    private fun createNotificationBuilder() : Notification.Builder {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            @Suppress("DEPRECATION")
-            Notification.Builder(this)
-        }
-        else {
-            val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            // The id of the channel.
-            val id = NOTIFICATION_CHANNEL_ID
-            // The user-visible name of the channel.
-            val name = getString(R.string.channel_name)
-            // The user-visible description of the channel.
-            val description = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val mChannel = NotificationChannel(id, name, importance)
-            // Configure the notification channel.
-            mChannel.description = description
-            mNotificationManager.createNotificationChannel(mChannel)
-            Notification.Builder(this, id)
-        }
-    }
+    private fun createNotificationBuilder() : Notification.Builder =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                @Suppress("DEPRECATION")
+                Notification.Builder(this)
+            }
+            else {
+                val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                // The id of the channel.
+                val id = NOTIFICATION_CHANNEL_ID
+                // The user-visible name of the channel.
+                val name = getString(R.string.channel_name)
+                // The user-visible description of the channel.
+                val description = getString(R.string.channel_description)
+                val importance = NotificationManager.IMPORTANCE_LOW
+                val mChannel = NotificationChannel(id, name, importance)
+                // Configure the notification channel.
+                mChannel.description = description
+                mNotificationManager.createNotificationChannel(mChannel)
+                Notification.Builder(this, id)
+            }
 
-    private fun hardwareCanSendSms(): Boolean {
-        return (application as TexterApplication).hardwareCanSendSms()
-    }
+    private fun hardwareCanSendSms(): Boolean = (application as TexterApplication).hardwareCanSendSms()
 
     private fun addDistanceListeners() {
         if (!hardwareCanSendSms()) {

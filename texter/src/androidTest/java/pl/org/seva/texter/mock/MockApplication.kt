@@ -34,5 +34,5 @@ class MockApplication: TexterApplication() {
 
     override fun hardwareCanSendSms() = true
 
-    override fun stopService() {}
+    override fun stopService() = Unit
 }

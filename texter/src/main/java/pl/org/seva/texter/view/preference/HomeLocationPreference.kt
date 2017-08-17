@@ -27,9 +27,7 @@ import java.util.*
 
 class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
-    override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
-        return Constants.DEFAULT_HOME_LOCATION
-    }
+    override fun onGetDefaultValue(a: TypedArray, index: Int): Any = Constants.DEFAULT_HOME_LOCATION
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
         if (!restorePersistedValue) {
@@ -40,9 +38,7 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
     companion object {
         private val GEO_URI_FORMAT = "geo:%.6f,%.6f"
 
-        fun toString(lat: Double, lon: Double): String {
-            return String.format(Locale.US, GEO_URI_FORMAT, lat, lon)
-        }
+        fun toString(lat: Double, lon: Double) = String.format(Locale.US, GEO_URI_FORMAT, lat, lon)
 
         fun parseLatitude(geoUri: String): Double {
             val str = geoUri.substring(geoUri.indexOf(":") + 1, geoUri.indexOf(","))

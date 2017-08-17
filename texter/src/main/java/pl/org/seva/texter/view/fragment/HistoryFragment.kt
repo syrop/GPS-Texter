@@ -49,9 +49,8 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_history, container, false)
-    }
+            savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_history, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,9 +65,7 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
         scrollToBottom = true
     }
 
-    private fun createSubscription() {
-         smsSender.addSmsSentListener(lifecycle) { update() }
-    }
+    private fun createSubscription() = smsSender.addSmsSentListener(lifecycle) { update() }
 
     override fun onResume() {
         super.onResume()
@@ -93,8 +90,6 @@ class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
 
     companion object {
 
-        fun newInstance(): HistoryFragment {
-            return HistoryFragment()
-        }
+        fun newInstance() = HistoryFragment()
     }
 }

@@ -222,9 +222,7 @@ class StatsFragment: LifecycleFragment(), KodeinGlobalAware {
     }
 
     private val formattedDistanceStr : String
-        get() {
-            return String.format("%.3f km", distance)
-        }
+        get() = String.format("%.3f km", distance)
 
     private val formattedSpeedStr: String
         get() {
@@ -317,8 +315,6 @@ class StatsFragment: LifecycleFragment(), KodeinGlobalAware {
         private lateinit var hourString: String
         private lateinit var speedUnitStr: String
 
-        fun newInstance(): StatsFragment {
-            return StatsFragment()
-        }
+        fun newInstance(): StatsFragment = StatsFragment()
     }
 }

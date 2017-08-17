@@ -26,9 +26,8 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.view.activity.SettingsActivity
 
 class SettingsFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.preferences)
-    }
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) =
+            addPreferencesFromResource(R.xml.preferences)
 
     var homeLocationClickedListener: (() -> Unit)? = null
     var smsEnabledClickedListener: (() -> Unit)? = null
@@ -53,8 +52,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
 
-        fun newInstance(): SettingsFragment {
-            return SettingsFragment()
-        }
+        fun newInstance(): SettingsFragment = SettingsFragment()
     }
 }

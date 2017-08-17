@@ -24,9 +24,8 @@ import io.reactivex.disposables.Disposable
 
 open class LiveSource protected constructor() {
 
-    fun Lifecycle.observe(createSubscription: () -> Disposable) {
-        addObserver(RxLifecycleObserver(createSubscription))
-    }
+    fun Lifecycle.observe(createSubscription: () -> Disposable) =
+            addObserver(RxLifecycleObserver(createSubscription))
 
     private class RxLifecycleObserver(
             val createSubscription: () -> Disposable) : LifecycleObserver {

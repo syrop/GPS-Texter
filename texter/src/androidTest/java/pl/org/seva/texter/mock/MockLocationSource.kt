@@ -51,8 +51,8 @@ class MockLocationSource: LocationSource() {
                 .subscribe()
     }
 
-    override fun request() {}
-    override fun removeRequest() {}
+    override fun request() = Unit
+    override fun removeRequest() = Unit
 
     companion object {
 

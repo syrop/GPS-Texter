@@ -26,9 +26,7 @@ class ZoneCalculator {
 
     private val zones = SparseArray<DistanceZone>()
 
-    fun clearCache() {
-        zones.clear()
-    }
+    fun clearCache() = zones.clear()
 
     fun calculateZone(distance: Double): DistanceZone {
         var check = 0

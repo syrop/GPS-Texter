@@ -22,14 +22,10 @@ class DistanceZone(val min: Int, val max: Int) {
         private set
     private val time: Long = System.currentTimeMillis()
 
-    fun increaseCounter() {
-        counter++
-    }
+    fun increaseCounter() = counter++
 
     val delay: Long
         get() = System.currentTimeMillis() - time
 
-    override fun toString(): String {
-        return "[$min km - $max km]"
-    }
+    override fun toString() = "[$min km - $max km]"
 }

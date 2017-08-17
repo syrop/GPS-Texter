@@ -52,10 +52,10 @@ class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
     private val locationSource: LocationSource = instance()
     private val smsSender: SmsSender = instance()
 
-    val preferenceListener : (a : SharedPreferences, b : String) -> Unit =
+    private val preferenceListener : (a : SharedPreferences, b : String) -> Unit =
             { _, key -> this.onSharedPreferenceChanged(key) }
 
-    var permissionsCompositeSubscription = CompositeDisposable()
+    private var permissionsCompositeSubscription = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,25 +124,21 @@ class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
         return super.onOptionsItemSelected(item)
     }
 
-    fun onHomeLocationClicked() {
-        processLocationPermissions()
-    }
+    private fun onHomeLocationClicked() = processLocationPermissions()
 
-    fun onSmsEnabledChanged() {
+    private fun onSmsEnabledChanged() {
         if (isSmsEnabled()) {
             processSmsPermissions()
         }
     }
 
-    fun onNumberClicked() {
-        PhoneNumberFragment().show(supportFragmentManager, PHONE_NUMBER_FRAGMENT_TAG)
-    }
+    private fun onNumberClicked() =
+            PhoneNumberFragment().show(supportFragmentManager, PHONE_NUMBER_FRAGMENT_TAG)
 
-    private fun isSmsEnabled(): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)
-    }
+    private fun isSmsEnabled(): Boolean =
+            PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)
 
-    fun startHomeLocationActivity() {
+    private fun startHomeLocationActivity() {
         val intent = Intent(this, HomeLocationActivity::class.java)
         startActivity(intent)
     }
@@ -185,7 +181,7 @@ class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
         onLocationPermissionGranted()
     }
 
-    fun onHomeLocationChanged() {
+    private fun onHomeLocationChanged() {
         locationSource.onHomeLocationChanged()
         smsSender.resetZones()
     }
@@ -194,9 +190,8 @@ class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
-            grantResults: IntArray) {
-        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+            grantResults: IntArray) =
+            permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     private fun onSharedPreferenceChanged(key: String) {
         when (key) {

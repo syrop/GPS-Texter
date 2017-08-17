@@ -25,19 +25,16 @@ object DistanceCalculator {
         System.loadLibrary("native-lib")
     }
 
-    fun distanceKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        return distance(lat1, lon1, lat2, lon2)
-    }
+    fun distanceKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double) =
+            distance(lat1, lon1, lat2, lon2)
 
 
-    fun speedKph(loc1: Location, loc2: Location, time: Long): Double {
-        return speed(
-                loc1.latitude,
-                loc1.longitude,
-                loc2.latitude,
-                loc2.longitude,
-                time)
-    }
+    fun speedKph(loc1: Location, loc2: Location, time: Long) = speed(
+            loc1.latitude,
+            loc1.longitude,
+            loc2.latitude,
+            loc2.longitude,
+            time)
 
     private external fun distance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double
     private external fun speed(lat1: Double, lon1: Double, lat2: Double, lon2: Double, time: Long): Double

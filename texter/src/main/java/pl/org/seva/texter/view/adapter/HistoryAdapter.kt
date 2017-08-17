@@ -61,9 +61,7 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
                 context.getString(R.string.speed_unit))
     }
 
-    override fun getItemCount(): Int {
-        return values.size
-    }
+    override fun getItemCount() = values.size
 
     class DividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
@@ -100,8 +98,8 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val distance: TextView = view.findViewById<TextView>(R.id.distance)
-        val time: TextView = view.findViewById<TextView>(R.id.time)
-        val speed: TextView = view.findViewById<TextView>(R.id.speed)
+        val distance: TextView = view.findViewById(R.id.distance)
+        val time: TextView = view.findViewById(R.id.time)
+        val speed: TextView = view.findViewById(R.id.speed)
     }
 }

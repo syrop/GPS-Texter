@@ -20,12 +20,7 @@ package pl.org.seva.texter.mock
 import android.app.Activity
 import android.app.PendingIntent
 
-import javax.inject.Singleton
-
-import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.SmsSender
-import pl.org.seva.texter.presenter.SmsHistory
-import pl.org.seva.texter.presenter.ZoneCalculator
 
 class MockSmsSender: SmsSender() {
 

@@ -25,9 +25,7 @@ import pl.org.seva.texter.Constants
 
 class NumberPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
-    override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
-        return Constants.DEFAULT_PHONE_NUMBER
-    }
+    override fun onGetDefaultValue(a: TypedArray, index: Int) = Constants.DEFAULT_PHONE_NUMBER
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
         if (!restorePersistedValue) {

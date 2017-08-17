@@ -48,11 +48,9 @@ class Timer: LiveSource() {
         createTimerSubscription()
     }
 
-    fun addTimerListenerUi(lifecycle : Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { timerSubject
-                .doOnSubscribe { start() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listener() } }
-    }
+    fun addTimerListenerUi(lifecycle : Lifecycle, listener: () -> Unit) = lifecycle.observe { timerSubject
+            .doOnSubscribe { start() }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { listener() } }
 }

@@ -150,9 +150,7 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
         return false
     }
 
-    private fun initGps() {
-        locationSource.initGpsOnLocationGranted(applicationContext)
-    }
+    private fun initGps() = locationSource.initGpsOnLocationGranted(applicationContext)
 
     private fun showStartupDialog(): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -209,22 +207,14 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private val versionName: String
-        get() {
-            try {
-                return packageManager.getPackageInfo(packageName, 0).versionName
-            } catch (ex: PackageManager.NameNotFoundException) {
-                return getString(R.string.app_version_unknown)
-            }
-
-        }
+        get() =  packageManager.getPackageInfo(packageName, 0).versionName
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
-            grantResults: IntArray) {
-        // If request is cancelled, the result arrays are empty.
-        permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+            grantResults: IntArray) =
+            // If request is cancelled, the result arrays are empty.
+            permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     public override fun onDestroy() {
         // Also called when the screen is rotated.
@@ -236,26 +226,22 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
         super.onDestroy()
     }
 
-    private fun stopService() {
-        (application as TexterApplication).stopService()
-    }
+    private fun stopService() = (application as TexterApplication).stopService()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
-    override fun onBackPressed() {
-        if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
-            shuttingDown = true
-            exitToast?.cancel()
-            super.onBackPressed()
-        } else {
-            exitToast?.cancel()
-            exitToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
-            exitToast!!.show()
-            clickTime = System.currentTimeMillis()
-        }
+    override fun onBackPressed() = if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
+        shuttingDown = true
+        exitToast?.cancel()
+        super.onBackPressed()
+    } else {
+        exitToast?.cancel()
+        exitToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
+        exitToast!!.show()
+        clickTime = System.currentTimeMillis()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

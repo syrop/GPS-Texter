@@ -19,7 +19,6 @@ package pl.org.seva.texter.source
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
@@ -68,17 +67,13 @@ open class LocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks, Go
     protected var homeLng: Double = 0.0
     private var time: Long = 0
 
-    val locationUrl: String
-        get() {
-            return location?.let { GOOGLE_PREFIX + it.latitude + "," + it.longitude } ?: ""
-        }
+    val locationUrl
+        get() = location?.run { GOOGLE_PREFIX + latitude + "," + longitude } ?: ""
 
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
 
-    private fun connectGoogleApiClient() {
-        googleApiClient!!.connect()
-    }
+    private fun connectGoogleApiClient() = googleApiClient!!.connect()
 
     fun onHomeLocationChanged() {
         updateDistance()
@@ -114,27 +109,23 @@ open class LocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks, Go
         connectGoogleApiClient()
     }
 
-    fun addDistanceListener(lifecycle: Lifecycle, listener : () -> Unit) {
-        lifecycle.observe { distanceSubject
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe { request() }
-                .doOnDispose { removeRequest() }
-                .subscribe { listener() } }
-    }
+    fun addDistanceListener(lifecycle: Lifecycle, listener : () -> Unit) =
+            lifecycle.observe { distanceSubject
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { request() }
+            .doOnDispose { removeRequest() }
+            .subscribe { listener() } }
 
-    fun addDistanceChangedListenerUi(lifecycle: Lifecycle, listener : () -> Unit) {
-        lifecycle.observe { distanceSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listener() } }
-    }
+    fun addDistanceChangedListenerUi(lifecycle: Lifecycle, listener : () -> Unit) =
+            lifecycle.observe { distanceSubject
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { listener() } }
 
-    fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { homeChangedSubject.subscribe { listener() } }
-    }
+    fun addHomeChangedListener(lifecycle: Lifecycle, listener: () -> Unit) =
+            lifecycle.observe { homeChangedSubject.subscribe { listener() } }
 
-    fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { locationChangedSubject.subscribe { listener() } }
-    }
+    fun addLocationChangedListener(lifecycle: Lifecycle, listener: () -> Unit) =
+            lifecycle.observe { locationChangedSubject.subscribe { listener() } }
 
     val homeLatLng: LatLng
         get() = LatLng(homeLat, homeLng)
@@ -213,9 +204,9 @@ open class LocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks, Go
             LocationServices.FusedLocationApi.removeLocationUpdates(it, this) }
     }
 
-    override fun onConnectionSuspended(i: Int) {}
+    override fun onConnectionSuspended(i: Int) = Unit
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
+    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     companion object {
         private val GOOGLE_PREFIX = "http://maps.google.com/?q="

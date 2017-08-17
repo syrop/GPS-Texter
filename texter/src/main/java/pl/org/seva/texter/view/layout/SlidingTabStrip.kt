@@ -111,13 +111,11 @@ internal class SlidingTabStrip(context: Context) : LinearLayout(context, null) {
         /**
          * Set the alpha value of the `color` to be the given `alpha` value.
          */
-        private fun setColorAlpha(color: Int): Int {
-            return Color.argb(
-                    DEFAULT_BOTTOM_BORDER_COLOR_ALPHA.toInt(),
-                    Color.red(color),
-                    Color.green(color),
-                    Color.blue(color))
-        }
+        private fun setColorAlpha(color: Int): Int = Color.argb(
+                DEFAULT_BOTTOM_BORDER_COLOR_ALPHA.toInt(),
+                Color.red(color),
+                Color.green(color),
+                Color.blue(color))
 
         /**
          * Blend `color1` and `color2` using the given ratio.

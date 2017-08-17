@@ -153,13 +153,9 @@ class NavigationFragment: LifecycleFragment(), KodeinGlobalAware {
         distance_view!!.text = distanceStr
     }
 
-    private fun onDistanceChanged() {
-        showDistance(locationSource.distance)
-    }
+    private fun onDistanceChanged() = showDistance(locationSource.distance)
 
-    private fun onHomeChanged() {
-        updateHomeLocation(locationSource.homeLatLng)
-    }
+    private fun onHomeChanged() = updateHomeLocation(locationSource.homeLatLng)
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {

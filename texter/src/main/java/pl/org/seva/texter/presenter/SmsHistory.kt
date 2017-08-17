@@ -28,7 +28,7 @@ class SmsHistory {
     val list: MutableList<SmsLocation>
 
     init {
-        list = ArrayList<SmsLocation>()
+        list = ArrayList()
         list.add(SmsLocation())
     }
 

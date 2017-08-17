@@ -131,34 +131,24 @@ open class SmsSender: LiveSource(), KodeinGlobalAware {
         } ?:let { this.zone = zone }
     }
 
-    private fun canSendZone(zone: DistanceZone): Boolean {
-        return zone.min != this.zone!!.min &&
-                zone.counter >= Constants.SMS_COUNT_TRIGGER &&
-                zone.delay >= Constants.TIME_IN_ZONE
-    }
+    private fun canSendZone(zone: DistanceZone): Boolean = zone.min != this.zone!!.min &&
+            zone.counter >= Constants.SMS_COUNT_TRIGGER &&
+            zone.delay >= Constants.TIME_IN_ZONE
 
-    private fun calculateDirection(zone: DistanceZone): Int {
-        if (this.zone!!.min > zone.min) {
-            return -1
-        } else {
-            return 1
-        }
-    }
+    private fun calculateDirection(zone: DistanceZone) = if (this.zone!!.min > zone.min) -1 else 1
 
     @Synchronized fun resetZones() {
         zoneCalculator.clearCache()
         zone = null
     }
 
-    fun addSmsSendingListenerUi(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { smsSendingSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { listener() } }
-    }
+    fun addSmsSendingListenerUi(lifecycle: Lifecycle, listener: () -> Unit) =
+            lifecycle.observe { smsSendingSubject
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { listener() } }
 
-    fun addSmsSentListener(lifecycle: Lifecycle, listener: () -> Unit) {
-        lifecycle.observe { smsSentSubject.subscribe { listener() } }
-    }
+    fun addSmsSentListener(lifecycle: Lifecycle, listener: () -> Unit) =
+            lifecycle.observe { smsSentSubject.subscribe { listener() } }
 
     private val phoneNumber: String
         get() {
@@ -180,10 +170,8 @@ open class SmsSender: LiveSource(), KodeinGlobalAware {
         weakContext.get()?.unregisterReceiver(receiver)
     }
 
-    private fun registerBroadcastReceiver(id: String) {
-        // When the SMS has been sent.
-        registerReceiver(SmsSentReceiver(), IntentFilter(SENT + id))
-    }
+    private fun registerBroadcastReceiver(id: String) =// When the SMS has been sent.
+            registerReceiver(SmsSentReceiver(), IntentFilter(SENT + id))
 
     @SuppressLint("WrongConstant")
     fun send(model: SmsLocation) {
@@ -253,9 +241,8 @@ open class SmsSender: LiveSource(), KodeinGlobalAware {
     protected open fun sendTextMessage(
             text: String,
             sentIntent: PendingIntent,
-            deliveredIntent: PendingIntent) {
-        smsManager.sendTextMessage(phoneNumber, null, text, sentIntent, deliveredIntent)
-    }
+            deliveredIntent: PendingIntent) =
+            smsManager.sendTextMessage(phoneNumber, null, text, sentIntent, deliveredIntent)
 
     private fun checkInit() {
         if (!initialized) {

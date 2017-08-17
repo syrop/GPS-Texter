@@ -66,9 +66,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         addView(mTabStrip, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
     }
 
-    fun setCustomTabColorizer(tabColorizer: (Any) -> Int) {
-        mTabStrip.setCustomTabColorizer(tabColorizer)
-    }
+    fun setCustomTabColorizer(tabColorizer: (Any) -> Int) = mTabStrip.setCustomTabColorizer(tabColorizer)
 
     fun setDistributeEvenly() {
         mDistributeEvenly = true
@@ -204,12 +202,10 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
     }
 
-    private fun onTabClicked(v: View) {
-        repeat (mTabStrip.childCount) {
-            if (v === mTabStrip.getChildAt(it)) {
-                viewPager.currentItem = it
-                return
-            }
+    private fun onTabClicked(v: View) = repeat (mTabStrip.childCount) {
+        if (v === mTabStrip.getChildAt(it)) {
+            viewPager.currentItem = it
+            return
         }
     }
 

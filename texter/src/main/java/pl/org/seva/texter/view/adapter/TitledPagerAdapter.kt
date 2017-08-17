@@ -30,9 +30,7 @@ class TitledPagerAdapter(fm: FragmentManager, private val titles: Array<CharSequ
         return this
     }
 
-    override fun getItem(position: Int): Fragment {
-        return items[position]
-    }
+    override fun getItem(position: Int): Fragment = items[position]
 
     override fun getPageTitle(position: Int): CharSequence? {
         if (titles == null || position > titles.size) {
@@ -41,7 +39,5 @@ class TitledPagerAdapter(fm: FragmentManager, private val titles: Array<CharSequ
         return titles[position]
     }
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int = items.size
 }

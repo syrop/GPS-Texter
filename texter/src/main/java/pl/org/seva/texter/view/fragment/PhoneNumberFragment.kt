@@ -62,7 +62,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
         val v = inflater.inflate(R.layout.fragment_number, null)
 
-        number = v.findViewById<EditText>(R.id.number)
+        number = v.findViewById(R.id.number)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity,
@@ -111,10 +111,8 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         d.dismiss()
     }
 
-    private fun persistString(`val`: String) {
-        PreferenceManager.getDefaultSharedPreferences(activity).edit()
-                .putString(SettingsActivity.PHONE_NUMBER, `val`).apply()
-    }
+    private fun persistString(`val`: String) = PreferenceManager.getDefaultSharedPreferences(activity).edit()
+            .putString(SettingsActivity.PHONE_NUMBER, `val`).apply()
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -122,9 +120,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         loaderManager.initLoader(CONTACTS_QUERY_ID, null, this)
     }
 
-    override fun toString(): String {
-        return number.text.toString()
-    }
+    override fun toString() = number.text.toString()
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
         if (!contactsEnabled) {
@@ -167,22 +163,24 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                     }
                 }
                 data.close()
-                if (numbers.size == 1) {
-                    this.number.setText(numbers[0])
-                } else if (numbers.isEmpty()) {
-                    toast = Toast.makeText(
-                            context,
-                            R.string.no_number,
-                            Toast.LENGTH_SHORT)
-                    toast!!.show()
-                } else {
-                    val items = numbers.toTypedArray()
-                    AlertDialog.Builder(activity).setItems(items) { dialog, which ->
-                        dialog.dismiss()
-                        number.setText(numbers[which])
-                    }.setTitle(contactName).setCancelable(true).setNegativeButton(
-                            android.R.string.cancel)
-                            { dialog, _ -> dialog.dismiss() }.show()
+                when {
+                    numbers.size == 1 -> this.number.setText(numbers[0])
+                    numbers.isEmpty() -> {
+                        toast = Toast.makeText(
+                                context,
+                                R.string.no_number,
+                                Toast.LENGTH_SHORT)
+                        toast!!.show()
+                    }
+                    else -> {
+                        val items = numbers.toTypedArray()
+                        AlertDialog.Builder(activity).setItems(items) { dialog, which ->
+                            dialog.dismiss()
+                            number.setText(numbers[which])
+                        }.setTitle(contactName).setCancelable(true).setNegativeButton(
+                                android.R.string.cancel)
+                        { dialog, _ -> dialog.dismiss() }.show()
+                    }
                 }
             }
         }
@@ -206,9 +204,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         loaderManager.restartLoader(DETAILS_QUERY_ID, null, this)
     }
 
-    fun setNumber(number: String?) {
-        this.number.setText(number)
-    }
+    private fun setNumber(number: String?) = this.number.setText(number)
 
     companion object {
 

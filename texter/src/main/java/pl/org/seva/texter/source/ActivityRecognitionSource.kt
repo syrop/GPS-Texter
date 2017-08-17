@@ -76,9 +76,7 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
                 pendingIntent)
     }
 
-    override fun onConnectionSuspended(i: Int) {
-        unregisterReceiver()
-    }
+    override fun onConnectionSuspended(i: Int) = unregisterReceiver()
 
     private fun registerReceiver() {
         val context = weakContext!!.get() ?: return
@@ -92,8 +90,7 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
         context.unregisterReceiver(activityRecognitionReceiver)
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-    }
+    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     fun addActivityRecognitionListener(
             lifecycle: Lifecycle,

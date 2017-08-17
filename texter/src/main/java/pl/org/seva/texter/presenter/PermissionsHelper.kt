@@ -31,9 +31,7 @@ class PermissionsHelper {
 
     private val rationalesShown = ArrayList<String>()
 
-    fun isRationaleNeeded(permission: String): Boolean {
-        return !rationalesShown.contains(permission)
-    }
+    fun isRationaleNeeded(permission: String) = !rationalesShown.contains(permission)
 
     fun onRationaleShown(permission: String) {
         if (isRationaleNeeded(permission)) {
@@ -41,36 +39,29 @@ class PermissionsHelper {
         }
     }
 
-    fun permissionGrantedListener(): Observable<Pair<Int, String>> {
-        return permissionGrantedSubject.hide()
-    }
+    fun permissionGrantedListener(): Observable<Pair<Int, String>> = permissionGrantedSubject.hide()
 
-    fun permissionDeniedListener(): Observable<Pair<Int, String>> {
-        return permissionDeniedSubject.hide()
-    }
+    fun permissionDeniedListener(): Observable<Pair<Int, String>> = permissionDeniedSubject.hide()
 
-    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
-        if (grantResults.isEmpty()) {
-            for (permission in permissions) {
-                onPermissionDenied(requestCode, permission)
+    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) =
+            if (grantResults.isEmpty()) {
+                for (permission in permissions) {
+                    onPermissionDenied(requestCode, permission)
+                }
             }
-        }
-        else repeat (permissions.size) {
-            if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
-                onPermissionGranted(requestCode, permissions[it])
-            } else {
-                onPermissionDenied(requestCode, permissions[it])
+            else repeat (permissions.size) {
+                if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionGranted(requestCode, permissions[it])
+                } else {
+                    onPermissionDenied(requestCode, permissions[it])
+                }
             }
-        }
-    }
 
-    private fun onPermissionGranted(requestCode: Int, permission: String) {
-        permissionGrantedSubject.onNext(Pair(requestCode, permission))
-    }
+    private fun onPermissionGranted(requestCode: Int, permission: String) =
+            permissionGrantedSubject.onNext(Pair(requestCode, permission))
 
-    private fun onPermissionDenied(requestCode: Int, permission: String) {
-        permissionDeniedSubject.onNext(Pair(requestCode, permission))
-    }
+    private fun onPermissionDenied(requestCode: Int, permission: String) =
+            permissionDeniedSubject.onNext(Pair(requestCode, permission))
 
     companion object {
 

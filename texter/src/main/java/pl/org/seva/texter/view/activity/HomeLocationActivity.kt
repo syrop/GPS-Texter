@@ -23,7 +23,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
-import android.widget.Button
 import android.widget.Toast
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
@@ -147,14 +146,11 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
         super.onSaveInstanceState(outState)
     }
 
-    fun latLngToString(): String {
-        return HomeLocationPreference.toString(lat, lon)
-    }
+    private fun latLngToString(): String = HomeLocationPreference.toString(lat, lon)
 
-    private fun persistHomeLocation(`val`: String) {
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putString(SettingsActivity.HOME_LOCATION, `val`).apply()
-    }
+    private fun persistHomeLocation(`val`: String) =
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString(SettingsActivity.HOME_LOCATION, `val`).apply()
 
     private val persistedString: String
         get() = PreferenceManager.getDefaultSharedPreferences(this)
@@ -190,7 +186,7 @@ class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
         zoom = map!!.cameraPosition.zoom
     }
 
-    fun onUseCurrentLocationButtonClicked() {
+    private fun onUseCurrentLocationButtonClicked() {
         current_location_button.isEnabled = false
         val loc = locationSource.latLng
         loc?.let {
