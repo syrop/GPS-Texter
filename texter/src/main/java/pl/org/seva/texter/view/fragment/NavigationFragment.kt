@@ -170,8 +170,6 @@ class NavigationFragment: LifecycleFragment(), KodeinGlobalAware {
 
         private val MAP_TAG_NAVIGATION = "map_navigation"
 
-        fun newInstance(): NavigationFragment {
-            return NavigationFragment()
-        }
+        fun newInstance() = NavigationFragment()
     }
 }
