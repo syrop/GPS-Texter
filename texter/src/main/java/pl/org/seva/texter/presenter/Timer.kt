@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.source.LiveSource
 
-class Timer: LiveSource() {
+class Timer : LiveSource() {
 
     var resetTime = System.currentTimeMillis()
     private var timerSubscription = Disposables.empty()

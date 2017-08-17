@@ -24,7 +24,7 @@ import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 
-class Bootstrap(private val application: Application): KodeinGlobalAware {
+class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
     private var isServiceRunning = false
 

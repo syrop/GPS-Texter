@@ -46,7 +46,7 @@ import pl.org.seva.texter.view.fragment.PhoneNumberFragment
 
 import java.util.ArrayList
 
-class SettingsActivity: AppCompatActivity(), KodeinGlobalAware {
+class SettingsActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val permissionsHelper: PermissionsHelper = instance()
     private val locationSource: LocationSource = instance()

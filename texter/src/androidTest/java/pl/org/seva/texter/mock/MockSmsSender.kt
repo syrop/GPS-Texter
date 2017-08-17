@@ -22,7 +22,7 @@ import android.app.PendingIntent
 
 import pl.org.seva.texter.presenter.SmsSender
 
-class MockSmsSender: SmsSender() {
+class MockSmsSender : SmsSender() {
 
     var messagesSent: Int = 0
         private set

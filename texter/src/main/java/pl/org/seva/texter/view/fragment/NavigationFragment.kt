@@ -40,7 +40,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
 
-class NavigationFragment: LifecycleFragment(), KodeinGlobalAware {
+class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val permissionsHelper: PermissionsHelper = instance()

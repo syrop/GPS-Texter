@@ -28,7 +28,7 @@ import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 import pl.org.seva.texter.Constants
 
-class MockLocationSource: LocationSource() {
+class MockLocationSource : LocationSource() {
 
     private var ticks = -1
 

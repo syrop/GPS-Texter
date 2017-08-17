@@ -46,7 +46,7 @@ import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.model.SmsLocation
 
-class StatsFragment: LifecycleFragment(), KodeinGlobalAware {
+class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val activityRecognitionSource: ActivityRecognitionSource = instance()

@@ -33,7 +33,7 @@ import pl.org.seva.texter.presenter.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
 import pl.org.seva.texter.presenter.SmsSender
 
-class HistoryFragment: LifecycleFragment(), KodeinGlobalAware {
+class HistoryFragment : LifecycleFragment(), KodeinGlobalAware {
 
     private val smsHistory: SmsHistory = instance()
     private val smsSender: SmsSender = instance()

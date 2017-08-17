@@ -42,7 +42,8 @@ import pl.org.seva.texter.R
  * [android.app.Activity] or [android.support.v4.app.Fragment] call
  * [.setViewPager] providing it the ViewPager this layout is being used for.
  */
-class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : HorizontalScrollView(context, attrs, defStyle) {
+class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+        HorizontalScrollView(context, attrs, defStyle) {
 
 
     private val mTitleOffset: Int

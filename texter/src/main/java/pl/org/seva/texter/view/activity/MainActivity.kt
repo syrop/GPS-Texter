@@ -55,7 +55,7 @@ import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment
 import pl.org.seva.texter.source.LocationSource
 
-class MainActivity: AppCompatActivity(), KodeinGlobalAware {
+class MainActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val smsSender: SmsSender = instance()
     private val locationSource: LocationSource = instance()

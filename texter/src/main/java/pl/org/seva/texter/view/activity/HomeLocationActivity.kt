@@ -40,7 +40,7 @@ import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.Constants
 import pl.org.seva.texter.view.preference.HomeLocationPreference
 
-class HomeLocationActivity: LifecycleActivity(), KodeinGlobalAware {
+class HomeLocationActivity : LifecycleActivity(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
 

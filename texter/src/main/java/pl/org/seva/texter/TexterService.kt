@@ -35,7 +35,7 @@ import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.source.ActivityRecognitionSource
 
 
-class TexterService: LifecycleService(), KodeinGlobalAware {
+class TexterService : LifecycleService(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val smsSender: SmsSender = instance()

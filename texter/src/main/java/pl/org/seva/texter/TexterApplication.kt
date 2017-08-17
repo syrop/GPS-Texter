@@ -23,7 +23,7 @@ import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
 
-open class TexterApplication: Application(), KodeinGlobalAware {
+open class TexterApplication : Application(), KodeinGlobalAware {
 
     private val bootstrap: Bootstrap get() = instance()
 

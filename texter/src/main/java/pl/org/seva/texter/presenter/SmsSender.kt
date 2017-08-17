@@ -49,7 +49,7 @@ import pl.org.seva.texter.view.activity.SettingsActivity
 import pl.org.seva.texter.model.SmsLocation
 import pl.org.seva.texter.source.LiveSource
 
-open class SmsSender: LiveSource(), KodeinGlobalAware {
+open class SmsSender : LiveSource(), KodeinGlobalAware {
 
     private val smsHistory: SmsHistory = instance()
     private val locationSource: LocationSource = instance()
