@@ -17,24 +17,31 @@
 
 package pl.org.seva.texter.model
 
-import android.os.Parcel
+import android.annotation.SuppressLint
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class SmsLocation
-    : Parcelable {
-    var distance: Double = 0.0  // in kilometers
-    var minutes: Int = 0
-        private set // in minutes since midnight
-    var direction: Int = 0
-    var speed: Double = 0.0
+@SuppressLint("ParcelCreator")
+@Parcelize
+class SmsLocation(
+    var distance: Double = 0.0,  // in kilometers
+    var minutes: Int = 0, // in minutes since midnight
+    var direction: Int = 0,
+    var speed: Double = 0.0): Parcelable {
+
+    val sign: String
+        get() = when {
+            direction == 0 -> ""
+            direction < 0 -> "-"
+            else -> "+"
+        }
 
     override fun equals(other: Any?): Boolean {
         // ignore direction
         if (other !is SmsLocation) {
             return false
         }
-        val model = other
-        return model.distance == distance && model.minutes == minutes && model.speed == speed
+        return other.distance == distance && other.minutes == minutes && other.speed == speed
     }
 
     override fun hashCode(): Int {
@@ -45,30 +52,8 @@ class SmsLocation
         return result
     }
 
-    val sign: String
-        get() {
-            if (direction == 0) {
-                return ""
-            } else if (direction < 0) {
-                return "-"
-            } else {
-                return "+"
-            }
-        }
-
     fun setTime(minutes: Int): SmsLocation {
         this.minutes = minutes
         return this
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(out: Parcel, flags: Int) {
-        out.writeDouble(distance)
-        out.writeInt(minutes)
-        out.writeInt(direction)
-        out.writeDouble(speed)
     }
 }
