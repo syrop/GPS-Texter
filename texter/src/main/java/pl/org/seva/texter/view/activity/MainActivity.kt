@@ -264,8 +264,7 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
             // as you specify a parent activity in AndroidManifest.xml.
             when (item.itemId) {
                 R.id.action_settings -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this, SettingsActivity::class.java))
                     true
                 }
                 R.id.action_help -> {
@@ -275,9 +274,7 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
                 else -> super.onOptionsItemSelected(item)
             }
 
-    private fun onLocationPermissionGranted() {
-        initGps()
-    }
+    private fun onLocationPermissionGranted() = initGps()
 
     companion object {
 
