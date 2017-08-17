@@ -57,10 +57,10 @@ dependencies {
     implementation 'com.github.salomonbrys.kodein:kodein-android:4.1.0'
     implementation 'com.github.salomonbrys.kodein:kodein-conf:4.1.0'
     implementation 'commons-io:commons-io:2.5'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile 'org.mockito:mockito-android:2.6.2'
+    androidTestImplementation 'org.mockito:mockito-android:2.6.2'
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
