@@ -40,7 +40,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
 
-class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
+class NavigationFragment: LifecycleFragment(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val permissionsHelper: PermissionsHelper = instance()
@@ -58,9 +58,8 @@ class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_navigation, container, false)
-    }
+            savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_navigation, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

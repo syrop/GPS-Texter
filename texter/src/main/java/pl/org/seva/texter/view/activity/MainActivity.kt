@@ -289,6 +289,6 @@ class MainActivity: AppCompatActivity(), KodeinGlobalAware {
         private val GOOGLE_REQUEST_CODE = 0
 
         /** Number of milliseconds that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MS: Long = 500
+        private val DOUBLE_CLICK_MS: Long = 1000
     }
 }
