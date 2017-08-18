@@ -26,6 +26,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.view.activity.SettingsActivity
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) =
             addPreferencesFromResource(R.xml.preferences)
 

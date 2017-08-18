@@ -26,6 +26,7 @@ import org.hamcrest.Matcher
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
 
 class DelayAction private constructor(private val millis: Long) : ViewAction {
+
     override fun getConstraints(): Matcher<View> = isRoot()
 
     override fun getDescription(): String = "wait $millis milliseconds"

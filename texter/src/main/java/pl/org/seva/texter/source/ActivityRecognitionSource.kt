@@ -36,8 +36,8 @@ import java.lang.ref.WeakReference
 import io.reactivex.subjects.PublishSubject
 
 open class ActivityRecognitionSource : LiveSource(),
-    GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false
     private var googleApiClient: GoogleApiClient? = null

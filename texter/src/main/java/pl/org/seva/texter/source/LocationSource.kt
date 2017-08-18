@@ -43,10 +43,10 @@ import pl.org.seva.texter.presenter.DistanceCalculator
 import pl.org.seva.texter.Constants
 
 open class LocationSource : LiveSource(),
-    GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener,
-    com.google.android.gms.location.LocationListener,
-    KodeinGlobalAware {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener,
+        KodeinGlobalAware {
 
     private val timer: Timer = instance()
 
