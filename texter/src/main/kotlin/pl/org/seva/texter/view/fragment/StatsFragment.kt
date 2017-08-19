@@ -45,6 +45,8 @@ import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.model.SmsLocation
+import pl.org.seva.texter.view.map.prepareMap
+import pl.org.seva.texter.view.map.ready
 
 class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
 
@@ -99,18 +101,13 @@ class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
 
     override fun onResume() {
         super.onResume()
-        prepareMapFragment()
-    }
-
-    private fun prepareMapFragment() {
-        val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_TAG_STATS) as SupportMapFragment?
-        mapFragment?:let {
-            mapFragment = SupportMapFragment()
-            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_STATS).commit()
+        prepareMap {
+            fm = fragmentManager
+            container = mapContainerId
+            tag = MAP_TAG_STATS
+        } ready {
+            onReady()
         }
-
-        mapFragment!!.getMapAsync { it.onReady() }
     }
 
     @SuppressLint("MissingPermission")

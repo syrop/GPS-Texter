@@ -39,6 +39,8 @@ import kotlinx.android.synthetic.main.fragment_navigation.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
+import pl.org.seva.texter.view.map.ready
+import pl.org.seva.texter.view.map.prepareMap
 
 class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
@@ -75,18 +77,13 @@ class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
     override fun onResume() {
         super.onResume()
-        prepareMaps()
-    }
-
-    private fun prepareMaps() {
-        val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_TAG_NAVIGATION) as SupportMapFragment?
-        mapFragment?: let {
-            mapFragment = SupportMapFragment()
-            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_NAVIGATION).commit()
+        prepareMap {
+            fm = fragmentManager
+            container = mapContainerId
+            tag = MAP_TAG_NAVIGATION
+        } ready {
+            onReady()
         }
-
-        mapFragment!!.getMapAsync{ it.onReady() }
     }
 
     private fun createLocationSubscriptions() {
