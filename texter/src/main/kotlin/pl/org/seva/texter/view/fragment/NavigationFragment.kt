@@ -40,7 +40,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.source.LocationSource
 import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.view.map.ready
-import pl.org.seva.texter.view.map.prepareMap
+import pl.org.seva.texter.view.map.mapFragment
 
 class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
@@ -77,7 +77,7 @@ class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
 
     override fun onResume() {
         super.onResume()
-        prepareMap {
+        mapFragment = mapFragment {
             fm = fragmentManager
             container = mapContainerId
             tag = MAP_TAG_NAVIGATION

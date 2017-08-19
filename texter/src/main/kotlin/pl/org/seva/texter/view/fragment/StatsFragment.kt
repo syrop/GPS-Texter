@@ -45,7 +45,7 @@ import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.presenter.Timer
 import pl.org.seva.texter.model.SmsLocation
-import pl.org.seva.texter.view.map.prepareMap
+import pl.org.seva.texter.view.map.mapFragment
 import pl.org.seva.texter.view.map.ready
 
 class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
@@ -101,7 +101,7 @@ class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
 
     override fun onResume() {
         super.onResume()
-        prepareMap {
+        mapFragment = mapFragment {
             fm = fragmentManager
             container = mapContainerId
             tag = MAP_TAG_STATS
