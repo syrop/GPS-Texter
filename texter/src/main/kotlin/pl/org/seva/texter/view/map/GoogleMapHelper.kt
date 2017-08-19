@@ -21,7 +21,8 @@ import android.support.v4.app.FragmentManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 
-fun mapFragment(f: GoogleMapHelper.() -> Unit): SupportMapFragment = GoogleMapHelper().apply(f).prepare()
+inline fun mapFragment(f: GoogleMapHelper.() -> Unit): SupportMapFragment =
+        GoogleMapHelper().apply(f).prepare()
 
 infix fun SupportMapFragment.ready(f: GoogleMap.() -> Unit): SupportMapFragment = apply { getMapAsync(f) }
 
