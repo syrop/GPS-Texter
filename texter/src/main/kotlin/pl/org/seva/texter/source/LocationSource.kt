@@ -150,7 +150,7 @@ open class LocationSource : LiveSource(),
         val time = System.currentTimeMillis()
         speed = calculateSpeedOrReturnZero(this.location, location, time - this.time)
         this.location = location
-        this.distance = calculateCurrentDistance()  // distance in kilometres
+        updateDistance()
         this.time = time
         distanceSubject.onNext(0)
         locationChangedSubject.onNext(0)
