@@ -172,8 +172,8 @@ class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
         smsSender.addSmsSendingListenerUi(lifecycle) { onSendingSms() }
         activityRecognitionSource.addActivityRecognitionListener(
                 lifecycle,
-                stationaryListener = { onDeviceStationary() },
-                movingListener = { onDeviceMoving() })
+                stationary = this::onDeviceStationary,
+                moving = this::onDeviceMoving)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

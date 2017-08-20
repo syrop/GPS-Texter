@@ -60,9 +60,7 @@ class TexterService : LifecycleService(), KodeinGlobalAware {
             return
         }
         activityRecognitionSource.addActivityRecognitionListener(
-                lifecycle,
-                stationaryListener = { onDeviceStationary() },
-                movingListener = { onDeviceMoving() })
+                lifecycle, stationary = this::onDeviceStationary, moving = this::onDeviceMoving)
         activityRecognitionListenersAdded = true
     }
 

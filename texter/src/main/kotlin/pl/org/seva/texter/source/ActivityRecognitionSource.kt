@@ -93,12 +93,9 @@ open class ActivityRecognitionSource : LiveSource(),
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
-    fun addActivityRecognitionListener(
-            lifecycle: Lifecycle,
-            stationaryListener: () -> Unit,
-            movingListener: () -> Unit) {
-        lifecycle.observe { stationarySubject.subscribe { stationaryListener() }}
-        lifecycle.observe { movingSubject.subscribe { movingListener() }}
+    fun addActivityRecognitionListener(lifecycle: Lifecycle, stationary: () -> Unit, moving: () -> Unit) {
+        lifecycle.observe { stationarySubject.subscribe { stationary() }}
+        lifecycle.observe { movingSubject.subscribe { moving() }}
     }
 
     open protected fun onDeviceStationary() = stationarySubject.onNext(0)
