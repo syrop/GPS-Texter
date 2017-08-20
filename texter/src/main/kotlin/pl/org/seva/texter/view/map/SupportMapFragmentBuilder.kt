@@ -21,17 +21,17 @@ import android.support.v4.app.FragmentManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 
-inline fun mapFragment(f: GoogleMapHelper.() -> Unit): SupportMapFragment =
-        GoogleMapHelper().apply(f).prepare()
+inline fun mapFragment(f: SupportMapFragmentBuilder.() -> Unit): SupportMapFragment =
+        SupportMapFragmentBuilder().apply(f).build()
 
 infix fun SupportMapFragment.ready(f: GoogleMap.() -> Unit): SupportMapFragment = apply { getMapAsync(f) }
 
-class GoogleMapHelper {
+class SupportMapFragmentBuilder {
     lateinit var fm: FragmentManager
     lateinit var tag: String
     var container: Int = 0
 
-    fun prepare(): SupportMapFragment {
+    fun build(): SupportMapFragment {
         var result = fm.findFragmentByTag(tag) as SupportMapFragment?
         result?: let {
             result = SupportMapFragment()
