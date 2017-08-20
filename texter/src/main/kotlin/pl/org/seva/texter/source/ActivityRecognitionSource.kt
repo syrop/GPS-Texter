@@ -110,15 +110,16 @@ open class ActivityRecognitionSource : LiveSource(),
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result.mostProbableActivity.type == DetectedActivity.STILL &&
-                        result.getActivityConfidence(DetectedActivity.STILL) >=
-                                STATIONARY_CONFIDENCE_THRESHOLD) {
+                if (result probably DetectedActivity.STILL) {
                     onDeviceStationary()
                 } else {
                     onDeviceMoving()
                 }
             }
         }
+
+        private infix fun ActivityRecognitionResult.probably(activity: Int) =
+                mostProbableActivity.type == activity && getActivityConfidence(activity) >= MIN_CONFIDENCE
     }
 
     companion object {
@@ -126,7 +127,7 @@ open class ActivityRecognitionSource : LiveSource(),
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         /** The device is only stationary if confidence >= this level. */
-        private val STATIONARY_CONFIDENCE_THRESHOLD = 70
+        private val MIN_CONFIDENCE = 70
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
