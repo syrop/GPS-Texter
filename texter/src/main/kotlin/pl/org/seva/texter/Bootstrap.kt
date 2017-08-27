@@ -19,6 +19,7 @@ package pl.org.seva.texter
 
 import android.app.Application
 import android.content.Intent
+import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.source.ActivityRecognitionSource
@@ -39,8 +40,16 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         if (isServiceRunning) {
             return
         }
-        application.startService(Intent(application.baseContext, TexterService::class.java))
+        startService(Intent(application.baseContext, TexterService::class.java))
         isServiceRunning = true
+    }
+
+    private fun startService(intent: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            application.startForegroundService(intent)
+        } else {
+            application.startService(intent)
+        }
     }
 
     fun stopService() {
