@@ -19,7 +19,7 @@ package pl.org.seva.texter.mock
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
-import pl.org.seva.texter.TexterApplication
+import pl.org.seva.texter.application.TexterApplication
 
 class MockApplication : TexterApplication() {
 

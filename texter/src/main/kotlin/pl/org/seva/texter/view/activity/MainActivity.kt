@@ -49,7 +49,7 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.presenter.SmsSender
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter
-import pl.org.seva.texter.TexterApplication
+import pl.org.seva.texter.application.TexterApplication
 import pl.org.seva.texter.view.fragment.HistoryFragment
 import pl.org.seva.texter.view.fragment.StatsFragment
 import pl.org.seva.texter.view.fragment.NavigationFragment

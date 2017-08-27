@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.application
 
 import android.app.Application
 import android.content.Intent
 import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
+import pl.org.seva.texter.service.TexterService
 import pl.org.seva.texter.source.ActivityRecognitionSource
 import pl.org.seva.texter.source.LocationSource
 

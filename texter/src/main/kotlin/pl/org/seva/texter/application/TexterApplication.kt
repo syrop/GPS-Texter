@@ -15,13 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.application
 
 import android.app.Application
 import android.content.pm.PackageManager
 import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
+import pl.org.seva.texter.application.Bootstrap
+import pl.org.seva.texter.application.module
 
 open class TexterApplication : Application(), KodeinGlobalAware {
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.service
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -32,6 +32,8 @@ import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
+import pl.org.seva.texter.R
+import pl.org.seva.texter.application.TexterApplication
 import pl.org.seva.texter.source.ActivityRecognitionSource
 
 

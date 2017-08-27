@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.application
 
 import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
