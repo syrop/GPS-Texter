@@ -19,9 +19,9 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LifecycleFragment
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +42,7 @@ import pl.org.seva.texter.presenter.PermissionsHelper
 import pl.org.seva.texter.view.map.ready
 import pl.org.seva.texter.view.map.mapFragment
 
-class NavigationFragment : LifecycleFragment(), KodeinGlobalAware {
+class NavigationFragment : Fragment(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val permissionsHelper: PermissionsHelper = instance()

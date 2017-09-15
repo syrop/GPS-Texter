@@ -17,8 +17,8 @@
 
 package pl.org.seva.texter.view.fragment
 
-import android.arch.lifecycle.LifecycleFragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +33,7 @@ import pl.org.seva.texter.presenter.SmsHistory
 import pl.org.seva.texter.view.adapter.HistoryAdapter
 import pl.org.seva.texter.presenter.SmsSender
 
-class HistoryFragment : LifecycleFragment(), KodeinGlobalAware {
+class HistoryFragment : Fragment(), KodeinGlobalAware {
 
     private val smsHistory: SmsHistory = instance()
     private val smsSender: SmsSender = instance()

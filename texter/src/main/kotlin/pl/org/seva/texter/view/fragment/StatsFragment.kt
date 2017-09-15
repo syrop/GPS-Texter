@@ -19,10 +19,10 @@ package pl.org.seva.texter.view.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LifecycleFragment
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +48,7 @@ import pl.org.seva.texter.model.SmsLocation
 import pl.org.seva.texter.view.map.mapFragment
 import pl.org.seva.texter.view.map.ready
 
-class StatsFragment : LifecycleFragment(), KodeinGlobalAware {
+class StatsFragment : Fragment(), KodeinGlobalAware {
 
     private val locationSource: LocationSource = instance()
     private val activityRecognitionSource: ActivityRecognitionSource = instance()

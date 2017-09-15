@@ -37,8 +37,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
-import android.widget.ListView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_number.*
 
 import java.util.ArrayList
 
@@ -68,7 +68,6 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                 activity,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
-        val contacts = v.findViewById<ListView>(R.id.contacts)
         if (!contactsEnabled) {
             contacts.visibility = View.GONE
         } else {
