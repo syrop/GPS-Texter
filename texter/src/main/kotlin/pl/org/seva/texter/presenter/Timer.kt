@@ -34,12 +34,11 @@ class Timer : LiveSource() {
     private val timerSubject = PublishSubject.create<Any>()
     private var start = { reset() }
 
+    private val interval = Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
+
     private fun createTimerSubscription() {
         timerSubscription.dispose()
-        timerSubscription = Observable.timer(1, TimeUnit.SECONDS, Schedulers.io())
-                .doOnNext { timerSubject.onNext(0) }
-                .repeat()
-                .subscribe()
+        timerSubscription = interval.subscribe { timerSubject.onNext(0) }
     }
 
     fun reset() {
