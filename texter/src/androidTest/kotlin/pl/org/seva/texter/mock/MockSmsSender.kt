@@ -20,7 +20,7 @@ package pl.org.seva.texter.mock
 import android.app.Activity
 import android.app.PendingIntent
 
-import pl.org.seva.texter.presenter.SmsSender
+import pl.org.seva.texter.sms.SmsSender
 
 class MockSmsSender : SmsSender() {
 

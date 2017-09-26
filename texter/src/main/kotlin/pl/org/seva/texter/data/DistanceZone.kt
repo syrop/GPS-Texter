@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.data
 
-import org.junit.Test
+class DistanceZone(val min: Int, val max: Int) {
+    var counter: Int = 0
+        private set
+    private val time: Long = System.currentTimeMillis()
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+    fun increaseCounter() = counter++
 
-class HomePreferenceTest {
+    val delay: Long
+        get() = System.currentTimeMillis() - time
 
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
-    }
+    override fun toString() = "[$min km - $max km]"
 }

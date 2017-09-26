@@ -15,17 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.application
 
-import org.junit.Test
+object Constants {
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+    /** Geo URI for Warsaw.  */
+    val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
-class HomePreferenceTest {
+    /** Number when it has not been otherwise set. */
+    val DEFAULT_PHONE_NUMBER = ""
 
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
-    }
+    /** Send an sms each time this value is crossed.  */
+    val KM_THRESHOLD = 2
+
+    /** If the number of measurements in the present zone has reached the trigger, send SMS.  */
+    val SMS_COUNT_TRIGGER = 2
+
+    /** Time spent in zone before an SMS is sent.  */
+    val TIME_IN_ZONE = 11 * 1000
+
+    val LOCATION_UPDATE_FREQUENCY_MS = 1000L
 }

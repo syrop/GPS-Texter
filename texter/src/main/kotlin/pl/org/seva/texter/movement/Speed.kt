@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.movement
 
-import org.junit.Test
+import android.annotation.SuppressLint
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
-
-class HomePreferenceTest {
-
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
+fun getSpeedString(speed: Double, speedUnit: String): String {
+    @SuppressLint("DefaultLocale")
+    var result = String.format("%.1f", speed) + " " + speedUnit
+    if (result.contains(".0")) {
+        result = result.replace(".0", "")
+    } else if (result.contains(",0")) {
+        result = result.replace(",0", "")
     }
+    return result
 }

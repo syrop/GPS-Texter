@@ -24,9 +24,9 @@ import java.util.concurrent.TimeUnit
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
-import pl.org.seva.texter.source.LocationSource
-import pl.org.seva.texter.view.preference.HomeLocationPreference
-import pl.org.seva.texter.Constants
+import pl.org.seva.texter.movement.LocationSource
+import pl.org.seva.texter.ui.preference.HomeLocationPreference
+import pl.org.seva.texter.application.Constants
 
 class MockLocationSource : LocationSource() {
 

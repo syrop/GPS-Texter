@@ -25,7 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import pl.org.seva.texter.mock.MockSmsSender
-import pl.org.seva.texter.view.activity.MainActivity
+import pl.org.seva.texter.ui.activity.MainActivity
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
@@ -33,7 +33,7 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import junit.framework.Assert.assertTrue
 import pl.org.seva.texter.action.DelayAction
-import pl.org.seva.texter.presenter.SmsSender
+import pl.org.seva.texter.sms.SmsSender
 
 @RunWith(AndroidJUnit4::class)
 class LocationTest : KodeinGlobalAware {

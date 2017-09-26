@@ -17,7 +17,7 @@
 
 package pl.org.seva.texter.mock
 
-import pl.org.seva.texter.source.ActivityRecognitionSource
+import pl.org.seva.texter.movement.ActivityRecognitionSource
 
 class MockActivityRecognitionSource : ActivityRecognitionSource() {
 

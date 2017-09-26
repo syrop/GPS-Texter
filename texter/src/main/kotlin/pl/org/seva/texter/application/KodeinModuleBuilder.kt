@@ -21,9 +21,11 @@ import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.singleton
-import pl.org.seva.texter.presenter.*
-import pl.org.seva.texter.source.ActivityRecognitionSource
-import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.sms.*
+import pl.org.seva.texter.movement.ActivityRecognitionSource
+import pl.org.seva.texter.movement.LocationSource
+import pl.org.seva.texter.movement.ZoneCalculator
+import pl.org.seva.texter.ui.activity.Timer
 
 fun module(f: KodeinModuleBuilder.() -> Unit) =
         KodeinModuleBuilder().apply { f() }.build()
@@ -37,7 +39,7 @@ class KodeinModuleBuilder {
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }
         bind<Timer>() with singleton { Timer() }
-        bind<PermissionsHelper>() with singleton { PermissionsHelper() }
+        bind<Permissions>() with singleton { Permissions() }
         bind<SmsHistory>() with singleton { SmsHistory() }
         bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
         bind<ZoneCalculator>() with singleton { ZoneCalculator() }

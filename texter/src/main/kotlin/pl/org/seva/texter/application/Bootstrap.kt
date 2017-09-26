@@ -22,9 +22,9 @@ import android.content.Intent
 import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
-import pl.org.seva.texter.service.TexterService
-import pl.org.seva.texter.source.ActivityRecognitionSource
-import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.application.service.TexterService
+import pl.org.seva.texter.movement.ActivityRecognitionSource
+import pl.org.seva.texter.movement.LocationSource
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 

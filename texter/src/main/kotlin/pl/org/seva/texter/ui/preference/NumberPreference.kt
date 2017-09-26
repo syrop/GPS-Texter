@@ -15,17 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.ui.preference
 
-import org.junit.Test
+import android.content.Context
+import android.content.res.TypedArray
+import android.support.v7.preference.Preference
+import android.util.AttributeSet
+import pl.org.seva.texter.application.Constants
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+class NumberPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
-class HomePreferenceTest {
+    override fun onGetDefaultValue(a: TypedArray, index: Int) = Constants.DEFAULT_PHONE_NUMBER
 
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
+    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
+        if (!restorePersistedValue) {
+            persistString(Constants.DEFAULT_PHONE_NUMBER)
+        }
     }
 }

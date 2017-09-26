@@ -15,17 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.movement
 
-import org.junit.Test
+import android.location.Location
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+object DistanceCalculator {
 
-class HomePreferenceTest {
-
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
+    init {
+        System.loadLibrary("native-lib")
     }
+
+    fun distanceKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double) =
+            distance(lat1, lon1, lat2, lon2)
+
+
+    fun speedKph(loc1: Location, loc2: Location, time: Long) = speed(
+            loc1.latitude,
+            loc1.longitude,
+            loc2.latitude,
+            loc2.longitude,
+            time)
+
+    private external fun distance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double
+    private external fun speed(lat1: Double, lon1: Double, lat2: Double, lon2: Double, time: Long): Double
 }

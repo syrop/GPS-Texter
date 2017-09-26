@@ -20,9 +20,9 @@ package pl.org.seva.texter.mock
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.singleton
-import pl.org.seva.texter.presenter.SmsSender
-import pl.org.seva.texter.source.ActivityRecognitionSource
-import pl.org.seva.texter.source.LocationSource
+import pl.org.seva.texter.sms.SmsSender
+import pl.org.seva.texter.movement.ActivityRecognitionSource
+import pl.org.seva.texter.movement.LocationSource
 
 fun module(f: MockModuleBuilder.() -> Unit) =
         MockModuleBuilder().apply { f() }.build()

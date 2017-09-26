@@ -15,17 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter
+package pl.org.seva.texter.sms
 
-import org.junit.Test
+import java.util.ArrayList
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+import pl.org.seva.texter.data.SmsLocation
 
-class HomePreferenceTest {
+class SmsHistory {
 
-    @Test
-    fun testString() {
-        val str = HomeLocationPreference.toString(0.10407, -77.32785)
-        println(str)
+    private var mockFirstHistoryItem = true
+
+    val list: MutableList<SmsLocation>
+
+    init {
+        list = ArrayList()
+        list.add(SmsLocation())
+    }
+
+    fun add(model: SmsLocation) {
+        if (mockFirstHistoryItem) {
+            list.clear()
+            mockFirstHistoryItem = false
+        }
+        list.add(model)
     }
 }
