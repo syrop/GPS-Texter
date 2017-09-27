@@ -50,8 +50,9 @@ class SettingsActivity : AppCompatActivity(), KodeinGlobalAware {
     private val locationSource: LocationSource = instance()
     private val smsSender: SmsSender = instance()
 
-    private val preferenceListener : (a : SharedPreferences, b : String) -> Unit =
-            { _, key -> this.onSharedPreferenceChanged(key) }
+    private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener {
+        _, key -> onSharedPreferenceChanged(key)
+    }
 
     private var permissionsCompositeSubscription = CompositeDisposable()
 
