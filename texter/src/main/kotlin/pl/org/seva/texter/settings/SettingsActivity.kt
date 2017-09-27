@@ -134,7 +134,7 @@ class SettingsActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onNumberClicked() =
             PhoneNumberFragment().show(supportFragmentManager, PHONE_NUMBER_FRAGMENT_TAG)
 
-    private fun isSmsEnabled(): Boolean =
+    private fun isSmsEnabled() =
             PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)
 
     private fun startHomeLocationActivity() {
