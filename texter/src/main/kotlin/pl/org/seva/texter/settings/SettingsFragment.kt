@@ -51,7 +51,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     companion object {
-
         fun newInstance(): SettingsFragment = SettingsFragment()
     }
 }

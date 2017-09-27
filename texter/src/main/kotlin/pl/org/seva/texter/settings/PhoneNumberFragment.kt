@@ -37,8 +37,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
+import android.widget.ListView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_number.*
 
 import java.util.ArrayList
 
@@ -62,6 +62,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         val v = inflater.inflate(R.layout.fragment_number, null)
 
         number = v.findViewById(R.id.number)
+        val contacts = v.findViewById<ListView>(R.id.contacts)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity,
