@@ -15,24 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mock
+package pl.org.seva.texter.main
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.global
-import pl.org.seva.texter.main.TexterApplication
+object Constants {
 
-class MockApplication : TexterApplication() {
+    /** Geo URI for Warsaw.  */
+    val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
-    init {
-        Kodein.global.addImport(module {}, allowOverride = true)
-    }
+    /** Number when it has not been otherwise set. */
+    val DEFAULT_PHONE_NUMBER = ""
 
-    override fun onCreate() {
-        super.onCreate()
-        startService()
-    }
+    /** Send an sms each time this value is crossed.  */
+    val KM_THRESHOLD = 2
 
-    override fun hardwareCanSendSms() = true
+    /** If the number of measurements in the present zone has reached the trigger, send SMS.  */
+    val SMS_COUNT_TRIGGER = 2
 
-    override fun stopService() = Unit
+    /** Time spent in zone before an SMS is sent.  */
+    val TIME_IN_ZONE = 11 * 1000
+
+    val LOCATION_UPDATE_FREQUENCY_MS = 1000L
 }

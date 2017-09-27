@@ -15,24 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mock
+package pl.org.seva.texter.settings
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.global
-import pl.org.seva.texter.main.TexterApplication
+import android.content.Context
+import android.content.res.TypedArray
+import android.support.v7.preference.Preference
+import android.util.AttributeSet
+import pl.org.seva.texter.main.Constants
 
-class MockApplication : TexterApplication() {
+class NumberPreference(context: Context, attrs: AttributeSet) : Preference(context, attrs) {
 
-    init {
-        Kodein.global.addImport(module {}, allowOverride = true)
+    override fun onGetDefaultValue(a: TypedArray, index: Int) = Constants.DEFAULT_PHONE_NUMBER
+
+    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
+        if (!restorePersistedValue) {
+            persistString(Constants.DEFAULT_PHONE_NUMBER)
+        }
     }
-
-    override fun onCreate() {
-        super.onCreate()
-        startService()
-    }
-
-    override fun hardwareCanSendSms() = true
-
-    override fun stopService() = Unit
 }

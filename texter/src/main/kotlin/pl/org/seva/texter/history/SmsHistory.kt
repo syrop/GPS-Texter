@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.mock
+package pl.org.seva.texter.history
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.global
-import pl.org.seva.texter.main.TexterApplication
+import java.util.ArrayList
 
-class MockApplication : TexterApplication() {
+import pl.org.seva.texter.data.SmsLocation
+
+class SmsHistory {
+
+    private var mockFirstHistoryItem = true
+
+    val list: MutableList<SmsLocation>
 
     init {
-        Kodein.global.addImport(module {}, allowOverride = true)
+        list = ArrayList()
+        list.add(SmsLocation())
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        startService()
+    fun add(model: SmsLocation) {
+        if (mockFirstHistoryItem) {
+            list.clear()
+            mockFirstHistoryItem = false
+        }
+        list.add(model)
     }
-
-    override fun hardwareCanSendSms() = true
-
-    override fun stopService() = Unit
 }

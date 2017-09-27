@@ -18,7 +18,7 @@
 package pl.org.seva.texter.movement
 
 import android.util.SparseArray
-import pl.org.seva.texter.application.Constants
+import pl.org.seva.texter.main.Constants
 
 import pl.org.seva.texter.data.DistanceZone
 

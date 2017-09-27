@@ -41,14 +41,15 @@ import java.util.UUID
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.application.Constants
+import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.R
-import pl.org.seva.texter.application.observe
+import pl.org.seva.texter.main.observe
 import pl.org.seva.texter.data.DistanceZone
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.movement.getSpeedString
-import pl.org.seva.texter.ui.activity.SettingsActivity
+import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.data.SmsLocation
+import pl.org.seva.texter.history.SmsHistory
 import pl.org.seva.texter.movement.ZoneCalculator
 
 open class SmsSender : KodeinGlobalAware {

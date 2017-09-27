@@ -25,7 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import pl.org.seva.texter.mock.MockSmsSender
-import pl.org.seva.texter.ui.activity.MainActivity
+import pl.org.seva.texter.main.MainActivity
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot

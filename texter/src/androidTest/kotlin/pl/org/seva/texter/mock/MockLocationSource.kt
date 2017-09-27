@@ -25,8 +25,8 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
 import pl.org.seva.texter.movement.LocationSource
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
-import pl.org.seva.texter.application.Constants
+import pl.org.seva.texter.settings.HomeLocationPreference
+import pl.org.seva.texter.main.Constants
 
 class MockLocationSource : LocationSource() {
 

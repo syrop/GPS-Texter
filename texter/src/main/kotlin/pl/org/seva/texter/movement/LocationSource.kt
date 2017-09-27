@@ -36,11 +36,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.ui.activity.Timer
-import pl.org.seva.texter.ui.activity.SettingsActivity
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
-import pl.org.seva.texter.application.Constants
-import pl.org.seva.texter.application.observe
+import pl.org.seva.texter.stats.Timer
+import pl.org.seva.texter.settings.SettingsActivity
+import pl.org.seva.texter.settings.HomeLocationPreference
+import pl.org.seva.texter.main.Constants
+import pl.org.seva.texter.main.observe
 
 open class LocationSource :
         GoogleApiClient.ConnectionCallbacks,

@@ -19,7 +19,7 @@ package pl.org.seva.texter
 
 import org.junit.Test
 
-import pl.org.seva.texter.ui.preference.HomeLocationPreference
+import pl.org.seva.texter.settings.HomeLocationPreference
 
 class HomePreferenceTest {
 
