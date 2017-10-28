@@ -37,9 +37,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar.*
+import pl.org.seva.texter.main.addTo
 import pl.org.seva.texter.main.instance
+import pl.org.seva.texter.main.liveDisposable
 
 import java.util.ArrayList
 
@@ -53,7 +54,7 @@ class SettingsActivity : AppCompatActivity() {
         _, key -> onSharedPreferenceChanged(key)
     }
 
-    private var permissionsCompositeSubscription = CompositeDisposable()
+    private var permissionsCompositeSubscription = liveDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,20 +97,19 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun addReadContactsPermissionListeners() {
-        permissionsCompositeSubscription.add(permissionsHelper
+        permissionsHelper
                 .permissionDeniedListener()
                 .filter { it.first == Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
                 .filter { it.second == Manifest.permission.READ_CONTACTS }
-                .subscribe { onReadContactsPermissionDenied() })
+                .subscribe { onReadContactsPermissionDenied() } addTo permissionsCompositeSubscription
     }
 
     private fun addLocationPermissionListeners() {
-        permissionsCompositeSubscription.addAll(
-                permissionsHelper
-                        .permissionGrantedListener()
-                        .filter {it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
-                        .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                        .subscribe { onLocationPermissionGranted() })
+            permissionsHelper
+                    .permissionGrantedListener()
+                    .filter {it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { onLocationPermissionGranted() } addTo permissionsCompositeSubscription
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -139,11 +139,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun startHomeLocationActivity() {
         val intent = Intent(this, HomeLocationActivity::class.java)
         startActivity(intent)
-    }
-
-    override fun onDestroy() {
-        permissionsCompositeSubscription.dispose()
-        super.onDestroy()
     }
 
     private fun processSmsPermissions() {
