@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.main.service
+package pl.org.seva.texter.main
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -25,14 +25,11 @@ import android.os.Build
 
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.sms.SmsSender
-import pl.org.seva.texter.main.MainActivity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import pl.org.seva.texter.R
-import pl.org.seva.texter.main.TexterApplication
-import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.movement.ActivityRecognitionSource
 
 

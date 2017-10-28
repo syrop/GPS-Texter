@@ -20,7 +20,6 @@ package pl.org.seva.texter.main
 import android.app.Application
 import android.content.Intent
 import android.os.Build
-import pl.org.seva.texter.main.service.TexterService
 import pl.org.seva.texter.movement.ActivityRecognitionSource
 import pl.org.seva.texter.movement.LocationSource
 
