@@ -20,13 +20,11 @@ package pl.org.seva.texter.main
 import android.app.Application
 import android.content.Intent
 import android.os.Build
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.main.service.TexterService
 import pl.org.seva.texter.movement.ActivityRecognitionSource
 import pl.org.seva.texter.movement.LocationSource
 
-class Bootstrap(private val application: Application) : KodeinGlobalAware {
+class Bootstrap(private val application: Application) {
 
     private var isServiceRunning = false
 

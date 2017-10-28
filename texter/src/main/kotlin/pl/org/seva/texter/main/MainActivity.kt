@@ -32,8 +32,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.webkit.WebView
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -54,7 +52,7 @@ import pl.org.seva.texter.map.NavigationFragment
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.settings.SettingsActivity
 
-class MainActivity : AppCompatActivity(), KodeinGlobalAware {
+class MainActivity : AppCompatActivity() {
 
     private val smsSender: SmsSender = instance()
     private val locationSource: LocationSource = instance()

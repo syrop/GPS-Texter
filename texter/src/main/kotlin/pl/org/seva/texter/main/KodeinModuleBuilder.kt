@@ -20,6 +20,8 @@ package pl.org.seva.texter.main
 import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.conf.global
+import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
 import pl.org.seva.texter.history.SmsHistory
 import pl.org.seva.texter.sms.*
@@ -28,8 +30,9 @@ import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.movement.ZoneCalculator
 import pl.org.seva.texter.stats.Timer
 
-fun module(f: KodeinModuleBuilder.() -> Unit) =
-        KodeinModuleBuilder().apply { f() }.build()
+fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
+
+inline fun <reified T : Any> instance() = Kodein.global.instance<T>()
 
 class KodeinModuleBuilder {
 

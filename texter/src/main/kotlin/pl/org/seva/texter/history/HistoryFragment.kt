@@ -24,14 +24,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v7.widget.RecyclerView
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.fragment_history.*
 
 import pl.org.seva.texter.R
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.sms.SmsSender
 
-class HistoryFragment : Fragment(), KodeinGlobalAware {
+class HistoryFragment : Fragment() {
 
     private val smsHistory: SmsHistory = instance()
     private val smsSender: SmsSender = instance()

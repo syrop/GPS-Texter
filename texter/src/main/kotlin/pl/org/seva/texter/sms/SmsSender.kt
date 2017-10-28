@@ -32,8 +32,6 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import java.lang.ref.WeakReference
 import java.util.Calendar
@@ -50,9 +48,10 @@ import pl.org.seva.texter.movement.getSpeedString
 import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.history.SmsHistory
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.movement.ZoneCalculator
 
-open class SmsSender : KodeinGlobalAware {
+open class SmsSender {
 
     private val smsHistory: SmsHistory = instance()
     private val locationSource: LocationSource = instance()

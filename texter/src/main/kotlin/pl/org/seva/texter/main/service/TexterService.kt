@@ -30,14 +30,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.TexterApplication
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.movement.ActivityRecognitionSource
 
 
-class TexterService : LifecycleService(), KodeinGlobalAware {
+class TexterService : LifecycleService() {
 
     private val locationSource: LocationSource = instance()
     private val smsSender: SmsSender = instance()

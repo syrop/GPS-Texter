@@ -18,14 +18,12 @@
 package pl.org.seva.texter.settings
 
 import android.Manifest
-import android.arch.lifecycle.LifecycleActivity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -38,8 +36,9 @@ import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Constants
+import pl.org.seva.texter.main.instance
 
-class HomeLocationActivity : LifecycleActivity(), KodeinGlobalAware {
+class HomeLocationActivity : AppCompatActivity() {
 
     private val locationSource: LocationSource = instance()
 

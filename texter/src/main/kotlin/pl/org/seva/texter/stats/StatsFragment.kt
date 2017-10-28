@@ -27,8 +27,6 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -44,10 +42,11 @@ import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Permissions
 import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.data.SmsLocation
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.map.mapFragment
 import pl.org.seva.texter.map.ready
 
-class StatsFragment : Fragment(), KodeinGlobalAware {
+class StatsFragment : Fragment() {
 
     private val locationSource: LocationSource = instance()
     private val activityRecognitionSource: ActivityRecognitionSource = instance()

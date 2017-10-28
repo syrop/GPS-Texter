@@ -20,10 +20,9 @@ package pl.org.seva.texter.main
 import android.app.Application
 import android.content.pm.PackageManager
 import com.github.salomonbrys.kodein.*
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
 
-open class TexterApplication : Application(), KodeinGlobalAware {
+open class TexterApplication : Application() {
 
     private val bootstrap: Bootstrap get() = instance()
 

@@ -26,8 +26,6 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -39,9 +37,10 @@ import kotlinx.android.synthetic.main.fragment_navigation.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Permissions
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.stats.StatsFragment
 
-class NavigationFragment : Fragment(), KodeinGlobalAware {
+class NavigationFragment : Fragment() {
 
     private val locationSource: LocationSource = instance()
     private val permissionsHelper: Permissions = instance()

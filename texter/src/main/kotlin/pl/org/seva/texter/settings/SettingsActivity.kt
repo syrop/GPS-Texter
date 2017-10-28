@@ -37,14 +37,13 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar.*
+import pl.org.seva.texter.main.instance
 
 import java.util.ArrayList
 
-class SettingsActivity : AppCompatActivity(), KodeinGlobalAware {
+class SettingsActivity : AppCompatActivity() {
 
     private val permissionsHelper: Permissions = instance()
     private val locationSource: LocationSource = instance()
