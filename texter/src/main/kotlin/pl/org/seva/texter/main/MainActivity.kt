@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        val titles = arrayOf<CharSequence>(getString(R.string.stats_tab_name),
+        val titles = arrayOf<CharSequence>(
+                getString(R.string.stats_tab_name),
                 getString(R.string.map_tab_name),
                 getString(R.string.history_tab_name))
 
