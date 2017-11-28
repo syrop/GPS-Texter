@@ -48,7 +48,7 @@ import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.ui.TitledPagerAdapter
 import pl.org.seva.texter.history.HistoryFragment
 import pl.org.seva.texter.stats.StatsFragment
-import pl.org.seva.texter.map.NavigationFragment
+import pl.org.seva.texter.navigation.NavigationFragment
 import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.settings.SettingsActivity
 

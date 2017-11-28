@@ -43,8 +43,8 @@ import pl.org.seva.texter.main.Permissions
 import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.map.mapFragment
-import pl.org.seva.texter.map.ready
+import pl.org.seva.texter.navigation.mapFragment
+import pl.org.seva.texter.navigation.ready
 
 class StatsFragment : Fragment() {
 
