@@ -125,7 +125,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         val adapter = viewPager.adapter
         val tabClickListener = View.OnClickListener { this.onTabClicked(it) }
 
-        repeat (adapter.count) {
+        repeat (adapter!!.count) {
             var tabTitleView: TextView? = null
 
             val tabView = createDefaultTabView(context)
