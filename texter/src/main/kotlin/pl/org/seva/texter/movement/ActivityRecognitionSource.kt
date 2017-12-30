@@ -72,8 +72,7 @@ open class ActivityRecognitionSource :
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
-                googleApiClient,
+        ActivityRecognition.getClient(context).requestActivityUpdates(
                 ACTIVITY_RECOGNITION_INTERVAL_MS,
                 pendingIntent)
     }
@@ -99,9 +98,9 @@ open class ActivityRecognitionSource :
         lifecycle.observe { movingSubject.subscribe { moving() }}
     }
 
-    open protected fun onDeviceStationary() = stationarySubject.onNext(0)
+    protected open fun onDeviceStationary() = stationarySubject.onNext(0)
 
-    open protected fun onDeviceMoving() = movingSubject.onNext(0)
+    protected open fun onDeviceMoving() = movingSubject.onNext(0)
 
     private inner class ActivityRecognitionReceiver : BroadcastReceiver() {
 
@@ -122,10 +121,10 @@ open class ActivityRecognitionSource :
 
     companion object {
 
-        private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
-        private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
+        private const val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
+        private const val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         /** The device is only stationary if confidence >= this level. */
-        private val MIN_CONFIDENCE = 75 // 70 does not work on LG G6 Android 7.0
+        private const val MIN_CONFIDENCE = 75 // 70 does not work on LG G6 Android 7.0
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
