@@ -65,7 +65,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         val contacts = v.findViewById<ListView>(R.id.contacts)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
-                activity,
+                activity!!,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
         if (!contactsEnabled) {
@@ -91,9 +91,9 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity!!)
         // Get the layout inflater
-        val inflater = activity.layoutInflater
+        val inflater = activity!!.layoutInflater
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -129,7 +129,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
             CONTACTS_QUERY_ID -> {
                 val contactsSelectionArgs = arrayOf("1")
                 return CursorLoader(
-                        activity,
+                        activity!!,
                         ContactsContract.Contacts.CONTENT_URI,
                         CONTACTS_PROJECTION,
                         CONTACTS_SELECTION,
@@ -139,7 +139,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
             DETAILS_QUERY_ID -> {
                 val detailsSelectionArgs = arrayOf(contactKey)
                 return CursorLoader(
-                        activity,
+                        activity!!,
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         DETAILS_PROJECTION,
                         DETAILS_SELECTION,
@@ -173,7 +173,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                     }
                     else -> {
                         val items = numbers.toTypedArray()
-                        AlertDialog.Builder(activity).setItems(items) { dialog, which ->
+                        AlertDialog.Builder(activity!!).setItems(items) { dialog, which ->
                             dialog.dismiss()
                             number.setText(numbers[which])
                         }.setTitle(contactName).setCancelable(true).setNegativeButton(

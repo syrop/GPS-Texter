@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.texter.map
+package pl.org.seva.texter.navigation
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -69,14 +69,14 @@ class NavigationFragment : Fragment() {
         savedInstanceState?.let {
             animateCamera = false
         }
-        MapsInitializer.initialize(activity.applicationContext)
+        MapsInitializer.initialize(activity!!.applicationContext)
         mapContainerId = map_container_navigation.id
     }
 
     override fun onResume() {
         super.onResume()
         mapFragment = mapFragment {
-            fm = fragmentManager
+            fm = fragmentManager!!
             container = mapContainerId
             tag = MAP_TAG_NAVIGATION
         } ready {
@@ -106,7 +106,7 @@ class NavigationFragment : Fragment() {
 
     private fun processLocationPermission() {
         if (ContextCompat.checkSelfPermission(
-                activity,
+                activity!!,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onLocationPermissionGranted()
             map?.isMyLocationEnabled = true
@@ -120,7 +120,7 @@ class NavigationFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         mapFragment?.let {
-            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            fragmentManager!!.beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }
         super.onSaveInstanceState(outState)
