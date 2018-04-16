@@ -53,7 +53,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
     private lateinit var contactKey: String
     private var contactName: String? = null
 
-    private var adapter: SimpleCursorAdapter? = null
+    lateinit var adapter: SimpleCursorAdapter
     private lateinit var number: EditText
 
     @SuppressLint("InflateParams")
@@ -116,15 +116,14 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        loaderManager.initLoader(CONTACTS_QUERY_ID, null, this)
+        if (contactsEnabled) {
+            loaderManager.initLoader(CONTACTS_QUERY_ID, null, this)
+        }
     }
 
     override fun toString() = number.text.toString()
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
-        if (!contactsEnabled) {
-            return null
-        }
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         when (id) {
             CONTACTS_QUERY_ID -> {
                 val contactsSelectionArgs = arrayOf("1")
@@ -146,13 +145,13 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                         detailsSelectionArgs,
                         DETAILS_SORT)
             }
-            else -> return null
+            else -> throw IllegalArgumentException()
         }
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
         when (loader.id) {
-            CONTACTS_QUERY_ID -> adapter!!.swapCursor(data)
+            CONTACTS_QUERY_ID -> adapter.swapCursor(data)
             DETAILS_QUERY_ID -> {
                 val numbers = ArrayList<String>()
                 while (data.moveToNext()) {
@@ -187,7 +186,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
         when (loader.id) {
-            CONTACTS_QUERY_ID -> adapter!!.swapCursor(null)
+            CONTACTS_QUERY_ID -> adapter.swapCursor(null)
             DETAILS_QUERY_ID -> {
             }
         }
@@ -207,34 +206,34 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
 
     companion object {
 
-        private val CONTACTS_QUERY_ID = 0
-        private val DETAILS_QUERY_ID = 1
+        private const val CONTACTS_QUERY_ID = 0
+        private const val DETAILS_QUERY_ID = 1
 
         private val FROM_COLUMNS = arrayOf(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
 
         private val CONTACTS_PROJECTION = arrayOf( // SELECT
                 ContactsContract.Contacts._ID, ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY, ContactsContract.Contacts.HAS_PHONE_NUMBER)
 
-        private val CONTACTS_SELECTION = // FROM
+        private const val CONTACTS_SELECTION = // FROM
                 ContactsContract.Contacts.HAS_PHONE_NUMBER + " = ?"
 
-        private val CONTACTS_SORT = // ORDER_BY
+        private const val CONTACTS_SORT = // ORDER_BY
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
 
         private val DETAILS_PROJECTION = arrayOf( // SELECT
                 ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.LABEL)
 
-        private val DETAILS_SORT = // ORDER_BY
+        private const val DETAILS_SORT = // ORDER_BY
                 ContactsContract.CommonDataKinds.Phone._ID
 
-        private val DETAILS_SELECTION = // WHERE
+        private const val DETAILS_SELECTION = // WHERE
                 ContactsContract.Data.LOOKUP_KEY + " = ?"
 
 
         // The column index for the LOOKUP_KEY column
-        private val CONTACT_KEY_INDEX = 1
-        private val CONTACT_NAME_INDEX = 2
-        private val DETAILS_NUMBER_INDEX = 1
+        private const val CONTACT_KEY_INDEX = 1
+        private const val CONTACT_NAME_INDEX = 2
+        private const val DETAILS_NUMBER_INDEX = 1
 
         private val TO_IDS = intArrayOf(android.R.id.text1)
     }
