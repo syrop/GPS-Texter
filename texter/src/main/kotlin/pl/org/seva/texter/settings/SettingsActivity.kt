@@ -214,24 +214,24 @@ class SettingsActivity : AppCompatActivity() {
 
     companion object {
 
-        val PHONE_NUMBER_FRAGMENT_TAG = "number"
+        const val PHONE_NUMBER_FRAGMENT_TAG = "number"
 
         /** If device is not enabled to send SMS, this entire category will be hidden.  */
-        val CATEGORY_SMS = "category_sms"
+        const val CATEGORY_SMS = "category_sms"
 
         /** Unless true, SMS will be disabled and SMS-related options grayed out.  */
-        val SMS_ENABLED = "pref_enable_sms"
+        const val SMS_ENABLED = "pref_enable_sms"
         /** All text messages will be sent to this number.  */
-        val PHONE_NUMBER = "pref_phone_number"
+        const val PHONE_NUMBER = "pref_phone_number"
         /** Beyond this distance from home, no messages will be sent.  */
-        val MAXIMUM_DISTANCE = "pref_max_distance"
+        const val MAXIMUM_DISTANCE = "pref_max_distance"
         /** Location to measure distance from.  */
-        val HOME_LOCATION = "pref_home_location"
+        const val HOME_LOCATION = "pref_home_location"
         /** If true, time will be sent with every SMS.  */
-        val INCLUDE_TIME = "pref_include_time"
+        const val INCLUDE_TIME = "pref_include_time"
         /** If true, speed will be sent with every SMS.  */
-        val INCLUDE_SPEED = "pref_include_speed"
+        const val INCLUDE_SPEED = "pref_include_speed"
         /** If true, location will be sent with every SMS.  */
-        val INCLUDE_LOCATION = "pref_include_location"
+        const val INCLUDE_LOCATION = "pref_include_location"
     }
 }

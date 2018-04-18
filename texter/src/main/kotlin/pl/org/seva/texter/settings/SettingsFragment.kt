@@ -42,12 +42,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        when (preference.key) {
-            SettingsActivity.HOME_LOCATION -> homeLocationClickedListener?.invoke()
-            SettingsActivity.SMS_ENABLED -> smsEnabledClickedListener?.invoke()
-            SettingsActivity.PHONE_NUMBER -> numberClickedListener?.invoke()
+        return when (preference.key) {
+            SettingsActivity.HOME_LOCATION -> {
+                homeLocationClickedListener?.invoke()
+                true
+            }
+            SettingsActivity.SMS_ENABLED -> {
+                smsEnabledClickedListener?.invoke()
+                true
+            }
+            SettingsActivity.PHONE_NUMBER -> {
+                numberClickedListener?.invoke()
+                true
+            }
+            else -> super.onPreferenceTreeClick(preference)
         }
-        return super.onPreferenceTreeClick(preference)
     }
 
     companion object {
