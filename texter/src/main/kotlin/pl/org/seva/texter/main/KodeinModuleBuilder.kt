@@ -18,11 +18,11 @@
 package pl.org.seva.texter.main
 
 import android.app.Application
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.conf.global
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
+import org.kodein.di.Kodein
+import org.kodein.di.conf.global
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
 import pl.org.seva.texter.history.SmsHistory
 import pl.org.seva.texter.sms.*
 import pl.org.seva.texter.movement.ActivityRecognitionSource
@@ -32,7 +32,10 @@ import pl.org.seva.texter.stats.Timer
 
 fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
 
-inline fun <reified T : Any> instance() = Kodein.global.instance<T>()
+inline fun <reified R : Any> instance(): R {
+    val result by Kodein.global.instance<R>()
+    return result
+}
 
 class KodeinModuleBuilder {
 

@@ -19,8 +19,8 @@ package pl.org.seva.texter.main
 
 import android.app.Application
 import android.content.pm.PackageManager
-import com.github.salomonbrys.kodein.*
-import com.github.salomonbrys.kodein.conf.global
+import org.kodein.di.Kodein
+import org.kodein.di.conf.global
 
 open class TexterApplication : Application() {
 
