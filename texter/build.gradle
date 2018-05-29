@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '28.0-rc1'
+    buildToolsVersion '28.0-rc2'
 
     defaultConfig {
         applicationId 'pl.org.seva.texter'
