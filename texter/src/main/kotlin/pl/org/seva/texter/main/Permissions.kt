@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.main
@@ -65,7 +67,7 @@ class Permissions {
 
     companion object {
 
-        val LOCATION_PERMISSION_REQUEST_ID = 0
-        val SMS_AND_CONTACTS_PERMISSION_REQUEST_ID = 1
+        const val LOCATION_PERMISSION_REQUEST_ID = 0
+        const val SMS_AND_CONTACTS_PERMISSION_REQUEST_ID = 1
     }
 }

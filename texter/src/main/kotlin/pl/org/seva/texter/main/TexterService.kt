@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.main
@@ -123,7 +125,7 @@ class TexterService : LifecycleService() {
     }
 
     companion object {
-        private val NOTIFICATION_CHANNEL_ID = "my_channel_01"
-        private val ONGOING_NOTIFICATION_ID = 1
+        private const val NOTIFICATION_CHANNEL_ID = "my_channel_01"
+        private const val ONGOING_NOTIFICATION_ID = 1
     }
 }

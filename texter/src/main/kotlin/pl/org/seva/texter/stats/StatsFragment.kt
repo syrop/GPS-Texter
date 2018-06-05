@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.stats
@@ -142,6 +144,7 @@ class StatsFragment : Fragment() {
         map!!.addMarker(marker)
     }
 
+    @SuppressLint("CheckResult")
     private fun processLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 activity!!,
@@ -301,15 +304,15 @@ class StatsFragment : Fragment() {
 
     companion object {
 
-        private val MAP_TAG_STATS = "map_stats"
+        private const val MAP_TAG_STATS = "map_stats"
 
-        private val ZOOM_PROPERTY_NAME = "stats_map_zoom"
-        private val DEFAULT_ZOOM = 7.5f
+        private const val ZOOM_PROPERTY_NAME = "stats_map_zoom"
+        private const val DEFAULT_ZOOM = 7.5f
 
         var homeString: String? = null
         private lateinit var hourString: String
         private lateinit var speedUnitStr: String
 
-        fun newInstance(): StatsFragment = StatsFragment()
+        fun newInstance() = StatsFragment()
     }
 }

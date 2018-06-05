@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.main
@@ -20,19 +22,19 @@ package pl.org.seva.texter.main
 object Constants {
 
     /** Geo URI for Warsaw.  */
-    val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
+    const val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
     /** Number when it has not been otherwise set. */
-    val DEFAULT_PHONE_NUMBER = ""
+    const val DEFAULT_PHONE_NUMBER = ""
 
     /** Send an sms each time this value is crossed.  */
-    val KM_THRESHOLD = 2
+    const val KM_THRESHOLD = 2
 
     /** If the number of measurements in the present zone has reached the trigger, send SMS.  */
-    val SMS_COUNT_TRIGGER = 2
+    const val SMS_COUNT_TRIGGER = 2
 
     /** Time spent in zone before an SMS is sent.  */
-    val TIME_IN_ZONE = 11 * 1000
+    const val TIME_IN_ZONE = 11 * 1000
 
-    val LOCATION_UPDATE_FREQUENCY_MS = 1000L
+    const val LOCATION_UPDATE_FREQUENCY_MS = 1000L
 }

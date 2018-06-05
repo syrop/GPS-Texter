@@ -13,11 +13,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -119,6 +122,7 @@ class MainActivity : AppCompatActivity() {
 
      * @return true if all permissions had been granted before calling the method
      */
+    @SuppressLint("CheckResult")
     private fun processPermissions(): Boolean {
         val permissionsToRequest = ArrayList<String>()
         if (ContextCompat.checkSelfPermission(
@@ -262,13 +266,13 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        private val APP_VERSION_PLACEHOLDER = "[app_version]"
+        private const val APP_VERSION_PLACEHOLDER = "[app_version]"
 
-        private val PREF_STARTUP_SHOWN = "pref_startup_shown"
+        private const val PREF_STARTUP_SHOWN = "pref_startup_shown"
 
-        private val GOOGLE_REQUEST_CODE = 0
+        private const val GOOGLE_REQUEST_CODE = 0
 
         /** Number of milliseconds that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MS: Long = 1000
+        private const val DOUBLE_CLICK_MS = 1000L
     }
 }

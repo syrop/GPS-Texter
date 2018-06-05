@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter.movement
@@ -210,13 +212,13 @@ open class LocationSource :
     override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     companion object {
-        private val GOOGLE_PREFIX = "http://maps.google.com/?q="
-        private val ACCURACY_THRESHOLD_M = 100.0
+        private const val GOOGLE_PREFIX = "http://maps.google.com/?q="
+        private const val ACCURACY_THRESHOLD_M = 100.0
 
         /** Minimal distance (in meters) that will be counted between two subsequent updates.  */
-        private val MIN_DISTANCE = 5.0f
+        private const val MIN_DISTANCE = 5.0f
 
-        private val SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2
+        private const val SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2
 
         private fun isBetterLocation(location: Location, currentBestLocation: Location?): Boolean {
             currentBestLocation ?: return true

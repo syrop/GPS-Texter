@@ -13,12 +13,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.texter
 
 object TestConstants {
 
-    val LATITUDE_STEP = 0.001
-    internal val EXPECTED_MESSAGES_SENT = 2
+    const val LATITUDE_STEP = 0.001
+    internal const val EXPECTED_MESSAGES_SENT = 2
 }
