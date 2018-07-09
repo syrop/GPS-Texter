@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 3JVNWUeVH118S3pzU4hDgkUNwEeNarZySf
+ * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
  */
 
 package pl.org.seva.texter.sms
@@ -160,7 +160,7 @@ open class SmsSender {
             return if (numberStr!!.isNotEmpty()) numberStr else "0"
         }
 
-    open protected val maxSentDistance: Int
+    protected open val maxSentDistance: Int
         get() {
             val numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "")
             return if (numberStr!!.isNotEmpty()) Integer.valueOf(numberStr) else 0
@@ -193,16 +193,16 @@ open class SmsSender {
         val distance = model.distance
         @SuppressLint("DefaultLocale")
         val distanceStr = String.format("%.2f", distance) + model.sign
-        val smsBuilder = StringBuilder(distanceStr + " km")
+        val smsBuilder = StringBuilder("$distanceStr km")
         if (isSpeedIncluded) {
             val speedStr = getSpeedString(model.speed, speedUnit)
-            smsBuilder.append(if (speedStr.startsWith("0 ")) "" else ", " + speedStr)
+            smsBuilder.append(if (speedStr.startsWith("0 ")) "" else ", $speedStr")
         }
         if (isTimeIncluded) {
             val now = Calendar.getInstance()
             var minuteStr = Integer.toString(now.get(Calendar.MINUTE))
             if (minuteStr.length == 1) {
-                minuteStr = "0" + minuteStr
+                minuteStr = "0$minuteStr"
             }
             val timeStr = Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr
             smsBuilder.append(" (").append(timeStr).append(")")
@@ -309,13 +309,13 @@ open class SmsSender {
 
     companion object {
 
-        private val TEXT_KEY = "pl.org.seva.texter.Text"
-        private val DISTANCE_KEY = "pl.org.seva.texter.Distance"
-        private val MINUTES_KEY = "pl.org.seva.texter.Minutes"
-        private val DIRECTION_KEY = "pl.org.seva.texter.Direction"
-        private val SPEED_KEY = "pl.org.seva.texter.Speed"
+        private const val TEXT_KEY = "pl.org.seva.texter.Text"
+        private const val DISTANCE_KEY = "pl.org.seva.texter.Distance"
+        private const val MINUTES_KEY = "pl.org.seva.texter.Minutes"
+        private const val DIRECTION_KEY = "pl.org.seva.texter.Direction"
+        private const val SPEED_KEY = "pl.org.seva.texter.Speed"
 
-        private val SENT = "SMS_SENT"
-        private val DELIVERED = "SMS_DELIVERED"
+        private const val SENT = "SMS_SENT"
+        private const val DELIVERED = "SMS_DELIVERED"
     }
 }
