@@ -55,8 +55,8 @@ class LocationTest {
     }
 
     companion object {
-        private val DURATION_SEC = 50
-        private val SECOND_MS = 1000L
-        private val TENTH_SECOND_MS = 100L
+        private const val DURATION_SEC = 50
+        private const val SECOND_MS = 1000L
+        private const val TENTH_SECOND_MS = 100L
     }
 }
