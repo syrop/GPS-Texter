@@ -58,6 +58,6 @@ class MockLocationSource : LocationSource() {
 
     companion object {
 
-        private val MOCK_PROVIDER_NAME = "Mock provider"
+        private const val MOCK_PROVIDER_NAME = "Mock provider"
     }
 }
