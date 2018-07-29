@@ -36,19 +36,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.texter.stats.Timer
 import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.settings.HomeLocationPreference
 import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
+import pl.org.seva.texter.stats.timer
+
+val locationSource get() = instance<LocationSource>()
 
 open class LocationSource :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
-
-    private val timer: Timer = instance()
 
     private lateinit var preferences: SharedPreferences
 
@@ -71,7 +71,7 @@ open class LocationSource :
     private var time: Long = 0
 
     val locationUrl
-        get() = location?.run { GOOGLE_PREFIX + latitude + "," + longitude } ?: ""
+        get() = location?.run { "$GOOGLE_PREFIX$latitude,$longitude" } ?: ""
 
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
@@ -181,7 +181,7 @@ open class LocationSource :
         connected = true
 
         location?: let {
-            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.let { onLocationChanged(it) }
+            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.run { onLocationChanged(this) }
         }
 
         val updateFrequency = updateFrequency

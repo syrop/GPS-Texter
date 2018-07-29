@@ -45,19 +45,17 @@ import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.observe
 import pl.org.seva.texter.data.DistanceZone
-import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.movement.getSpeedString
 import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.data.SmsLocation
-import pl.org.seva.texter.history.SmsHistory
+import pl.org.seva.texter.history.smsHistory
 import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.movement.ZoneCalculator
+import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.zoneCalculator
+
+val smsSender get() = instance<SmsSender>()
 
 open class SmsSender {
-
-    private val smsHistory: SmsHistory = instance()
-    private val locationSource: LocationSource = instance()
-    private val zoneCalculator: ZoneCalculator = instance()
 
     private lateinit var preferences: SharedPreferences
     private lateinit var speedUnit: String

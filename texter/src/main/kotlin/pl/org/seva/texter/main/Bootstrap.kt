@@ -23,15 +23,14 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import pl.org.seva.texter.movement.ActivityRecognitionSource
-import pl.org.seva.texter.movement.LocationSource
+import pl.org.seva.texter.movement.activityRecognitionSource
+import pl.org.seva.texter.movement.locationSource
 
 class Bootstrap(private val application: Application) {
 
     private var isServiceRunning = false
 
     fun boot() {
-        val locationSource: LocationSource = instance()
-        val activityRecognitionSource: ActivityRecognitionSource = instance()
         locationSource.initPreferences(application)
         activityRecognitionSource.initWithContext(application)
     }

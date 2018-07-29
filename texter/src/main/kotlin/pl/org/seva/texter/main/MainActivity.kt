@@ -47,19 +47,15 @@ import java.util.ArrayList
 import java.util.Locale
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.ui.TitledPagerAdapter
 import pl.org.seva.texter.history.HistoryFragment
+import pl.org.seva.texter.movement.locationSource
 import pl.org.seva.texter.stats.StatsFragment
 import pl.org.seva.texter.navigation.NavigationFragment
-import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.settings.SettingsActivity
+import pl.org.seva.texter.sms.smsSender
 
 class MainActivity : AppCompatActivity() {
-
-    private val smsSender: SmsSender = instance()
-    private val locationSource: LocationSource = instance()
-    private val permissionsHelper: Permissions = instance()
 
     /** Used when counting a double click.  */
     private var clickTime: Long = 0
@@ -129,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            permissionsHelper
+            permissions
                     .permissionGrantedListener()
                     .filter { it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
@@ -213,10 +209,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
-            permissions: Array<String>,
+            permissionsArray: Array<String>,
             grantResults: IntArray) =
             // If request is cancelled, the result arrays are empty.
-            permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            permissions.onRequestPermissionsResult(requestCode, permissionsArray, grantResults)
 
     public override fun onDestroy() {
         // Also called when the screen is rotated.

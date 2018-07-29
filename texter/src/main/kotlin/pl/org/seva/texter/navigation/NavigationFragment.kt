@@ -37,15 +37,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_navigation.*
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Permissions
-import pl.org.seva.texter.main.instance
+import pl.org.seva.texter.main.permissions
+import pl.org.seva.texter.movement.locationSource
 import pl.org.seva.texter.stats.StatsFragment
 
 class NavigationFragment : Fragment() {
-
-    private val locationSource: LocationSource = instance()
-    private val permissionsHelper: Permissions = instance()
 
     private var map: GoogleMap? = null
     private var animateCamera = true
@@ -114,7 +111,7 @@ class NavigationFragment : Fragment() {
             onLocationPermissionGranted()
             map?.isMyLocationEnabled = true
         } else {
-            permissionsHelper.permissionGrantedListener()
+            permissions.permissionGrantedListener()
                     .filter { it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }

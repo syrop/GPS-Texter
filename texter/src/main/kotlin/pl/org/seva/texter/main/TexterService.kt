@@ -25,21 +25,17 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 
-import pl.org.seva.texter.movement.LocationSource
-import pl.org.seva.texter.sms.SmsSender
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.ActivityRecognitionSource
+import pl.org.seva.texter.movement.activityRecognitionSource
+import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.sms.smsSender
 
 
 class TexterService : LifecycleService() {
-
-    private val locationSource: LocationSource = instance()
-    private val smsSender: SmsSender = instance()
-    private val activityRecognitionSource: ActivityRecognitionSource = instance()
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
     private var activityRecognitionListenersAdded = false

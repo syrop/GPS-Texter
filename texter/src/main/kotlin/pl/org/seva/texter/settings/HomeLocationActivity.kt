@@ -36,13 +36,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Constants
-import pl.org.seva.texter.main.instance
+import pl.org.seva.texter.movement.locationSource
 
 class HomeLocationActivity : AppCompatActivity() {
-
-    private val locationSource: LocationSource = instance()
 
     private var locationChangedSubscription = Disposables.empty()
 

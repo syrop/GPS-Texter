@@ -20,9 +20,6 @@
 package pl.org.seva.texter.settings
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.LocationSource
-import pl.org.seva.texter.main.Permissions
-import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.ui.TitledPagerAdapter
 
 import android.Manifest
@@ -40,17 +37,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.toolbar.*
-import pl.org.seva.texter.main.addTo
-import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.main.liveDisposable
+import pl.org.seva.texter.main.*
+import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.sms.smsSender
 
 import java.util.ArrayList
 
 class SettingsActivity : AppCompatActivity() {
-
-    private val permissionsHelper: Permissions = instance()
-    private val locationSource: LocationSource = instance()
-    private val smsSender: SmsSender = instance()
 
     private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener {
         _, key -> onSharedPreferenceChanged(key)
@@ -99,7 +92,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun addReadContactsPermissionListeners() {
-        permissionsHelper
+        permissions
                 .permissionDeniedListener()
                 .filter { it.first == Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
                 .filter { it.second == Manifest.permission.READ_CONTACTS }
@@ -107,7 +100,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun addLocationPermissionListeners() {
-            permissionsHelper
+            permissions
                     .permissionGrantedListener()
                     .filter {it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
@@ -184,9 +177,9 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
-            permissions: Array<String>,
+            permissionsArray: Array<String>,
             grantResults: IntArray) =
-            permissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            permissions.onRequestPermissionsResult(requestCode, permissionsArray, grantResults)
 
     private fun onSharedPreferenceChanged(key: String) {
         when (key) {
@@ -197,12 +190,12 @@ class SettingsActivity : AppCompatActivity() {
     private fun onReadContactsPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                Manifest.permission.READ_CONTACTS) && permissionsHelper
+                Manifest.permission.READ_CONTACTS) && permissions
                 .isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage(R.string.perm_contacts_rationale)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
-                permissionsHelper.onRationaleShown(Manifest.permission.READ_CONTACTS)
+                permissions.onRationaleShown(Manifest.permission.READ_CONTACTS)
                 processSmsPermissions()
             }
             builder.create().show()

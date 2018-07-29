@@ -33,8 +33,7 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.isRoot
 import junit.framework.Assert.assertTrue
 import pl.org.seva.texter.action.DelayAction
-import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.sms.SmsSender
+import pl.org.seva.texter.sms.smsSender
 
 @RunWith(AndroidJUnit4::class)
 class LocationTest {
@@ -50,7 +49,7 @@ class LocationTest {
         repeat (DURATION_SEC) {
             onView(isRoot()).perform(DelayAction.delay(SECOND_MS))
         }
-        val sender = instance<SmsSender>() as MockSmsSender
+        val sender = smsSender as MockSmsSender
         assertTrue(sender.messagesSent >= TestConstants.EXPECTED_MESSAGES_SENT)
     }
 

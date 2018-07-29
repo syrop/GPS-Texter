@@ -36,7 +36,10 @@ import com.google.android.gms.location.DetectedActivity
 import java.lang.ref.WeakReference
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
+
+val activityRecognitionSource get() = instance<ActivityRecognitionSource>()
 
 open class ActivityRecognitionSource :
         GoogleApiClient.ConnectionCallbacks,

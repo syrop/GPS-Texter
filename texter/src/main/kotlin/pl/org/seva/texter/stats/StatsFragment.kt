@@ -39,22 +39,16 @@ import kotlinx.android.synthetic.main.fragment_stats.*
 import java.util.Calendar
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.ActivityRecognitionSource
-import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.main.Permissions
-import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.data.SmsLocation
-import pl.org.seva.texter.main.instance
+import pl.org.seva.texter.main.permissions
+import pl.org.seva.texter.movement.activityRecognitionSource
+import pl.org.seva.texter.movement.locationSource
 import pl.org.seva.texter.navigation.mapFragment
 import pl.org.seva.texter.navigation.ready
+import pl.org.seva.texter.sms.smsSender
 
 class StatsFragment : Fragment() {
-
-    private val locationSource: LocationSource = instance()
-    private val activityRecognitionSource: ActivityRecognitionSource = instance()
-    private val timer: Timer = instance()
-    private val smsSender: SmsSender = instance()
-    private val permissionsHelper: Permissions = instance()
 
     private var distance: Double = 0.0
     private var speed: Double = 0.0
@@ -153,7 +147,7 @@ class StatsFragment : Fragment() {
             map?.isMyLocationEnabled = true
             onLocationPermissionGranted()
         } else {
-            permissionsHelper.permissionGrantedListener()
+            permissions.permissionGrantedListener()
                     .filter { it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }

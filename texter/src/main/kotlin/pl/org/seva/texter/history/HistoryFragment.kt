@@ -29,13 +29,9 @@ import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_history.*
 
 import pl.org.seva.texter.R
-import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.sms.SmsSender
+import pl.org.seva.texter.sms.smsSender
 
 class HistoryFragment : Fragment() {
-
-    private val smsHistory: SmsHistory = instance()
-    private val smsSender: SmsSender = instance()
 
     private lateinit var adapter: HistoryAdapter
     private var scrollToBottom: Boolean = false

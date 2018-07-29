@@ -26,6 +26,8 @@ import java.util.ArrayList
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
+val permissions get() = instance<Permissions>()
+
 class Permissions {
 
     private val permissionGrantedSubject = PublishSubject.create<Pair<Int, String>>()

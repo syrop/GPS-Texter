@@ -27,7 +27,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
+
+val timer get() = instance<Timer>()
 
 class Timer {
 

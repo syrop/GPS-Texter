@@ -23,6 +23,9 @@ import android.util.SparseArray
 import pl.org.seva.texter.main.Constants
 
 import pl.org.seva.texter.data.DistanceZone
+import pl.org.seva.texter.main.instance
+
+val zoneCalculator get() = instance<ZoneCalculator>()
 
 class ZoneCalculator {
 

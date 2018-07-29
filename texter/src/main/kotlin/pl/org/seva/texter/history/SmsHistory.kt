@@ -22,6 +22,9 @@ package pl.org.seva.texter.history
 import java.util.ArrayList
 
 import pl.org.seva.texter.data.SmsLocation
+import pl.org.seva.texter.main.instance
+
+val smsHistory = instance<SmsHistory>()
 
 class SmsHistory {
 
