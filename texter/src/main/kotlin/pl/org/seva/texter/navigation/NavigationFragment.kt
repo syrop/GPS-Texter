@@ -23,17 +23,21 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.maps.*
-
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+
+
 import kotlinx.android.synthetic.main.fragment_navigation.*
 
 import pl.org.seva.texter.R
@@ -46,7 +50,6 @@ class NavigationFragment : Fragment() {
 
     private var map: GoogleMap? = null
     private var animateCamera = true
-    private var mapContainerId: Int = 0
     private var mapFragment: SupportMapFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,18 +72,8 @@ class NavigationFragment : Fragment() {
             animateCamera = false
         }
         MapsInitializer.initialize(activity!!.applicationContext)
-        mapContainerId = map_container_navigation.id
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapFragment = mapFragment {
-            fm = fragmentManager!!
-            container = mapContainerId
-            tag = MAP_TAG_NAVIGATION
-        } ready {
-            onReady()
-        }
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync { it.onReady() }
     }
 
     private fun createLocationSubscriptions() {
@@ -158,9 +151,6 @@ class NavigationFragment : Fragment() {
     }
 
     companion object {
-
-        private val MAP_TAG_NAVIGATION = "map_navigation"
-
         fun newInstance() = NavigationFragment()
     }
 }

@@ -24,8 +24,8 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +44,6 @@ import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.main.permissions
 import pl.org.seva.texter.movement.activityRecognitionSource
 import pl.org.seva.texter.movement.locationSource
-import pl.org.seva.texter.navigation.mapFragment
-import pl.org.seva.texter.navigation.ready
 import pl.org.seva.texter.sms.smsSender
 
 class StatsFragment : Fragment() {
@@ -54,7 +52,6 @@ class StatsFragment : Fragment() {
     private var speed: Double = 0.0
     private var isStationary: Boolean = false
 
-    private var mapContainerId: Int = 0
     private var mapFragment: SupportMapFragment? = null
     private var map: GoogleMap? = null
     private var locationPermissionGranted = false
@@ -90,18 +87,8 @@ class StatsFragment : Fragment() {
 
         showStats()
         MapsInitializer.initialize(activity!!.applicationContext)
-        mapContainerId = map_container_stats.id
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapFragment = mapFragment {
-            fm = fragmentManager!!
-            container = mapContainerId
-            tag = MAP_TAG_STATS
-        } ready {
-            onReady()
-        }
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync { it.onReady() }
     }
 
     @SuppressLint("MissingPermission")
@@ -297,9 +284,6 @@ class StatsFragment : Fragment() {
     }
 
     companion object {
-
-        private const val MAP_TAG_STATS = "map_stats"
-
         private const val ZOOM_PROPERTY_NAME = "stats_map_zoom"
         private const val DEFAULT_ZOOM = 7.5f
 

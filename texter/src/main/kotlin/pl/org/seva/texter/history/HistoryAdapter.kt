@@ -23,7 +23,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,11 +71,11 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
 
         init {
             val styledAttributes = context.obtainStyledAttributes(ATTRS)
-            divider = styledAttributes.getDrawable(0)
+            divider = styledAttributes.getDrawable(0)!!
             styledAttributes.recycle()
         }
 
-        override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+        override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
             val left = parent.paddingLeft
             val right = parent.width - parent.paddingRight
 

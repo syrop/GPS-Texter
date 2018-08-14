@@ -20,7 +20,7 @@
 package pl.org.seva.texter.movement
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location

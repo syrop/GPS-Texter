@@ -19,7 +19,7 @@
 
 package pl.org.seva.texter.stats
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import java.util.concurrent.TimeUnit
 
 import io.reactivex.Observable

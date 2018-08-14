@@ -27,7 +27,7 @@ import android.os.Build
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.arch.lifecycle.LifecycleService
+import androidx.lifecycle.LifecycleService
 import android.content.Context
 import pl.org.seva.texter.R
 import pl.org.seva.texter.movement.activityRecognitionSource

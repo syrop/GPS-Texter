@@ -20,7 +20,7 @@
 package pl.org.seva.texter.movement
 
 import android.app.PendingIntent
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

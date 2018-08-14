@@ -19,20 +19,20 @@
 
 package pl.org.seva.texter
 
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import pl.org.seva.texter.mock.MockSmsSender
-import pl.org.seva.texter.main.MainActivity
 
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.rule.ActivityTestRule
 import junit.framework.Assert.assertTrue
+import org.junit.Rule
 import pl.org.seva.texter.action.DelayAction
+import pl.org.seva.texter.main.MainActivity
 import pl.org.seva.texter.sms.smsSender
 
 @RunWith(AndroidJUnit4::class)
