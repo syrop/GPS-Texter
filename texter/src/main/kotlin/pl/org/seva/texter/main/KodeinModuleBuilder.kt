@@ -43,7 +43,7 @@ class KodeinModuleBuilder {
 
     lateinit var application: Application
 
-    fun build() = Kodein.Module {
+    fun build() = Kodein.Module("main") {
         bind<Bootstrap>() with singleton { Bootstrap(application) }
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }

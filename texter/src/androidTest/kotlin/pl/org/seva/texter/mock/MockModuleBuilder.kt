@@ -30,7 +30,7 @@ fun module(f: MockModuleBuilder.() -> Unit) =
         MockModuleBuilder().apply { f() }.build()
 
 class MockModuleBuilder {
-    fun build() = Kodein.Module {
+    fun build() = Kodein.Module("test") {
         bind<LocationSource>(overrides = true) with singleton { MockLocationSource() }
         bind<SmsSender>(overrides = true) with singleton { MockSmsSender() }
         bind<ActivityRecognitionSource>(overrides = true) with singleton { MockActivityRecognitionSource() }
