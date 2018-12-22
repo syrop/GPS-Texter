@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.texter.settings
@@ -31,25 +31,21 @@ class HomeLocationPreference(context: Context, attrs: AttributeSet) : Preference
 
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any = Constants.DEFAULT_HOME_LOCATION
 
-    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        if (!restorePersistedValue) {
-            persistString(Constants.DEFAULT_HOME_LOCATION)
-        }
+    override fun onSetInitialValue(defaultValue: Any?) {
+        persistString(Constants.DEFAULT_HOME_LOCATION)
     }
 
     companion object {
-        private val GEO_URI_FORMAT = "geo:%.6f,%.6f"
+        private const val GEO_URI_FORMAT = "geo:%.6f,%.6f"
 
         fun toString(lat: Double, lon: Double) = String.format(Locale.US, GEO_URI_FORMAT, lat, lon)
 
         fun parseLatitude(geoUri: String): Double {
-            val str = geoUri.substring(geoUri.indexOf(":") + 1, geoUri.indexOf(","))
-            return java.lang.Double.valueOf(str)!!
+            return geoUri.substring(geoUri.indexOf(":") + 1, geoUri.indexOf(",")).toDouble()
         }
 
         fun parseLongitude(geoUri: String): Double {
-            val str = geoUri.substring(geoUri.indexOf(",") + 1)
-            return java.lang.Double.valueOf(str)!!
+            return geoUri.substring(geoUri.indexOf(",") + 1).toDouble()
         }
     }
 }
