@@ -71,7 +71,7 @@ class HomeLocationActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val locationAvailable = locationPermitted && locationSource.isLocationAvailable
         current_location_button.isEnabled = locationAvailable
-        current_location_button.setOnClickListener { onUseCurrentLocationButtonClicked() }
+        current_location_button.setOnClickListener { onUseCurrentLocationClicked() }
         if (!toastShown) {
             Toast.makeText(
                     this,
@@ -183,7 +183,7 @@ class HomeLocationActivity : AppCompatActivity() {
         zoom = map!!.cameraPosition.zoom
     }
 
-    private fun onUseCurrentLocationButtonClicked() {
+    private fun onUseCurrentLocationClicked() {
         current_location_button.isEnabled = false
         val loc = locationSource.latLng
         loc?.let {
