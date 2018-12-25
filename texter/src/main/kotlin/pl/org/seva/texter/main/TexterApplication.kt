@@ -26,11 +26,11 @@ import org.kodein.di.conf.global
 
 open class TexterApplication : Application() {
 
-    private val bootstrap: Bootstrap get() = instance()
-
     init {
-        Kodein.global.addImport(module { application = this@TexterApplication })
+        Kodein.global.addImport(module)
     }
+
+    private val bootstrap: Bootstrap get() = instance()
 
     override fun onCreate() {
         super.onCreate()

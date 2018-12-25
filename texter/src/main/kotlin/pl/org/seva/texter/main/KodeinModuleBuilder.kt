@@ -19,7 +19,7 @@
 
 package pl.org.seva.texter.main
 
-import android.app.Application
+import android.content.Context
 import org.kodein.di.Kodein
 import org.kodein.di.conf.global
 import org.kodein.di.generic.bind
@@ -32,19 +32,17 @@ import pl.org.seva.texter.movement.LocationSource
 import pl.org.seva.texter.movement.ZoneCalculator
 import pl.org.seva.texter.stats.Timer
 
-fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
+val Context.module get() = KodeinModuleBuilder(this).build()
 
 inline fun <reified R : Any> instance(): R {
     val result by Kodein.global.instance<R>()
     return result
 }
 
-class KodeinModuleBuilder {
-
-    lateinit var application: Application
+class KodeinModuleBuilder(private val ctx: Context) {
 
     fun build() = Kodein.Module("main") {
-        bind<Bootstrap>() with singleton { Bootstrap(application) }
+        bind<Bootstrap>() with singleton { Bootstrap(ctx) }
         bind<LocationSource>() with singleton { LocationSource() }
         bind<SmsSender>() with singleton { SmsSender() }
         bind<Timer>() with singleton { Timer() }

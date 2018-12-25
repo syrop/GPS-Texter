@@ -19,34 +19,34 @@
 
 package pl.org.seva.texter.main
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import pl.org.seva.texter.movement.activityRecognitionSource
 import pl.org.seva.texter.movement.locationSource
 
-class Bootstrap(private val application: Application) {
+class Bootstrap(private val ctx: Context) {
 
     private var isServiceRunning = false
 
     fun boot() {
-        locationSource.initPreferences(application)
-        activityRecognitionSource.initWithContext(application)
+        locationSource.initPreferences(ctx)
+        activityRecognitionSource.initWithContext(ctx)
     }
 
     fun startService() {
         if (isServiceRunning) {
             return
         }
-        startService(Intent(application.baseContext, TexterService::class.java))
+        startService(Intent(ctx, TexterService::class.java))
         isServiceRunning = true
     }
 
     private fun startService(intent: Intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            application.startForegroundService(intent)
+            ctx.startForegroundService(intent)
         } else {
-            application.startService(intent)
+            ctx.startService(intent)
         }
     }
 
@@ -54,7 +54,7 @@ class Bootstrap(private val application: Application) {
         if (!isServiceRunning) {
             return
         }
-        application.stopService(Intent(application.baseContext, TexterService::class.java))
+        ctx.stopService(Intent(ctx, TexterService::class.java))
         isServiceRunning = false
     }
 }

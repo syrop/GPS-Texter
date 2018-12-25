@@ -26,8 +26,7 @@ import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.movement.ActivityRecognitionSource
 import pl.org.seva.texter.movement.LocationSource
 
-fun module(f: MockModuleBuilder.() -> Unit) =
-        MockModuleBuilder().apply { f() }.build()
+val module get() = MockModuleBuilder().build()
 
 class MockModuleBuilder {
     fun build() = Kodein.Module("test") {

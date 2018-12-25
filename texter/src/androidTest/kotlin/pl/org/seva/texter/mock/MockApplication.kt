@@ -26,7 +26,7 @@ import pl.org.seva.texter.main.TexterApplication
 class MockApplication : TexterApplication() {
 
     init {
-        Kodein.global.addImport(module {}, allowOverride = true)
+        Kodein.global.addImport(module, allowOverride = true)
     }
 
     override fun onCreate() {
