@@ -25,6 +25,8 @@ import android.os.Build
 import pl.org.seva.texter.movement.activityRecognitionSource
 import pl.org.seva.texter.movement.locationSource
 
+val bootstrap: Bootstrap get() = instance()
+
 class Bootstrap(private val ctx: Context) {
 
     private var isServiceRunning = false
