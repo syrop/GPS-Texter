@@ -100,6 +100,19 @@ class HomeLocationActivity : AppCompatActivity() {
     }
 
     private fun GoogleMap.onReady() {
+        fun onMapLongClick(latLng: LatLng) {
+            lat = latLng.latitude
+            lon = latLng.longitude
+            updateMarker()
+            if (isCurrentLocationAvailable) {
+                current_location_button.isEnabled = true
+            }
+        }
+
+        fun onCameraIdle() {
+            zoom = map!!.cameraPosition.zoom
+        }
+
         map = this
         if (ContextCompat.checkSelfPermission(
                 this@HomeLocationActivity,
@@ -172,20 +185,6 @@ class HomeLocationActivity : AppCompatActivity() {
         }
         isCurrentLocationAvailable = true
         current_location_button.isEnabled = true
-    }
-
-
-    private fun onMapLongClick(latLng: LatLng) {
-        lat = latLng.latitude
-        lon = latLng.longitude
-        updateMarker()
-        if (isCurrentLocationAvailable) {
-            current_location_button.isEnabled = true
-        }
-    }
-
-    private fun onCameraIdle() {
-        zoom = map!!.cameraPosition.zoom
     }
 
     private fun onUseCurrentLocationClicked() {
