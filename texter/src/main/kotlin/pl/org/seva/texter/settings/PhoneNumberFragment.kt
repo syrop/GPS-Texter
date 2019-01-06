@@ -64,7 +64,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         val v = inflater.inflate(R.layout.fragment_number, null)
 
         number = v.findViewById(R.id.number)
-        val contacts = v.findViewById<ListView>(R.id.contacts)
+        val contacts: ListView = v.findViewById(R.id.contacts)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
                 activity!!,

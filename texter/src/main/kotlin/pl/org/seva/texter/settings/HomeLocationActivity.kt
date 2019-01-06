@@ -38,7 +38,9 @@ import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.movement.locationSource
+import androidx.core.content.edit
 
+@Suppress("DEPRECATION")
 class HomeLocationActivity : AppCompatActivity() {
 
     private var locationChangedSubscription = Disposables.empty()
@@ -117,8 +119,8 @@ class HomeLocationActivity : AppCompatActivity() {
         }
         animateCamera = false
 
-        map!!.setOnMapLongClickListener({ onMapLongClick(it) })
-        map!!.setOnCameraIdleListener({ onCameraIdle() })
+        map!!.setOnMapLongClickListener { onMapLongClick(it) }
+        map!!.setOnCameraIdleListener { onCameraIdle() }
     }
 
     override fun onBackPressed() {
@@ -126,7 +128,9 @@ class HomeLocationActivity : AppCompatActivity() {
         toastShown = false
 
         persistHomeLocation(latLngToString())
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
+        PreferenceManager.getDefaultSharedPreferences(this).edit {
+                putFloat(ZOOM_PROPERTY_NAME, zoom)
+        }
         locationSource.onHomeLocationChanged()
 
         mapFragment?.let {
@@ -146,12 +150,13 @@ class HomeLocationActivity : AppCompatActivity() {
     private fun latLngToString(): String = HomeLocationPreference.toString(lat, lon)
 
     private fun persistHomeLocation(`val`: String) =
-            PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .putString(SettingsActivity.HOME_LOCATION, `val`).apply()
+            PreferenceManager.getDefaultSharedPreferences(this).edit {
+                putString(SettingsActivity.HOME_LOCATION, `val`)
+            }
 
     private val persistedString: String
         get() = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)
+                .getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)!!
 
     private fun updateMarker() {
         map!!.clear()
@@ -197,8 +202,8 @@ class HomeLocationActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val MAP_TAG_HOME_LOCATION = "map_home_location"
-        private val ZOOM_PROPERTY_NAME = "map_preference_gui_zoom"
-        private val ZOOM_DEFAULT_VALUE = 7.5f
+        private const val MAP_TAG_HOME_LOCATION = "map_home_location"
+        private const val ZOOM_PROPERTY_NAME = "map_preference_gui_zoom"
+        private const val ZOOM_DEFAULT_VALUE = 7.5f
     }
 }

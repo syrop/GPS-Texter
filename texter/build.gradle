@@ -76,7 +76,7 @@ kapt {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // Support
+    // AndroidX
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -85,6 +85,7 @@ dependencies {
     implementation 'androidx.test:rules:1.1.1'
     implementation 'androidx.test:runner:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     // Play
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
