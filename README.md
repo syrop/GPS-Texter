@@ -19,4 +19,4 @@ Once your home location is set, the program continues to send an sms when your d
 
 Please note that your carrier may charge you for each text message you send. It is advised to use this program if you have free text messages in your price plan.
 
-**Donate bitcoin:** 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+**Donate bitcoin:** bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
