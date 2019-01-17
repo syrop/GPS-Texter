@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = TitledPagerAdapter(supportFragmentManager, titles).setItems(fragments)
 
-        val pager = findViewById<ViewPager>(R.id.pager)
         pager.adapter = adapter
 
         val tabColor: Int
