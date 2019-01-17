@@ -30,7 +30,6 @@ import android.preference.PreferenceManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.webkit.WebView
