@@ -8,3 +8,5 @@ captures/
 projectFilesBackup/
 texter/.externalNativeBuild/
 texter/release
+.cxx/
+texter/.cxx/
