@@ -48,7 +48,7 @@ import java.util.Locale
 import pl.org.seva.texter.R
 import pl.org.seva.texter.ui.TitledPagerAdapter
 import pl.org.seva.texter.history.HistoryFragment
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.stats.StatsFragment
 import pl.org.seva.texter.navigation.NavigationFragment
 import pl.org.seva.texter.settings.SettingsActivity
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    private fun initGps() = locationSource.initGpsOnLocationGranted(applicationContext)
+    private fun initGps() = location.initGpsOnLocationGranted(applicationContext)
 
     private fun showStartupDialog(): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)

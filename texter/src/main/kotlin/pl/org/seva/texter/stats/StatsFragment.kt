@@ -42,8 +42,8 @@ import pl.org.seva.texter.R
 import pl.org.seva.texter.main.Permissions
 import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.main.permissions
-import pl.org.seva.texter.movement.activityRecognitionSource
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.activityRecognition
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.sms.smsSender
 
 class StatsFragment : Fragment() {
@@ -67,8 +67,8 @@ class StatsFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        distance = locationSource.distance
-        speed = locationSource.speed
+        distance = location.distance
+        speed = location.speed
         zoom = PreferenceManager.getDefaultSharedPreferences(activity)
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
 
@@ -95,7 +95,7 @@ class StatsFragment : Fragment() {
     private fun GoogleMap.onReady() {
         map = this
         processLocationPermission()
-        val homeLatLng = locationSource.homeLatLng
+        val homeLatLng = location.homeLatLng
         updateHomeLocation(homeLatLng)
         val cameraPosition = CameraPosition.Builder()
                 .target(homeLatLng).zoom(zoom).build()
@@ -148,11 +148,11 @@ class StatsFragment : Fragment() {
     }
 
     private fun createSubscriptions() {
-        locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
-        locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
+        location.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
+        location.addHomeChangedListener(lifecycle) { onHomeChanged() }
         timer.addTimerListenerUi(lifecycle) { showStats() }
         smsSender.addSmsSendingListenerUi(lifecycle) { onSendingSms() }
-        activityRecognitionSource.addActivityRecognitionListener(
+        activityRecognition.addActivityRecognitionListener(
                 lifecycle,
                 stationary = ::onDeviceStationary,
                 moving = ::onDeviceMoving)
@@ -254,8 +254,8 @@ class StatsFragment : Fragment() {
             this.speed = 0.0
             this.distance = 0.0
         } else {
-            this.distance = locationSource.distance
-            this.speed = locationSource.speed
+            this.distance = location.distance
+            this.speed = location.speed
         }
         showStats()
     }
@@ -279,7 +279,7 @@ class StatsFragment : Fragment() {
     }
 
     private fun onHomeChanged() {
-        distance = locationSource.distance
+        distance = location.distance
         showStats()
     }
 

@@ -37,7 +37,7 @@ import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.Constants
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.location
 import androidx.core.content.edit
 
 @Suppress("DEPRECATION")
@@ -71,7 +71,7 @@ class HomeLocationActivity : AppCompatActivity() {
         val locationPermitted = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val locationAvailable = locationPermitted && locationSource.isLocationAvailable
+        val locationAvailable = locationPermitted && location.isLocationAvailable
         current_location_button.isEnabled = locationAvailable
         current_location_button.setOnClickListener { onUseCurrentLocationClicked() }
         if (!toastShown) {
@@ -81,7 +81,7 @@ class HomeLocationActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT).show()
             toastShown = true
         }
-        locationSource.addLocationChangedListener(lifecycle) { onLocationChanged() }
+        location.addLocationChangedListener(lifecycle) { onLocationChanged() }
 
         if (!locationPermitted) {
             current_location_button.isEnabled = false
@@ -144,7 +144,7 @@ class HomeLocationActivity : AppCompatActivity() {
         PreferenceManager.getDefaultSharedPreferences(this).edit {
                 putFloat(ZOOM_PROPERTY_NAME, zoom)
         }
-        locationSource.onHomeLocationChanged()
+        location.onHomeLocationChanged()
 
         mapFragment?.let {
             fragmentManager.beginTransaction().remove(it).commit()
@@ -189,7 +189,7 @@ class HomeLocationActivity : AppCompatActivity() {
 
     private fun onUseCurrentLocationClicked() {
         current_location_button.isEnabled = false
-        val loc = locationSource.latLng
+        val loc = location.latLng
         loc?.let {
             lat = it.latitude
             lon = it.longitude

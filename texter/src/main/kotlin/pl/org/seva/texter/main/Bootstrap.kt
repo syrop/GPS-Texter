@@ -22,8 +22,8 @@ package pl.org.seva.texter.main
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import pl.org.seva.texter.movement.activityRecognitionSource
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.activityRecognition
+import pl.org.seva.texter.movement.location
 
 val bootstrap: Bootstrap get() = instance()
 
@@ -32,8 +32,8 @@ class Bootstrap(private val ctx: Context) {
     private var isServiceRunning = false
 
     fun boot() {
-        locationSource.initPreferences(ctx)
-        activityRecognitionSource.initWithContext(ctx)
+        location.initPreferences(ctx)
+        activityRecognition.initWithContext(ctx)
     }
 
     fun startService() {

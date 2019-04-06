@@ -30,8 +30,8 @@ import android.app.NotificationManager
 import androidx.lifecycle.LifecycleService
 import android.content.Context
 import pl.org.seva.texter.R
-import pl.org.seva.texter.movement.activityRecognitionSource
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.activityRecognition
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.sms.smsSender
 
 
@@ -46,7 +46,7 @@ class TexterService : LifecycleService() {
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addDistanceListeners()
         addActivityRecognitionListeners()
-        locationSource.request()
+        location.request()
 
         return Service.START_STICKY
     }
@@ -55,19 +55,19 @@ class TexterService : LifecycleService() {
         if (activityRecognitionListenersAdded) {
             return
         }
-        activityRecognitionSource.addActivityRecognitionListener(
+        activityRecognition.addActivityRecognitionListener(
                 lifecycle, stationary = ::onDeviceStationary, moving = ::onDeviceMoving)
         activityRecognitionListenersAdded = true
     }
 
     private fun onDeviceStationary() {
-        locationSource.paused = true
-        locationSource.removeRequest()
+        location.paused = true
+        location.removeRequest()
     }
 
     private fun onDeviceMoving() {
-        locationSource.paused = false
-        locationSource.request()
+        location.paused = false
+        location.request()
     }
 
     private fun createOngoingNotification(): Notification {
@@ -117,7 +117,7 @@ class TexterService : LifecycleService() {
         if (!hardwareCanSendSms()) {
             return
         }
-        locationSource.addDistanceListener(lifecycle) { smsSender.onDistanceChanged() }
+        location.addDistanceListener(lifecycle) { smsSender.onDistanceChanged() }
     }
 
     companion object {

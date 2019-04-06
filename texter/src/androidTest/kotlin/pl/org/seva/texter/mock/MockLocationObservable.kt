@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import pl.org.seva.texter.TestConstants
-import pl.org.seva.texter.movement.LocationSource
+import pl.org.seva.texter.movement.LocationObservable
 import pl.org.seva.texter.settings.HomeLocationPreference
 import pl.org.seva.texter.main.Constants
 
-class MockLocationSource : LocationSource() {
+class MockLocationObservable : LocationObservable() {
 
     private var ticks = -1
 

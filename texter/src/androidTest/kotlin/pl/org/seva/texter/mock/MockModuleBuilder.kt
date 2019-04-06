@@ -24,13 +24,13 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
 import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.movement.ActivityRecognitionObservable
-import pl.org.seva.texter.movement.LocationSource
+import pl.org.seva.texter.movement.LocationObservable
 
 val mockModule get() = MockModuleBuilder().build()
 
 class MockModuleBuilder {
     fun build() = Kodein.Module("test") {
-        bind<LocationSource>(overrides = true) with singleton { MockLocationSource() }
+        bind<LocationObservable>(overrides = true) with singleton { MockLocationObservable() }
         bind<SmsSender>(overrides = true) with singleton { MockSmsSender() }
         bind<ActivityRecognitionObservable>(overrides = true) with singleton { MockActivityRecognitionObservable() }
     }

@@ -43,7 +43,7 @@ import kotlinx.android.synthetic.main.fragment_navigation.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.Permissions
 import pl.org.seva.texter.main.permissions
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.stats.StatsFragment
 
 class NavigationFragment : Fragment() {
@@ -66,7 +66,7 @@ class NavigationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showDistance(locationSource.distance)
+        showDistance(location.distance)
 
         savedInstanceState?.let {
             animateCamera = false
@@ -77,14 +77,14 @@ class NavigationFragment : Fragment() {
     }
 
     private fun createLocationSubscriptions() {
-            locationSource.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
-            locationSource.addHomeChangedListener(lifecycle) { onHomeChanged() }
+            location.addDistanceChangedListenerUi(lifecycle) { onDistanceChanged() }
+            location.addHomeChangedListener(lifecycle) { onHomeChanged() }
     }
 
     private fun GoogleMap.onReady() {
         map = this
         processLocationPermission()
-        val homeLatLng = locationSource.homeLatLng
+        val homeLatLng = location.homeLatLng
         updateHomeLocation(homeLatLng)
         val cameraPosition = CameraPosition.Builder()
                 .target(homeLatLng).zoom(12f).build()
@@ -141,9 +141,9 @@ class NavigationFragment : Fragment() {
         distance_view!!.text = distanceStr
     }
 
-    private fun onDistanceChanged() = showDistance(locationSource.distance)
+    private fun onDistanceChanged() = showDistance(location.distance)
 
-    private fun onHomeChanged() = updateHomeLocation(locationSource.homeLatLng)
+    private fun onHomeChanged() = updateHomeLocation(location.homeLatLng)
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {

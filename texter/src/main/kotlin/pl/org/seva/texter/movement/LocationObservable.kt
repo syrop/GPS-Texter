@@ -43,9 +43,9 @@ import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
 import pl.org.seva.texter.stats.timer
 
-val locationSource get() = instance<LocationSource>()
+val location get() = instance<LocationObservable>()
 
-open class LocationSource :
+open class LocationObservable :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {

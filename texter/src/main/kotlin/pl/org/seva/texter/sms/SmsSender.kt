@@ -50,7 +50,7 @@ import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.history.smsHistory
 import pl.org.seva.texter.main.instance
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.movement.zoneCalculator
 
 val smsSender get() = instance<SmsSender>()
@@ -105,8 +105,8 @@ open class SmsSender {
     }
 
     fun onDistanceChanged() {
-        val distance = locationSource.distance
-        val speed = locationSource.speed
+        val distance = location.distance
+        val speed = location.speed
 
         val time = System.currentTimeMillis()
         val calendar = Calendar.getInstance()
@@ -206,7 +206,7 @@ open class SmsSender {
             smsBuilder.append(" (").append(timeStr).append(")")
         }
         if (isLocationIncluded) {
-            smsBuilder.append(" ").append(locationSource.locationUrl)
+            smsBuilder.append(" ").append(location.locationUrl)
         }
         @SuppressLint("DefaultLocale")
         val intentDistanceStr = String.format("%.1f", distance) + model.sign + " km"

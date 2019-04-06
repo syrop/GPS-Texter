@@ -38,7 +38,7 @@ import android.view.MenuItem
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.toolbar.*
 import pl.org.seva.texter.main.*
-import pl.org.seva.texter.movement.locationSource
+import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.sms.smsSender
 
 import java.util.ArrayList
@@ -170,7 +170,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun onHomeLocationChanged() {
-        locationSource.onHomeLocationChanged()
+        location.onHomeLocationChanged()
         smsSender.resetZones()
     }
 
@@ -203,7 +203,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun onLocationPermissionGranted() {
-        locationSource.initGpsOnLocationGranted(applicationContext)
+        location.initGpsOnLocationGranted(applicationContext)
         startHomeLocationActivity()
     }
 
