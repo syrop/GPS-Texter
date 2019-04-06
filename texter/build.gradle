@@ -99,7 +99,7 @@ dependencies {
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.1.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:6.1.0'
     implementation 'commons-io:commons-io:2.5'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     androidTestImplementation 'org.mockito:mockito-android:2.18.3'
