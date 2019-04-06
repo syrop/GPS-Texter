@@ -39,9 +39,9 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
 
-val activityRecognitionSource get() = instance<ActivityRecognitionSource>()
+val activityRecognitionSource get() = instance<ActivityRecognitionObservable>()
 
-open class ActivityRecognitionSource :
+open class ActivityRecognitionObservable :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 

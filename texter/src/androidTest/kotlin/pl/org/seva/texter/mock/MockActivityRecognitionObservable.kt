@@ -19,9 +19,9 @@
 
 package pl.org.seva.texter.mock
 
-import pl.org.seva.texter.movement.ActivityRecognitionSource
+import pl.org.seva.texter.movement.ActivityRecognitionObservable
 
-class MockActivityRecognitionSource : ActivityRecognitionSource() {
+class MockActivityRecognitionObservable : ActivityRecognitionObservable() {
 
     override fun onDeviceMoving() = Unit
     override fun onDeviceStationary() = Unit
