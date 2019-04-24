@@ -40,14 +40,13 @@ import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-import org.apache.commons.io.IOUtils
-
 import java.util.ArrayList
 import java.util.Locale
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.ui.TitledPagerAdapter
 import pl.org.seva.texter.history.HistoryFragment
+import pl.org.seva.texter.main.extension.readString
 import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.stats.StatsFragment
 import pl.org.seva.texter.navigation.NavigationFragment
@@ -157,16 +156,13 @@ class MainActivity : AppCompatActivity() {
         dialog!!.setCancelable(false)
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_startup)
-
         val web = dialog.findViewById<WebView>(R.id.web)
-
         val language = Locale.getDefault().language
         web.settings.defaultTextEncodingName = "utf-8"
-
-        val content = IOUtils.toString(
-                assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html"),
-                "UTF-8")
-                .replace(APP_VERSION_PLACEHOLDER, versionName)
+        val content =
+                assets.open(if (language == "pl") "startup_pl.html" else "startup_en.html")
+                        .readString()
+                        .replace(APP_VERSION_PLACEHOLDER, versionName)
         web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
 
         dialog.findViewById<View>(R.id.dismiss).setOnClickListener {
@@ -189,13 +185,11 @@ class MainActivity : AppCompatActivity() {
         dialog!!.setContentView(R.layout.dialog_help)
         val web = dialog!!.findViewById<WebView>(R.id.web)
         web.settings.defaultTextEncodingName = "utf-8"
-
         val language = Locale.getDefault().language
-
-        val content = IOUtils.toString(
-                assets.open(if (language == "pl") "help_pl.html" else "help_en.html"),
-                "UTF-8")
-                .replace(APP_VERSION_PLACEHOLDER, versionName)
+        val content =
+                assets.open(if (language == "pl") "help_pl.html" else "help_en.html")
+                        .readString()
+                        .replace(APP_VERSION_PLACEHOLDER, versionName)
         web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
 
         dialog!!.findViewById<View>(R.id.ok).setOnClickListener { dialog!!.dismiss() }

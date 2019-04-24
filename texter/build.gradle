@@ -98,11 +98,10 @@ dependencies {
     // Kodein
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.2.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:6.2.0'
-    implementation 'commons-io:commons-io:2.5'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestImplementation 'org.mockito:mockito-android:2.18.3'
+    androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
