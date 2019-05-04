@@ -17,9 +17,6 @@
 
 package pl.org.seva.texter;
 
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +24,8 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.dagger.MockGraph;
@@ -62,7 +61,7 @@ public class LocationTest {
     }
 
     @Test
-    public void test() {
+    public void testLocation() {
         onView(isRoot()).perform(delay(100));
         for (int i = 0; i <= DURATION_IN_SECONDS; i++) {
             onView(isRoot()).perform(delay(1000));

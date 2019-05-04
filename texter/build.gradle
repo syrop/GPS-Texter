@@ -67,6 +67,8 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation 'androidx.test:rules:1.1.1'
+    implementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     testImplementation 'junit:junit:4.12'
 }
