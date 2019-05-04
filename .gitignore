@@ -1,9 +1,12 @@
 .idea/
 *.iml
+*.apk
 .gradle/
 build/
 local.properties
 captures/
 projectFilesBackup/
 texter/.externalNativeBuild/
-texter/texter-release.apk
+texter/release
+.cxx/
+texter/.cxx/

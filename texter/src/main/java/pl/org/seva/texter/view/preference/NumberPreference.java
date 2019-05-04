@@ -22,10 +22,11 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.fragment.app.FragmentActivity;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.view.fragment.PhoneNumberFragment;
 
@@ -45,7 +46,7 @@ public class NumberPreference extends DialogPreference {
     protected View onCreateDialogView() {
         View result = super.onCreateDialogView();
         numberFragment = (PhoneNumberFragment)
-                ((android.support.v4.app.FragmentActivity) getContext()).
+                ((FragmentActivity) getContext()).
                         getSupportFragmentManager().findFragmentById(R.id.number_fragment);
         numberFragment.setNumber(number);
 
@@ -62,7 +63,7 @@ public class NumberPreference extends DialogPreference {
             myState.number = number;
             // If called after onSaveInstanceState, throws:
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            ((android.support.v4.app.FragmentActivity) getContext()).
+            ((FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
             numberFragment = null;
         }
@@ -106,7 +107,7 @@ public class NumberPreference extends DialogPreference {
             else {
                 number = getPersistedString("");
             }
-            ((android.support.v4.app.FragmentActivity) getContext()).
+            ((FragmentActivity) getContext()).
                     getSupportFragmentManager().beginTransaction().remove(numberFragment).commit();
         }
         super.onDialogClosed(positiveResult);

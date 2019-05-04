@@ -19,7 +19,7 @@ package pl.org.seva.texter;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 
 import javax.inject.Inject;
