@@ -67,4 +67,9 @@ public class MockSmsSender extends SmsSender {
     public int getMessagesSent() {
         return messagesSent;
     }
+
+    @Override
+    protected int getMaxSentDistance() {
+        return 50;
+    }
 }

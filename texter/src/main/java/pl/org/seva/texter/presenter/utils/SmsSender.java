@@ -156,7 +156,7 @@ public class SmsSender {
 		return numberStr.length() > 0 ? numberStr : "0";
 	}
 
-    private int getMaxSentDistance() {
+    protected int getMaxSentDistance() {
         String numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "");
         return numberStr.length() > 0 ? Integer.valueOf(numberStr) : 0;
     }

@@ -32,13 +32,9 @@ import pl.org.seva.texter.dagger.MockGraph;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.Assert.assertEquals;
 import static pl.org.seva.texter.action.DelayAction.delay;
-import static pl.org.seva.texter.matcher.DistanceMatcher.distance;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class LocationTest {
@@ -65,8 +61,7 @@ public class LocationTest {
         onView(isRoot()).perform(delay(100));
         for (int i = 0; i <= DURATION_IN_SECONDS; i++) {
             onView(isRoot()).perform(delay(1000));
-            onView(withId(R.id.distance_value)).check(matches(withText(distance(i * TestConstants.DISTANCE_STEP))));
         }
-        assertEquals(TestConstants.EXPECTED_MESSAGES_SENT, ((MockSmsSender) smsSender).getMessagesSent());
+        assertTrue(((MockSmsSender) smsSender).getMessagesSent() >= TestConstants.EXPECTED_MESSAGES_SENT);
     }
 }
