@@ -24,8 +24,8 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.dagger.MockGraph;

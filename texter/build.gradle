@@ -64,14 +64,16 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     androidTestAnnotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     implementation 'commons-io:commons-io:2.5'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'androidx.test:rules:1.1.1'
-    implementation 'androidx.test:runner:1.1.1'
+
+    // Testing
+    androidTestImplementation 'androidx.test:core:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1-alpha05'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test:rules:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
-    testImplementation 'junit:junit:4.12'
 }
+
 repositories {
     mavenCentral()
 }
