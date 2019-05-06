@@ -82,8 +82,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha5'
-    implementation 'androidx.test:rules:1.1.1'
-    implementation 'androidx.test:runner:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.core:core-ktx:1.0.1'
 
@@ -98,10 +96,15 @@ dependencies {
     // Kodein
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.2.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:6.2.0'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestImplementation 'org.mockito:mockito-android:2.27.0'
-    testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // Testing
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    androidTestImplementation 'androidx.test:core:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test:core-ktx:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1-alpha05'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1-alpha05'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test:rules:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
 }

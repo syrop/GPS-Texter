@@ -19,8 +19,6 @@
 
 package pl.org.seva.texter
 
-import androidx.test.runner.AndroidJUnit4
-
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -28,8 +26,9 @@ import pl.org.seva.texter.mock.MockSmsSender
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
-import junit.framework.Assert.assertTrue
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import pl.org.seva.texter.action.DelayAction
 import pl.org.seva.texter.main.MainActivity
