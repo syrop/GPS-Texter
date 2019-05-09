@@ -9,7 +9,7 @@ Press [SETTINGS] in the startup dialog.
 
 ![Settings](images/settings.png)
 
-In the settings menu click "Enable SMS", enter phone number, select which details are going to be sent with each sms and select your phone location.
+In the settings menu click "Enable SMS", enter phone number, select which details are going to be sent with each sms and select your home location.
 
 ![Home](images/home.png)
 
