@@ -81,9 +81,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha5'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.core:core-ktx:1.0.1'
+    implementation 'androidx.core:core-ktx:1.0.2'
 
     // Play
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
@@ -100,11 +100,11 @@ dependencies {
 
     // Testing
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    androidTestImplementation 'androidx.test:core:1.2.0-alpha05'
-    androidTestImplementation 'androidx.test:core-ktx:1.2.0-alpha05'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1-alpha05'
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1-alpha05'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
-    androidTestImplementation 'androidx.test:rules:1.2.0-alpha05'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
+    androidTestImplementation 'androidx.test:core:1.2.0-beta01'
+    androidTestImplementation 'androidx.test:core-ktx:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1-beta01'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1-beta01'
+    androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
+    androidTestImplementation 'androidx.test:rules:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
 }
