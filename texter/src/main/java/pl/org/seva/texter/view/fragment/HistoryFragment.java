@@ -19,6 +19,8 @@ package pl.org.seva.texter.view.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,10 +46,10 @@ import pl.org.seva.texter.presenter.utils.SmsSender;
 
 public class HistoryFragment extends Fragment {
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     SmsCache smsCache;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     SmsSender smsSender;
 
@@ -71,7 +73,6 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
     public void onAttach(Activity activity) {
@@ -130,7 +131,7 @@ public class HistoryFragment extends Fragment {
 
     private class OnScrollListener extends RecyclerView.OnScrollListener {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             if (recyclerView == historyRecyclerView) {
                 scrollToBottom = recyclerView.computeVerticalScrollOffset() ==
                         recyclerView.computeVerticalScrollRange() -

@@ -47,11 +47,8 @@ import pl.org.seva.texter.model.Sms;
 @Singleton
 public class SmsSender {
 
-    @SuppressWarnings("WeakerAccess")
     @Inject protected SmsCache smsCache;
-    @SuppressWarnings("WeakerAccess")
     @Inject protected LocationSource locationSource;
-    @SuppressWarnings("WeakerAccess")
     @Inject protected ZoneCalculator zoneCalculator;
 
     private static final String TEXT_KEY = "pl.org.seva.texter.Text";
@@ -207,7 +204,7 @@ public class SmsSender {
             if (minuteStr.length() == 1) {
                 minuteStr = "0" + minuteStr;
             }
-            String timeStr = Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr;
+            String timeStr = now.get(Calendar.HOUR_OF_DAY) + ":" + minuteStr;
             smsBuilder.append(" (").append(timeStr).append(")");
         }
         if (isLocationIncluded()) {
