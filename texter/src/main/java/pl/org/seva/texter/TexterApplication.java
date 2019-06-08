@@ -17,6 +17,7 @@
 
 package pl.org.seva.texter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.multidex.MultiDexApplication;
@@ -34,10 +35,10 @@ public class TexterApplication extends MultiDexApplication {
 
     private static final String TAG = TexterApplication.class.getSimpleName();
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     LocationSource locationSource;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     ActivityRecognitionSource activityRecognitionSource;
 
@@ -60,6 +61,8 @@ public class TexterApplication extends MultiDexApplication {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressLint("CheckResult")
     private void addGpsProviderListeners() {
         locationSource
                 .providerEnabledListener()
@@ -69,6 +72,8 @@ public class TexterApplication extends MultiDexApplication {
                 .subscribe(__ -> onProviderDisabled());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressLint("CheckResult")
     private void addActivityRecognitionListeners() {
         activityRecognitionSource
                 .stationaryListener()
