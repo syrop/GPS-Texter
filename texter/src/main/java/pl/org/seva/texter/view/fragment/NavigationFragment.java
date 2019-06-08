@@ -54,9 +54,9 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 
 public class NavigationFragment extends Fragment {
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject LocationSource locationSource;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject PermissionsUtils permissionsUtils;
 
     private TextView distanceTextView;
@@ -110,6 +110,7 @@ public class NavigationFragment extends Fragment {
         mapFragment.getMapAsync(this::onGoogleMapReady);
     }
 
+    @SuppressLint("CheckResult")
     private void onGoogleMapReady(GoogleMap googleMap) {
         map = googleMap;
         if (ContextCompat.checkSelfPermission(
@@ -143,7 +144,6 @@ public class NavigationFragment extends Fragment {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     // http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated#32088447
     public void onAttach(Activity activity) {

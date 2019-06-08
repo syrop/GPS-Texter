@@ -45,9 +45,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import org.apache.commons.io.IOUtils;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -73,19 +73,19 @@ import pl.org.seva.texter.presenter.utils.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     SmsSender smsSender;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     LocationSource locationSource;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     PermissionsUtils permissionsUtils;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     Timer timer;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     ActivityRecognitionSource activityRecognitionSource;
 
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     @Override
-    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         action = getIntent().getAction();
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        CharSequence titles[] = new CharSequence[NUMBER_OF_TABS];
+        CharSequence[] titles = new CharSequence[NUMBER_OF_TABS];
         titles[STATS_TAB_POSITION] = getString(R.string.stats_tab_name);
         titles[MAP_TAB_POSITION] = getString(R.string.map_tab_name);
         titles[HISTORY_TAB_POSITION] = getString(R.string.history_tab_name);
@@ -222,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         if (permissions.isEmpty()) {
             return true;
         }
-        String arr[] = new String[permissions.size()];
+        String[] arr = new String[permissions.size()];
         permissions.toArray(arr);
         ActivityCompat.requestPermissions(
                 this,
@@ -235,6 +234,24 @@ public class MainActivity extends AppCompatActivity {
     private void initGps() {
         locationSource.init(this);
         locationSource.callProviderListener();
+    }
+
+    private String read(String file) {
+        String result = null;
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open(file)))) {
+            StringBuilder builder = new StringBuilder();
+            String line = br.readLine();
+            while (line != null){
+                builder.append(line);
+                line = br.readLine();
+            }
+            result = builder.toString();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 
     private boolean showStartupDialog() {
@@ -255,16 +272,12 @@ public class MainActivity extends AppCompatActivity {
         String language = Locale.getDefault().getLanguage();
         web.getSettings().setDefaultTextEncodingName("utf-8");
 
-        try {
-            String content = IOUtils.toString(
-                    getAssets().open(language.equals("pl") ? "startup_pl.html" : "startup_en.html"),
-                    "UTF-8")
-                    .replace("[APP_VERSION]", getVersionName());
-            web.loadData(content, "text/html", "UTF-8");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        String content = read(language.equals("pl") ? "startup_pl.html" : "startup_en.html")
+                .replace("[APP_VERSION]", getVersionName());
+        web.loadData(
+                content,
+                "text/html",
+                "UTF-8");
 
         dialogBinding.dismiss.setOnClickListener(v -> {
             processPermissions();
@@ -298,16 +311,9 @@ public class MainActivity extends AppCompatActivity {
 
         String language = Locale.getDefault().getLanguage();
 
-        try {
-            String content = IOUtils.toString(
-                        getAssets().open(language.equals("pl") ? "help_pl.html" : "help_en.html"),
-                        "UTF-8")
-                    .replace("[APP_VERSION]", getVersionName());
-            web.loadData(content, "text/html", "UTF-8");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        String content = read(language.equals("pl") ? "help_pl.html" : "help_en.html")
+                .replace("[APP_VERSION]", getVersionName());
+        web.loadData(content, "text/html", "UTF-8");
 
         dialogBinding.ok.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
@@ -325,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
-            @NonNull String permissions[],
+            @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         // If request is cancelled, the result arrays are empty.
         if (requestCode == PermissionsUtils.PERMISSION_ACCESS_FINE_LOCATION_REQUEST) {
