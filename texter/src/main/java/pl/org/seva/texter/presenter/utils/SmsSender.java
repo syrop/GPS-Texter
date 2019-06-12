@@ -76,7 +76,6 @@ public class SmsSender {
     private Sms lastSentLocation;
     private DistanceZone zone;
 
-
     @Inject
     protected SmsSender() {
 		smsManager = android.telephony.SmsManager.getDefault();
