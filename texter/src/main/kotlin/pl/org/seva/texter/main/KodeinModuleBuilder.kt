@@ -34,10 +34,7 @@ import pl.org.seva.texter.stats.Timer
 
 val Context.module get() = KodeinModuleBuilder(this).build()
 
-inline fun <reified R : Any> instance(): R {
-    val result by Kodein.global.instance<R>()
-    return result
-}
+inline fun <reified R : Any> instance() = Kodein.global.instance<R>()
 
 class KodeinModuleBuilder(private val ctx: Context) {
 

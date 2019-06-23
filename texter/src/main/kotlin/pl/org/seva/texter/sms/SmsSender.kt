@@ -53,7 +53,7 @@ import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.movement.zoneCalculator
 
-val smsSender get() = instance<SmsSender>()
+val smsSender by instance<SmsSender>()
 
 open class SmsSender {
 

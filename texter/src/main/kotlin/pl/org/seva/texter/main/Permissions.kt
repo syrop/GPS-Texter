@@ -26,7 +26,7 @@ import java.util.ArrayList
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-val permissions get() = instance<Permissions>()
+val permissions by instance<Permissions>()
 
 class Permissions {
 

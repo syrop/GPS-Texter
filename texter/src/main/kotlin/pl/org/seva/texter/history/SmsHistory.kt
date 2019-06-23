@@ -24,7 +24,7 @@ import java.util.ArrayList
 import pl.org.seva.texter.data.SmsLocation
 import pl.org.seva.texter.main.instance
 
-val smsHistory = instance<SmsHistory>()
+val smsHistory by instance<SmsHistory>()
 
 class SmsHistory {
 

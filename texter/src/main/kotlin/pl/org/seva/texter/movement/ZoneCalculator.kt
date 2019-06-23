@@ -25,7 +25,7 @@ import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.data.DistanceZone
 import pl.org.seva.texter.main.instance
 
-val zoneCalculator get() = instance<ZoneCalculator>()
+val zoneCalculator by instance<ZoneCalculator>()
 
 class ZoneCalculator {
 

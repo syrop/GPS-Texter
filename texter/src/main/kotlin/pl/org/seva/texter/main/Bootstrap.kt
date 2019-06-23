@@ -25,7 +25,7 @@ import android.os.Build
 import pl.org.seva.texter.movement.activityRecognition
 import pl.org.seva.texter.movement.location
 
-val bootstrap: Bootstrap get() = instance()
+val bootstrap: Bootstrap by instance()
 
 class Bootstrap(private val ctx: Context) {
 

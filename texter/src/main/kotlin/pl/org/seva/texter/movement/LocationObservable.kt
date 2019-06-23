@@ -43,7 +43,7 @@ import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
 import pl.org.seva.texter.stats.timer
 
-val location get() = instance<LocationObservable>()
+val location by instance<LocationObservable>()
 
 open class LocationObservable :
         GoogleApiClient.ConnectionCallbacks,

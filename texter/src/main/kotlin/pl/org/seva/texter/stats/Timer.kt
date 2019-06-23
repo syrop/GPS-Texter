@@ -30,7 +30,7 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
 
-val timer get() = instance<Timer>()
+val timer by instance<Timer>()
 
 class Timer {
 

@@ -39,7 +39,7 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.texter.main.instance
 import pl.org.seva.texter.main.observe
 
-val activityRecognition get() = instance<ActivityRecognitionObservable>()
+val activityRecognition by instance<ActivityRecognitionObservable>()
 
 open class ActivityRecognitionObservable :
         GoogleApiClient.ConnectionCallbacks,

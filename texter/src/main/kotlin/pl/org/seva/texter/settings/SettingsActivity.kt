@@ -33,9 +33,10 @@ import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar.*
 import pl.org.seva.texter.main.*
 import pl.org.seva.texter.movement.location
@@ -49,7 +50,7 @@ class SettingsActivity : AppCompatActivity() {
         _, key -> onSharedPreferenceChanged(key)
     }
 
-    private var permissionsCompositeSubscription = liveDisposable()
+    private var permissionsCompositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,12 +92,17 @@ class SettingsActivity : AppCompatActivity() {
                 .unregisterOnSharedPreferenceChangeListener(preferenceListener)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        permissionsCompositeDisposable.dispose()
+    }
+
     private fun addReadContactsPermissionListeners() {
         permissions
                 .permissionDeniedListener()
                 .filter { it.first == Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
                 .filter { it.second == Manifest.permission.READ_CONTACTS }
-                .subscribe { onReadContactsPermissionDenied() } addTo permissionsCompositeSubscription
+                .subscribe { onReadContactsPermissionDenied() } addTo permissionsCompositeDisposable
     }
 
     private fun addLocationPermissionListeners() {
@@ -104,7 +110,7 @@ class SettingsActivity : AppCompatActivity() {
                     .permissionGrantedListener()
                     .filter {it.first == Permissions.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { onLocationPermissionGranted() } addTo permissionsCompositeSubscription
+                    .subscribe { onLocationPermissionGranted() } addTo permissionsCompositeDisposable
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
