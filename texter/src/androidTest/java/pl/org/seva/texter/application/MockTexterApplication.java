@@ -25,6 +25,9 @@ public class MockTexterApplication extends TexterApplication {
 
     @Override
     protected TexterComponent createComponent() {
+        // If it is not generated, try to run some tests first.
+        // See the whole thread on StackOverflow, and this response:
+        // https://stackoverflow.com/a/51349183/10821419
         return DaggerMockTexterComponent.create();
     }
 
