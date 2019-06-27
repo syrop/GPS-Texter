@@ -42,7 +42,7 @@ public class LocationTest {
 
     private static final int DURATION_IN_SECONDS = 50;
 
-    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject SmsSender smsSender;
 
     @Rule
