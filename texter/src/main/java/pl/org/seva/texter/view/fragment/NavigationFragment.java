@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.databinding.FragmentNavigationBinding;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
@@ -155,8 +155,8 @@ public class NavigationFragment extends Fragment {
     }
 
     private void injectDependencies(Activity activity) {
-        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        graph.inject(this);
+        Component component = ((TexterApplication) activity.getApplication()).getComponent();
+        component.inject(this);
     }
 
     @Override

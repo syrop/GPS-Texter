@@ -40,7 +40,7 @@ import pl.org.seva.texter.R;
 import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.view.adapter.HistoryAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.databinding.FragmentHistoryBinding;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
@@ -85,8 +85,8 @@ public class HistoryFragment extends Fragment {
     }
 
     private void  initDependencies(Activity activity) {
-        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        graph.inject(this);
+        Component component = ((TexterApplication) activity.getApplication()).getComponent();
+        component.inject(this);
     }
 
     @Override

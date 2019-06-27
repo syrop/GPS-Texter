@@ -19,12 +19,12 @@ package pl.org.seva.texter.application;
 
 import pl.org.seva.texter.TexterApplication;
 import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.Component;
 
 public class MockTexterApplication extends TexterApplication {
 
     @Override
-    protected Graph createGraph() {
+    protected Component createGraph() {
         return DaggerMockGraph.create();
     }
 

@@ -25,8 +25,8 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.org.seva.texter.presenter.dagger.DaggerGraph;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.DaggerComponent;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.service.TexterService;
@@ -46,13 +46,13 @@ public class TexterApplication extends MultiDexApplication {
     private boolean isDeviceStationary;
     private boolean isProviderEnabled;
 
-    private Graph graph;
+    private Component component;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        graph = createGraph();
-        graph.inject(this);
+        component = createGraph();
+        component.inject(this);
         addGpsProviderListeners();
         addActivityRecognitionListeners();
     }
@@ -84,8 +84,8 @@ public class TexterApplication extends MultiDexApplication {
                 .subscribe(__ -> onDeviceMoving());
     }
 
-    protected Graph createGraph() {
-        return DaggerGraph.create();
+    protected Component createGraph() {
+        return DaggerComponent.create();
     }
 
     private void onDeviceStationary() {
@@ -130,7 +130,7 @@ public class TexterApplication extends MultiDexApplication {
         isServiceRunning = false;
     }
 
-    public Graph getGraph() {
-        return graph;
+    public Component getComponent() {
+        return component;
     }
 }

@@ -26,9 +26,10 @@ import javax.inject.Inject;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+
+import pl.org.seva.texter.dagger.MockComponent;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
-import pl.org.seva.texter.dagger.MockGraph;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -52,7 +53,7 @@ public class LocationTest {
 
     @Before
     public void setUp() {
-        MockGraph graph = (MockGraph) ((TexterApplication) activityRule.getActivity().getApplication()).getGraph();
+        MockComponent graph = (MockComponent) ((TexterApplication) activityRule.getActivity().getApplication()).getComponent();
         graph.inject(this);
     }
 

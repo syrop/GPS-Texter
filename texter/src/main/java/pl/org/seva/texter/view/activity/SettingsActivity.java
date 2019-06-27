@@ -23,7 +23,7 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.view.fragment.SettingsFragment;
 
@@ -83,8 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        Graph graph = ((TexterApplication) getApplication()).getGraph();
-        graph.inject(this);
+        Component component = ((TexterApplication) getApplication()).getComponent();
+        component.inject(this);
 
         ActivitySettingsBinding binding =
                 DataBindingUtil.setContentView(this, R.layout.activity_settings);

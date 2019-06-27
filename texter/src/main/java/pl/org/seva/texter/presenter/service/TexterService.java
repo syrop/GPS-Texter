@@ -55,7 +55,7 @@ public class TexterService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        ((TexterApplication) getApplication()).getGraph().inject(this);
+        ((TexterApplication) getApplication()).getComponent().inject(this);
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
 
         // Use System.currentTimeMillis() to have a unique ID for the pending intent.

@@ -40,7 +40,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.databinding.FragmentStatsBinding;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
@@ -164,8 +164,8 @@ public class StatsFragment extends Fragment {
     }
 
     private void initDependencies() {
-        Graph graph = ((TexterApplication) activity.getApplication()).getGraph();
-        graph.inject(this);
+        Component component = ((TexterApplication) activity.getApplication()).getComponent();
+        component.inject(this);
     }
 
     private void showStats() {

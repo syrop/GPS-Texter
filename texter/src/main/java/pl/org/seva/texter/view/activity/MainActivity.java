@@ -55,12 +55,12 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import pl.org.seva.texter.R;
+import pl.org.seva.texter.presenter.dagger.Component;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Graph;
 import pl.org.seva.texter.databinding.ActivityMainBinding;
 import pl.org.seva.texter.databinding.DialogHelpBinding;
 import pl.org.seva.texter.databinding.DialogStartupBinding;
@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        Graph graph = ((TexterApplication) getApplication()).getGraph();
-        graph.inject(this);
+        Component component = ((TexterApplication) getApplication()).getComponent();
+        component.inject(this);
         activityRecognitionSource.init(this);
 
         // Set up colors depending on SDK version.
