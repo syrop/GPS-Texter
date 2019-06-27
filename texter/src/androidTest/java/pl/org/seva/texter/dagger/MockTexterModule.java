@@ -24,12 +24,12 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.texter.mockimplementations.MockSmsSender;
+import pl.org.seva.texter.mockimplementations.FakeSmsSender;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.presenter.utils.SmsCache;
-import pl.org.seva.texter.mockimplementations.MockLocationSource;
+import pl.org.seva.texter.mockimplementations.FakeLocationSource;
 import pl.org.seva.texter.presenter.utils.Timer;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
@@ -39,13 +39,13 @@ class MockTexterModule {
     @Provides
     @Singleton
     LocationSource provideGpsManager(Timer timer) {
-        return new MockLocationSource(timer);
+        return new FakeLocationSource(timer);
     }
 
     @Provides
     @Singleton
     SmsSender provideSmsManager(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
-        return new MockSmsSender(locationSource, smsCache, zoneCalculator);
+        return new FakeSmsSender(locationSource, smsCache, zoneCalculator);
     }
 
     @Provides

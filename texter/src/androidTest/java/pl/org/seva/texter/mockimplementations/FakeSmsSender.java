@@ -28,11 +28,11 @@ import pl.org.seva.texter.presenter.utils.SmsCache;
 import pl.org.seva.texter.presenter.utils.ZoneCalculator;
 
 @Singleton
-public class MockSmsSender extends SmsSender {
+public class FakeSmsSender extends SmsSender {
 
     private int messagesSent;
 
-    public MockSmsSender(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
+    public FakeSmsSender(LocationSource locationSource, SmsCache smsCache, ZoneCalculator zoneCalculator) {
         this.locationSource = locationSource;
         this.smsCache = smsCache;
         this.zoneCalculator = zoneCalculator;

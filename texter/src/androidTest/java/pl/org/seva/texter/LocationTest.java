@@ -28,7 +28,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import pl.org.seva.texter.dagger.MockTexterComponent;
-import pl.org.seva.texter.mockimplementations.MockSmsSender;
+import pl.org.seva.texter.mockimplementations.FakeSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 
@@ -63,6 +63,6 @@ public class LocationTest {
         for (int i = 0; i <= DURATION_IN_SECONDS; i++) {
             onView(isRoot()).perform(delay(1000));
         }
-        assertTrue(((MockSmsSender) smsSender).getMessagesSent() >= TestConstants.EXPECTED_MESSAGES_SENT);
+        assertTrue(((FakeSmsSender) smsSender).getMessagesSent() >= TestConstants.EXPECTED_MESSAGES_SENT);
     }
 }

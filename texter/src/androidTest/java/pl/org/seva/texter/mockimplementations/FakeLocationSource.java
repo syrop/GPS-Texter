@@ -32,13 +32,13 @@ import pl.org.seva.texter.view.preference.HomeLocationPreference;
 import pl.org.seva.texter.presenter.utils.Constants;
 
 @Singleton
-public class MockLocationSource extends LocationSource {
+public class FakeLocationSource extends LocationSource {
 
     private static final String MOCK_PROVIDER_NAME = "Mock provider";
 
     private int ticks = -1;
 
-    public MockLocationSource(Timer timer) {
+    public FakeLocationSource(Timer timer) {
         this.timer = timer;
         String defaultHomeLocation = Constants.DEFAULT_HOME_LOCATION;
         homeLat = HomeLocationPreference.parseLatitude(defaultHomeLocation);
