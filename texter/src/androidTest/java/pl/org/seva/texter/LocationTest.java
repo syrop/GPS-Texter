@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import pl.org.seva.texter.dagger.MockComponent;
+import pl.org.seva.texter.dagger.MockTexterComponent;
 import pl.org.seva.texter.mockimplementations.MockSmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.presenter.utils.SmsSender;
@@ -42,7 +42,7 @@ public class LocationTest {
 
     private static final int DURATION_IN_SECONDS = 50;
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject SmsSender smsSender;
 
     @Rule
@@ -53,7 +53,7 @@ public class LocationTest {
 
     @Before
     public void setUp() {
-        MockComponent graph = (MockComponent) ((TexterApplication) activityRule.getActivity().getApplication()).getComponent();
+        MockTexterComponent graph = (MockTexterComponent) ((TexterApplication) activityRule.getActivity().getApplication()).getComponent();
         graph.inject(this);
     }
 

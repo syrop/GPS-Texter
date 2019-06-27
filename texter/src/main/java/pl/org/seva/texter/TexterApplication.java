@@ -18,20 +18,20 @@
 package pl.org.seva.texter;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.org.seva.texter.presenter.dagger.DaggerComponent;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.presenter.dagger.DaggerTexterComponent;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.service.TexterService;
 
-public class TexterApplication extends MultiDexApplication {
+public class TexterApplication extends Application {
 
     private static final String TAG = TexterApplication.class.getSimpleName();
 
@@ -46,12 +46,12 @@ public class TexterApplication extends MultiDexApplication {
     private boolean isDeviceStationary;
     private boolean isProviderEnabled;
 
-    private Component component;
+    private TexterComponent component;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        component = createGraph();
+        component = createComponent();
         component.inject(this);
         addGpsProviderListeners();
         addActivityRecognitionListeners();
@@ -84,8 +84,8 @@ public class TexterApplication extends MultiDexApplication {
                 .subscribe(__ -> onDeviceMoving());
     }
 
-    protected Component createGraph() {
-        return DaggerComponent.create();
+    protected TexterComponent createComponent() {
+        return DaggerTexterComponent.create();
     }
 
     private void onDeviceStationary() {
@@ -130,7 +130,7 @@ public class TexterApplication extends MultiDexApplication {
         isServiceRunning = false;
     }
 
-    public Component getComponent() {
+    public TexterComponent getComponent() {
         return component;
     }
 }

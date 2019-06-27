@@ -55,7 +55,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import pl.org.seva.texter.R;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 import pl.org.seva.texter.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.SmsSender;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        Component component = ((TexterApplication) getApplication()).getComponent();
+        TexterComponent component = ((TexterApplication) getApplication()).getComponent();
         component.inject(this);
         activityRecognitionSource.init(this);
 

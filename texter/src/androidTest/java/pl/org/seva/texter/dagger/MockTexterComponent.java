@@ -19,11 +19,12 @@ package pl.org.seva.texter.dagger;
 
 import javax.inject.Singleton;
 
+import dagger.Component;
 import pl.org.seva.texter.LocationTest;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 
 @Singleton
-@dagger.Component(modules = { pl.org.seva.texter.dagger.MockTexterModule.class })
-public interface MockComponent extends Component {
+@Component(modules = { pl.org.seva.texter.dagger.MockTexterModule.class })
+public interface MockTexterComponent extends TexterComponent {
     void inject(LocationTest locationTest);
 }

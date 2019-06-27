@@ -48,7 +48,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import pl.org.seva.texter.R;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 import pl.org.seva.texter.databinding.ActivityHomeLocationBinding;
 import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.PermissionsUtils;
@@ -94,7 +94,7 @@ public class HomeLocationActivity extends AppCompatActivity {
             animateCamera = false;
         }
 
-        Component component = ((TexterApplication) getApplication()).getComponent();
+        TexterComponent component = ((TexterApplication) getApplication()).getComponent();
         component.inject(this);
 
         String value = getPersistedString();

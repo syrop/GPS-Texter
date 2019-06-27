@@ -23,7 +23,7 @@ import pl.org.seva.texter.presenter.utils.PermissionsUtils;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.adapter.TitledPagerAdapter;
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 import pl.org.seva.texter.databinding.ActivitySettingsBinding;
 import pl.org.seva.texter.view.fragment.SettingsFragment;
 
@@ -51,13 +51,13 @@ import javax.inject.Inject;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     PermissionsUtils permissionsUtils;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     LocationSource locationSource;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @SuppressWarnings({"CanBeFinal"})
     @Inject
     SmsSender smsSender;
 
@@ -83,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        Component component = ((TexterApplication) getApplication()).getComponent();
+        TexterComponent component = ((TexterApplication) getApplication()).getComponent();
         component.inject(this);
 
         ActivitySettingsBinding binding =

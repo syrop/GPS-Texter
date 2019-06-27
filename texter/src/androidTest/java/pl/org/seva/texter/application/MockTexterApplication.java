@@ -18,14 +18,14 @@
 package pl.org.seva.texter.application;
 
 import pl.org.seva.texter.TexterApplication;
-import pl.org.seva.texter.dagger.DaggerMockGraph;
-import pl.org.seva.texter.presenter.dagger.Component;
+import pl.org.seva.texter.dagger.DaggerMockTexterComponent;
+import pl.org.seva.texter.presenter.dagger.TexterComponent;
 
 public class MockTexterApplication extends TexterApplication {
 
     @Override
-    protected Component createGraph() {
-        return DaggerMockGraph.create();
+    protected TexterComponent createComponent() {
+        return DaggerMockTexterComponent.create();
     }
 
     @Override
