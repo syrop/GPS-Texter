@@ -30,7 +30,7 @@ import pl.org.seva.texter.view.fragment.StatsFragment;
 import pl.org.seva.texter.presenter.service.TexterService;
 
 @Singleton
-@Component(modules = { pl.org.seva.texter.presenter.dagger.TexterModule.class })
+@Component(modules = { TexterModule.class })
 public interface TexterComponent {
     void inject(TexterService texterService);
     void inject(NavigationFragment navigationFragment);
