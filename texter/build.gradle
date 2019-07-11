@@ -60,6 +60,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     // https://androidstudio.googleblog.com/2018/04/android-studio-32-canary-11-now.html
     lintOptions {
         check 'Interoperability'
