@@ -71,7 +71,7 @@ class HistoryAdapter(private val context: Context, private val values: List<SmsL
 
         init {
             val styledAttributes = context.obtainStyledAttributes(ATTRS)
-            divider = styledAttributes.getDrawable(0)!!
+            divider = checkNotNull(styledAttributes.getDrawable(0))
             styledAttributes.recycle()
         }
 

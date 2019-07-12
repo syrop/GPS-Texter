@@ -67,7 +67,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
         val contacts: ListView = v.findViewById(R.id.contacts)
 
         contactsEnabled = ContextCompat.checkSelfPermission(
-                activity!!,
+                requireActivity(),
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 
         if (!contactsEnabled) {
@@ -88,14 +88,14 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
     }
 
     private val persistedString: String
-        get() = PreferenceManager.getDefaultSharedPreferences(activity)
-                .getString(SettingsActivity.PHONE_NUMBER, Constants.DEFAULT_PHONE_NUMBER)!!
+        get() = checkNotNull(PreferenceManager.getDefaultSharedPreferences(activity)
+                .getString(SettingsActivity.PHONE_NUMBER, Constants.DEFAULT_PHONE_NUMBER))
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = AlertDialog.Builder(requireActivity())
         // Get the layout inflater
-        val inflater = activity!!.layoutInflater
+        val inflater = requireActivity().layoutInflater
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -130,7 +130,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
             CONTACTS_QUERY_ID -> {
                 val contactsSelectionArgs = arrayOf("1")
                 return CursorLoader(
-                        activity!!,
+                        requireActivity(),
                         ContactsContract.Contacts.CONTENT_URI,
                         CONTACTS_PROJECTION,
                         CONTACTS_SELECTION,
@@ -140,7 +140,7 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
             DETAILS_QUERY_ID -> {
                 val detailsSelectionArgs = arrayOf(contactKey)
                 return CursorLoader(
-                        activity!!,
+                        requireActivity(),
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         DETAILS_PROJECTION,
                         DETAILS_SELECTION,
@@ -170,11 +170,11 @@ class PhoneNumberFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Curs
                                 context,
                                 R.string.no_number,
                                 Toast.LENGTH_SHORT)
-                        toast!!.show()
+                        checkNotNull(toast).show()
                     }
                     else -> {
                         val items = numbers.toTypedArray()
-                        AlertDialog.Builder(activity!!).setItems(items) { dialog, which ->
+                        AlertDialog.Builder(requireActivity()).setItems(items) { dialog, which ->
                             dialog.dismiss()
                             number.setText(numbers[which])
                         }.setTitle(contactName).setCancelable(true).setNegativeButton(

@@ -96,7 +96,7 @@ class HomeLocationActivity : AppCompatActivity() {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_TAG_HOME_LOCATION).commit()
         }
-        mapFragment!!.getMapAsync { it.onReady() }
+        checkNotNull(mapFragment).getMapAsync { it.onReady() }
     }
 
     private fun GoogleMap.onReady() {
@@ -110,14 +110,14 @@ class HomeLocationActivity : AppCompatActivity() {
         }
 
         fun onCameraIdle() {
-            zoom = map!!.cameraPosition.zoom
+            zoom = checkNotNull(map).cameraPosition.zoom
         }
 
         map = this
         if (ContextCompat.checkSelfPermission(
                 this@HomeLocationActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map!!.isMyLocationEnabled = true
+            checkNotNull(map).isMyLocationEnabled = true
         }
         zoom = PreferenceManager.getDefaultSharedPreferences(this@HomeLocationActivity)
                 .getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE)
@@ -126,14 +126,14 @@ class HomeLocationActivity : AppCompatActivity() {
         val cameraPosition = CameraPosition.Builder()
                 .target(LatLng(lat, lon)).zoom(zoom).build()
         if (animateCamera) {
-            map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            checkNotNull(map).animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         } else {
-            map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            checkNotNull(map).moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
         animateCamera = false
 
-        map!!.setOnMapLongClickListener { onMapLongClick(it) }
-        map!!.setOnCameraIdleListener { onCameraIdle() }
+        checkNotNull(map).setOnMapLongClickListener { onMapLongClick(it) }
+        checkNotNull(map).setOnCameraIdleListener { onCameraIdle() }
     }
 
     override fun onBackPressed() {
@@ -168,15 +168,15 @@ class HomeLocationActivity : AppCompatActivity() {
             }
 
     private val persistedString: String
-        get() = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)!!
+        get() = checkNotNull(PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION))
 
     private fun updateMarker() {
-        map!!.clear()
+        checkNotNull(map).clear()
         val marker = MarkerOptions().position(
                 LatLng(lat, lon)).title(getString(R.string.home))
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-        map!!.addMarker(marker)
+        checkNotNull(map).addMarker(marker)
     }
 
     private fun onLocationChanged() {
@@ -196,7 +196,7 @@ class HomeLocationActivity : AppCompatActivity() {
             updateMarker()
             val cameraPosition = CameraPosition.Builder()
                     .target(LatLng(lat, lon)).zoom(zoom).build()
-            map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            checkNotNull(map).animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
     }
 

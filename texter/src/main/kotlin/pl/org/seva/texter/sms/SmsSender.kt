@@ -133,11 +133,11 @@ open class SmsSender {
         } ?:let { this.zone = zone }
     }
 
-    private fun canSendZone(zone: DistanceZone): Boolean = zone.min != this.zone!!.min &&
+    private fun canSendZone(zone: DistanceZone): Boolean = zone.min != checkNotNull(this.zone).min &&
             zone.counter >= Constants.SMS_COUNT_TRIGGER &&
             zone.delay >= Constants.TIME_IN_ZONE
 
-    private fun calculateDirection(zone: DistanceZone) = if (this.zone!!.min > zone.min) -1 else 1
+    private fun calculateDirection(zone: DistanceZone) = if (checkNotNull(this.zone).min > zone.min) -1 else 1
 
     @Synchronized fun resetZones() {
         zoneCalculator.clearCache()
@@ -154,14 +154,14 @@ open class SmsSender {
 
     private val phoneNumber: String
         get() {
-            val numberStr = preferences.getString(SettingsActivity.PHONE_NUMBER, "")
-            return if (numberStr!!.isNotEmpty()) numberStr else "0"
+            val numberStr = checkNotNull(preferences.getString(SettingsActivity.PHONE_NUMBER, ""))
+            return if (numberStr.isNotEmpty()) numberStr else "0"
         }
 
     protected open val maxSentDistance: Int
         get() {
-            val numberStr = preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, "")
-            return if (numberStr!!.isNotEmpty()) Integer.valueOf(numberStr) else 0
+            val numberStr = checkNotNull(preferences.getString(SettingsActivity.MAXIMUM_DISTANCE, ""))
+            return if (numberStr.isNotEmpty()) Integer.valueOf(numberStr) else 0
         }
 
     private fun registerReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {

@@ -73,7 +73,7 @@ class StatsFragment : Fragment() {
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
 
         homeString = getString(R.string.home)
-        hourString = activity!!.getString(R.string.hour)
+        hourString = requireActivity().getString(R.string.hour)
         speedUnitStr = getString(R.string.speed_unit)
         return inflater.inflate(R.layout.fragment_stats, container, false)
     }
@@ -86,7 +86,7 @@ class StatsFragment : Fragment() {
                 distance != smsSender.lastSentDistance
 
         showStats()
-        MapsInitializer.initialize(activity!!.applicationContext)
+        MapsInitializer.initialize(requireActivity().applicationContext)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { it.onReady() }
     }
@@ -99,15 +99,15 @@ class StatsFragment : Fragment() {
         updateHomeLocation(homeLatLng)
         val cameraPosition = CameraPosition.Builder()
                 .target(homeLatLng).zoom(zoom).build()
-        map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        checkNotNull(map).moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         if (locationPermissionGranted) {
-            map!!.isMyLocationEnabled = true
+            checkNotNull(map).isMyLocationEnabled = true
         }
-        map!!.setOnCameraIdleListener { onCameraIdle() }
+        checkNotNull(map).setOnCameraIdleListener { onCameraIdle() }
     }
 
     private fun onCameraIdle() {
-        zoom = map!!.cameraPosition.zoom
+        zoom = checkNotNull(map).cameraPosition.zoom
         PreferenceManager.getDefaultSharedPreferences(activity).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
     }
 
@@ -121,14 +121,14 @@ class StatsFragment : Fragment() {
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
 
         // adding marker
-        map!!.clear()
-        map!!.addMarker(marker)
+        checkNotNull(map).clear()
+        checkNotNull(map).addMarker(marker)
     }
 
     @SuppressLint("CheckResult")
     private fun processLocationPermission() {
         if (ContextCompat.checkSelfPermission(
-                activity!!,
+                requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true
             map?.isMyLocationEnabled = true
@@ -170,7 +170,7 @@ class StatsFragment : Fragment() {
 
     private fun deleteMapFragment() {
         mapFragment?.let {
-            fragmentManager!!.beginTransaction().remove(it).commitAllowingStateLoss()
+            checkNotNull(fragmentManager).beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }
     }

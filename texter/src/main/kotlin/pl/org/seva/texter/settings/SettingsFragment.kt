@@ -38,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!activity!!.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+        if (!requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
             preferenceScreen.removePreference(findPreference(SettingsActivity.CATEGORY_SMS))
         }
     }

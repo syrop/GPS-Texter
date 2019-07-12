@@ -61,14 +61,14 @@ open class ActivityRecognitionObservable :
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build()
-            googleApiClient!!.connect()
+            checkNotNull(googleApiClient).connect()
         }
 
         initialized = true
     }
 
     override fun onConnected(bundle: Bundle?) {
-        val context = weakContext!!.get() ?: return
+        val context = checkNotNull(weakContext).get() ?: return
         registerReceiver()
         val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
 
@@ -85,13 +85,13 @@ open class ActivityRecognitionObservable :
     override fun onConnectionSuspended(i: Int) = unregisterReceiver()
 
     private fun registerReceiver() {
-        val context = weakContext!!.get() ?: return
+        val context = checkNotNull(weakContext).get() ?: return
         activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
         context.registerReceiver(activityRecognitionReceiver, IntentFilter(ACTIVITY_RECOGNITION_INTENT))
     }
 
     private fun unregisterReceiver() {
-        val context = weakContext!!.get() ?: return
+        val context = checkNotNull(weakContext).get() ?: return
         activityRecognitionReceiver?: return
         context.unregisterReceiver(activityRecognitionReceiver)
     }

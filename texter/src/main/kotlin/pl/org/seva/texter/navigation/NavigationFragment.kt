@@ -71,7 +71,7 @@ class NavigationFragment : Fragment() {
         savedInstanceState?.let {
             animateCamera = false
         }
-        MapsInitializer.initialize(activity!!.applicationContext)
+        MapsInitializer.initialize(requireActivity().applicationContext)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { it.onReady() }
     }
@@ -89,9 +89,9 @@ class NavigationFragment : Fragment() {
         val cameraPosition = CameraPosition.Builder()
                 .target(homeLatLng).zoom(12f).build()
         if (animateCamera) {
-            map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            checkNotNull(map).animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         } else {
-            map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            checkNotNull(map).moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
         animateCamera = false
     }
@@ -99,7 +99,7 @@ class NavigationFragment : Fragment() {
     @SuppressLint("CheckResult")
     private fun processLocationPermission() {
         if (ContextCompat.checkSelfPermission(
-                activity!!,
+                requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onLocationPermissionGranted()
             map?.isMyLocationEnabled = true
@@ -113,7 +113,7 @@ class NavigationFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         mapFragment?.let {
-            fragmentManager!!.beginTransaction().remove(it).commitAllowingStateLoss()
+            checkNotNull(fragmentManager).beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }
         super.onSaveInstanceState(outState)
@@ -129,8 +129,8 @@ class NavigationFragment : Fragment() {
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
 
         // adding marker
-        map!!.clear()
-        map!!.addMarker(marker)
+        checkNotNull(map).clear()
+        checkNotNull(map).addMarker(marker)
     }
 
     private fun showDistance(distance: Double) {
@@ -138,7 +138,7 @@ class NavigationFragment : Fragment() {
         if (distance == 0.0) {
             distanceStr = "0 km"
         }
-        distance_view!!.text = distanceStr
+        distance_view.text = distanceStr
     }
 
     private fun onDistanceChanged() = showDistance(location.distance)

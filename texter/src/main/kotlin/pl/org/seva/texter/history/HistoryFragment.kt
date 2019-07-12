@@ -52,9 +52,9 @@ class HistoryFragment : Fragment() {
 
         recycler_view.setHasFixedSize(true)
         recycler_view.layoutManager = LinearLayoutManager(context)
-        adapter = HistoryAdapter(activity!!, smsHistory.list)
+        adapter = HistoryAdapter(requireActivity(), smsHistory.list)
         recycler_view.adapter = adapter
-        recycler_view.addItemDecoration(HistoryAdapter.DividerItemDecoration(activity!!))
+        recycler_view.addItemDecoration(HistoryAdapter.DividerItemDecoration(requireActivity()))
         recycler_view.clearOnScrollListeners()
         recycler_view.addOnScrollListener(OnScrollListener())
         scrollToBottom = true

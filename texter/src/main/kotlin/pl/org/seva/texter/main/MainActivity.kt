@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
             return false
         }
         dialog = Dialog(this)
-        dialog!!.setCancelable(false)
+        checkNotNull(dialog).setCancelable(false)
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_startup)
         val web = dialog.findViewById<WebView>(R.id.web)
@@ -181,19 +181,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun showHelpDialog() {
         dialog = Dialog(this)
-        dialog!!.setCancelable(false)
-        dialog!!.setContentView(R.layout.dialog_help)
-        val web = dialog!!.findViewById<WebView>(R.id.web)
+        checkNotNull(dialog).setCancelable(false)
+        checkNotNull(dialog).setContentView(R.layout.dialog_help)
+        val web = checkNotNull(dialog).findViewById<WebView>(R.id.web)
         web.settings.defaultTextEncodingName = "utf-8"
         val language = Locale.getDefault().language
         val content =
                 assets.open(if (language == "pl") "help_pl.html" else "help_en.html")
                         .readString()
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
-        web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null)
+        web.loadDataWithBaseURL(
+                "file:///android_asset/",
+                content,
+                "text/html",
+                "UTF-8",
+                null)
 
-        dialog!!.findViewById<View>(R.id.ok).setOnClickListener { dialog!!.dismiss() }
-        dialog!!.show()
+        checkNotNull(dialog).findViewById<View>(R.id.ok).setOnClickListener {
+            checkNotNull(dialog).dismiss()
+        }
+        checkNotNull(dialog).show()
     }
 
     private val versionName: String
@@ -230,7 +237,7 @@ class MainActivity : AppCompatActivity() {
     } else {
         exitToast?.cancel()
         exitToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
-        exitToast!!.show()
+        checkNotNull(exitToast).show()
         clickTime = System.currentTimeMillis()
     }
 

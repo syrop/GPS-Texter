@@ -26,7 +26,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -64,7 +63,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         mTitleOffset = (TITLE_OFFSET_DIPS * resources.displayMetrics.density).toInt()
 
         mTabStrip = SlidingTabStrip(context)
-        addView(mTabStrip, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
     fun setCustomTabColorizer(tabColorizer: (Any) -> Int) = mTabStrip.setCustomTabColorizer(tabColorizer)
@@ -123,9 +122,9 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun populateTabStrip() {
         val adapter = viewPager.adapter
-        val tabClickListener = View.OnClickListener { this.onTabClicked(it) }
+        val tabClickListener = OnClickListener { this.onTabClicked(it) }
 
-        repeat (adapter!!.count) {
+        repeat (checkNotNull(adapter).count) {
             var tabTitleView: TextView? = null
 
             val tabView = createDefaultTabView(context)

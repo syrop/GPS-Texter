@@ -76,12 +76,14 @@ open class LocationObservable :
     private val updateFrequency: Long
         get() = Constants.LOCATION_UPDATE_FREQUENCY_MS
 
-    private fun connectGoogleApiClient() = googleApiClient!!.connect()
+    private fun connectGoogleApiClient() = checkNotNull(googleApiClient).connect()
 
     fun onHomeLocationChanged() {
         updateDistance()
 
-        val homeLocation = preferences.getString(SettingsActivity.HOME_LOCATION, Constants.DEFAULT_HOME_LOCATION)!!
+        val homeLocation = checkNotNull(preferences.getString(
+                SettingsActivity.HOME_LOCATION,
+                Constants.DEFAULT_HOME_LOCATION))
         homeLat = HomeLocationPreference.parseLatitude(homeLocation)
         homeLng = HomeLocationPreference.parseLongitude(homeLocation)
         location?.let {
@@ -160,8 +162,8 @@ open class LocationObservable :
 
     private fun calculateCurrentDistance() =
         DistanceCalculator.distanceKm(
-                location!!.latitude,
-                location!!.longitude,
+                checkNotNull(location).latitude,
+                checkNotNull(location).longitude,
                 homeLat,
                 homeLng)
 
