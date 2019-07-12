@@ -46,6 +46,7 @@
     <string name="app_name_settings">GPS Texter - Ustawienia</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz by wyjść z aplikacji</string>
     <string name="app_version_unknown">Nieznana</string>
+    <string name="sms_not_supported">Brak wsparcia dla SMS</string>
 
     <!-- Map preferences -->
     <string name="home_location">Lokalizacja domu</string>

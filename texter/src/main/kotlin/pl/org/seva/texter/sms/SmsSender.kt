@@ -61,10 +61,8 @@ open class SmsSender {
     private lateinit var speedUnit: String
     private lateinit var weakContext: WeakReference<Context>
 
-    private val smsManager: android.telephony.SmsManager = android.telephony.SmsManager.getDefault()
-
-    private val smsSendingSubject: PublishSubject<Any> = PublishSubject.create<Any>()
-    private val smsSentSubject: PublishSubject<Any> = PublishSubject.create<Any>()
+    private val smsSendingSubject = PublishSubject.create<Any>()
+    private val smsSentSubject = PublishSubject.create<Any>()
 
     var lastSentDistance: Double = 0.0
 
@@ -198,11 +196,11 @@ open class SmsSender {
         }
         if (isTimeIncluded) {
             val now = Calendar.getInstance()
-            var minuteStr = Integer.toString(now.get(Calendar.MINUTE))
+            var minuteStr = now.get(Calendar.MINUTE).toString()
             if (minuteStr.length == 1) {
                 minuteStr = "0$minuteStr"
             }
-            val timeStr = Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr
+            val timeStr = now.get(Calendar.HOUR_OF_DAY).toString() + ":" + minuteStr
             smsBuilder.append(" (").append(timeStr).append(")")
         }
         if (isLocationIncluded) {
@@ -244,7 +242,12 @@ open class SmsSender {
             text: String,
             sentIntent: PendingIntent,
             deliveredIntent: PendingIntent) =
-            smsManager.sendTextMessage(phoneNumber, null, text, sentIntent, deliveredIntent)
+            weakContext.get()?.apply {
+                Toast.makeText(
+                        this,
+                        getString(R.string.sms_not_supported),
+                        Toast.LENGTH_SHORT).show()
+            }
 
     private fun checkInit() {
         if (!initialized) {

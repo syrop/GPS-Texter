@@ -11,8 +11,8 @@ android {
         applicationId 'pl.org.seva.texter'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 42
-        versionName '1.3.14'
+        versionCode 43
+        versionName '2.0.0'
         resConfigs 'en', 'pl'
         testInstrumentationRunner 'pl.org.seva.texter.MockTestRunner'
         manifestPlaceholders = [ googleMapsKey: 'AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8']
