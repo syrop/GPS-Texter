@@ -44,7 +44,6 @@ import pl.org.seva.texter.R
 class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
         HorizontalScrollView(context, attrs, defStyle) {
 
-
     private val mTitleOffset: Int
 
     private var mDistributeEvenly: Boolean = false
