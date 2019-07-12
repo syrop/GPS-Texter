@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId 'pl.org.seva.texter'
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 43
         versionName '2.0.0'
         resConfigs 'en', 'pl'
