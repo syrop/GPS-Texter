@@ -20,7 +20,6 @@
 package pl.org.seva.texter.main
 
 import android.app.Application
-import android.content.pm.PackageManager
 import org.kodein.di.Kodein
 import org.kodein.di.conf.global
 
@@ -34,10 +33,4 @@ open class TexterApplication : Application() {
         super.onCreate()
         bootstrap.boot()
     }
-
-    open fun hardwareCanSendSms() = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-
-    fun startService() = bootstrap.startService()
-
-    open fun stopService() = bootstrap.stopService()
 }

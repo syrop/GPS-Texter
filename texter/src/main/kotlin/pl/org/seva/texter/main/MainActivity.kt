@@ -45,13 +45,11 @@ import java.util.Locale
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.ui.TitledPagerAdapter
-import pl.org.seva.texter.history.HistoryFragment
 import pl.org.seva.texter.main.extension.readString
 import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.stats.StatsFragment
 import pl.org.seva.texter.navigation.NavigationFragment
 import pl.org.seva.texter.settings.SettingsActivity
-import pl.org.seva.texter.sms.smsSender
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,14 +70,12 @@ class MainActivity : AppCompatActivity() {
 
         val titles = arrayOf<CharSequence>(
                 getString(R.string.stats_tab_name),
-                getString(R.string.map_tab_name),
-                getString(R.string.history_tab_name))
+                getString(R.string.map_tab_name))
 
         setSupportActionBar(toolbar)
         val fragments = ArrayList<Fragment>()
         fragments.add(StatsFragment.newInstance())
         fragments.add(NavigationFragment.newInstance())
-        fragments.add(HistoryFragment.newInstance())
 
         val adapter = TitledPagerAdapter(supportFragmentManager, titles).setItems(fragments)
 
@@ -96,8 +92,6 @@ class MainActivity : AppCompatActivity() {
         tabs.setCustomTabColorizer { tabColor }
         tabs.setViewPager(pager)
 
-        smsSender.init(this, getString(R.string.speed_unit))
-
         val googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (googlePlay != ConnectionResult.SUCCESS) {
             GoogleApiAvailability.getInstance().getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show()
@@ -106,7 +100,6 @@ class MainActivity : AppCompatActivity() {
         if (!showStartupDialog()) {
             processPermissions()
         }
-        (application as TexterApplication).startService()
     }
 
     /**
@@ -129,9 +122,6 @@ class MainActivity : AppCompatActivity() {
                     .subscribe { onLocationPermissionGranted() }
         } else {
             initGps()
-        }
-        if (smsSender.isTextingEnabled) {
-            permissionsToRequest.addAll(smsSender.permissionsToRequest())
         }
         if (permissionsToRequest.isEmpty()) {
             return true
@@ -209,14 +199,8 @@ class MainActivity : AppCompatActivity() {
     public override fun onDestroy() {
         // Also called when the screen is rotated.
         dialog?.dismiss()
-        if (action == Intent.ACTION_MAIN && shuttingDown) {
-            // action != Intent.ACTION_MAIN when activity has been launched from a notification.
-            stopService()
-        }
         super.onDestroy()
     }
-
-    private fun stopService() = (application as TexterApplication).stopService()
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)

@@ -32,7 +32,6 @@ import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AlertDialog
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +39,6 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.toolbar.*
 import pl.org.seva.texter.main.*
 import pl.org.seva.texter.movement.location
-import pl.org.seva.texter.sms.smsSender
 
 import java.util.ArrayList
 
@@ -64,15 +62,9 @@ class SettingsActivity : AppCompatActivity() {
             it.setDisplayShowHomeEnabled(true)
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)) {
-            processSmsPermissions()
-        }
-
         val fragments = ArrayList<Fragment>()
         val settingsFragment = SettingsFragment.newInstance()
-        settingsFragment.smsEnabledClickedListener = { onSmsEnabledChanged() }
         settingsFragment.homeLocationClickedListener = { onHomeLocationClicked() }
-        settingsFragment.numberClickedListener = { onNumberClicked() }
         fragments.add(settingsFragment)
 
         val adapter = TitledPagerAdapter(supportFragmentManager, null).setItems(fragments)
@@ -97,14 +89,6 @@ class SettingsActivity : AppCompatActivity() {
         permissionsCompositeDisposable.dispose()
     }
 
-    private fun addReadContactsPermissionListeners() {
-        permissions
-                .permissionDeniedListener()
-                .filter { it.first == Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID }
-                .filter { it.second == Manifest.permission.READ_CONTACTS }
-                .subscribe { onReadContactsPermissionDenied() } addTo permissionsCompositeDisposable
-    }
-
     private fun addLocationPermissionListeners() {
             permissions
                     .permissionGrantedListener()
@@ -125,40 +109,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun onHomeLocationClicked() = processLocationPermissions()
 
-    private fun onSmsEnabledChanged() {
-        if (isSmsEnabled()) {
-            processSmsPermissions()
-        }
-    }
-
-    private fun onNumberClicked() =
-            PhoneNumberFragment().show(supportFragmentManager, PHONE_NUMBER_FRAGMENT_TAG)
-
-    private fun isSmsEnabled() =
-            PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SMS_ENABLED, false)
-
     private fun startHomeLocationActivity() {
         val intent = Intent(this, HomeLocationActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun processSmsPermissions() {
-        val permissions = ArrayList<String>()
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_CONTACTS)
-            addReadContactsPermissionListeners()
-        }
-        permissions.addAll(smsSender.permissionsToRequest())
-        if (!permissions.isEmpty()) {
-            val arr = permissions.toTypedArray()
-            ActivityCompat.requestPermissions(
-                    this,
-                    arr,
-                    Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID)
-        }
     }
 
     private fun processLocationPermissions() {
@@ -177,7 +130,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun onHomeLocationChanged() {
         location.onHomeLocationChanged()
-        smsSender.resetZones()
     }
 
 
@@ -193,46 +145,14 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun onReadContactsPermissionDenied() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.READ_CONTACTS) && permissions
-                .isRationaleNeeded(Manifest.permission.READ_CONTACTS)) {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage(R.string.perm_contacts_rationale)
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                permissions.onRationaleShown(Manifest.permission.READ_CONTACTS)
-                processSmsPermissions()
-            }
-            builder.create().show()
-        }
-    }
-
     private fun onLocationPermissionGranted() {
         location.initGpsOnLocationGranted(applicationContext)
         startHomeLocationActivity()
     }
 
     companion object {
-
-        const val PHONE_NUMBER_FRAGMENT_TAG = "number"
-
-        /** If device is not enabled to send SMS, this entire category will be hidden.  */
-        const val CATEGORY_SMS = "category_sms"
-
-        /** Unless true, SMS will be disabled and SMS-related options grayed out.  */
-        const val SMS_ENABLED = "pref_enable_sms"
-        /** All text messages will be sent to this number.  */
-        const val PHONE_NUMBER = "pref_phone_number"
-        /** Beyond this distance from home, no messages will be sent.  */
-        const val MAXIMUM_DISTANCE = "pref_max_distance"
         /** Location to measure distance from.  */
         const val HOME_LOCATION = "pref_home_location"
         /** If true, time will be sent with every SMS.  */
-        const val INCLUDE_TIME = "pref_include_time"
-        /** If true, speed will be sent with every SMS.  */
-        const val INCLUDE_SPEED = "pref_include_speed"
-        /** If true, location will be sent with every SMS.  */
-        const val INCLUDE_LOCATION = "pref_include_location"
     }
 }

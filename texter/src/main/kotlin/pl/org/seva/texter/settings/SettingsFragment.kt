@@ -19,7 +19,6 @@
 
 package pl.org.seva.texter.settings
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -32,28 +31,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             addPreferencesFromResource(R.xml.preferences)
 
     var homeLocationClickedListener: (() -> Unit)? = null
-    var smsEnabledClickedListener: (() -> Unit)? = null
-    var numberClickedListener: (() -> Unit)? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (!activity!!.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            preferenceScreen.removePreference(findPreference(SettingsActivity.CATEGORY_SMS))
-        }
-    }
 
     override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
         SettingsActivity.HOME_LOCATION -> {
             homeLocationClickedListener?.invoke()
-            true
-        }
-        SettingsActivity.SMS_ENABLED -> {
-            smsEnabledClickedListener?.invoke()
-            true
-        }
-        SettingsActivity.PHONE_NUMBER -> {
-            numberClickedListener?.invoke()
             true
         }
         else -> super.onPreferenceTreeClick(preference)

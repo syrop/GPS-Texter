@@ -25,9 +25,6 @@ import org.kodein.di.conf.global
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
-import pl.org.seva.texter.history.SmsHistory
-import pl.org.seva.texter.sms.*
-import pl.org.seva.texter.movement.ActivityRecognitionObservable
 import pl.org.seva.texter.movement.LocationObservable
 import pl.org.seva.texter.movement.ZoneCalculator
 import pl.org.seva.texter.stats.Timer
@@ -41,11 +38,8 @@ class KodeinModuleBuilder(private val ctx: Context) {
     fun build() = Kodein.Module("main") {
         bind<Bootstrap>() with singleton { Bootstrap(ctx) }
         bind<LocationObservable>() with singleton { LocationObservable() }
-        bind<SmsSender>() with singleton { SmsSender() }
         bind<Timer>() with singleton { Timer() }
         bind<Permissions>() with singleton { Permissions() }
-        bind<SmsHistory>() with singleton { SmsHistory() }
-        bind<ActivityRecognitionObservable>() with singleton { ActivityRecognitionObservable() }
         bind<ZoneCalculator>() with singleton { ZoneCalculator() }
     }
 }

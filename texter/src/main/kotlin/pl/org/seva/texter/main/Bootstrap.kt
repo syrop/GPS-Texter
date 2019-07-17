@@ -20,43 +20,13 @@
 package pl.org.seva.texter.main
 
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import pl.org.seva.texter.movement.activityRecognition
 import pl.org.seva.texter.movement.location
 
 val bootstrap: Bootstrap by instance()
 
 class Bootstrap(private val ctx: Context) {
 
-    private var isServiceRunning = false
-
     fun boot() {
         location.initPreferences(ctx)
-        activityRecognition.initWithContext(ctx)
-    }
-
-    fun startService() {
-        if (isServiceRunning) {
-            return
-        }
-        startService(Intent(ctx, TexterService::class.java))
-        isServiceRunning = true
-    }
-
-    private fun startService(intent: Intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ctx.startForegroundService(intent)
-        } else {
-            ctx.startService(intent)
-        }
-    }
-
-    fun stopService() {
-        if (!isServiceRunning) {
-            return
-        }
-        ctx.stopService(Intent(ctx, TexterService::class.java))
-        isServiceRunning = false
     }
 }

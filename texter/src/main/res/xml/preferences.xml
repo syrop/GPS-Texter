@@ -3,48 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/sms_settings"
-        android:key="category_sms">
-        <SwitchPreference
-            android:key="pref_enable_sms"
-            android:title="@string/enable_sms"
-            android:defaultValue="false" />
-
-        <!--suppress AndroidElementNotAllowed -->
-        <pl.org.seva.texter.settings.NumberPreference
-            android:dependency="pref_enable_sms"
-            android:key="pref_phone_number"
-            android:title="@string/telephone_number"
-            android:summary="@string/telephone_number_summary"/>
-        <EditTextPreference
-            android:dependency="pref_enable_sms"
-            android:key="pref_max_distance"
-            android:inputType="number"
-            android:title="@string/maximum_distance"
-            android:summary="@string/maximum_distance_summary"
-            android:defaultValue="50"
-            />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/content_settings">
-        <SwitchPreference
-            android:key="pref_include_speed"
-            android:title="@string/include_speed"
-            android:summary="@string/include_speed_summary"
-            android:defaultValue="true"/>
-        <SwitchPreference
-            android:key="pref_include_time"
-            android:title="@string/include_time"
-            android:summary="@string/include_time_summary"
-            android:defaultValue="true"/>
-        <SwitchPreference
-            android:key="pref_include_location"
-            android:title="@string/include_location"
-            android:summary="@string/include_location_summary"
-            android:defaultValue="false"/>
-
-    </PreferenceCategory>
-    <PreferenceCategory
         android:title="@string/location_settings">
         <!--suppress AndroidDomInspection, AndroidElementNotAllowed -->
         <pl.org.seva.texter.settings.HomeLocationPreference
