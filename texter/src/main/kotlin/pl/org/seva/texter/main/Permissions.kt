@@ -70,6 +70,5 @@ class Permissions {
     companion object {
 
         const val LOCATION_PERMISSION_REQUEST_ID = 0
-        const val SMS_AND_CONTACTS_PERMISSION_REQUEST_ID = 1
     }
 }

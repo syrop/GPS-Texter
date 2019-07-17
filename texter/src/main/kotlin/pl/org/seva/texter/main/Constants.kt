@@ -24,17 +24,8 @@ object Constants {
     /** Geo URI for Warsaw.  */
     const val DEFAULT_HOME_LOCATION = "geo:52.233333,21.016667"
 
-    /** Number when it has not been otherwise set. */
-    const val DEFAULT_PHONE_NUMBER = ""
-
     /** Send an sms each time this value is crossed.  */
     const val KM_THRESHOLD = 2
-
-    /** If the number of measurements in the present zone has reached the trigger, send SMS.  */
-    const val SMS_COUNT_TRIGGER = 2
-
-    /** Time spent in zone before an SMS is sent.  */
-    const val TIME_IN_ZONE = 11 * 1000
 
     const val LOCATION_UPDATE_FREQUENCY_MS = 1000L
 }
