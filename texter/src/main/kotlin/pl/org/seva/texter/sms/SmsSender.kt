@@ -198,11 +198,11 @@ open class SmsSender {
         }
         if (isTimeIncluded) {
             val now = Calendar.getInstance()
-            var minuteStr = Integer.toString(now.get(Calendar.MINUTE))
+            var minuteStr = now.get(Calendar.MINUTE).toString()
             if (minuteStr.length == 1) {
                 minuteStr = "0$minuteStr"
             }
-            val timeStr = Integer.toString(now.get(Calendar.HOUR_OF_DAY)) + ":" + minuteStr
+            val timeStr = now.get(Calendar.HOUR_OF_DAY).toString() + ":" + minuteStr
             smsBuilder.append(" (").append(timeStr).append(")")
         }
         if (isLocationIncluded) {
