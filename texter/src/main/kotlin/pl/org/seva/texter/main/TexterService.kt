@@ -40,7 +40,7 @@ class TexterService : LifecycleService() {
     private val notificationBuilder by lazy { createNotificationBuilder() }
     private var activityRecognitionListenersAdded = false
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
