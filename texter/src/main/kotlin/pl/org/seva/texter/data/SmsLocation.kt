@@ -29,7 +29,7 @@ class SmsLocation(
         var distance: Double = 0.0,  // in kilometers
         var minutes: Int = 0, // in minutes since midnight
         var direction: Int = 0,
-        var speed: Double = 0.0
+        var speed: Double = 0.0,
 ): Parcelable {
 
     val sign: String
