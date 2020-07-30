@@ -100,10 +100,8 @@ dependencies {
     // Kodein
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.5.1'
     implementation 'org.kodein.di:kodein-di-conf-jvm:6.5.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // Testing
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:core-ktx:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
