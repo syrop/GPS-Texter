@@ -40,7 +40,8 @@ class LocationTest {
     // https://stackoverflow.com/questions/29945087/kotlin-and-new-activitytestrule-the-rule-must-be-public
     @Suppress("unused", "BooleanLiteralArgument")
     @get:Rule
-    val activityRule = ActivityTestRule(MainActivity::class.java, true, true)
+    val activityRule =
+        ActivityTestRule(MainActivity::class.java, true, true)
 
     @Test
     fun testLocation() {

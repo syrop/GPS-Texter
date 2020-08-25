@@ -152,24 +152,24 @@ class SettingsActivity : AppCompatActivity() {
             addReadContactsPermissionListeners()
         }
         permissions.addAll(smsSender.permissionsToRequest())
-        if (!permissions.isEmpty()) {
+        if (permissions.isNotEmpty()) {
             val arr = permissions.toTypedArray()
             ActivityCompat.requestPermissions(
                     this,
                     arr,
-                    Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID)
+                    Permissions.SMS_AND_CONTACTS_PERMISSION_REQUEST_ID, )
         }
     }
 
     private fun processLocationPermissions() {
         if (ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_FINE_LOCATION, ) != PackageManager.PERMISSION_GRANTED) {
             addLocationPermissionListeners()
             ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    Permissions.LOCATION_PERMISSION_REQUEST_ID)
+                    Permissions.LOCATION_PERMISSION_REQUEST_ID, )
             return
         }
         onLocationPermissionGranted()

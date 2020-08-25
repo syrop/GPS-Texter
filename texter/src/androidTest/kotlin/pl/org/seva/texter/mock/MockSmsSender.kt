@@ -21,10 +21,11 @@ package pl.org.seva.texter.mock
 
 import android.app.Activity
 import android.app.PendingIntent
+import android.content.Context
 
 import pl.org.seva.texter.sms.SmsSender
 
-class MockSmsSender : SmsSender() {
+class MockSmsSender(ctx: Context) : SmsSender(ctx) {
 
     var messagesSent: Int = 0
         private set
@@ -40,7 +41,8 @@ class MockSmsSender : SmsSender() {
     override fun sendTextMessage(
             text: String,
             sentIntent: PendingIntent,
-            deliveredIntent: PendingIntent) {
+            deliveredIntent: PendingIntent,
+    ) {
         messagesSent++
         sentIntent.send(Activity.RESULT_OK)
     }

@@ -36,7 +36,8 @@ object DistanceCalculator {
             loc1.longitude,
             loc2.latitude,
             loc2.longitude,
-            time)
+            time,
+    )
 
     private external fun distance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double
     private external fun speed(lat1: Double, lon1: Double, lat2: Double, lon2: Double, time: Long): Double

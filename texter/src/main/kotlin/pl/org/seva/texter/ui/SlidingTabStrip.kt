@@ -23,7 +23,7 @@ import android.graphics.Paint
 import android.util.TypedValue
 import android.widget.LinearLayout
 
-internal class SlidingTabStrip(context: Context) : LinearLayout(context, null) {
+internal class SlidingTabStrip(ctx: Context) : LinearLayout(ctx, null) {
 
     private val bottomBorderThickness: Int
     private val bottomBorderPaint: Paint

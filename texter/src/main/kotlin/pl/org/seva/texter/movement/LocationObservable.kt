@@ -91,7 +91,8 @@ open class LocationObservable :
                     homeLat,
                     homeLng,
                     it.latitude,
-                    it.longitude)
+                    it.longitude,
+            )
         }
         homeChangedSubject.onNext(0)
     }

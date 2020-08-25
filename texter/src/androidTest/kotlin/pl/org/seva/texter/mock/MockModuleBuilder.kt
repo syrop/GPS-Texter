@@ -19,6 +19,7 @@
 
 package pl.org.seva.texter.mock
 
+import android.content.Context
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
@@ -26,12 +27,12 @@ import pl.org.seva.texter.sms.SmsSender
 import pl.org.seva.texter.movement.ActivityRecognitionObservable
 import pl.org.seva.texter.movement.LocationObservable
 
-val mockModule get() = MockModuleBuilder().build()
+val Context.mockModule get() = MockModuleBuilder().build(this)
 
 class MockModuleBuilder {
-    fun build() = Kodein.Module("test") {
+    fun build(ctx: Context) = Kodein.Module("test") {
         bind<LocationObservable>(overrides = true) with singleton { MockLocationObservable() }
-        bind<SmsSender>(overrides = true) with singleton { MockSmsSender() }
+        bind<SmsSender>(overrides = true) with singleton { MockSmsSender(ctx) }
         bind<ActivityRecognitionObservable>(overrides = true) with singleton { MockActivityRecognitionObservable() }
     }
 }

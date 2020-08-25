@@ -35,7 +35,6 @@ import android.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 
-import java.lang.ref.WeakReference
 import java.util.Calendar
 import java.util.UUID
 
@@ -55,11 +54,10 @@ import pl.org.seva.texter.movement.zoneCalculator
 
 val smsSender by instance<SmsSender>()
 
-open class SmsSender {
+open class SmsSender(private val ctx: Context) {
 
     private lateinit var preferences: SharedPreferences
     private lateinit var speedUnit: String
-    private lateinit var weakContext: WeakReference<Context>
 
     private val smsManager: android.telephony.SmsManager = android.telephony.SmsManager.getDefault()
 
@@ -74,31 +72,28 @@ open class SmsSender {
     private var zone: DistanceZone? = null
 
 
-    fun init(context: Context, speedUnit: String) {
+    fun init(speedUnit: String) {
         if (initialized) {
             return
         }
         this.speedUnit = speedUnit
-        preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        weakContext = WeakReference(context)
+        preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
         initialized = true
     }
 
     fun permissionsToRequest() : List<String> {
         val result = ArrayList<String>()
-        weakContext.get()?.let {
-            if (needsPermission() &&
-                    ContextCompat.checkSelfPermission(
-                            it,
-                            Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                result.add(Manifest.permission.SEND_SMS)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && needsPermission() &&
-                    ContextCompat.checkSelfPermission(
-                            it,
-                            Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                result.add(Manifest.permission.READ_PHONE_STATE)
-            }
+        if (needsPermission() &&
+                ContextCompat.checkSelfPermission(
+                        ctx,
+                        Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            result.add(Manifest.permission.SEND_SMS)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && needsPermission() &&
+                ContextCompat.checkSelfPermission(
+                        ctx,
+                        Manifest.permission.READ_PHONE_STATE, ) != PackageManager.PERMISSION_GRANTED) {
+            result.add(Manifest.permission.READ_PHONE_STATE)
         }
 
         return result
@@ -165,11 +160,11 @@ open class SmsSender {
         }
 
     private fun registerReceiver(receiver: BroadcastReceiver, filter: IntentFilter) {
-        weakContext.get()?.registerReceiver(receiver, filter)
+        ctx.registerReceiver(receiver, filter)
     }
 
     private fun unregisterReceiver(receiver: BroadcastReceiver) {
-        weakContext.get()?.unregisterReceiver(receiver)
+        ctx.unregisterReceiver(receiver)
     }
 
     private fun registerBroadcastReceiver(id: String) =// When the SMS has been sent.
@@ -232,12 +227,10 @@ open class SmsSender {
 
         smsSendingSubject.onNext(0)
 
-        weakContext.get()?.let {
-            val sentPI = PendingIntent.getBroadcast(it, 0, sentIntent, 0)
-            val deliveredPI = PendingIntent.getBroadcast(it, 0, deliveredIntent, 0)
-            registerBroadcastReceiver(id)
-            sendTextMessage(text, sentPI, deliveredPI)
-        }
+        val sentPI = PendingIntent.getBroadcast(ctx, 0, sentIntent, 0)
+        val deliveredPI = PendingIntent.getBroadcast(ctx, 0, deliveredIntent, 0)
+        registerBroadcastReceiver(id)
+        sendTextMessage(text, sentPI, deliveredPI)
     }
 
     protected open fun sendTextMessage(

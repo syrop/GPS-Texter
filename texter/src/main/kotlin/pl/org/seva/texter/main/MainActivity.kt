@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         tabs.setCustomTabColorizer { tabColor }
         tabs.setViewPager(pager)
 
-        smsSender.init(this, getString(R.string.speed_unit))
+        smsSender.init(getString(R.string.speed_unit))
 
         val googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (googlePlay != ConnectionResult.SUCCESS) {

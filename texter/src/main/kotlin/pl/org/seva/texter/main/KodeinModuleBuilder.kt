@@ -32,16 +32,16 @@ import pl.org.seva.texter.movement.LocationObservable
 import pl.org.seva.texter.movement.ZoneCalculator
 import pl.org.seva.texter.stats.Timer
 
-val Context.module get() = KodeinModuleBuilder(this).build()
+val Context.module get() = KodeinModuleBuilder().build(this)
 
 inline fun <reified R : Any> instance() = Kodein.global.instance<R>()
 
-class KodeinModuleBuilder(private val ctx: Context) {
+class KodeinModuleBuilder {
 
-    fun build() = Kodein.Module("main") {
+    fun build(ctx: Context) = Kodein.Module("main") {
         bind<Bootstrap>() with singleton { Bootstrap(ctx) }
         bind<LocationObservable>() with singleton { LocationObservable() }
-        bind<SmsSender>() with singleton { SmsSender() }
+        bind<SmsSender>() with singleton { SmsSender(ctx) }
         bind<Timer>() with singleton { Timer() }
         bind<Permissions>() with singleton { Permissions() }
         bind<SmsHistory>() with singleton { SmsHistory() }
