@@ -19,6 +19,7 @@ package pl.org.seva.texter;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.NotificationChannel;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class TexterApplication extends Application {
         super.onCreate();
         component = createComponent();
         component.inject(this);
+        Notifications.createNotificationChannels(this);
         addGpsProviderListeners();
         addActivityRecognitionListeners();
     }

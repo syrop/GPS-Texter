@@ -21,7 +21,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 
 import javax.inject.Inject;
@@ -33,6 +32,7 @@ import pl.org.seva.texter.presenter.source.LocationSource;
 import pl.org.seva.texter.presenter.utils.SmsSender;
 import pl.org.seva.texter.view.activity.MainActivity;
 import pl.org.seva.texter.TexterApplication;
+import pl.org.seva.texter.Notifications;
 
 public class TexterService extends Service {
 
@@ -64,13 +64,10 @@ public class TexterService extends Service {
                 (int) System.currentTimeMillis(),
                 mainActivityIntent,
                 0);
-        Notification n = new Notification.Builder(this)
+        Notification n = new Notification.Builder(this, Notifications.NOTIFICATION_CHANNEL_NAME)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notification_text))
-                .setSmallIcon(
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
-                        R.drawable.notification :
-                        R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.notification)
                 .setContentIntent(pIntent)
                 .setAutoCancel(false)
                 .build();
