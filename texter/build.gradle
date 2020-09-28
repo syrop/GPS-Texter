@@ -19,9 +19,9 @@ android {
     defaultConfig {
         applicationId "pl.org.seva.texter"
         minSdkVersion 26
-        targetSdkVersion 28  // Upgrading above 28 requires a change in location settings
+        targetSdkVersion 28  // Upgrading above 28 requires a change in location permissions
                              // https://developer.android.com/training/location/background
-                             // It will also require setting ACTIVITY_RECOGNITION
+                             // It will also require permission ACTIVITY_RECOGNITION
         resConfigs "en", "pl"
         testInstrumentationRunner "pl.org.seva.texter.MockTestRunner"
         manifestPlaceholders = [ googleMapsKey: "AIzaSyC-CTsb0OYlo93b9_lWKcAaae5q8v3goD8"]
