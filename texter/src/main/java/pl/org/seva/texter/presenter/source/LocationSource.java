@@ -141,7 +141,7 @@ public class LocationSource implements
         homeLat = HomeLocationPreference.parseLatitude(homeLocation);
         homeLon = HomeLocationPreference.parseLongitude(homeLocation);
         if (location != null) {
-            distance = DistanceCalculator.distanceInKm(
+            distance = DistanceCalculator.distanceKm(
                     homeLat,
                     homeLon,
                     location.getLatitude(),
@@ -285,7 +285,7 @@ public class LocationSource implements
     }
 
     private double calculateCurrentDistance() {
-        return DistanceCalculator.distanceInKm(
+        return DistanceCalculator.distanceKm(
                 location.getLatitude(),
                 location.getLongitude(),
                 getHomeLat(),
@@ -301,7 +301,7 @@ public class LocationSource implements
         if (time == 0.0) {
             return 0.0;
         }
-        return DistanceCalculator.speedInKph(loc1, loc2, time);
+        return DistanceCalculator.speedKph(loc1, loc2, time);
     }
 
     @Override

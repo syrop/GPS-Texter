@@ -21,27 +21,20 @@ import android.location.Location;
 
 public class DistanceCalculator {
 
-    static {
-        System.loadLibrary("native-lib");
+    public static double distanceKm(double lat1, double lon1, double lat2, double lon2) {
+      float[] distance = new float[2];
+      Location.distanceBetween(lat1, lon1, lat2, lon2, distance);
+      return distance[0] / 1000.0;
     }
 
-    private DistanceCalculator() {
+    public static double speedKph(Location loc1, Location loc2, long time) {
+      double seconds = time / 1000.0;
+      double hours = seconds / 3600.0;
+      double distance = distanceKm(
+          loc1.getLatitude(),
+          loc1.getLongitude(),
+          loc2.getLatitude(),
+          loc2.getLongitude());
+      return distance / hours;
     }
-
-    public static double distanceInKm(double lat1, double lon1, double lat2, double lon2) {
-        return distance(lat1, lon1, lat2, lon2);
-    }
-
-
-    public static double speedInKph(Location loc1, Location loc2, long time) {
-        return speed(
-                loc1.getLatitude(),
-                loc1.getLongitude(),
-                loc2.getLatitude(),
-                loc2.getLongitude(),
-                time);
-    }
-
-    private static native double distance(double lat1, double lon1, double lat2, double lon2);
-    private static native double speed(double lat1, double lon1, double lat2, double lon2, long time);
 }

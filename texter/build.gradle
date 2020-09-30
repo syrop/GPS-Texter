@@ -40,16 +40,6 @@ android {
             manifestPlaceholders = [ googleMapsKey: "AIzaSyCMsxrnN2emRTKdYAf-S43_WPEgwp5a6I0"]
         }
     }
-
-    // Encapsulates your external native build configurations.
-    externalNativeBuild {
-
-        // Encapsulates your CMake build configurations.
-        cmake {
-            // Provides a relative path to your CMake build script.
-            path "CMakeLists.txt"
-        }
-    }
 }
 
 dependencies {
@@ -59,7 +49,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
     implementation 'com.google.dagger:dagger:2.29.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.29.1'
