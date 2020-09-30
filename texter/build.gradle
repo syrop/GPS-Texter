@@ -38,12 +38,6 @@ android {
         release.java.srcDirs += 'src/release/kotlin'
     }
 
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
-
     lintOptions {
         checkReleaseBuilds false
     }
