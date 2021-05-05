@@ -3,13 +3,11 @@ buildscript {
         google()
         mavenCentral()
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
-        // May not be required since Arctic Fox
-        gradlePluginPortal()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.3'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30'
+        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32'
     }
 }
 
@@ -18,7 +16,5 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
-        // May not be required since Arctic Fox
-        gradlePluginPortal()
     }
 }
