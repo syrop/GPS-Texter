@@ -112,7 +112,7 @@ open class ActivityRecognitionObservable :
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result probably DetectedActivity.STILL) {
+                if (result?.probably(DetectedActivity.STILL) == true) {
                     onDeviceStationary()
                 } else {
                     onDeviceMoving()

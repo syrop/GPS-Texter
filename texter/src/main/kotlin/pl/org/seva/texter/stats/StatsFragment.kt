@@ -29,12 +29,13 @@ import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_stats.*
 
 import java.util.Calendar
 
@@ -58,6 +59,12 @@ class StatsFragment : Fragment() {
 
     private var zoom = 0.0f
 
+    private val sendNowButton by lazy { requireActivity().findViewById<Button>(R.id.send_now_button) }
+    private val distanceValue by lazy { requireActivity().findViewById<TextView>(R.id.distance_value) }
+    private val stationary by lazy { requireActivity().findViewById<View>(R.id.stationary) }
+    private val updateIntervalValue by lazy { requireActivity().findViewById<TextView>(R.id.update_interval_value) }
+    private val speedValue by lazy { requireActivity().findViewById<TextView>(R.id.speed_value) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createSubscriptions()
@@ -80,8 +87,8 @@ class StatsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        send_now_button.setOnClickListener { onSendNowClicked() }
-        send_now_button.isEnabled = smsSender.isTextingEnabled &&
+        sendNowButton.setOnClickListener { onSendNowClicked() }
+        sendNowButton.isEnabled = smsSender.isTextingEnabled &&
                 distance != 0.0 &&
                 distance != smsSender.lastSentDistance
 
@@ -184,19 +191,19 @@ class StatsFragment : Fragment() {
     }
 
     private fun showStats() {
-        distance_value.text = if (distance == 0.0) {
+        distanceValue.text = if (distance == 0.0) {
             "0 km"
         } else {
             formattedDistanceStr
         }
 
         stationary.visibility = if (isStationary) View.VISIBLE else View.INVISIBLE
-        update_interval_value.text = formattedTimeStr
+        updateIntervalValue.text = formattedTimeStr
         if (speed == 0.0 || distance == 0.0) {
-            speed_value.visibility = View.INVISIBLE
+            speedValue.visibility = View.INVISIBLE
         } else {
-            speed_value.visibility = View.VISIBLE
-            speed_value.text = formattedSpeedStr
+            speedValue.visibility = View.VISIBLE
+            speedValue.text = formattedSpeedStr
         }
     }
 
@@ -246,7 +253,7 @@ class StatsFragment : Fragment() {
 
     private fun onDistanceChanged() {
         if (distance != smsSender.lastSentDistance) {
-            send_now_button.isEnabled = smsSender.isTextingEnabled
+            sendNowButton.isEnabled = smsSender.isTextingEnabled
         }
 
         val threeHoursPassed = System.currentTimeMillis() - timer.resetTime > 3 * 3600 * 1000
@@ -262,7 +269,7 @@ class StatsFragment : Fragment() {
 
     @SuppressLint("WrongConstant")
     private fun onSendNowClicked() {
-        send_now_button.isEnabled = false
+        sendNowButton.isEnabled = false
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timer.resetTime
         val minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
@@ -275,7 +282,7 @@ class StatsFragment : Fragment() {
     }
 
     private fun onSendingSms() {
-        send_now_button.isEnabled = false
+        sendNowButton.isEnabled = false
     }
 
     private fun onHomeChanged() {

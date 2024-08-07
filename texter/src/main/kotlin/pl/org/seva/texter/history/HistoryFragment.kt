@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_history.*
 
 import pl.org.seva.texter.R
 import pl.org.seva.texter.sms.smsSender
@@ -35,6 +34,7 @@ class HistoryFragment : Fragment() {
 
     private lateinit var adapter: HistoryAdapter
     private var scrollToBottom: Boolean = false
+    private val recyclerView by lazy<RecyclerView> { requireActivity().findViewById(R.id.recycler_view)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +50,13 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recycler_view.setHasFixedSize(true)
-        recycler_view.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = HistoryAdapter(requireActivity(), smsHistory.list)
-        recycler_view.adapter = adapter
-        recycler_view.addItemDecoration(HistoryAdapter.DividerItemDecoration(requireActivity()))
-        recycler_view.clearOnScrollListeners()
-        recycler_view.addOnScrollListener(OnScrollListener())
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(HistoryAdapter.DividerItemDecoration(requireActivity()))
+        recyclerView.clearOnScrollListeners()
+        recyclerView.addOnScrollListener(OnScrollListener())
         scrollToBottom = true
     }
 
@@ -70,13 +70,13 @@ class HistoryFragment : Fragment() {
     private fun update() {
         adapter.notifyDataSetChanged()
         if (scrollToBottom) {
-            recycler_view.scrollToPosition(adapter.itemCount - 1)
+            recyclerView.scrollToPosition(adapter.itemCount - 1)
         }
     }
 
     private inner class OnScrollListener : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            if (recyclerView === recycler_view) {
+            if (recyclerView === this@HistoryFragment.recyclerView) {
                 scrollToBottom = recyclerView.computeVerticalScrollOffset() ==
                         recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent()
             }

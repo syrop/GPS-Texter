@@ -23,6 +23,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
@@ -34,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 import io.reactivex.disposables.Disposables
-import kotlinx.android.synthetic.main.activity_home_location.*
 import pl.org.seva.texter.R
 import pl.org.seva.texter.main.Constants
 import pl.org.seva.texter.movement.location
@@ -56,6 +57,8 @@ class HomeLocationActivity : AppCompatActivity() {
     private var mapContainerId: Int = 0
     private var mapFragment: MapFragment? = null
 
+    private val currentLocationButton by lazy { findViewById<Button>(R.id.current_location_button)}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,15 +68,15 @@ class HomeLocationActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_home_location)
 
-        mapContainerId = map_container.id
+        mapContainerId = R.id.map_container
         MapsInitializer.initialize(this)
 
         val locationPermitted = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val locationAvailable = locationPermitted && location.isLocationAvailable
-        current_location_button.isEnabled = locationAvailable
-        current_location_button.setOnClickListener { onUseCurrentLocationClicked() }
+        currentLocationButton.isEnabled = locationAvailable
+        currentLocationButton.setOnClickListener { onUseCurrentLocationClicked() }
         if (!toastShown) {
             Toast.makeText(
                     this,
@@ -84,7 +87,7 @@ class HomeLocationActivity : AppCompatActivity() {
         location.addLocationChangedListener(lifecycle) { onLocationChanged() }
 
         if (!locationPermitted) {
-            current_location_button.isEnabled = false
+            currentLocationButton.isEnabled = false
         }
     }
 
@@ -105,7 +108,7 @@ class HomeLocationActivity : AppCompatActivity() {
             lon = latLng.longitude
             updateMarker()
             if (isCurrentLocationAvailable) {
-                current_location_button.isEnabled = true
+                currentLocationButton.isEnabled = true
             }
         }
 
@@ -184,11 +187,11 @@ class HomeLocationActivity : AppCompatActivity() {
             return
         }
         isCurrentLocationAvailable = true
-        current_location_button.isEnabled = true
+        currentLocationButton.isEnabled = true
     }
 
     private fun onUseCurrentLocationClicked() {
-        current_location_button.isEnabled = false
+        currentLocationButton.isEnabled = false
         val loc = location.latLng
         loc?.let {
             lat = it.latitude

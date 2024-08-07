@@ -184,7 +184,7 @@ open class LocationObservable :
         connected = true
 
         location?: let {
-            LocationServices.FusedLocationApi.getLastLocation(googleApiClient)?.run { onLocationChanged(this) }
+            LocationServices.FusedLocationApi.getLastLocation(requireNotNull(googleApiClient))?.run { onLocationChanged(this) }
         }
 
         val updateFrequency = updateFrequency
@@ -199,6 +199,8 @@ open class LocationObservable :
 
     @SuppressLint("MissingPermission")
     open fun request() {
+        val googleApiClient = this.googleApiClient
+        val locationRequest = this.locationRequest
         if (paused || googleApiClient == null || locationRequest == null) {
             return
         }

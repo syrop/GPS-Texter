@@ -37,7 +37,6 @@ import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.toolbar.*
 import pl.org.seva.texter.main.*
 import pl.org.seva.texter.movement.location
 import pl.org.seva.texter.sms.smsSender
@@ -47,7 +46,7 @@ import java.util.ArrayList
 class SettingsActivity : AppCompatActivity() {
 
     private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener {
-        _, key -> onSharedPreferenceChanged(key)
+        _, key -> onSharedPreferenceChanged(requireNotNull(key))
     }
 
     private var permissionsCompositeDisposable = CompositeDisposable()
@@ -58,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)

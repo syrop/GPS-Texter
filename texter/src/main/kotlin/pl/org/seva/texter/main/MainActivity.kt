@@ -34,11 +34,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.viewpager.widget.ViewPager
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar.*
 
 import java.util.ArrayList
 import java.util.Locale
@@ -52,6 +51,7 @@ import pl.org.seva.texter.stats.StatsFragment
 import pl.org.seva.texter.navigation.NavigationFragment
 import pl.org.seva.texter.settings.SettingsActivity
 import pl.org.seva.texter.sms.smsSender
+import pl.org.seva.texter.ui.SlidingTabLayout
 
 class MainActivity : AppCompatActivity() {
 
@@ -75,8 +75,10 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.map_tab_name),
                 getString(R.string.history_tab_name))
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         val fragments = ArrayList<Fragment>()
+        val pager = findViewById<ViewPager>(R.id.pager)
+        val tabs = findViewById<SlidingTabLayout>(R.id.tabs)
         fragments.add(StatsFragment.newInstance())
         fragments.add(NavigationFragment.newInstance())
         fragments.add(HistoryFragment.newInstance())
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         val googlePlay = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (googlePlay != ConnectionResult.SUCCESS) {
-            GoogleApiAvailability.getInstance().getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE).show()
+            GoogleApiAvailability.getInstance().getErrorDialog(this, googlePlay, GOOGLE_REQUEST_CODE)?.show()
         }
 
         if (!showStartupDialog()) {
